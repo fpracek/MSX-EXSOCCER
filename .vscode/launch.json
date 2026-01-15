@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "configurations": [
+      {
+          "type": "emulicious-debugger",
+          "request": "launch",
+          "name": "EXSOCCER (Emulicious)",
+          "program": "${workspaceFolder}/emul/rom/exsoccer.rom",
+          "preLaunchTask": "Build", 
+          "port": 58870,
+          "stopOnEntry": false
+      },
+      {
+        "name": "EXSOCCER (openMSX)",
+        "type": "node",           
+        "request": "launch",
+        "preLaunchTask": "prepareAndBuild",  
+        "args": [],
+        "cwd": "${workspaceFolder}",
+        "program": "false"
+      }
+    ]
+}

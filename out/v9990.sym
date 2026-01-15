@@ -1,0 +1,91 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 1
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =   00002710 L
+    .__.ABS.                                                    =   00000000 G
+    .__.CPU.                                                    =   00000000 L
+    .__.H$L.                                                    =   00000000 L
+  0 _V9_ClearVRAM                                                   00000104 GR
+  0 _V9_Detect                                                      00000023 GR
+  0 _V9_FillVRAM16_CurrentAddr                                      00000168 GR
+  0 _V9_FillVRAM_CurrentAddr                                        0000015B GR
+  0 _V9_GetPort                                                     00000004 GR
+  0 _V9_GetRegister                                                 0000001C GR
+  0 _V9_Peek16_CurrentAddr                                          00000147 GR
+  0 _V9_Peek_CurrentAddr                                            00000143 GR
+  0 _V9_Poke16_CurrentAddr                                          00000153 GR
+  0 _V9_Poke_CurrentAddr                                            0000014F GR
+  0 _V9_ReadVRAM_CurrentAddr                                        00000186 GR
+  0 _V9_SetPaletteEntry                                             00000193 GR
+  0 _V9_SetPort                                                     00000000 GR
+  0 _V9_SetReadAddress                                              00000135 GR
+  0 _V9_SetRegister                                                 00000008 GR
+  0 _V9_SetRegister16                                               00000010 GR
+  0 _V9_SetScreenMode                                               00000039 GR
+  0 _V9_SetScrollingBX                                              000000E8 GR
+  0 _V9_SetScrollingBY                                              000000CF GR
+  0 _V9_SetScrollingX                                               000000B3 GR
+  0 _V9_SetScrollingY                                               0000009A GR
+  0 _V9_SetWriteAddress                                             00000128 GR
+  0 _V9_WriteVRAM_CurrentAddr                                       00000179 GR
+    _g_V9_CmdDataPort                                           =   00000062 
+  0 _g_V9_ColorConfig                                               00000088 GR
+    _g_V9_IntFlagPort                                           =   00000066 
+    _g_V9_Kanji2AddrHPort                                       =   0000006B 
+    _g_V9_Kanji2AddrLPort                                       =   0000006A 
+    _g_V9_Kanji2DataPort                                        =   0000006B 
+    _g_V9_KanjiAddrHPort                                        =   00000069 
+    _g_V9_KanjiAddrLPort                                        =   00000068 
+    _g_V9_KanjiDataPort                                         =   00000069 
+  0 _g_V9_ModeConfig                                                0000006A GR
+    _g_V9_OutputCtrPort                                         =   0000006F 
+    _g_V9_PalettePort                                           =   00000061 
+    _g_V9_RegDataPort                                           =   00000063 
+    _g_V9_RegSelectPort                                         =   00000064 
+    _g_V9_SatusPort                                             =   00000065 
+    _g_V9_SysCtrlPort                                           =   00000067 
+    _g_V9_VRAMPort                                              =   00000060 
+  0 v9_clear_loop                                                   00000110 R
+  0 v9_detect                                                       00000023 R
+  0 v9_fill16_loop                                                  0000016B R
+  0 v9_fill16_setup                                                 00000168 R
+  0 v9_fill_loop                                                    0000015E R
+  0 v9_fill_setup                                                   0000015B R
+  0 v9_found                                                        00000033 R
+  0 v9_get_port                                                     00000004 R
+  0 v9_get_reg                                                      0000001C R
+  0 v9_notfound                                                     00000037 R
+  0 v9_read_loop                                                    0000018B R
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+  0 v9_read_setup                                                   00000186 R
+  0 v9_set_pal_entry                                                000001A0 R
+  0 v9_set_port                                                     00000000 R
+  0 v9_set_read_addr                                                00000135 R
+  0 v9_set_reg                                                      00000008 R
+  0 v9_set_reg16                                                    00000010 R
+  0 v9_set_write_addr                                               00000128 R
+  0 v9_write_loop                                                   0000017E R
+  0 v9_write_setup                                                  00000179 R
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 3
+Hexadecimal [32-Bits]
+
+Area Table
+
+   0 _CODE                                      size      1AD   flags    0
+   1 _DATA                                      size        0   flags    0
+   2 _INITIALIZED                               size        0   flags    0
+   3 _DABS                                      size        0   flags    8
+   4 _HOME                                      size        0   flags    0
+   5 _GSINIT                                    size        0   flags    0
+   6 _GSFINAL                                   size        0   flags    0
+   7 _INITIALIZER                               size        0   flags    0
+   8 _CABS                                      size        0   flags    8
+

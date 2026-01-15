@@ -1,0 +1,61 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+ 
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.bat",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "prepareAndBuild",
+            "dependsOn": [
+                "killOpenMSX",
+                "Build"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "group": {
+              "kind": "build",
+              "isDefault": true
+            }
+        },
+        {
+          "label": "killOpenMSX",
+          "type": "shell",
+          "command": "cmd",
+          "args": [
+            "/C",
+            "taskkill /IM openmsx.exe /F || exit /B 0"
+          ],
+          "problemMatcher": [],
+          "options": {
+            "shell": {
+              "executable": "cmd.exe",
+              "args": [
+                "/C"
+              ]
+            }
+          }
+        },
+        {
+          "label": "launchOpenMSX",
+          "type": "shell",
+          "command": "E:\\Dropbox\\FAUSTO\\SVILUPPI\\MSX\\EMULATORI\\openMSX\\openMSX.exe",
+          "args": [
+            "-machine",
+            "Sony_HB-75P",
+            "-cart",
+            "${workspaceFolder}/out/exsoccer.rom",
+            "-ext",
+            "video9000"
+          ],
+          "options": {
+            "cwd": "${workspaceFolder}"
+          }
+        }
+    ]
+}

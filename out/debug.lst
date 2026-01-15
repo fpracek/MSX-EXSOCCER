@@ -1,0 +1,144 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.2.0 #13081 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module debug
+                                      6 	.optsdcc -mz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _DEBUG_INIT
+                                     12 	.globl _DEBUG_BREAK
+                                     13 	.globl _DEBUG_ASSERT
+                                     14 	.globl _DEBUG_LOG
+                                     15 	.globl _DEBUG_LOGNUM
+                                     16 	.globl _DEBUG_PRINT
+                                     17 ;--------------------------------------------------------
+                                     18 ; special function registers
+                                     19 ;--------------------------------------------------------
+                         0000002E    20 _g_PortDebugMode	=	0x002e
+                         0000002F    21 _g_PortDebugData	=	0x002f
+                                     22 ;--------------------------------------------------------
+                                     23 ; ram data
+                                     24 ;--------------------------------------------------------
+                                     25 	.area _DATA
+                                     26 ;--------------------------------------------------------
+                                     27 ; ram data
+                                     28 ;--------------------------------------------------------
+                                     29 	.area _INITIALIZED
+                                     30 ;--------------------------------------------------------
+                                     31 ; absolute external ram data
+                                     32 ;--------------------------------------------------------
+                                     33 	.area _DABS (ABS)
+                                     34 ;--------------------------------------------------------
+                                     35 ; global & static initialisations
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _HOME
+                                     38 	.area _GSINIT
+                                     39 	.area _GSFINAL
+                                     40 	.area _GSINIT
+                                     41 ;--------------------------------------------------------
+                                     42 ; Home
+                                     43 ;--------------------------------------------------------
+                                     44 	.area _HOME
+                                     45 	.area _HOME
+                                     46 ;--------------------------------------------------------
+                                     47 ; code
+                                     48 ;--------------------------------------------------------
+                                     49 	.area _CODE
+                                     50 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:66: void DEBUG_INIT() {}
+                                     51 ;	---------------------------------
+                                     52 ; Function DEBUG_INIT
+                                     53 ; ---------------------------------
+    00000000                         54 _DEBUG_INIT::
+    00000000 C9               [10]   55 	ret
+                                     56 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:70: void DEBUG_BREAK()
+                                     57 ;	---------------------------------
+                                     58 ; Function DEBUG_BREAK
+                                     59 ; ---------------------------------
+    00000001                         60 _DEBUG_BREAK::
+                                     61 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:73: g_PortDebugMode = 0xFF;
+    00000001 3E FF            [ 7]   62 	ld	a, #0xff
+    00000003 D3 2E            [11]   63 	out	(_g_PortDebugMode), a
+                                     64 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:75: }
+    00000005 C9               [10]   65 	ret
+                                     66 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:79: void DEBUG_ASSERT(bool a)
+                                     67 ;	---------------------------------
+                                     68 ; Function DEBUG_ASSERT
+                                     69 ; ---------------------------------
+    00000006                         70 _DEBUG_ASSERT::
+                                     71 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:81: if (!(a))
+    00000006 4F               [ 4]   72 	ld	c, a
+    00000007 B7               [ 4]   73 	or	a, a
+                                     74 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:82: DEBUG_BREAK();
+    00000008 CAr01r00         [10]   75 	jp	Z,_DEBUG_BREAK
+                                     76 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:83: }
+    0000000B C9               [10]   77 	ret
+                                     78 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:87: void DEBUG_LOG(const c8* msg)
+                                     79 ;	---------------------------------
+                                     80 ; Function DEBUG_LOG
+                                     81 ; ---------------------------------
+    0000000C                         82 _DEBUG_LOG::
+                                     83 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:90: DEBUG_PRINT("%s", msg);
+    0000000C 01r17r00         [10]   84 	ld	bc, #___str_0+0
+    0000000F E5               [11]   85 	push	hl
+    00000010 C5               [11]   86 	push	bc
+    00000011 CDr40r00         [17]   87 	call	_DEBUG_PRINT
+    00000014 F1               [10]   88 	pop	af
+    00000015 F1               [10]   89 	pop	af
+                                     90 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:96: }
+    00000016 C9               [10]   91 	ret
+    00000017                         92 ___str_0:
+    00000017 25 73                   93 	.ascii "%s"
+    00000019 00                      94 	.db 0x00
+                                     95 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:100: void DEBUG_LOGNUM(const c8* msg, u8 num)
+                                     96 ;	---------------------------------
+                                     97 ; Function DEBUG_LOGNUM
+                                     98 ; ---------------------------------
+    0000001A                         99 _DEBUG_LOGNUM::
+    0000001A DD E5            [15]  100 	push	ix
+    0000001C DD 21 00 00      [14]  101 	ld	ix,#0
+    00000020 DD 39            [15]  102 	add	ix,sp
+                                    103 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:103: DEBUG_PRINT("%s:%d", msg, num);
+    00000022 DD 5E 04         [19]  104 	ld	e, 4 (ix)
+    00000025 16 00            [ 7]  105 	ld	d, #0x00
+    00000027 01r3Ar00         [10]  106 	ld	bc, #___str_1+0
+    0000002A D5               [11]  107 	push	de
+    0000002B E5               [11]  108 	push	hl
+    0000002C C5               [11]  109 	push	bc
+    0000002D CDr40r00         [17]  110 	call	_DEBUG_PRINT
+    00000030 21 06 00         [10]  111 	ld	hl, #6
+    00000033 39               [11]  112 	add	hl, sp
+    00000034 F9               [ 6]  113 	ld	sp, hl
+                                    114 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:110: }
+    00000035 DD E1            [14]  115 	pop	ix
+    00000037 E1               [10]  116 	pop	hl
+    00000038 33               [ 6]  117 	inc	sp
+    00000039 E9               [ 4]  118 	jp	(hl)
+    0000003A                        119 ___str_1:
+    0000003A 25 73 3A 25 64         120 	.ascii "%s:%d"
+    0000003F 00                     121 	.db 0x00
+                                    122 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:114: void DEBUG_PRINT(const c8* format, ...)
+                                    123 ;	---------------------------------
+                                    124 ; Function DEBUG_PRINT
+                                    125 ; ---------------------------------
+    00000040                        126 _DEBUG_PRINT::
+                                    127 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:118: va_start(args, format);
+                                    128 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:119: u16 val = ((u16)args - sizeof(format));
+    00000040 21 02 00         [10]  129 	ld	hl,#0x2
+    00000043 39               [11]  130 	add	hl,sp
+                                    131 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:122: g_PortDebugMode = 1;
+    00000044 3E 01            [ 7]  132 	ld	a, #0x01
+    00000046 D3 2E            [11]  133 	out	(_g_PortDebugMode), a
+                                    134 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:123: g_PortDebugData = val & 0xFF; // low byte
+    00000048 7D               [ 4]  135 	ld	a, l
+    00000049 D3 2F            [11]  136 	out	(_g_PortDebugData), a
+                                    137 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:124: g_PortDebugData = val >> 8; // high byte
+    0000004B 7C               [ 4]  138 	ld	a, h
+    0000004C D3 2F            [11]  139 	out	(_g_PortDebugData), a
+                                    140 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/debug.c:135: }
+    0000004E C9               [10]  141 	ret
+                                    142 	.area _CODE
+                                    143 	.area _INITIALIZER
+                                    144 	.area _CABS (ABS)

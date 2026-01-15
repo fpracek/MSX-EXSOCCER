@@ -1,0 +1,1731 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.2.0 #13081 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module vdp
+                                      6 	.optsdcc -mz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _g_VDPInitilized
+                                     12 	.globl _g_SpriteColorLow
+                                     13 	.globl _g_SpritePatternLow
+                                     14 	.globl _g_SpriteAttributeLow
+                                     15 	.globl _g_ScreenPatternLow
+                                     16 	.globl _g_ScreenColorLow
+                                     17 	.globl _g_ScreenLayoutLow
+                                     18 	.globl _g_VDP_Sprite
+                                     19 	.globl _g_VDP_Command
+                                     20 	.globl _g_VDP_Data
+                                     21 	.globl _g_VDP_REGSAV
+                                     22 	.globl _g_SLTSL
+                                     23 	.globl _g_GRPACY
+                                     24 	.globl _g_GRPACX
+                                     25 	.globl _g_LOGOPR
+                                     26 	.globl _g_CMASK
+                                     27 	.globl _g_CLOC
+                                     28 	.globl _g_FNKSTR
+                                     29 	.globl _g_ATRBYT
+                                     30 	.globl _g_BDRCLR
+                                     31 	.globl _g_BAKCLR
+                                     32 	.globl _g_FORCLR
+                                     33 	.globl _g_CSRX
+                                     34 	.globl _g_CSRY
+                                     35 	.globl _g_CLIKSW
+                                     36 	.globl _g_MLTPAT
+                                     37 	.globl _g_MLTATR
+                                     38 	.globl _g_MLTCGP
+                                     39 	.globl _g_MLTCOL
+                                     40 	.globl _g_MLTNAM
+                                     41 	.globl _g_GRPPAT
+                                     42 	.globl _g_GRPATR
+                                     43 	.globl _g_GRPCGP
+                                     44 	.globl _g_GRPCOL
+                                     45 	.globl _g_GRPNAM
+                                     46 	.globl _g_T32PAT
+                                     47 	.globl _g_T32ATR
+                                     48 	.globl _g_T32CGP
+                                     49 	.globl _g_T32COL
+                                     50 	.globl _g_T32NAM
+                                     51 	.globl _g_TXTPAT
+                                     52 	.globl _g_TXTATR
+                                     53 	.globl _g_TXTCGP
+                                     54 	.globl _g_TXTCOL
+                                     55 	.globl _g_TXTNAM
+                                     56 	.globl _g_CLMLST
+                                     57 	.globl _g_CRTCNT
+                                     58 	.globl _g_LINLEN
+                                     59 	.globl _g_LINL32
+                                     60 	.globl _g_LINL40
+                                     61 	.globl _g_CHAR_16
+                                     62 	.globl _g_MSXMID
+                                     63 	.globl _g_MSXVER
+                                     64 	.globl _g_ROMVersion
+                                     65 	.globl _g_BASRVN
+                                     66 	.globl _g_VDP_DW
+                                     67 	.globl _g_VDP_DR
+                                     68 	.globl _g_CGTABL
+                                     69 	.globl _g_SVFFFD
+                                     70 	.globl _g_RG27SAV
+                                     71 	.globl _g_RG26SAV
+                                     72 	.globl _g_RG25SAV
+                                     73 	.globl _g_SVFFF8
+                                     74 	.globl _g_MINROM
+                                     75 	.globl _g_RG23SAV
+                                     76 	.globl _g_RG22SAV
+                                     77 	.globl _g_RG21SAV
+                                     78 	.globl _g_RG20SAV
+                                     79 	.globl _g_RG19SAV
+                                     80 	.globl _g_RG18SAV
+                                     81 	.globl _g_RG17SAV
+                                     82 	.globl _g_RG16SAV
+                                     83 	.globl _g_RG15SAV
+                                     84 	.globl _g_RG14SAV
+                                     85 	.globl _g_RG13SAV
+                                     86 	.globl _g_RG12SAV
+                                     87 	.globl _g_RG11SAV
+                                     88 	.globl _g_RG10SAV
+                                     89 	.globl _g_RG09SAV
+                                     90 	.globl _g_RG08SAV
+                                     91 	.globl _g_PROCNM
+                                     92 	.globl _g_SLTWRK
+                                     93 	.globl _g_SLTATR
+                                     94 	.globl _g_SLTTBL
+                                     95 	.globl _g_EXPTBL
+                                     96 	.globl _g_MNROM
+                                     97 	.globl _g_DRWANG
+                                     98 	.globl _g_DRWSCL
+                                     99 	.globl _g_DRWFLG
+                                    100 	.globl _g_GYPOS
+                                    101 	.globl _g_GXPOS
+                                    102 	.globl _g_BRDATR
+                                    103 	.globl _g_CASPRV
+                                    104 	.globl _g_OLDSCR
+                                    105 	.globl _g_SCRMOD
+                                    106 	.globl _g_FLBMEM
+                                    107 	.globl _g_KANAMD
+                                    108 	.globl _g_KANAST
+                                    109 	.globl _g_CAPST
+                                    110 	.globl _g_CSTYLE
+                                    111 	.globl _g_CSRSW
+                                    112 	.globl _g_INSFLG
+                                    113 	.globl _g_ESCCNT
+                                    114 	.globl _g_GRPHED
+                                    115 	.globl _g_WINWID
+                                    116 	.globl _g_LOWLIM
+                                    117 	.globl _g_INTCNT
+                                    118 	.globl _g_INTVAL
+                                    119 	.globl _g_JIFFY
+                                    120 	.globl _g_PADX
+                                    121 	.globl _g_PADY
+                                    122 	.globl _g_INTFLG
+                                    123 	.globl _g_RTYCNT
+                                    124 	.globl _g_TRPTBL
+                                    125 	.globl _g_HIMEM
+                                    126 	.globl _g_BOTTOM
+                                    127 	.globl _g_PATWRK
+                                    128 	.globl _g_LINWRK
+                                    129 	.globl _g_KEYBUF
+                                    130 	.globl _g_NEWKEY
+                                    131 	.globl _g_OLDKEY
+                                    132 	.globl _g_CLIKFL
+                                    133 	.globl _g_ONGSBF
+                                    134 	.globl _g_FNKFLG
+                                    135 	.globl _g_FNKSWI
+                                    136 	.globl _g_CODSAV
+                                    137 	.globl _g_FSTPOS
+                                    138 	.globl _g_LINTTB
+                                    139 	.globl _g_BASROM
+                                    140 	.globl _g_ENSTOP
+                                    141 	.globl _g_VCBC
+                                    142 	.globl _g_VCBB
+                                    143 	.globl _g_VCBA
+                                    144 	.globl _g_PLYCNT
+                                    145 	.globl _g_MUSICF
+                                    146 	.globl _g_QUEUEN
+                                    147 	.globl _g_MCLPTR
+                                    148 	.globl _g_MCLLEN
+                                    149 	.globl _g_SAVVOL
+                                    150 	.globl _g_VOICEN
+                                    151 	.globl _g_SAVSP
+                                    152 	.globl _g_PRSCNT
+                                    153 	.globl _g_LSTMOD
+                                    154 	.globl _g_LSTCOM
+                                    155 	.globl _g_COMMSK
+                                    156 	.globl _g_ESTBLS
+                                    157 	.globl _g_FLAGS
+                                    158 	.globl _g_ERRORS
+                                    159 	.globl _g_DATCNT
+                                    160 	.globl _g_DEVNUM
+                                    161 	.globl _g_OLDINT
+                                    162 	.globl _g_OLDSTT
+                                    163 	.globl _g_MEXBIh
+                                    164 	.globl _g_RSIQLN
+                                    165 	.globl _g_RSFCB
+                                    166 	.globl _g_TOCNT
+                                    167 	.globl _g_RSTMP
+                                    168 	.globl _g_YSAVE
+                                    169 	.globl _g_XSAVE
+                                    170 	.globl _g_NORUSE
+                                    171 	.globl _g_MODE
+                                    172 	.globl _g_ROMA
+                                    173 	.globl _g_CHRCNT
+                                    174 	.globl _g_EXBRSA
+                                    175 	.globl _g_AVCSAV
+                                    176 	.globl _g_ACPAGE
+                                    177 	.globl _g_DPPAGE
+                                    178 	.globl _g_RS2IQ
+                                    179 	.globl _g_VOICCQ
+                                    180 	.globl _g_VOICBQ
+                                    181 	.globl _g_VOICAQ
+                                    182 	.globl _g_QUEBAK
+                                    183 	.globl _g_QUETAB
+                                    184 	.globl _g_ASPCT2
+                                    185 	.globl _g_ASPCT1
+                                    186 	.globl _g_HEADER
+                                    187 	.globl _g_HIGH
+                                    188 	.globl _g_LOW
+                                    189 	.globl _g_CS240
+                                    190 	.globl _g_CS120
+                                    191 	.globl _g_GETPNT
+                                    192 	.globl _g_PUTPNT
+                                    193 	.globl _g_REPCNT
+                                    194 	.globl _g_SCNCNT
+                                    195 	.globl _g_FRCNEW
+                                    196 	.globl _g_QUEUES
+                                    197 	.globl _g_MINUPD
+                                    198 	.globl _g_MAXUPD
+                                    199 	.globl _g_TRGFLG
+                                    200 	.globl _g_STATFL
+                                    201 	.globl _g_RG7SAV
+                                    202 	.globl _g_RG6SAV
+                                    203 	.globl _g_RG5SAV
+                                    204 	.globl _g_RG4SAV
+                                    205 	.globl _g_RG3SAV
+                                    206 	.globl _g_RG2SAV
+                                    207 	.globl _g_RG1SAV
+                                    208 	.globl _g_RG0SAV
+                                    209 	.globl _g_CNSDFG
+                                    210 	.globl _g_USRTAB
+                                    211 	.globl _g_CLPRIM
+                                    212 	.globl _g_WRPRIM
+                                    213 	.globl _g_RDPRIM
+                                    214 	.globl _VDP_SetModeFlag
+                                    215 	.globl _VDP_SetModeText1
+                                    216 	.globl _VDP_SetModeMultiColor
+                                    217 	.globl _VDP_SetModeGraphic1
+                                    218 	.globl _VDP_SetModeGraphic2
+                                    219 	.globl _VDP_ClearVRAM
+                                    220 	.globl _VDP_WriteVRAM_16K
+                                    221 	.globl _VDP_FillVRAM_16K
+                                    222 	.globl _VDP_ReadVRAM_16K
+                                    223 	.globl _VDP_Peek_16K
+                                    224 	.globl _VDP_Poke_16K
+                                    225 	.globl _VDP_Initialize
+                                    226 	.globl _VDP_SetMode
+                                    227 	.globl _VDP_GetVersion
+                                    228 	.globl _VDP_RegWrite
+                                    229 	.globl _VDP_RegWriteBak
+                                    230 	.globl _VDP_RegWriteBakMask
+                                    231 	.globl _VDP_ReadDefaultStatus
+                                    232 	.globl _VDP_SetLayoutTable
+                                    233 	.globl _VDP_SetColorTable
+                                    234 	.globl _VDP_SetPatternTable
+                                    235 	.globl _VDP_SetSpriteAttributeTable
+                                    236 	.globl _VDP_SetSpritePatternTable
+                                    237 	.globl _VDP_LoadSpritePattern
+                                    238 	.globl _VDP_SetSpriteSM1
+                                    239 	.globl _VDP_SetSprite
+                                    240 	.globl _VDP_SetSpritePosition
+                                    241 	.globl _VDP_SetSpritePositionX
+                                    242 	.globl _VDP_SetSpritePositionY
+                                    243 	.globl _VDP_SetSpritePattern
+                                    244 	.globl _VDP_SetSpriteColorSM1
+                                    245 	.globl _VDP_DisableSpritesFrom
+                                    246 	.globl _VDP_LoadPattern_GM2
+                                    247 	.globl _VDP_LoadColor_GM2
+                                    248 	.globl _VDP_WriteLayout_GM2
+                                    249 	.globl _VDP_FillLayout_GM2
+                                    250 ;--------------------------------------------------------
+                                    251 ; special function registers
+                                    252 ;--------------------------------------------------------
+                         000000A8   253 _g_PortPrimarySlot	=	0x00a8
+                         000000A9   254 _g_PortReadKeyboard	=	0x00a9
+                         000000AA   255 _g_PortAccessKeyboard	=	0x00aa
+                         000000AB   256 _g_PortControl	=	0x00ab
+                         00000098   257 _g_VDP_DataPort	=	0x0098
+                         00000099   258 _g_VDP_RegPort	=	0x0099
+                         00000099   259 _g_VDP_AddrPort	=	0x0099
+                         00000099   260 _g_VDP_StatPort	=	0x0099
+                         000000A0   261 _g_PSG_RegPort	=	0x00a0
+                         000000A1   262 _g_PSG_DataPort	=	0x00a1
+                         000000A2   263 _g_PSG_StatPort	=	0x00a2
+                         00000010   264 _g_PSG_Ext_RegPort	=	0x0010
+                         00000011   265 _g_PSG_Ext_DataPort	=	0x0011
+                         00000012   266 _g_PSG_Ext_StatPort	=	0x0012
+                         0000007C   267 _g_MSXMusic_IndexPort	=	0x007c
+                         0000007D   268 _g_MSXMusic_DataPort	=	0x007d
+                         000000C0   269 _g_MSXAudio_IndexPort	=	0x00c0
+                         000000C1   270 _g_MSXAudio_DataPort	=	0x00c1
+                         000000C2   271 _g_MSXAudio_IndexPort2	=	0x00c2
+                         000000C3   272 _g_MSXAudio_DataPort2	=	0x00c3
+                         000000B4   273 _g_RTC_AddrPort	=	0x00b4
+                         000000B5   274 _g_RTC_DataPort	=	0x00b5
+                                    275 ;--------------------------------------------------------
+                                    276 ; ram data
+                                    277 ;--------------------------------------------------------
+                                    278 	.area _DATA
+                         0000F3AE   279 _g_LINL40	=	0xf3ae
+                         0000F3AF   280 _g_LINL32	=	0xf3af
+                         0000F3B0   281 _g_LINLEN	=	0xf3b0
+                         0000F3B1   282 _g_CRTCNT	=	0xf3b1
+                         0000F3B2   283 _g_CLMLST	=	0xf3b2
+                         0000F3B3   284 _g_TXTNAM	=	0xf3b3
+                         0000F3B5   285 _g_TXTCOL	=	0xf3b5
+                         0000F3B7   286 _g_TXTCGP	=	0xf3b7
+                         0000F3B9   287 _g_TXTATR	=	0xf3b9
+                         0000F3BB   288 _g_TXTPAT	=	0xf3bb
+                         0000F3BD   289 _g_T32NAM	=	0xf3bd
+                         0000F3BF   290 _g_T32COL	=	0xf3bf
+                         0000F3C1   291 _g_T32CGP	=	0xf3c1
+                         0000F3C3   292 _g_T32ATR	=	0xf3c3
+                         0000F3C5   293 _g_T32PAT	=	0xf3c5
+                         0000F3C7   294 _g_GRPNAM	=	0xf3c7
+                         0000F3C9   295 _g_GRPCOL	=	0xf3c9
+                         0000F3CB   296 _g_GRPCGP	=	0xf3cb
+                         0000F3CD   297 _g_GRPATR	=	0xf3cd
+                         0000F3CF   298 _g_GRPPAT	=	0xf3cf
+                         0000F3D1   299 _g_MLTNAM	=	0xf3d1
+                         0000F3D3   300 _g_MLTCOL	=	0xf3d3
+                         0000F3D5   301 _g_MLTCGP	=	0xf3d5
+                         0000F3D7   302 _g_MLTATR	=	0xf3d7
+                         0000F3D9   303 _g_MLTPAT	=	0xf3d9
+                         0000F3DB   304 _g_CLIKSW	=	0xf3db
+                         0000F3DC   305 _g_CSRY	=	0xf3dc
+                         0000F3DD   306 _g_CSRX	=	0xf3dd
+                         0000F3E9   307 _g_FORCLR	=	0xf3e9
+                         0000F3EA   308 _g_BAKCLR	=	0xf3ea
+                         0000F3EB   309 _g_BDRCLR	=	0xf3eb
+                         0000F3F2   310 _g_ATRBYT	=	0xf3f2
+                         0000F87F   311 _g_FNKSTR	=	0xf87f
+                         0000F92A   312 _g_CLOC	=	0xf92a
+                         0000F92C   313 _g_CMASK	=	0xf92c
+                         0000FB02   314 _g_LOGOPR	=	0xfb02
+                         0000FCB7   315 _g_GRPACX	=	0xfcb7
+                         0000FCB9   316 _g_GRPACY	=	0xfcb9
+                         0000FFFF   317 _g_SLTSL	=	0xffff
+    00000000                        318 _g_VDP_REGSAV::
+    00000000                        319 	.ds 28
+    0000001C                        320 _g_VDP_Data::
+    0000001C                        321 	.ds 2
+    0000001E                        322 _g_VDP_Command::
+    0000001E                        323 	.ds 15
+    0000002D                        324 _g_VDP_Sprite::
+    0000002D                        325 	.ds 4
+    00000031                        326 _g_ScreenLayoutLow::
+    00000031                        327 	.ds 2
+    00000033                        328 _g_ScreenColorLow::
+    00000033                        329 	.ds 2
+    00000035                        330 _g_ScreenPatternLow::
+    00000035                        331 	.ds 2
+    00000037                        332 _g_SpriteAttributeLow::
+    00000037                        333 	.ds 2
+    00000039                        334 _g_SpritePatternLow::
+    00000039                        335 	.ds 2
+    0000003B                        336 _g_SpriteColorLow::
+    0000003B                        337 	.ds 2
+                                    338 ;--------------------------------------------------------
+                                    339 ; ram data
+                                    340 ;--------------------------------------------------------
+                                    341 	.area _INITIALIZED
+    00000000                        342 _g_VDPInitilized::
+    00000000                        343 	.ds 1
+                                    344 ;--------------------------------------------------------
+                                    345 ; absolute external ram data
+                                    346 ;--------------------------------------------------------
+                                    347 	.area _DABS (ABS)
+                                    348 ;--------------------------------------------------------
+                                    349 ; global & static initialisations
+                                    350 ;--------------------------------------------------------
+                                    351 	.area _HOME
+                                    352 	.area _GSINIT
+                                    353 	.area _GSFINAL
+                                    354 	.area _GSINIT
+                                    355 ;--------------------------------------------------------
+                                    356 ; Home
+                                    357 ;--------------------------------------------------------
+                                    358 	.area _HOME
+                                    359 	.area _HOME
+                                    360 ;--------------------------------------------------------
+                                    361 ; code
+                                    362 ;--------------------------------------------------------
+                                    363 	.area _CODE
+                                    364 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:165: void VDP_SetModeFlag(u8 flag)
+                                    365 ;	---------------------------------
+                                    366 ; Function VDP_SetModeFlag
+                                    367 ; ---------------------------------
+    00000000                        368 _VDP_SetModeFlag::
+    00000000 5F               [ 4]  369 	ld	e, a
+                                    370 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:168: u8 reg1 = g_VDP_REGSAV[1];
+    00000001 3Ar01r00         [13]  371 	ld	a, (#_g_VDP_REGSAV + 1)
+                                    372 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:169: reg1 &= 0b11100111;
+    00000004 E6 E7            [ 7]  373 	and	a, #0xe7
+    00000006 6F               [ 4]  374 	ld	l, a
+                                    375 ;	spillPairReg hl
+                                    376 ;	spillPairReg hl
+                                    377 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:170: if (flag & 0b00001)
+    00000007 CB 43            [ 8]  378 	bit	0, e
+    00000009 28 02            [12]  379 	jr	Z, 00102$
+                                    380 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:171: reg1 |= 0b00010000;
+    0000000B CB E5            [ 8]  381 	set	4, l
+    0000000D                        382 00102$:
+                                    383 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:172: if (flag & 0b00010)
+    0000000D CB 4B            [ 8]  384 	bit	1, e
+    0000000F 28 02            [12]  385 	jr	Z, 00104$
+                                    386 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:173: reg1 |= 0b00001000;
+    00000011 CB DD            [ 8]  387 	set	3, l
+    00000013                        388 00104$:
+                                    389 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:174: VDP_RegWriteBak(1, reg1);
+    00000013 3E 01            [ 7]  390 	ld	a, #0x01
+    00000015 CDrF4r01         [17]  391 	call	_VDP_RegWriteBak
+                                    392 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:177: u8 reg0 = g_VDP_REGSAV[0];
+    00000018 3Ar00r00         [13]  393 	ld	a, (#_g_VDP_REGSAV + 0)
+                                    394 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:178: reg0 &= 0b11110001;
+    0000001B E6 F1            [ 7]  395 	and	a, #0xf1
+    0000001D 4F               [ 4]  396 	ld	c, a
+                                    397 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:179: flag >>= 1;
+    0000001E 7B               [ 4]  398 	ld	a, e
+    0000001F CB 3F            [ 8]  399 	srl	a
+                                    400 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:180: flag &= 0b00001110;
+    00000021 E6 0E            [ 7]  401 	and	a, #0x0e
+                                    402 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:181: reg0 |= flag;
+    00000023 B1               [ 4]  403 	or	a, c
+    00000024 6F               [ 4]  404 	ld	l, a
+                                    405 ;	spillPairReg hl
+                                    406 ;	spillPairReg hl
+                                    407 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:182: VDP_RegWriteBak(0, reg0);
+    00000025 AF               [ 4]  408 	xor	a, a
+                                    409 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:183: }
+    00000026 C3rF4r01         [10]  410 	jp	_VDP_RegWriteBak
+                         0000F380   411 _g_RDPRIM	=	0xf380
+                         0000F385   412 _g_WRPRIM	=	0xf385
+                         0000F38C   413 _g_CLPRIM	=	0xf38c
+                         0000F39A   414 _g_USRTAB	=	0xf39a
+                         0000F3DE   415 _g_CNSDFG	=	0xf3de
+                         0000F3DF   416 _g_RG0SAV	=	0xf3df
+                         0000F3E0   417 _g_RG1SAV	=	0xf3e0
+                         0000F3E1   418 _g_RG2SAV	=	0xf3e1
+                         0000F3E2   419 _g_RG3SAV	=	0xf3e2
+                         0000F3E3   420 _g_RG4SAV	=	0xf3e3
+                         0000F3E4   421 _g_RG5SAV	=	0xf3e4
+                         0000F3E5   422 _g_RG6SAV	=	0xf3e5
+                         0000F3E6   423 _g_RG7SAV	=	0xf3e6
+                         0000F3E7   424 _g_STATFL	=	0xf3e7
+                         0000F3E8   425 _g_TRGFLG	=	0xf3e8
+                         0000F3EC   426 _g_MAXUPD	=	0xf3ec
+                         0000F3EF   427 _g_MINUPD	=	0xf3ef
+                         0000F3F3   428 _g_QUEUES	=	0xf3f3
+                         0000F3F5   429 _g_FRCNEW	=	0xf3f5
+                         0000F3F6   430 _g_SCNCNT	=	0xf3f6
+                         0000F3F7   431 _g_REPCNT	=	0xf3f7
+                         0000F3F8   432 _g_PUTPNT	=	0xf3f8
+                         0000F3FA   433 _g_GETPNT	=	0xf3fa
+                         0000F3FC   434 _g_CS120	=	0xf3fc
+                         0000F401   435 _g_CS240	=	0xf401
+                         0000F406   436 _g_LOW	=	0xf406
+                         0000F408   437 _g_HIGH	=	0xf408
+                         0000F40A   438 _g_HEADER	=	0xf40a
+                         0000F40B   439 _g_ASPCT1	=	0xf40b
+                         0000F40D   440 _g_ASPCT2	=	0xf40d
+                         0000F959   441 _g_QUETAB	=	0xf959
+                         0000F971   442 _g_QUEBAK	=	0xf971
+                         0000F975   443 _g_VOICAQ	=	0xf975
+                         0000F9F5   444 _g_VOICBQ	=	0xf9f5
+                         0000FA75   445 _g_VOICCQ	=	0xfa75
+                         0000FAF5   446 _g_RS2IQ	=	0xfaf5
+                         0000FAF5   447 _g_DPPAGE	=	0xfaf5
+                         0000FAF6   448 _g_ACPAGE	=	0xfaf6
+                         0000FAF7   449 _g_AVCSAV	=	0xfaf7
+                         0000FAF8   450 _g_EXBRSA	=	0xfaf8
+                         0000FAF9   451 _g_CHRCNT	=	0xfaf9
+                         0000FAFA   452 _g_ROMA	=	0xfafa
+                         0000FAFC   453 _g_MODE	=	0xfafc
+                         0000FAFD   454 _g_NORUSE	=	0xfafd
+                         0000FAFE   455 _g_XSAVE	=	0xfafe
+                         0000FB00   456 _g_YSAVE	=	0xfb00
+                         0000FB03   457 _g_RSTMP	=	0xfb03
+                         0000FB03   458 _g_TOCNT	=	0xfb03
+                         0000FB04   459 _g_RSFCB	=	0xfb04
+                         0000FB06   460 _g_RSIQLN	=	0xfb06
+                         0000FB07   461 _g_MEXBIh	=	0xfb07
+                         0000FB0C   462 _g_OLDSTT	=	0xfb0c
+                         0000FB0C   463 _g_OLDINT	=	0xfb0c
+                         0000FB16   464 _g_DEVNUM	=	0xfb16
+                         0000FB17   465 _g_DATCNT	=	0xfb17
+                         0000FB1A   466 _g_ERRORS	=	0xfb1a
+                         0000FB1B   467 _g_FLAGS	=	0xfb1b
+                         0000FB1C   468 _g_ESTBLS	=	0xfb1c
+                         0000FB1D   469 _g_COMMSK	=	0xfb1d
+                         0000FB1E   470 _g_LSTCOM	=	0xfb1e
+                         0000FB1F   471 _g_LSTMOD	=	0xfb1f
+                         0000FB35   472 _g_PRSCNT	=	0xfb35
+                         0000FB36   473 _g_SAVSP	=	0xfb36
+                         0000FB38   474 _g_VOICEN	=	0xfb38
+                         0000FB39   475 _g_SAVVOL	=	0xfb39
+                         0000FB3B   476 _g_MCLLEN	=	0xfb3b
+                         0000FB3C   477 _g_MCLPTR	=	0xfb3c
+                         0000FB3E   478 _g_QUEUEN	=	0xfb3e
+                         0000FB3F   479 _g_MUSICF	=	0xfb3f
+                         0000FB40   480 _g_PLYCNT	=	0xfb40
+                         0000FB41   481 _g_VCBA	=	0xfb41
+                         0000FB66   482 _g_VCBB	=	0xfb66
+                         0000FB8B   483 _g_VCBC	=	0xfb8b
+                         0000FBB0   484 _g_ENSTOP	=	0xfbb0
+                         0000FBB1   485 _g_BASROM	=	0xfbb1
+                         0000FBB2   486 _g_LINTTB	=	0xfbb2
+                         0000FBCA   487 _g_FSTPOS	=	0xfbca
+                         0000FBCC   488 _g_CODSAV	=	0xfbcc
+                         0000FBCD   489 _g_FNKSWI	=	0xfbcd
+                         0000FBCE   490 _g_FNKFLG	=	0xfbce
+                         0000FBD8   491 _g_ONGSBF	=	0xfbd8
+                         0000FBD9   492 _g_CLIKFL	=	0xfbd9
+                         0000FBDA   493 _g_OLDKEY	=	0xfbda
+                         0000FBE5   494 _g_NEWKEY	=	0xfbe5
+                         0000FBF0   495 _g_KEYBUF	=	0xfbf0
+                         0000FC18   496 _g_LINWRK	=	0xfc18
+                         0000FC40   497 _g_PATWRK	=	0xfc40
+                         0000FC48   498 _g_BOTTOM	=	0xfc48
+                         0000FC4A   499 _g_HIMEM	=	0xfc4a
+                         0000FC4C   500 _g_TRPTBL	=	0xfc4c
+                         0000FC9A   501 _g_RTYCNT	=	0xfc9a
+                         0000FC9B   502 _g_INTFLG	=	0xfc9b
+                         0000FC9C   503 _g_PADY	=	0xfc9c
+                         0000FC9D   504 _g_PADX	=	0xfc9d
+                         0000FC9E   505 _g_JIFFY	=	0xfc9e
+                         0000FCA0   506 _g_INTVAL	=	0xfca0
+                         0000FCA2   507 _g_INTCNT	=	0xfca2
+                         0000FCA4   508 _g_LOWLIM	=	0xfca4
+                         0000FCA5   509 _g_WINWID	=	0xfca5
+                         0000FCA6   510 _g_GRPHED	=	0xfca6
+                         0000FCA7   511 _g_ESCCNT	=	0xfca7
+                         0000FCA8   512 _g_INSFLG	=	0xfca8
+                         0000FCA9   513 _g_CSRSW	=	0xfca9
+                         0000FCAA   514 _g_CSTYLE	=	0xfcaa
+                         0000FCAB   515 _g_CAPST	=	0xfcab
+                         0000FCAC   516 _g_KANAST	=	0xfcac
+                         0000FCAD   517 _g_KANAMD	=	0xfcad
+                         0000FCAE   518 _g_FLBMEM	=	0xfcae
+                         0000FCAF   519 _g_SCRMOD	=	0xfcaf
+                         0000FCB0   520 _g_OLDSCR	=	0xfcb0
+                         0000FCB1   521 _g_CASPRV	=	0xfcb1
+                         0000FCB2   522 _g_BRDATR	=	0xfcb2
+                         0000FCB3   523 _g_GXPOS	=	0xfcb3
+                         0000FCB5   524 _g_GYPOS	=	0xfcb5
+                         0000FCBB   525 _g_DRWFLG	=	0xfcbb
+                         0000FCBC   526 _g_DRWSCL	=	0xfcbc
+                         0000FCBD   527 _g_DRWANG	=	0xfcbd
+                         0000FCC1   528 _g_MNROM	=	0xfcc1
+                         0000FCC1   529 _g_EXPTBL	=	0xfcc1
+                         0000FCC5   530 _g_SLTTBL	=	0xfcc5
+                         0000FCC9   531 _g_SLTATR	=	0xfcc9
+                         0000FD09   532 _g_SLTWRK	=	0xfd09
+                         0000FD89   533 _g_PROCNM	=	0xfd89
+                         0000FFE7   534 _g_RG08SAV	=	0xffe7
+                         0000FFE8   535 _g_RG09SAV	=	0xffe8
+                         0000FFE9   536 _g_RG10SAV	=	0xffe9
+                         0000FFEA   537 _g_RG11SAV	=	0xffea
+                         0000FFEB   538 _g_RG12SAV	=	0xffeb
+                         0000FFEC   539 _g_RG13SAV	=	0xffec
+                         0000FFED   540 _g_RG14SAV	=	0xffed
+                         0000FFEE   541 _g_RG15SAV	=	0xffee
+                         0000FFEF   542 _g_RG16SAV	=	0xffef
+                         0000FFF0   543 _g_RG17SAV	=	0xfff0
+                         0000FFF1   544 _g_RG18SAV	=	0xfff1
+                         0000FFF2   545 _g_RG19SAV	=	0xfff2
+                         0000FFF3   546 _g_RG20SAV	=	0xfff3
+                         0000FFF4   547 _g_RG21SAV	=	0xfff4
+                         0000FFF5   548 _g_RG22SAV	=	0xfff5
+                         0000FFF6   549 _g_RG23SAV	=	0xfff6
+                         0000FFF7   550 _g_MINROM	=	0xfff7
+                         0000FFF8   551 _g_SVFFF8	=	0xfff8
+                         0000FFFA   552 _g_RG25SAV	=	0xfffa
+                         0000FFFB   553 _g_RG26SAV	=	0xfffb
+                         0000FFFC   554 _g_RG27SAV	=	0xfffc
+                         0000FFFD   555 _g_SVFFFD	=	0xfffd
+                         00000004   556 _g_CGTABL	=	0x0004
+                         00000006   557 _g_VDP_DR	=	0x0006
+                         00000007   558 _g_VDP_DW	=	0x0007
+                         0000002B   559 _g_BASRVN	=	0x002b
+                         0000002B   560 _g_ROMVersion	=	0x002b
+                         0000002D   561 _g_MSXVER	=	0x002d
+                         0000002E   562 _g_MSXMID	=	0x002e
+                         00000034   563 _g_CHAR_16	=	0x0034
+                                    564 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:188: void VDP_SetModeText1()
+                                    565 ;	---------------------------------
+                                    566 ; Function VDP_SetModeText1
+                                    567 ; ---------------------------------
+    00000029                        568 _VDP_SetModeText1::
+                                    569 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:190: VDP_SetModeFlag(VDP_T1_MODE);
+    00000029 3E 01            [ 7]  570 	ld	a, #0x01
+    0000002B CDr00r00         [17]  571 	call	_VDP_SetModeFlag
+                                    572 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:191: VDP_SetLayoutTable(VDP_T1_ADDR_NT);
+    0000002E 21 00 00         [10]  573 	ld	hl, #0x0000
+    00000031 CDr29r02         [17]  574 	call	_VDP_SetLayoutTable
+                                    575 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:192: VDP_SetPatternTable(VDP_T1_ADDR_PT);
+    00000034 21 00 08         [10]  576 	ld	hl, #0x0800
+                                    577 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:193: }
+    00000037 C3r66r02         [10]  578 	jp	_VDP_SetPatternTable
+                                    579 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:199: void VDP_SetModeMultiColor()
+                                    580 ;	---------------------------------
+                                    581 ; Function VDP_SetModeMultiColor
+                                    582 ; ---------------------------------
+    0000003A                        583 _VDP_SetModeMultiColor::
+                                    584 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:201: VDP_SetModeFlag(VDP_MC_MODE);
+    0000003A 3E 02            [ 7]  585 	ld	a, #0x02
+    0000003C CDr00r00         [17]  586 	call	_VDP_SetModeFlag
+                                    587 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:202: VDP_SetLayoutTable(VDP_MC_ADDR_NT);
+    0000003F 21 00 08         [10]  588 	ld	hl, #0x0800
+    00000042 CDr29r02         [17]  589 	call	_VDP_SetLayoutTable
+                                    590 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:203: VDP_SetPatternTable(VDP_MC_ADDR_PT);
+    00000045 21 00 00         [10]  591 	ld	hl, #0x0000
+    00000048 CDr66r02         [17]  592 	call	_VDP_SetPatternTable
+                                    593 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:205: VDP_SetSpriteAttributeTable(VDP_MC_ADDR_SAT);
+    0000004B 21 00 1B         [10]  594 	ld	hl, #0x1b00
+    0000004E CDr83r02         [17]  595 	call	_VDP_SetSpriteAttributeTable
+                                    596 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:206: VDP_SetSpritePatternTable(VDP_MC_ADDR_SPT);
+    00000051 21 00 38         [10]  597 	ld	hl, #0x3800
+                                    598 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:208: }
+    00000054 C3rB4r02         [10]  599 	jp	_VDP_SetSpritePatternTable
+                                    600 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:214: void VDP_SetModeGraphic1()
+                                    601 ;	---------------------------------
+                                    602 ; Function VDP_SetModeGraphic1
+                                    603 ; ---------------------------------
+    00000057                        604 _VDP_SetModeGraphic1::
+                                    605 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:216: VDP_SetModeFlag(VDP_G1_MODE);
+    00000057 AF               [ 4]  606 	xor	a, a
+    00000058 CDr00r00         [17]  607 	call	_VDP_SetModeFlag
+                                    608 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:217: VDP_SetLayoutTable(VDP_G1_ADDR_NT);
+    0000005B 21 00 18         [10]  609 	ld	hl, #0x1800
+    0000005E CDr29r02         [17]  610 	call	_VDP_SetLayoutTable
+                                    611 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:218: VDP_SetColorTable(VDP_G1_ADDR_CT);
+    00000061 21 00 20         [10]  612 	ld	hl, #0x2000
+    00000064 CDr39r02         [17]  613 	call	_VDP_SetColorTable
+                                    614 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:219: VDP_SetPatternTable(VDP_G1_ADDR_PT);
+    00000067 21 00 00         [10]  615 	ld	hl, #0x0000
+    0000006A CDr66r02         [17]  616 	call	_VDP_SetPatternTable
+                                    617 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:221: VDP_SetSpriteAttributeTable(VDP_G1_ADDR_SAT);
+    0000006D 21 00 1B         [10]  618 	ld	hl, #0x1b00
+    00000070 CDr83r02         [17]  619 	call	_VDP_SetSpriteAttributeTable
+                                    620 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:222: VDP_SetSpritePatternTable(VDP_G1_ADDR_SPT);
+    00000073 21 00 38         [10]  621 	ld	hl, #0x3800
+                                    622 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:224: }
+    00000076 C3rB4r02         [10]  623 	jp	_VDP_SetSpritePatternTable
+                                    624 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:230: void VDP_SetModeGraphic2()
+                                    625 ;	---------------------------------
+                                    626 ; Function VDP_SetModeGraphic2
+                                    627 ; ---------------------------------
+    00000079                        628 _VDP_SetModeGraphic2::
+                                    629 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:232: VDP_SetModeFlag(VDP_G2_MODE);
+    00000079 3E 04            [ 7]  630 	ld	a, #0x04
+    0000007B CDr00r00         [17]  631 	call	_VDP_SetModeFlag
+                                    632 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:233: VDP_SetLayoutTable(VDP_G2_ADDR_NT);
+    0000007E 21 00 18         [10]  633 	ld	hl, #0x1800
+    00000081 CDr29r02         [17]  634 	call	_VDP_SetLayoutTable
+                                    635 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:234: VDP_SetColorTable(VDP_G2_ADDR_CT);
+    00000084 21 00 20         [10]  636 	ld	hl, #0x2000
+    00000087 CDr39r02         [17]  637 	call	_VDP_SetColorTable
+                                    638 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:235: VDP_SetPatternTable(VDP_G2_ADDR_PT);
+    0000008A 21 00 00         [10]  639 	ld	hl, #0x0000
+    0000008D CDr66r02         [17]  640 	call	_VDP_SetPatternTable
+                                    641 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:237: VDP_SetSpriteAttributeTable(VDP_G2_ADDR_SAT);
+    00000090 21 00 1B         [10]  642 	ld	hl, #0x1b00
+    00000093 CDr83r02         [17]  643 	call	_VDP_SetSpriteAttributeTable
+                                    644 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:238: VDP_SetSpritePatternTable(VDP_G2_ADDR_SPT);
+    00000096 21 00 38         [10]  645 	ld	hl, #0x3800
+                                    646 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:240: }
+    00000099 C3rB4r02         [10]  647 	jp	_VDP_SetSpritePatternTable
+                                    648 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:251: void VDP_ClearVRAM()
+                                    649 ;	---------------------------------
+                                    650 ; Function VDP_ClearVRAM
+                                    651 ; ---------------------------------
+    0000009C                        652 _VDP_ClearVRAM::
+                                    653 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:254: VDP_FillVRAM_16K(0, 0x0000, 0x4000);  // Clear 16 KB of VRAM
+    0000009C 21 00 40         [10]  654 	ld	hl, #0x4000
+    0000009F E5               [11]  655 	push	hl
+    000000A0 11 00 00         [10]  656 	ld	de, #0x0000
+    000000A3 AF               [ 4]  657 	xor	a, a
+    000000A4 CDrD1r00         [17]  658 	call	_VDP_FillVRAM_16K
+                                    659 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:261: }
+    000000A7 C9               [10]  660 	ret
+                                    661 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:272: void VDP_WriteVRAM_16K(const u8* src, u16 dest, u16 count)
+                                    662 ;	---------------------------------
+                                    663 ; Function VDP_WriteVRAM_16K
+                                    664 ; ---------------------------------
+    000000A8                        665 _VDP_WriteVRAM_16K::
+                                    666 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:341: __endasm;
+    000000A8 FD 21 02 00      [14]  667 	ld	iy, #2
+    000000AC FD 39            [15]  668 	add	iy, sp
+    000000AE 7B               [ 4]  669 	ld	a, e
+    000000AF F3               [ 4]  670 	di
+    000000B0 D3 99            [11]  671 	out	(0x99), a
+    000000B2 7A               [ 4]  672 	ld	a, d
+    000000B3 E6 3F            [ 7]  673 	and	a, #0x3F
+    000000B5 F6 40            [ 7]  674 	or	a, #0x40
+    000000B7 FB               [ 4]  675 	ei
+    000000B8 D3 99            [11]  676 	out	(0x99), a
+    000000BA FD 5E 00         [19]  677 	ld	e, 0(iy)
+    000000BD FD 56 01         [19]  678 	ld	d, 1(iy)
+    000000C0 0E 98            [ 7]  679 	ld	c, #0x98
+    000000C2 43               [ 4]  680 	ld	b, e
+    000000C3 1B               [ 6]  681 	dec	de
+    000000C4 14               [ 4]  682 	inc	d
+    000000C5                        683 	 wrt16_loop_start:
+    000000C5 ED A3            [16]  684 	outi
+    000000C7 C2rC5r00         [10]  685 	jp	nz, wrt16_loop_start
+    000000CA 15               [ 4]  686 	dec	d
+    000000CB C2rC5r00         [10]  687 	jp	nz, wrt16_loop_start
+    000000CE                        688 	 wrt16_loop_end:
+                                    689 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:342: }
+    000000CE E1               [10]  690 	pop	hl
+    000000CF F1               [10]  691 	pop	af
+    000000D0 E9               [ 4]  692 	jp	(hl)
+                                    693 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:351: void VDP_FillVRAM_16K(u8 value, u16 dest, u16 count) __NAKED // Stack: 4 bytes
+                                    694 ;	---------------------------------
+                                    695 ; Function VDP_FillVRAM_16K
+                                    696 ; ---------------------------------
+    000000D1                        697 _VDP_FillVRAM_16K::
+                                    698 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:402: __endasm;
+    000000D1 4F               [ 4]  699 	ld	c, a
+    000000D2 7B               [ 4]  700 	ld	a, e
+    000000D3 F3               [ 4]  701 	di
+    000000D4 D3 99            [11]  702 	out	(0x99), a
+    000000D6 7A               [ 4]  703 	ld	a, d
+    000000D7 E6 3F            [ 7]  704 	and	a, #0x3F
+    000000D9 F6 40            [ 7]  705 	or	a, #0x40
+    000000DB D3 99            [11]  706 	out	(0x99), a
+    000000DD FD E1            [14]  707 	pop	iy
+    000000DF D1               [10]  708 	pop	de
+    000000E0 79               [ 4]  709 	ld	a, c
+    000000E1 43               [ 4]  710 	ld	b, e
+    000000E2 1B               [ 6]  711 	dec	de
+    000000E3 14               [ 4]  712 	inc	d
+    000000E4                        713 	 fll16_loop_start:
+    000000E4 D3 98            [11]  714 	out	(0x98), a
+    000000E6 00               [ 4]  715 	nop
+    000000E7 10 FB            [13]  716 	djnz	fll16_loop_start
+    000000E9 15               [ 4]  717 	dec	d
+    000000EA C2rE4r00         [10]  718 	jp	nz, fll16_loop_start
+    000000ED                        719 	 fll16_loop_end:
+    000000ED FB               [ 4]  720 	ei
+    000000EE FD E9            [ 8]  721 	jp	(iy)
+                                    722 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:403: }
+                                    723 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:516: void VDP_ReadVRAM_16K(u16 src, u8* dest, u16 count)
+                                    724 ;	---------------------------------
+                                    725 ; Function VDP_ReadVRAM_16K
+                                    726 ; ---------------------------------
+    000000F0                        727 _VDP_ReadVRAM_16K::
+                                    728 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:586: __endasm;
+    000000F0 FD 21 02 00      [14]  729 	ld	iy, #2
+    000000F4 FD 39            [15]  730 	add	iy, sp
+    000000F6 7D               [ 4]  731 	ld	a, l
+    000000F7 F3               [ 4]  732 	di
+    000000F8 D3 99            [11]  733 	out	(0x99), a
+    000000FA 7C               [ 4]  734 	ld	a, h
+    000000FB E6 3F            [ 7]  735 	and	a, #0x3F
+    000000FD FB               [ 4]  736 	ei
+    000000FE D3 99            [11]  737 	out	(0x99), a
+    00000100 EB               [ 4]  738 	ex	de, hl
+    00000101 FD 5E 00         [19]  739 	ld	e, 0(iy)
+    00000104 FD 56 01         [19]  740 	ld	d, 1(iy)
+    00000107 0E 98            [ 7]  741 	ld	c, #0x98
+    00000109 43               [ 4]  742 	ld	b, e
+    0000010A 1B               [ 6]  743 	dec	de
+    0000010B 14               [ 4]  744 	inc	d
+    0000010C                        745 	 rd16_loop_start:
+    0000010C ED A2            [16]  746 	ini
+    0000010E C2r0Cr01         [10]  747 	jp	nz, rd16_loop_start
+    00000111 15               [ 4]  748 	dec	d
+    00000112 C2r0Cr01         [10]  749 	jp	nz, rd16_loop_start
+    00000115                        750 	 rd16_loop_end:
+                                    751 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:587: }
+    00000115 E1               [10]  752 	pop	hl
+    00000116 F1               [10]  753 	pop	af
+    00000117 E9               [ 4]  754 	jp	(hl)
+                                    755 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:597: u8 VDP_Peek_16K(u16 dest) __NAKED __PRESERVES(b, c, d, e, iyl, iyh)
+                                    756 ;	---------------------------------
+                                    757 ; Function VDP_Peek_16K
+                                    758 ; ---------------------------------
+    00000118                        759 _VDP_Peek_16K::
+                                    760 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:633: __endasm;
+    00000118 7D               [ 4]  761 	ld	a, l
+    00000119 F3               [ 4]  762 	di
+    0000011A D3 99            [11]  763 	out	(0x99), a
+    0000011C 7C               [ 4]  764 	ld	a, h
+    0000011D E6 3F            [ 7]  765 	and	a, #0x3F
+    0000011F D3 99            [11]  766 	out	(0x99), a
+    00000121 29               [11]  767 	add	hl, hl
+    00000122 FB               [ 4]  768 	ei
+    00000123 DB 98            [11]  769 	in	a, (0x98)
+    00000125 C9               [10]  770 	ret
+                                    771 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:634: }
+                                    772 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:642: void VDP_Poke_16K(u8 val, u16 dest) __PRESERVES(c, h, l, iyl, iyh)
+                                    773 ;	---------------------------------
+                                    774 ; Function VDP_Poke_16K
+                                    775 ; ---------------------------------
+    00000126                        776 _VDP_Poke_16K::
+                                    777 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:679: __endasm;
+    00000126 47               [ 4]  778 	ld	b, a
+    00000127 7B               [ 4]  779 	ld	a, e
+    00000128 F3               [ 4]  780 	di
+    00000129 D3 99            [11]  781 	out	(0x99), a
+    0000012B 7A               [ 4]  782 	ld	a, d
+    0000012C E6 3F            [ 7]  783 	and	a, #0x3F
+    0000012E F6 40            [ 7]  784 	or	a, #0x40
+    00000130 D3 99            [11]  785 	out	(0x99), a
+    00000132 13               [ 6]  786 	inc	de
+    00000133 78               [ 4]  787 	ld	a, b
+    00000134 FB               [ 4]  788 	ei
+    00000135 D3 98            [11]  789 	out	(0x98), a
+                                    790 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:680: }
+    00000137 C9               [10]  791 	ret
+                                    792 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1452: void VDP_Initialize()
+                                    793 ;	---------------------------------
+                                    794 ; Function VDP_Initialize
+                                    795 ; ---------------------------------
+    00000138                        796 _VDP_Initialize::
+                                    797 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1460: __endasm;
+    00000138 21 DF F3         [10]  798 	ld	hl, #0xF3DF
+    0000013B 11r00r00         [10]  799 	ld	de, #_g_VDP_REGSAV+0
+    0000013E 01 08 00         [10]  800 	ld	bc, #8
+    00000141 ED B0            [21]  801 	ldir
+                                    802 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1483: g_VDPInitilized = TRUE;
+    00000143 21r00r00         [10]  803 	ld	hl, #_g_VDPInitilized
+    00000146 36 01            [10]  804 	ld	(hl), #0x01
+                                    805 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1485: }
+    00000148 C9               [10]  806 	ret
+                                    807 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1493: void VDP_SetMode(const u8 mode)
+                                    808 ;	---------------------------------
+                                    809 ; Function VDP_SetMode
+                                    810 ; ---------------------------------
+    00000149                        811 _VDP_SetMode::
+    00000149 4F               [ 4]  812 	ld	c, a
+                                    813 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1496: if (!g_VDPInitilized)
+    0000014A 3Ar00r00         [13]  814 	ld	a, (_g_VDPInitilized+0)
+    0000014D B7               [ 4]  815 	or	a, a
+    0000014E 20 05            [12]  816 	jr	NZ, 00102$
+                                    817 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1497: VDP_Initialize();
+    00000150 C5               [11]  818 	push	bc
+    00000151 CDr38r01         [17]  819 	call	_VDP_Initialize
+    00000154 C1               [10]  820 	pop	bc
+    00000155                        821 00102$:
+                                    822 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1504: g_VDP_Data.Mode = mode;
+    00000155 21r1Cr00         [10]  823 	ld	hl, #_g_VDP_Data
+                                    824 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1505: switch (mode)
+    00000158 79               [ 4]  825 	ld	a,c
+    00000159 77               [ 7]  826 	ld	(hl),a
+    0000015A B7               [ 4]  827 	or	a, a
+    0000015B 28 10            [12]  828 	jr	Z, 00103$
+    0000015D 79               [ 4]  829 	ld	a, c
+    0000015E 3D               [ 4]  830 	dec	a
+    0000015F 28 12            [12]  831 	jr	Z, 00104$
+    00000161 79               [ 4]  832 	ld	a,c
+    00000162 FE 02            [ 7]  833 	cp	a,#0x02
+    00000164 28 13            [12]  834 	jr	Z, 00105$
+    00000166 D6 03            [ 7]  835 	sub	a, #0x03
+    00000168 28 15            [12]  836 	jr	Z, 00106$
+    0000016A C3r82r01         [10]  837 	jp	00113$
+                                    838 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1512: case VDP_MODE_TEXT1:
+    0000016D                        839 00103$:
+                                    840 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1513: VDP_SetModeText1();
+    0000016D CDr29r00         [17]  841 	call	_VDP_SetModeText1
+                                    842 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1514: break;
+    00000170 C3r82r01         [10]  843 	jp	00113$
+                                    844 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1519: case VDP_MODE_MULTICOLOR:
+    00000173                        845 00104$:
+                                    846 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1520: VDP_SetModeMultiColor();
+    00000173 CDr3Ar00         [17]  847 	call	_VDP_SetModeMultiColor
+                                    848 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1521: break;
+    00000176 C3r82r01         [10]  849 	jp	00113$
+                                    850 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1526: case VDP_MODE_GRAPHIC1:
+    00000179                        851 00105$:
+                                    852 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1527: VDP_SetModeGraphic1();
+    00000179 CDr57r00         [17]  853 	call	_VDP_SetModeGraphic1
+                                    854 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1528: break;
+    0000017C C3r82r01         [10]  855 	jp	00113$
+                                    856 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1533: case VDP_MODE_GRAPHIC2:
+    0000017F                        857 00106$:
+                                    858 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1534: VDP_SetModeGraphic2();
+    0000017F CDr79r00         [17]  859 	call	_VDP_SetModeGraphic2
+                                    860 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.h:705: inline void VDP_EnableDisplay(bool enable) { VDP_RegWriteBakMask(1, (u8)~R01_BL, enable ? R01_BL : 0); }
+    00000182                        861 00113$:
+    00000182 3E 40            [ 7]  862 	ld	a, #0x40
+    00000184 F5               [11]  863 	push	af
+    00000185 33               [ 6]  864 	inc	sp
+    00000186 2E BF            [ 7]  865 	ld	l, #0xbf
+                                    866 ;	spillPairReg hl
+                                    867 ;	spillPairReg hl
+    00000188 3E 01            [ 7]  868 	ld	a, #0x01
+    0000018A CDr07r02         [17]  869 	call	_VDP_RegWriteBakMask
+                                    870 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.h:712: inline void VDP_EnableVBlank(bool enable) { VDP_RegWriteBakMask(1, (u8)~R01_IE0, enable ? R01_IE0 : 0); }
+    0000018D 3E 20            [ 7]  871 	ld	a, #0x20
+    0000018F F5               [11]  872 	push	af
+    00000190 33               [ 6]  873 	inc	sp
+    00000191 2E DF            [ 7]  874 	ld	l, #0xdf
+                                    875 ;	spillPairReg hl
+                                    876 ;	spillPairReg hl
+    00000193 3E 01            [ 7]  877 	ld	a, #0x01
+    00000195 CDr07r02         [17]  878 	call	_VDP_RegWriteBakMask
+                                    879 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1617: VDP_EnableVBlank(TRUE);
+                                    880 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1640: }
+    00000198 C9               [10]  881 	ret
+                                    882 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1646: u8 VDP_GetVersion() __NAKED
+                                    883 ;	---------------------------------
+                                    884 ; Function VDP_GetVersion
+                                    885 ; ---------------------------------
+    00000199                        886 _VDP_GetVersion::
+                                    887 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1715: __endasm;
+    00000199                        888 	 VDP_GetVersionAsm:
+    00000199 CDrB8r01         [17]  889 	call	VDP_IsTMS9918A
+    0000019C C8               [11]  890 	ret	z
+    0000019D 3E 01            [ 7]  891 	ld	a, #1
+    0000019F F3               [ 4]  892 	di
+    000001A0 D3 99            [11]  893 	out	(0x99), a
+    000001A2 3E 8F            [ 7]  894 	ld	a, #(0x80 | 15)
+    000001A4 D3 99            [11]  895 	out	(0x99), a
+    000001A6 DB 99            [11]  896 	in	a, (0x99)
+    000001A8 E6 3E            [ 7]  897 	and	#0b00111110
+    000001AA 0F               [ 4]  898 	rrca
+    000001AB 08               [ 4]  899 	ex	af, af'					; '
+    000001AC AF               [ 4]  900 	xor	a
+    000001AD D3 99            [11]  901 	out	(0x99), a
+    000001AF 3E 8F            [ 7]  902 	ld	a, #(0x80 | 15)
+    000001B1 FB               [ 4]  903 	ei
+    000001B2 D3 99            [11]  904 	out	(0x99), a
+    000001B4 08               [ 4]  905 	ex	af, af'					; '
+    000001B5 C0               [11]  906 	ret	nz
+    000001B6 3C               [ 4]  907 	inc	a
+    000001B7 C9               [10]  908 	ret
+    000001B8                        909 	 VDP_IsTMS9918A:
+    000001B8 AF               [ 4]  910 	xor	a
+    000001B9 F3               [ 4]  911 	di
+    000001BA D3 99            [11]  912 	out	(0x99), a
+    000001BC 3E 8F            [ 7]  913 	ld	a, #(0x80 | 15)
+    000001BE D3 99            [11]  914 	out	(0x99), a
+    000001C0 DB 99            [11]  915 	in	a, (0x99)
+    000001C2                        916 	 VDP_IsTMS9918A_Wait:
+    000001C2 DB 99            [11]  917 	in	a,(0x99)
+    000001C4 A7               [ 4]  918 	and	a
+    000001C5 F2rC2r01         [10]  919 	jp	p, VDP_IsTMS9918A_Wait
+    000001C8 3E 02            [ 7]  920 	ld	a, #2
+    000001CA D3 99            [11]  921 	out	(0x99), a
+    000001CC 3E 8F            [ 7]  922 	ld	a, #(0x80 | 15)
+    000001CE D3 99            [11]  923 	out	(0x99), a
+    000001D0 DB 99            [11]  924 	in	a, (0x99)
+    000001D2 08               [ 4]  925 	ex	af, af'					; '
+    000001D3 AF               [ 4]  926 	xor	a
+    000001D4 D3 99            [11]  927 	out	(0x99), a
+    000001D6 3E 8F            [ 7]  928 	ld	a, #(0x80 | 15)
+    000001D8 D3 99            [11]  929 	out	(0x99), a
+    000001DA 3A E6 F3         [13]  930 	ld	a, (0xF3E6)
+    000001DD D3 99            [11]  931 	out	(0x99), a
+    000001DF 3E 87            [ 7]  932 	ld	a, #(0x80 | 7)
+    000001E1 FB               [ 4]  933 	ei
+    000001E2 D3 99            [11]  934 	out	(0x99), a
+    000001E4 08               [ 4]  935 	ex	af, af'					; '
+    000001E5 E6 40            [ 7]  936 	and	#0b01000000
+    000001E7 C9               [10]  937 	ret
+                                    938 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1716: }
+                                    939 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1724: void VDP_RegWrite(u8 reg, u8 value) __PRESERVES(b, c, d, e, iyl, iyh)
+                                    940 ;	---------------------------------
+                                    941 ; Function VDP_RegWrite
+                                    942 ; ---------------------------------
+    000001E8                        943 _VDP_RegWrite::
+                                    944 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1738: __endasm;
+    000001E8 67               [ 4]  945 	ld	h, a
+    000001E9 7D               [ 4]  946 	ld	a, l
+    000001EA F3               [ 4]  947 	di
+    000001EB D3 99            [11]  948 	out	(0x99), a
+    000001ED 7C               [ 4]  949 	ld	a, h
+    000001EE C6 80            [ 7]  950 	add	#0x80
+    000001F0 FB               [ 4]  951 	ei
+    000001F1 D3 99            [11]  952 	out	(0x99), a
+                                    953 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1739: }
+    000001F3 C9               [10]  954 	ret
+                                    955 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1747: void VDP_RegWriteBak(u8 reg, u8 value) __PRESERVES(d, e, iyl, iyh)
+                                    956 ;	---------------------------------
+                                    957 ; Function VDP_RegWriteBak
+                                    958 ; ---------------------------------
+    000001F4                        959 _VDP_RegWriteBak::
+                                    960 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1767: __endasm;
+    000001F4 4F               [ 4]  961 	ld	c, a
+    000001F5 7D               [ 4]  962 	ld	a, l
+    000001F6 06 00            [ 7]  963 	ld	b, #0
+    000001F8 21r00r00         [10]  964 	ld	hl, #_g_VDP_REGSAV
+    000001FB 09               [11]  965 	add	hl, bc
+    000001FC 77               [ 7]  966 	ld	(hl), a
+    000001FD F3               [ 4]  967 	di
+    000001FE D3 99            [11]  968 	out	(0x99), a
+    00000200 79               [ 4]  969 	ld	a, c
+    00000201 C6 80            [ 7]  970 	add	#0x80
+    00000203 FB               [ 4]  971 	ei
+    00000204 D3 99            [11]  972 	out	(0x99), a
+                                    973 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1768: }
+    00000206 C9               [10]  974 	ret
+                                    975 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1777: void VDP_RegWriteBakMask(u8 reg, u8 mask, u8 flag)
+                                    976 ;	---------------------------------
+                                    977 ; Function VDP_RegWriteBakMask
+                                    978 ; ---------------------------------
+    00000207                        979 _VDP_RegWriteBakMask::
+    00000207 DD E5            [15]  980 	push	ix
+    00000209 DD 21 00 00      [14]  981 	ld	ix,#0
+    0000020D DD 39            [15]  982 	add	ix,sp
+    0000020F 4F               [ 4]  983 	ld	c, a
+    00000210 5D               [ 4]  984 	ld	e, l
+                                    985 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1779: u8 value = g_VDP_REGSAV[reg];
+    00000211 21r00r00         [10]  986 	ld	hl, #_g_VDP_REGSAV+0
+    00000214 06 00            [ 7]  987 	ld	b, #0x00
+    00000216 09               [11]  988 	add	hl, bc
+    00000217 7E               [ 7]  989 	ld	a, (hl)
+                                    990 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1780: value &= mask;
+    00000218 A3               [ 4]  991 	and	a, e
+                                    992 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1781: value |= flag;
+    00000219 DD B6 04         [19]  993 	or	a, 4 (ix)
+    0000021C 6F               [ 4]  994 	ld	l, a
+                                    995 ;	spillPairReg hl
+                                    996 ;	spillPairReg hl
+                                    997 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1782: VDP_RegWriteBak(reg, value);
+    0000021D 79               [ 4]  998 	ld	a, c
+    0000021E CDrF4r01         [17]  999 	call	_VDP_RegWriteBak
+                                   1000 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1783: }
+    00000221 DD E1            [14] 1001 	pop	ix
+    00000223 E1               [10] 1002 	pop	hl
+    00000224 33               [ 6] 1003 	inc	sp
+    00000225 E9               [ 4] 1004 	jp	(hl)
+                                   1005 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1787: u8 VDP_ReadDefaultStatus() __NAKED __PRESERVES(b, c, d, e, h, l, iyl, iyh)
+                                   1006 ;	---------------------------------
+                                   1007 ; Function VDP_ReadDefaultStatus
+                                   1008 ; ---------------------------------
+    00000226                       1009 _VDP_ReadDefaultStatus::
+                                   1010 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1792: __endasm;
+    00000226 DB 99            [11] 1011 	in	a, (0x99)
+    00000228 C9               [10] 1012 	ret
+                                   1013 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1793: }
+                                   1014 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1810: void VDP_SetLayoutTable(VADDR addr)
+                                   1015 ;	---------------------------------
+                                   1016 ; Function VDP_SetLayoutTable
+                                   1017 ; ---------------------------------
+    00000229                       1018 _VDP_SetLayoutTable::
+                                   1019 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1812: g_ScreenLayoutLow = (u16)addr;
+    00000229 22r31r00         [16] 1020 	ld	(_g_ScreenLayoutLow), hl
+                                   1021 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1815: reg = (u8)(addr >> 10);
+    0000022C 7C               [ 4] 1022 	ld	a, h
+    0000022D 0F               [ 4] 1023 	rrca
+    0000022E 0F               [ 4] 1024 	rrca
+    0000022F E6 3F            [ 7] 1025 	and	a, #0x3f
+    00000231 6F               [ 4] 1026 	ld	l, a
+                                   1027 ;	spillPairReg hl
+                                   1028 ;	spillPairReg hl
+    00000232 26 00            [ 7] 1029 	ld	h, #0x00
+                                   1030 ;	spillPairReg hl
+                                   1031 ;	spillPairReg hl
+                                   1032 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1836: VDP_RegWrite(2, reg);
+    00000234 3E 02            [ 7] 1033 	ld	a, #0x02
+                                   1034 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1841: }
+    00000236 C3rE8r01         [10] 1035 	jp	_VDP_RegWrite
+                                   1036 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1845: void VDP_SetColorTable(VADDR addr)
+                                   1037 ;	---------------------------------
+                                   1038 ; Function VDP_SetColorTable
+                                   1039 ; ---------------------------------
+    00000239                       1040 _VDP_SetColorTable::
+                                   1041 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1847: g_ScreenColorLow = (u16)addr;
+    00000239 22r33r00         [16] 1042 	ld	(_g_ScreenColorLow), hl
+                                   1043 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1850: reg = (u8)(addr >> 6);
+    0000023C CB 3C            [ 8] 1044 	srl	h
+    0000023E CB 1D            [ 8] 1045 	rr	l
+    00000240 CB 3C            [ 8] 1046 	srl	h
+    00000242 CB 1D            [ 8] 1047 	rr	l
+    00000244 CB 3C            [ 8] 1048 	srl	h
+    00000246 CB 1D            [ 8] 1049 	rr	l
+    00000248 CB 3C            [ 8] 1050 	srl	h
+    0000024A CB 1D            [ 8] 1051 	rr	l
+    0000024C CB 3C            [ 8] 1052 	srl	h
+    0000024E CB 1D            [ 8] 1053 	rr	l
+    00000250 CB 3C            [ 8] 1054 	srl	h
+    00000252 CB 1D            [ 8] 1055 	rr	l
+    00000254 4D               [ 4] 1056 	ld	c, l
+                                   1057 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1851: switch (g_VDP_Data.Mode)
+    00000255 3Ar1Cr00         [13] 1058 	ld	a, (#_g_VDP_Data + 0)
+    00000258 D6 03            [ 7] 1059 	sub	a, #0x03
+    0000025A 20 04            [12] 1060 	jr	NZ, 00102$
+                                   1061 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1871: reg |= 0b1111111;
+    0000025C 79               [ 4] 1062 	ld	a, c
+    0000025D F6 7F            [ 7] 1063 	or	a, #0x7f
+    0000025F 4F               [ 4] 1064 	ld	c, a
+                                   1065 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1873: };	
+    00000260                       1066 00102$:
+                                   1067 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1874: VDP_RegWrite(3, reg);
+    00000260 69               [ 4] 1068 	ld	l, c
+                                   1069 ;	spillPairReg hl
+                                   1070 ;	spillPairReg hl
+    00000261 3E 03            [ 7] 1071 	ld	a, #0x03
+                                   1072 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1882: }
+    00000263 C3rE8r01         [10] 1073 	jp	_VDP_RegWrite
+                                   1074 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1886: void VDP_SetPatternTable(VADDR addr)
+                                   1075 ;	---------------------------------
+                                   1076 ; Function VDP_SetPatternTable
+                                   1077 ; ---------------------------------
+    00000266                       1078 _VDP_SetPatternTable::
+                                   1079 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1888: g_ScreenPatternLow = (u16)addr;
+    00000266 22r35r00         [16] 1080 	ld	(_g_ScreenPatternLow), hl
+                                   1081 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1891: reg = (u8)(addr >> 11);
+    00000269 7C               [ 4] 1082 	ld	a, h
+    0000026A 0F               [ 4] 1083 	rrca
+    0000026B 0F               [ 4] 1084 	rrca
+    0000026C 0F               [ 4] 1085 	rrca
+    0000026D E6 1F            [ 7] 1086 	and	a, #0x1f
+    0000026F 4F               [ 4] 1087 	ld	c, a
+    00000270 06 00            [ 7] 1088 	ld	b, #0x00
+                                   1089 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1892: switch (g_VDP_Data.Mode)
+    00000272 3Ar1Cr00         [13] 1090 	ld	a, (#_g_VDP_Data + 0)
+    00000275 D6 03            [ 7] 1091 	sub	a, #0x03
+    00000277 20 04            [12] 1092 	jr	NZ, 00102$
+                                   1093 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1906: reg |= 0b11;
+    00000279 79               [ 4] 1094 	ld	a, c
+    0000027A F6 03            [ 7] 1095 	or	a, #0x03
+    0000027C 4F               [ 4] 1096 	ld	c, a
+                                   1097 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1907: };
+    0000027D                       1098 00102$:
+                                   1099 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1908: VDP_RegWrite(4, reg);
+    0000027D 69               [ 4] 1100 	ld	l, c
+                                   1101 ;	spillPairReg hl
+                                   1102 ;	spillPairReg hl
+    0000027E 3E 04            [ 7] 1103 	ld	a, #0x04
+                                   1104 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1913: }
+    00000280 C3rE8r01         [10] 1105 	jp	_VDP_RegWrite
+                                   1106 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1927: void VDP_SetSpriteAttributeTable(VADDR addr)
+                                   1107 ;	---------------------------------
+                                   1108 ; Function VDP_SetSpriteAttributeTable
+                                   1109 ; ---------------------------------
+    00000283                       1110 _VDP_SetSpriteAttributeTable::
+    00000283 EB               [ 4] 1111 	ex	de, hl
+                                   1112 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1929: g_SpriteAttributeLow = (u16)addr;
+    00000284 ED 53r37r00      [20] 1113 	ld	(_g_SpriteAttributeLow), de
+                                   1114 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1932: reg = (u8)(addr >> 7);
+    00000288 6B               [ 4] 1115 	ld	l, e
+                                   1116 ;	spillPairReg hl
+                                   1117 ;	spillPairReg hl
+    00000289 4A               [ 4] 1118 	ld	c, d
+    0000028A CB 39            [ 8] 1119 	srl	c
+    0000028C CB 1D            [ 8] 1120 	rr	l
+    0000028E CB 39            [ 8] 1121 	srl	c
+    00000290 CB 1D            [ 8] 1122 	rr	l
+    00000292 CB 39            [ 8] 1123 	srl	c
+    00000294 CB 1D            [ 8] 1124 	rr	l
+    00000296 CB 39            [ 8] 1125 	srl	c
+    00000298 CB 1D            [ 8] 1126 	rr	l
+    0000029A CB 39            [ 8] 1127 	srl	c
+    0000029C CB 1D            [ 8] 1128 	rr	l
+    0000029E CB 39            [ 8] 1129 	srl	c
+    000002A0 CB 1D            [ 8] 1130 	rr	l
+    000002A2 CB 39            [ 8] 1131 	srl	c
+    000002A4 CB 1D            [ 8] 1132 	rr	l
+                                   1133 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1955: VDP_RegWrite(5, reg);
+    000002A6 3E 05            [ 7] 1134 	ld	a, #0x05
+    000002A8 CDrE8r01         [17] 1135 	call	_VDP_RegWrite
+                                   1136 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1964: addr -= 0x200;
+                                   1137 ;	spillPairReg hl
+                                   1138 ;	spillPairReg hl
+    000002AB 6B               [ 4] 1139 	ld	l, e
+    000002AC 7A               [ 4] 1140 	ld	a,d
+    000002AD C6 FE            [ 7] 1141 	add	a,#0xfe
+    000002AF 67               [ 4] 1142 	ld	h, a
+                                   1143 ;	spillPairReg hl
+                                   1144 ;	spillPairReg hl
+    000002B0 22r3Br00         [16] 1145 	ld	(_g_SpriteColorLow), hl
+                                   1146 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1965: g_SpriteColorLow = (u16)addr;
+                                   1147 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1969: }
+    000002B3 C9               [10] 1148 	ret
+                                   1149 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1975: void VDP_SetSpritePatternTable(VADDR addr)
+                                   1150 ;	---------------------------------
+                                   1151 ; Function VDP_SetSpritePatternTable
+                                   1152 ; ---------------------------------
+    000002B4                       1153 _VDP_SetSpritePatternTable::
+                                   1154 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1977: g_SpritePatternLow  = (u16)addr;
+    000002B4 22r39r00         [16] 1155 	ld	(_g_SpritePatternLow), hl
+                                   1156 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1982: u8 reg = (u8)(addr >> 11);
+    000002B7 7C               [ 4] 1157 	ld	a, h
+    000002B8 0F               [ 4] 1158 	rrca
+    000002B9 0F               [ 4] 1159 	rrca
+    000002BA 0F               [ 4] 1160 	rrca
+    000002BB E6 1F            [ 7] 1161 	and	a, #0x1f
+    000002BD 6F               [ 4] 1162 	ld	l, a
+                                   1163 ;	spillPairReg hl
+                                   1164 ;	spillPairReg hl
+    000002BE 26 00            [ 7] 1165 	ld	h, #0x00
+                                   1166 ;	spillPairReg hl
+                                   1167 ;	spillPairReg hl
+                                   1168 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1983: VDP_RegWrite(6, reg);
+    000002C0 3E 06            [ 7] 1169 	ld	a, #0x06
+                                   1170 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1985: }
+    000002C2 C3rE8r01         [10] 1171 	jp	_VDP_RegWrite
+                                   1172 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1989: void VDP_LoadSpritePattern(const u8* addr, u8 index, u8 count)
+                                   1173 ;	---------------------------------
+                                   1174 ; Function VDP_LoadSpritePattern
+                                   1175 ; ---------------------------------
+    000002C5                       1176 _VDP_LoadSpritePattern::
+    000002C5 DD E5            [15] 1177 	push	ix
+    000002C7 DD 21 00 00      [14] 1178 	ld	ix,#0
+    000002CB DD 39            [15] 1179 	add	ix,sp
+    000002CD 4D               [ 4] 1180 	ld	c, l
+    000002CE 44               [ 4] 1181 	ld	b, h
+                                   1182 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1991: u16 low = g_SpritePatternLow;
+    000002CF ED 5Br39r00      [20] 1183 	ld	de, (_g_SpritePatternLow)
+                                   1184 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1992: low += (index * 8);
+    000002D3 DD 6E 04         [19] 1185 	ld	l, 4 (ix)
+                                   1186 ;	spillPairReg hl
+                                   1187 ;	spillPairReg hl
+    000002D6 26 00            [ 7] 1188 	ld	h, #0x00
+                                   1189 ;	spillPairReg hl
+                                   1190 ;	spillPairReg hl
+    000002D8 29               [11] 1191 	add	hl, hl
+    000002D9 29               [11] 1192 	add	hl, hl
+    000002DA 29               [11] 1193 	add	hl, hl
+    000002DB 19               [11] 1194 	add	hl, de
+    000002DC EB               [ 4] 1195 	ex	de, hl
+                                   1196 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1993: VDP_WriteVRAM(addr, low, g_SpritePatternHigh, count * 8);
+    000002DD DD 6E 05         [19] 1197 	ld	l, 5 (ix)
+                                   1198 ;	spillPairReg hl
+                                   1199 ;	spillPairReg hl
+    000002E0 26 00            [ 7] 1200 	ld	h, #0x00
+                                   1201 ;	spillPairReg hl
+                                   1202 ;	spillPairReg hl
+    000002E2 29               [11] 1203 	add	hl, hl
+    000002E3 29               [11] 1204 	add	hl, hl
+    000002E4 29               [11] 1205 	add	hl, hl
+    000002E5 E5               [11] 1206 	push	hl
+    000002E6 69               [ 4] 1207 	ld	l, c
+                                   1208 ;	spillPairReg hl
+                                   1209 ;	spillPairReg hl
+    000002E7 60               [ 4] 1210 	ld	h, b
+                                   1211 ;	spillPairReg hl
+                                   1212 ;	spillPairReg hl
+    000002E8 CDrA8r00         [17] 1213 	call	_VDP_WriteVRAM_16K
+                                   1214 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1994: }
+    000002EB DD E1            [14] 1215 	pop	ix
+    000002ED E1               [10] 1216 	pop	hl
+    000002EE F1               [10] 1217 	pop	af
+    000002EF E9               [ 4] 1218 	jp	(hl)
+                                   1219 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:1998: void VDP_SetSpriteSM1(u8 index, u8 x, u8 y, u8 shape, u8 color)
+                                   1220 ;	---------------------------------
+                                   1221 ; Function VDP_SetSpriteSM1
+                                   1222 ; ---------------------------------
+    000002F0                       1223 _VDP_SetSpriteSM1::
+    000002F0 DD E5            [15] 1224 	push	ix
+    000002F2 DD 21 00 00      [14] 1225 	ld	ix,#0
+    000002F6 DD 39            [15] 1226 	add	ix,sp
+    000002F8 5F               [ 4] 1227 	ld	e, a
+    000002F9 4D               [ 4] 1228 	ld	c, l
+                                   1229 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2000: g_VDP_Sprite.Y = y;				// Y coordinate on screen (all lower priority sprite will be disable if equal to 216 or 0xD0)
+    000002FA 21r2Dr00         [10] 1230 	ld	hl, #_g_VDP_Sprite
+    000002FD DD 7E 04         [19] 1231 	ld	a, 4 (ix)
+    00000300 77               [ 7] 1232 	ld	(hl), a
+                                   1233 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2001: g_VDP_Sprite.X = x;				// X coordinate of the sprite
+    00000301 21r2Er00         [10] 1234 	ld	hl, #(_g_VDP_Sprite + 1)
+    00000304 71               [ 7] 1235 	ld	(hl), c
+                                   1236 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2002: g_VDP_Sprite.Pattern = shape;	// Pattern index
+    00000305 21r2Fr00         [10] 1237 	ld	hl, #(_g_VDP_Sprite + 2)
+    00000308 DD 7E 05         [19] 1238 	ld	a, 5 (ix)
+    0000030B 77               [ 7] 1239 	ld	(hl), a
+                                   1240 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2003: g_VDP_Sprite.Color = color;		// Color index (Sprite Mode 1 only) + Early clock
+    0000030C 21r30r00         [10] 1241 	ld	hl, #(_g_VDP_Sprite + 3)
+    0000030F DD 7E 06         [19] 1242 	ld	a, 6 (ix)
+    00000312 77               [ 7] 1243 	ld	(hl), a
+                                   1244 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2005: u16 low = g_SpriteAttributeLow;
+    00000313 ED 4Br37r00      [20] 1245 	ld	bc, (_g_SpriteAttributeLow)
+                                   1246 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2006: low += (index * 4);
+    00000317 6B               [ 4] 1247 	ld	l, e
+                                   1248 ;	spillPairReg hl
+                                   1249 ;	spillPairReg hl
+    00000318 26 00            [ 7] 1250 	ld	h, #0x00
+                                   1251 ;	spillPairReg hl
+                                   1252 ;	spillPairReg hl
+    0000031A 29               [11] 1253 	add	hl, hl
+    0000031B 29               [11] 1254 	add	hl, hl
+    0000031C 09               [11] 1255 	add	hl, bc
+    0000031D EB               [ 4] 1256 	ex	de, hl
+                                   1257 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2007: VDP_WriteVRAM((u8*)&g_VDP_Sprite, low, g_SpriteAttributeHigh, 4);
+    0000031E 21 04 00         [10] 1258 	ld	hl, #0x0004
+    00000321 E5               [11] 1259 	push	hl
+    00000322 21r2Dr00         [10] 1260 	ld	hl, #_g_VDP_Sprite
+    00000325 CDrA8r00         [17] 1261 	call	_VDP_WriteVRAM_16K
+                                   1262 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2008: }
+    00000328 DD E1            [14] 1263 	pop	ix
+    0000032A E1               [10] 1264 	pop	hl
+    0000032B F1               [10] 1265 	pop	af
+    0000032C 33               [ 6] 1266 	inc	sp
+    0000032D E9               [ 4] 1267 	jp	(hl)
+                                   1268 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2012: void VDP_SetSprite(u8 index, u8 x, u8 y, u8 shape)
+                                   1269 ;	---------------------------------
+                                   1270 ; Function VDP_SetSprite
+                                   1271 ; ---------------------------------
+    0000032E                       1272 _VDP_SetSprite::
+    0000032E DD E5            [15] 1273 	push	ix
+    00000330 DD 21 00 00      [14] 1274 	ld	ix,#0
+    00000334 DD 39            [15] 1275 	add	ix,sp
+    00000336 5F               [ 4] 1276 	ld	e, a
+    00000337 4D               [ 4] 1277 	ld	c, l
+                                   1278 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2014: g_VDP_Sprite.Y = y;				// Y coordinate on screen (all lower priority sprite will be disable if equal to 216 or 0xD0)
+    00000338 21r2Dr00         [10] 1279 	ld	hl, #_g_VDP_Sprite
+    0000033B DD 7E 04         [19] 1280 	ld	a, 4 (ix)
+    0000033E 77               [ 7] 1281 	ld	(hl), a
+                                   1282 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2015: g_VDP_Sprite.X = x;				// X coordinate of the sprite
+    0000033F 21r2Er00         [10] 1283 	ld	hl, #(_g_VDP_Sprite + 1)
+    00000342 71               [ 7] 1284 	ld	(hl), c
+                                   1285 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2016: g_VDP_Sprite.Pattern = shape;	// Pattern index
+    00000343 21r2Fr00         [10] 1286 	ld	hl, #(_g_VDP_Sprite + 2)
+    00000346 DD 7E 05         [19] 1287 	ld	a, 5 (ix)
+    00000349 77               [ 7] 1288 	ld	(hl), a
+                                   1289 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2018: u16 low = g_SpriteAttributeLow;
+    0000034A ED 4Br37r00      [20] 1290 	ld	bc, (_g_SpriteAttributeLow)
+                                   1291 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2019: low += (index * 4);
+    0000034E 6B               [ 4] 1292 	ld	l, e
+                                   1293 ;	spillPairReg hl
+                                   1294 ;	spillPairReg hl
+    0000034F 26 00            [ 7] 1295 	ld	h, #0x00
+                                   1296 ;	spillPairReg hl
+                                   1297 ;	spillPairReg hl
+    00000351 29               [11] 1298 	add	hl, hl
+    00000352 29               [11] 1299 	add	hl, hl
+    00000353 09               [11] 1300 	add	hl, bc
+    00000354 EB               [ 4] 1301 	ex	de, hl
+                                   1302 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2020: VDP_WriteVRAM((u8*)&g_VDP_Sprite, low, g_SpriteAttributeHigh, 3);
+    00000355 21 03 00         [10] 1303 	ld	hl, #0x0003
+    00000358 E5               [11] 1304 	push	hl
+    00000359 21r2Dr00         [10] 1305 	ld	hl, #_g_VDP_Sprite
+    0000035C CDrA8r00         [17] 1306 	call	_VDP_WriteVRAM_16K
+                                   1307 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2021: }
+    0000035F DD E1            [14] 1308 	pop	ix
+    00000361 E1               [10] 1309 	pop	hl
+    00000362 F1               [10] 1310 	pop	af
+    00000363 E9               [ 4] 1311 	jp	(hl)
+                                   1312 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2059: void VDP_SetSpritePosition(u8 index, u8 x, u8 y)
+                                   1313 ;	---------------------------------
+                                   1314 ; Function VDP_SetSpritePosition
+                                   1315 ; ---------------------------------
+    00000364                       1316 _VDP_SetSpritePosition::
+    00000364 DD E5            [15] 1317 	push	ix
+    00000366 DD 21 00 00      [14] 1318 	ld	ix,#0
+    0000036A DD 39            [15] 1319 	add	ix,sp
+    0000036C 5F               [ 4] 1320 	ld	e, a
+    0000036D 4D               [ 4] 1321 	ld	c, l
+                                   1322 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2061: g_VDP_Sprite.Y = y;				// Y coordinate on screen (all lower priority sprite will be disable if equal to 216 or 0xD0)
+    0000036E 21r2Dr00         [10] 1323 	ld	hl, #_g_VDP_Sprite
+    00000371 DD 7E 04         [19] 1324 	ld	a, 4 (ix)
+    00000374 77               [ 7] 1325 	ld	(hl), a
+                                   1326 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2062: g_VDP_Sprite.X = x;				// X coordinate of the sprite
+    00000375 21r2Er00         [10] 1327 	ld	hl, #(_g_VDP_Sprite + 1)
+    00000378 71               [ 7] 1328 	ld	(hl), c
+                                   1329 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2064: u16 low = g_SpriteAttributeLow;
+    00000379 ED 4Br37r00      [20] 1330 	ld	bc, (_g_SpriteAttributeLow)
+                                   1331 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2065: low += (index * 4);
+    0000037D 6B               [ 4] 1332 	ld	l, e
+                                   1333 ;	spillPairReg hl
+                                   1334 ;	spillPairReg hl
+    0000037E 26 00            [ 7] 1335 	ld	h, #0x00
+                                   1336 ;	spillPairReg hl
+                                   1337 ;	spillPairReg hl
+    00000380 29               [11] 1338 	add	hl, hl
+    00000381 29               [11] 1339 	add	hl, hl
+    00000382 09               [11] 1340 	add	hl, bc
+    00000383 EB               [ 4] 1341 	ex	de, hl
+                                   1342 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2066: VDP_WriteVRAM((u8*)&g_VDP_Sprite, low, g_SpriteAttributeHigh, 2);
+    00000384 21 02 00         [10] 1343 	ld	hl, #0x0002
+    00000387 E5               [11] 1344 	push	hl
+    00000388 21r2Dr00         [10] 1345 	ld	hl, #_g_VDP_Sprite
+    0000038B CDrA8r00         [17] 1346 	call	_VDP_WriteVRAM_16K
+                                   1347 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2067: }
+    0000038E DD E1            [14] 1348 	pop	ix
+    00000390 E1               [10] 1349 	pop	hl
+    00000391 33               [ 6] 1350 	inc	sp
+    00000392 E9               [ 4] 1351 	jp	(hl)
+                                   1352 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2071: void VDP_SetSpritePositionX(u8 index, u8 x)
+                                   1353 ;	---------------------------------
+                                   1354 ; Function VDP_SetSpritePositionX
+                                   1355 ; ---------------------------------
+    00000393                       1356 _VDP_SetSpritePositionX::
+    00000393 47               [ 4] 1357 	ld	b, a
+    00000394 4D               [ 4] 1358 	ld	c, l
+                                   1359 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2073: u16 low = g_SpriteAttributeLow;
+    00000395 ED 5Br37r00      [20] 1360 	ld	de, (_g_SpriteAttributeLow)
+                                   1361 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2074: low += (index * 4);
+    00000399 68               [ 4] 1362 	ld	l, b
+                                   1363 ;	spillPairReg hl
+                                   1364 ;	spillPairReg hl
+    0000039A 26 00            [ 7] 1365 	ld	h, #0x00
+                                   1366 ;	spillPairReg hl
+                                   1367 ;	spillPairReg hl
+    0000039C 29               [11] 1368 	add	hl, hl
+    0000039D 29               [11] 1369 	add	hl, hl
+    0000039E 19               [11] 1370 	add	hl, de
+    0000039F EB               [ 4] 1371 	ex	de, hl
+                                   1372 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2075: VDP_Poke(x, ++low, g_SpriteAttributeHigh);
+    000003A0 13               [ 6] 1373 	inc	de
+    000003A1 79               [ 4] 1374 	ld	a, c
+                                   1375 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2076: }
+    000003A2 C3r26r01         [10] 1376 	jp	_VDP_Poke_16K
+                                   1377 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2080: void VDP_SetSpritePositionY(u8 index, u8 y)
+                                   1378 ;	---------------------------------
+                                   1379 ; Function VDP_SetSpritePositionY
+                                   1380 ; ---------------------------------
+    000003A5                       1381 _VDP_SetSpritePositionY::
+    000003A5 47               [ 4] 1382 	ld	b, a
+    000003A6 4D               [ 4] 1383 	ld	c, l
+                                   1384 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2082: u16 low = g_SpriteAttributeLow;
+    000003A7 ED 5Br37r00      [20] 1385 	ld	de, (_g_SpriteAttributeLow)
+                                   1386 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2083: low += (index * 4);
+    000003AB 68               [ 4] 1387 	ld	l, b
+                                   1388 ;	spillPairReg hl
+                                   1389 ;	spillPairReg hl
+    000003AC 26 00            [ 7] 1390 	ld	h, #0x00
+                                   1391 ;	spillPairReg hl
+                                   1392 ;	spillPairReg hl
+    000003AE 29               [11] 1393 	add	hl, hl
+    000003AF 29               [11] 1394 	add	hl, hl
+    000003B0 19               [11] 1395 	add	hl, de
+    000003B1 EB               [ 4] 1396 	ex	de, hl
+                                   1397 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2084: VDP_Poke(y, low, g_SpriteAttributeHigh);
+    000003B2 79               [ 4] 1398 	ld	a, c
+                                   1399 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2085: }
+    000003B3 C3r26r01         [10] 1400 	jp	_VDP_Poke_16K
+                                   1401 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2089: void VDP_SetSpritePattern(u8 index, u8 shape)
+                                   1402 ;	---------------------------------
+                                   1403 ; Function VDP_SetSpritePattern
+                                   1404 ; ---------------------------------
+    000003B6                       1405 _VDP_SetSpritePattern::
+    000003B6 47               [ 4] 1406 	ld	b, a
+    000003B7 4D               [ 4] 1407 	ld	c, l
+                                   1408 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2091: u16 low = g_SpriteAttributeLow + 2;
+    000003B8 ED 5Br37r00      [20] 1409 	ld	de, (_g_SpriteAttributeLow)
+    000003BC 13               [ 6] 1410 	inc	de
+    000003BD 13               [ 6] 1411 	inc	de
+                                   1412 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2092: low += (index * 4);
+    000003BE 68               [ 4] 1413 	ld	l, b
+                                   1414 ;	spillPairReg hl
+                                   1415 ;	spillPairReg hl
+    000003BF 26 00            [ 7] 1416 	ld	h, #0x00
+                                   1417 ;	spillPairReg hl
+                                   1418 ;	spillPairReg hl
+    000003C1 29               [11] 1419 	add	hl, hl
+    000003C2 29               [11] 1420 	add	hl, hl
+    000003C3 19               [11] 1421 	add	hl, de
+    000003C4 EB               [ 4] 1422 	ex	de, hl
+                                   1423 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2093: VDP_Poke(shape, low, g_SpriteAttributeHigh);
+    000003C5 79               [ 4] 1424 	ld	a, c
+                                   1425 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2094: }
+    000003C6 C3r26r01         [10] 1426 	jp	_VDP_Poke_16K
+                                   1427 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2098: void VDP_SetSpriteColorSM1(u8 index, u8 color)
+                                   1428 ;	---------------------------------
+                                   1429 ; Function VDP_SetSpriteColorSM1
+                                   1430 ; ---------------------------------
+    000003C9                       1431 _VDP_SetSpriteColorSM1::
+    000003C9 47               [ 4] 1432 	ld	b, a
+    000003CA 4D               [ 4] 1433 	ld	c, l
+                                   1434 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2100: u16 low = g_SpriteAttributeLow + 3;
+    000003CB ED 5Br37r00      [20] 1435 	ld	de, (_g_SpriteAttributeLow)
+    000003CF 13               [ 6] 1436 	inc	de
+    000003D0 13               [ 6] 1437 	inc	de
+    000003D1 13               [ 6] 1438 	inc	de
+                                   1439 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2101: low += (index * 4);
+    000003D2 68               [ 4] 1440 	ld	l, b
+                                   1441 ;	spillPairReg hl
+                                   1442 ;	spillPairReg hl
+    000003D3 26 00            [ 7] 1443 	ld	h, #0x00
+                                   1444 ;	spillPairReg hl
+                                   1445 ;	spillPairReg hl
+    000003D5 29               [11] 1446 	add	hl, hl
+    000003D6 29               [11] 1447 	add	hl, hl
+    000003D7 19               [11] 1448 	add	hl, de
+    000003D8 EB               [ 4] 1449 	ex	de, hl
+                                   1450 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2102: VDP_Poke(color, low, g_SpriteAttributeHigh);
+    000003D9 79               [ 4] 1451 	ld	a, c
+                                   1452 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2103: }
+    000003DA C3r26r01         [10] 1453 	jp	_VDP_Poke_16K
+                                   1454 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2136: void VDP_DisableSpritesFrom(u8 index)
+                                   1455 ;	---------------------------------
+                                   1456 ; Function VDP_DisableSpritesFrom
+                                   1457 ; ---------------------------------
+    000003DD                       1458 _VDP_DisableSpritesFrom::
+    000003DD 4F               [ 4] 1459 	ld	c, a
+                                   1460 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2143: VDP_SetSpritePositionY(index, y);
+    000003DE 2E D0            [ 7] 1461 	ld	l, #0xd0
+                                   1462 ;	spillPairReg hl
+                                   1463 ;	spillPairReg hl
+    000003E0 79               [ 4] 1464 	ld	a, c
+                                   1465 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2144: }
+    000003E1 C3rA5r03         [10] 1466 	jp	_VDP_SetSpritePositionY
+                                   1467 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2210: void VDP_LoadPattern_GM2(const u8* src, u8 count, u8 offset)
+                                   1468 ;	---------------------------------
+                                   1469 ; Function VDP_LoadPattern_GM2
+                                   1470 ; ---------------------------------
+    000003E4                       1471 _VDP_LoadPattern_GM2::
+    000003E4 DD E5            [15] 1472 	push	ix
+    000003E6 DD 21 00 00      [14] 1473 	ld	ix,#0
+    000003EA DD 39            [15] 1474 	add	ix,sp
+                                   1475 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2212: u16 dst = g_ScreenPatternLow + (offset * 8);
+    000003EC DD 5E 05         [19] 1476 	ld	e, 5 (ix)
+    000003EF 16 00            [ 7] 1477 	ld	d, #0x00
+    000003F1 EB               [ 4] 1478 	ex	de, hl
+    000003F2 29               [11] 1479 	add	hl, hl
+    000003F3 29               [11] 1480 	add	hl, hl
+    000003F4 29               [11] 1481 	add	hl, hl
+    000003F5 EB               [ 4] 1482 	ex	de, hl
+    000003F6 FD 2Ar35r00      [20] 1483 	ld	iy, (_g_ScreenPatternLow)
+    000003FA FD 19            [15] 1484 	add	iy, de
+                                   1485 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2213: VDP_WriteVRAM(src, dst, g_ScreenPatternHigh, count * 8);
+    000003FC DD 5E 04         [19] 1486 	ld	e, 4 (ix)
+    000003FF 16 00            [ 7] 1487 	ld	d, #0x00
+    00000401 EB               [ 4] 1488 	ex	de, hl
+    00000402 29               [11] 1489 	add	hl, hl
+    00000403 29               [11] 1490 	add	hl, hl
+    00000404 29               [11] 1491 	add	hl, hl
+    00000405 EB               [ 4] 1492 	ex	de, hl
+    00000406 4B               [ 4] 1493 	ld	c, e
+    00000407 42               [ 4] 1494 	ld	b, d
+    00000408 E5               [11] 1495 	push	hl
+    00000409 C5               [11] 1496 	push	bc
+    0000040A FD E5            [15] 1497 	push	iy
+    0000040C C5               [11] 1498 	push	bc
+    0000040D FD E5            [15] 1499 	push	iy
+    0000040F D1               [10] 1500 	pop	de
+    00000410 CDrA8r00         [17] 1501 	call	_VDP_WriteVRAM_16K
+    00000413 FD E1            [14] 1502 	pop	iy
+    00000415 C1               [10] 1503 	pop	bc
+    00000416 E1               [10] 1504 	pop	hl
+                                   1505 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2214: dst += 0x800;
+    00000417 11 00 08         [10] 1506 	ld	de, #0x0800
+    0000041A FD 19            [15] 1507 	add	iy, de
+                                   1508 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2215: VDP_WriteVRAM(src, dst, g_ScreenPatternHigh, count * 8);
+    0000041C E5               [11] 1509 	push	hl
+    0000041D C5               [11] 1510 	push	bc
+    0000041E FD E5            [15] 1511 	push	iy
+    00000420 C5               [11] 1512 	push	bc
+    00000421 FD E5            [15] 1513 	push	iy
+    00000423 D1               [10] 1514 	pop	de
+    00000424 CDrA8r00         [17] 1515 	call	_VDP_WriteVRAM_16K
+    00000427 FD E1            [14] 1516 	pop	iy
+    00000429 C1               [10] 1517 	pop	bc
+    0000042A E1               [10] 1518 	pop	hl
+                                   1519 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2216: dst += 0x800;
+    0000042B FD E5            [15] 1520 	push	iy
+    0000042D D1               [10] 1521 	pop	de
+    0000042E 7A               [ 4] 1522 	ld	a, d
+    0000042F C6 08            [ 7] 1523 	add	a, #0x08
+    00000431 57               [ 4] 1524 	ld	d, a
+                                   1525 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2217: VDP_WriteVRAM(src, dst, g_ScreenPatternHigh, count * 8);
+    00000432 C5               [11] 1526 	push	bc
+    00000433 CDrA8r00         [17] 1527 	call	_VDP_WriteVRAM_16K
+                                   1528 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2218: }
+    00000436 DD E1            [14] 1529 	pop	ix
+    00000438 E1               [10] 1530 	pop	hl
+    00000439 F1               [10] 1531 	pop	af
+    0000043A E9               [ 4] 1532 	jp	(hl)
+                                   1533 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2222: void VDP_LoadColor_GM2(const u8* src, u8 count, u8 offset)
+                                   1534 ;	---------------------------------
+                                   1535 ; Function VDP_LoadColor_GM2
+                                   1536 ; ---------------------------------
+    0000043B                       1537 _VDP_LoadColor_GM2::
+    0000043B DD E5            [15] 1538 	push	ix
+    0000043D DD 21 00 00      [14] 1539 	ld	ix,#0
+    00000441 DD 39            [15] 1540 	add	ix,sp
+                                   1541 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2224: u16 dst = g_ScreenColorLow + (offset * 8);
+    00000443 DD 5E 05         [19] 1542 	ld	e, 5 (ix)
+    00000446 16 00            [ 7] 1543 	ld	d, #0x00
+    00000448 EB               [ 4] 1544 	ex	de, hl
+    00000449 29               [11] 1545 	add	hl, hl
+    0000044A 29               [11] 1546 	add	hl, hl
+    0000044B 29               [11] 1547 	add	hl, hl
+    0000044C EB               [ 4] 1548 	ex	de, hl
+    0000044D FD 2Ar33r00      [20] 1549 	ld	iy, (_g_ScreenColorLow)
+    00000451 FD 19            [15] 1550 	add	iy, de
+                                   1551 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2225: VDP_WriteVRAM(src, dst, g_ScreenColorHigh, count * 8);
+    00000453 DD 5E 04         [19] 1552 	ld	e, 4 (ix)
+    00000456 16 00            [ 7] 1553 	ld	d, #0x00
+    00000458 EB               [ 4] 1554 	ex	de, hl
+    00000459 29               [11] 1555 	add	hl, hl
+    0000045A 29               [11] 1556 	add	hl, hl
+    0000045B 29               [11] 1557 	add	hl, hl
+    0000045C EB               [ 4] 1558 	ex	de, hl
+    0000045D 4B               [ 4] 1559 	ld	c, e
+    0000045E 42               [ 4] 1560 	ld	b, d
+    0000045F E5               [11] 1561 	push	hl
+    00000460 C5               [11] 1562 	push	bc
+    00000461 FD E5            [15] 1563 	push	iy
+    00000463 C5               [11] 1564 	push	bc
+    00000464 FD E5            [15] 1565 	push	iy
+    00000466 D1               [10] 1566 	pop	de
+    00000467 CDrA8r00         [17] 1567 	call	_VDP_WriteVRAM_16K
+    0000046A FD E1            [14] 1568 	pop	iy
+    0000046C C1               [10] 1569 	pop	bc
+    0000046D E1               [10] 1570 	pop	hl
+                                   1571 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2226: dst += 0x800;
+    0000046E 11 00 08         [10] 1572 	ld	de, #0x0800
+    00000471 FD 19            [15] 1573 	add	iy, de
+                                   1574 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2227: VDP_WriteVRAM(src, dst, g_ScreenColorHigh, count * 8);
+    00000473 E5               [11] 1575 	push	hl
+    00000474 C5               [11] 1576 	push	bc
+    00000475 FD E5            [15] 1577 	push	iy
+    00000477 C5               [11] 1578 	push	bc
+    00000478 FD E5            [15] 1579 	push	iy
+    0000047A D1               [10] 1580 	pop	de
+    0000047B CDrA8r00         [17] 1581 	call	_VDP_WriteVRAM_16K
+    0000047E FD E1            [14] 1582 	pop	iy
+    00000480 C1               [10] 1583 	pop	bc
+    00000481 E1               [10] 1584 	pop	hl
+                                   1585 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2228: dst += 0x800;
+    00000482 FD E5            [15] 1586 	push	iy
+    00000484 D1               [10] 1587 	pop	de
+    00000485 7A               [ 4] 1588 	ld	a, d
+    00000486 C6 08            [ 7] 1589 	add	a, #0x08
+    00000488 57               [ 4] 1590 	ld	d, a
+                                   1591 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2229: VDP_WriteVRAM(src, dst, g_ScreenColorHigh, count * 8);
+    00000489 C5               [11] 1592 	push	bc
+    0000048A CDrA8r00         [17] 1593 	call	_VDP_WriteVRAM_16K
+                                   1594 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2230: }
+    0000048D DD E1            [14] 1595 	pop	ix
+    0000048F E1               [10] 1596 	pop	hl
+    00000490 F1               [10] 1597 	pop	af
+    00000491 E9               [ 4] 1598 	jp	(hl)
+                                   1599 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2234: void VDP_WriteLayout_GM2(const u8* src, u8 dx, u8 dy, u8 nx, u8 ny)
+                                   1600 ;	---------------------------------
+                                   1601 ; Function VDP_WriteLayout_GM2
+                                   1602 ; ---------------------------------
+    00000492                       1603 _VDP_WriteLayout_GM2::
+    00000492 DD E5            [15] 1604 	push	ix
+    00000494 DD 21 00 00      [14] 1605 	ld	ix,#0
+    00000498 DD 39            [15] 1606 	add	ix,sp
+    0000049A 3B               [ 6] 1607 	dec	sp
+    0000049B 4D               [ 4] 1608 	ld	c, l
+    0000049C 44               [ 4] 1609 	ld	b, h
+                                   1610 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2236: u16 dst = g_ScreenLayoutLow + (dy * 32) + dx;
+    0000049D DD 6E 05         [19] 1611 	ld	l, 5 (ix)
+                                   1612 ;	spillPairReg hl
+                                   1613 ;	spillPairReg hl
+    000004A0 26 00            [ 7] 1614 	ld	h, #0x00
+                                   1615 ;	spillPairReg hl
+                                   1616 ;	spillPairReg hl
+    000004A2 29               [11] 1617 	add	hl, hl
+    000004A3 29               [11] 1618 	add	hl, hl
+    000004A4 29               [11] 1619 	add	hl, hl
+    000004A5 29               [11] 1620 	add	hl, hl
+    000004A6 29               [11] 1621 	add	hl, hl
+    000004A7 ED 5Br31r00      [20] 1622 	ld	de, (_g_ScreenLayoutLow)
+    000004AB 19               [11] 1623 	add	hl, de
+    000004AC DD 5E 04         [19] 1624 	ld	e, 4 (ix)
+    000004AF 16 00            [ 7] 1625 	ld	d, #0x00
+    000004B1 19               [11] 1626 	add	hl, de
+                                   1627 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2237: for (u8 y = 0; y < ny; ++y)
+    000004B2 DD 36 FF 00      [19] 1628 	ld	-1 (ix), #0x00
+    000004B6                       1629 00103$:
+    000004B6 DD 7E FF         [19] 1630 	ld	a, -1 (ix)
+    000004B9 DD 96 07         [19] 1631 	sub	a, 7 (ix)
+    000004BC 30 22            [12] 1632 	jr	NC, 00105$
+                                   1633 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2239: VDP_WriteVRAM(src, dst, g_ScreenLayoutHigh, nx);
+    000004BE DD 5E 06         [19] 1634 	ld	e, 6 (ix)
+    000004C1 16 00            [ 7] 1635 	ld	d, #0x00
+    000004C3 E5               [11] 1636 	push	hl
+    000004C4 C5               [11] 1637 	push	bc
+    000004C5 EB               [ 4] 1638 	ex	de, hl
+    000004C6 E5               [11] 1639 	push	hl
+    000004C7 69               [ 4] 1640 	ld	l, c
+                                   1641 ;	spillPairReg hl
+                                   1642 ;	spillPairReg hl
+    000004C8 60               [ 4] 1643 	ld	h, b
+                                   1644 ;	spillPairReg hl
+                                   1645 ;	spillPairReg hl
+    000004C9 CDrA8r00         [17] 1646 	call	_VDP_WriteVRAM_16K
+    000004CC C1               [10] 1647 	pop	bc
+    000004CD E1               [10] 1648 	pop	hl
+                                   1649 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2240: src += nx;
+    000004CE 79               [ 4] 1650 	ld	a, c
+    000004CF DD 86 06         [19] 1651 	add	a, 6 (ix)
+    000004D2 4F               [ 4] 1652 	ld	c, a
+    000004D3 30 01            [12] 1653 	jr	NC, 00118$
+    000004D5 04               [ 4] 1654 	inc	b
+    000004D6                       1655 00118$:
+                                   1656 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2241: dst += 32;
+    000004D6 11 20 00         [10] 1657 	ld	de, #0x0020
+    000004D9 19               [11] 1658 	add	hl, de
+                                   1659 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2237: for (u8 y = 0; y < ny; ++y)
+    000004DA DD 34 FF         [23] 1660 	inc	-1 (ix)
+    000004DD C3rB6r04         [10] 1661 	jp	00103$
+    000004E0                       1662 00105$:
+                                   1663 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2243: }
+    000004E0 33               [ 6] 1664 	inc	sp
+    000004E1 DD E1            [14] 1665 	pop	ix
+    000004E3 E1               [10] 1666 	pop	hl
+    000004E4 F1               [10] 1667 	pop	af
+    000004E5 F1               [10] 1668 	pop	af
+    000004E6 E9               [ 4] 1669 	jp	(hl)
+                                   1670 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2247: void VDP_FillLayout_GM2(u8 value, u8 dx, u8 dy, u8 nx, u8 ny)
+                                   1671 ;	---------------------------------
+                                   1672 ; Function VDP_FillLayout_GM2
+                                   1673 ; ---------------------------------
+    000004E7                       1674 _VDP_FillLayout_GM2::
+    000004E7 DD E5            [15] 1675 	push	ix
+    000004E9 DD 21 00 00      [14] 1676 	ld	ix,#0
+    000004ED DD 39            [15] 1677 	add	ix,sp
+    000004EF 4F               [ 4] 1678 	ld	c, a
+    000004F0 45               [ 4] 1679 	ld	b, l
+                                   1680 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2249: u16 dst = g_ScreenLayoutLow + (dy * 32) + dx;
+    000004F1 DD 6E 04         [19] 1681 	ld	l, 4 (ix)
+                                   1682 ;	spillPairReg hl
+                                   1683 ;	spillPairReg hl
+    000004F4 26 00            [ 7] 1684 	ld	h, #0x00
+                                   1685 ;	spillPairReg hl
+                                   1686 ;	spillPairReg hl
+    000004F6 29               [11] 1687 	add	hl, hl
+    000004F7 29               [11] 1688 	add	hl, hl
+    000004F8 29               [11] 1689 	add	hl, hl
+    000004F9 29               [11] 1690 	add	hl, hl
+    000004FA 29               [11] 1691 	add	hl, hl
+    000004FB ED 5Br31r00      [20] 1692 	ld	de, (_g_ScreenLayoutLow)
+    000004FF 19               [11] 1693 	add	hl, de
+    00000500 58               [ 4] 1694 	ld	e, b
+    00000501 16 00            [ 7] 1695 	ld	d, #0x00
+    00000503 19               [11] 1696 	add	hl, de
+                                   1697 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2250: for (u8 y = 0; y < ny; ++y)
+    00000504 06 00            [ 7] 1698 	ld	b, #0x00
+    00000506                       1699 00103$:
+    00000506 78               [ 4] 1700 	ld	a, b
+    00000507 DD 96 06         [19] 1701 	sub	a, 6 (ix)
+    0000050A 30 17            [12] 1702 	jr	NC, 00105$
+                                   1703 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2252: VDP_FillVRAM(value, dst, g_ScreenLayoutHigh, nx);
+    0000050C DD 5E 05         [19] 1704 	ld	e, 5 (ix)
+    0000050F 16 00            [ 7] 1705 	ld	d, #0x00
+    00000511 E5               [11] 1706 	push	hl
+    00000512 C5               [11] 1707 	push	bc
+    00000513 EB               [ 4] 1708 	ex	de, hl
+    00000514 E5               [11] 1709 	push	hl
+    00000515 79               [ 4] 1710 	ld	a, c
+    00000516 CDrD1r00         [17] 1711 	call	_VDP_FillVRAM_16K
+    00000519 C1               [10] 1712 	pop	bc
+    0000051A E1               [10] 1713 	pop	hl
+                                   1714 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2253: dst += 32;
+    0000051B 11 20 00         [10] 1715 	ld	de, #0x0020
+    0000051E 19               [11] 1716 	add	hl, de
+                                   1717 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2250: for (u8 y = 0; y < ny; ++y)
+    0000051F 04               [ 4] 1718 	inc	b
+    00000520 C3r06r05         [10] 1719 	jp	00103$
+    00000523                       1720 00105$:
+                                   1721 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/vdp.c:2255: }
+    00000523 DD E1            [14] 1722 	pop	ix
+    00000525 E1               [10] 1723 	pop	hl
+    00000526 F1               [10] 1724 	pop	af
+    00000527 33               [ 6] 1725 	inc	sp
+    00000528 E9               [ 4] 1726 	jp	(hl)
+                                   1727 	.area _CODE
+                                   1728 	.area _INITIALIZER
+    00000000                       1729 __xinit__g_VDPInitilized:
+    00000000 00                    1730 	.db #0x00	; 0
+                                   1731 	.area _CABS (ABS)

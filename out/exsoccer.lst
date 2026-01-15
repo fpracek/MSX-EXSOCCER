@@ -1,0 +1,1266 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.2.0 #13081 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module exsoccer
+                                      6 	.optsdcc -mz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _InterruptHook
+                                     12 	.globl _DEBUG_INIT
+                                     13 	.globl _TickShowKickOff
+                                     14 	.globl _TickUpdateTime
+                                     15 	.globl _TickActiveFieldZone
+                                     16 	.globl _GetJoystick1Direction
+                                     17 	.globl _TickPlayerToOwnTarget
+                                     18 	.globl _UpdateSpritesPositions
+                                     19 	.globl _SetTeamsPresentationSpritesPosition
+                                     20 	.globl _ShowHeaderInfo
+                                     21 	.globl _InitVariables
+                                     22 	.globl _ShowFieldZone
+                                     23 	.globl _SetTeam2Palette
+                                     24 	.globl _SetTeam1Palette
+                                     25 	.globl _V9_PutLayerBTileAtPos
+                                     26 	.globl _V9_PutLayerATileAtPos
+                                     27 	.globl _InitPalette
+                                     28 	.globl _UpdateV9990
+                                     29 	.globl _V9_Detect
+                                     30 	.globl _V9_SetScrollingBY
+                                     31 	.globl _V9_SetScrollingY
+                                     32 	.globl _V9_SetScreenMode
+                                     33 	.globl _V9_WriteVRAM_CurrentAddr
+                                     34 	.globl _V9_FillVRAM16_CurrentAddr
+                                     35 	.globl _V9_FillVRAM_CurrentAddr
+                                     36 	.globl _V9_SetWriteAddress
+                                     37 	.globl _V9_GetRegister
+                                     38 	.globl _V9_SetRegister16
+                                     39 	.globl _V9_SetRegister
+                                     40 	.globl _V9_SetPort
+                                     41 	.globl _Print_SetColor
+                                     42 	.globl _Print_DrawText
+                                     43 	.globl _Print_SetTextFont
+                                     44 	.globl _VDP_RegWriteBakMask
+                                     45 	.globl _VDP_SetMode
+                                     46 	.globl _VDP_ClearVRAM
+                                     47 	.globl _g_Timer
+                                     48 	.globl _g_FieldScrollSpeed
+                                     49 	.globl _g_MatchStatus
+                                     50 	.globl _g_PlayersPositioningPhaseCount
+                                     51 	.globl _g_FieldScrollingActionInProgress
+                                     52 	.globl _g_FieldCurrentYPosition
+                                     53 	.globl _g_VSynch
+                                     54 	.globl _g_SecondsToEndOfMatch
+                                     55 	.globl _g_RestartKickTeamId
+                                     56 	.globl _g_ActiveFieldZone
+                                     57 	.globl _g_Ball
+                                     58 	.globl _g_Players
+                                     59 	.globl _g_Team2Score
+                                     60 	.globl _g_Team1Score
+                                     61 	.globl _g_Team2PaletteId
+                                     62 	.globl _g_Team1PaletteId
+                                     63 	.globl _g_FrameCounter
+                                     64 	.globl _g_SLTSL
+                                     65 	.globl _g_GRPACY
+                                     66 	.globl _g_GRPACX
+                                     67 	.globl _g_LOGOPR
+                                     68 	.globl _g_CMASK
+                                     69 	.globl _g_CLOC
+                                     70 	.globl _g_FNKSTR
+                                     71 	.globl _g_ATRBYT
+                                     72 	.globl _g_BDRCLR
+                                     73 	.globl _g_BAKCLR
+                                     74 	.globl _g_FORCLR
+                                     75 	.globl _g_CSRX
+                                     76 	.globl _g_CSRY
+                                     77 	.globl _g_CLIKSW
+                                     78 	.globl _g_MLTPAT
+                                     79 	.globl _g_MLTATR
+                                     80 	.globl _g_MLTCGP
+                                     81 	.globl _g_MLTCOL
+                                     82 	.globl _g_MLTNAM
+                                     83 	.globl _g_GRPPAT
+                                     84 	.globl _g_GRPATR
+                                     85 	.globl _g_GRPCGP
+                                     86 	.globl _g_GRPCOL
+                                     87 	.globl _g_GRPNAM
+                                     88 	.globl _g_T32PAT
+                                     89 	.globl _g_T32ATR
+                                     90 	.globl _g_T32CGP
+                                     91 	.globl _g_T32COL
+                                     92 	.globl _g_T32NAM
+                                     93 	.globl _g_TXTPAT
+                                     94 	.globl _g_TXTATR
+                                     95 	.globl _g_TXTCGP
+                                     96 	.globl _g_TXTCOL
+                                     97 	.globl _g_TXTNAM
+                                     98 	.globl _g_CLMLST
+                                     99 	.globl _g_CRTCNT
+                                    100 	.globl _g_LINLEN
+                                    101 	.globl _g_LINL32
+                                    102 	.globl _g_LINL40
+                                    103 	.globl _g_BDOS
+                                    104 	.globl _g_MASTER
+                                    105 	.globl _g_RAMAD3
+                                    106 	.globl _g_RAMAD2
+                                    107 	.globl _g_RAMAD1
+                                    108 	.globl _g_RAMAD0
+                                    109 	.globl _g_BREAKV
+                                    110 	.globl _g_DISKVE
+                                    111 	.globl _g_KANJTABLE
+                                    112 	.globl _g_STRSRC
+                                    113 	.globl _g_SUBRID
+                                    114 	.globl _g_CHAR_16
+                                    115 	.globl _g_MSXMID
+                                    116 	.globl _g_MSXVER
+                                    117 	.globl _g_ROMVersion
+                                    118 	.globl _g_BASRVN
+                                    119 	.globl _g_VDP_DW
+                                    120 	.globl _g_VDP_DR
+                                    121 	.globl _g_CGTABL
+                                    122 	.globl _g_SVFFFD
+                                    123 	.globl _g_RG27SAV
+                                    124 	.globl _g_RG26SAV
+                                    125 	.globl _g_RG25SAV
+                                    126 	.globl _g_SVFFF8
+                                    127 	.globl _g_MINROM
+                                    128 	.globl _g_RG23SAV
+                                    129 	.globl _g_RG22SAV
+                                    130 	.globl _g_RG21SAV
+                                    131 	.globl _g_RG20SAV
+                                    132 	.globl _g_RG19SAV
+                                    133 	.globl _g_RG18SAV
+                                    134 	.globl _g_RG17SAV
+                                    135 	.globl _g_RG16SAV
+                                    136 	.globl _g_RG15SAV
+                                    137 	.globl _g_RG14SAV
+                                    138 	.globl _g_RG13SAV
+                                    139 	.globl _g_RG12SAV
+                                    140 	.globl _g_RG11SAV
+                                    141 	.globl _g_RG10SAV
+                                    142 	.globl _g_RG09SAV
+                                    143 	.globl _g_RG08SAV
+                                    144 	.globl _g_PROCNM
+                                    145 	.globl _g_SLTWRK
+                                    146 	.globl _g_SLTATR
+                                    147 	.globl _g_SLTTBL
+                                    148 	.globl _g_EXPTBL
+                                    149 	.globl _g_MNROM
+                                    150 	.globl _g_DRWANG
+                                    151 	.globl _g_DRWSCL
+                                    152 	.globl _g_DRWFLG
+                                    153 	.globl _g_GYPOS
+                                    154 	.globl _g_GXPOS
+                                    155 	.globl _g_BRDATR
+                                    156 	.globl _g_CASPRV
+                                    157 	.globl _g_OLDSCR
+                                    158 	.globl _g_SCRMOD
+                                    159 	.globl _g_FLBMEM
+                                    160 	.globl _g_KANAMD
+                                    161 	.globl _g_KANAST
+                                    162 	.globl _g_CAPST
+                                    163 	.globl _g_CSTYLE
+                                    164 	.globl _g_CSRSW
+                                    165 	.globl _g_INSFLG
+                                    166 	.globl _g_ESCCNT
+                                    167 	.globl _g_GRPHED
+                                    168 	.globl _g_WINWID
+                                    169 	.globl _g_LOWLIM
+                                    170 	.globl _g_INTCNT
+                                    171 	.globl _g_INTVAL
+                                    172 	.globl _g_JIFFY
+                                    173 	.globl _g_PADX
+                                    174 	.globl _g_PADY
+                                    175 	.globl _g_INTFLG
+                                    176 	.globl _g_RTYCNT
+                                    177 	.globl _g_TRPTBL
+                                    178 	.globl _g_HIMEM
+                                    179 	.globl _g_BOTTOM
+                                    180 	.globl _g_PATWRK
+                                    181 	.globl _g_LINWRK
+                                    182 	.globl _g_KEYBUF
+                                    183 	.globl _g_NEWKEY
+                                    184 	.globl _g_OLDKEY
+                                    185 	.globl _g_CLIKFL
+                                    186 	.globl _g_ONGSBF
+                                    187 	.globl _g_FNKFLG
+                                    188 	.globl _g_FNKSWI
+                                    189 	.globl _g_CODSAV
+                                    190 	.globl _g_FSTPOS
+                                    191 	.globl _g_LINTTB
+                                    192 	.globl _g_BASROM
+                                    193 	.globl _g_ENSTOP
+                                    194 	.globl _g_VCBC
+                                    195 	.globl _g_VCBB
+                                    196 	.globl _g_VCBA
+                                    197 	.globl _g_PLYCNT
+                                    198 	.globl _g_MUSICF
+                                    199 	.globl _g_QUEUEN
+                                    200 	.globl _g_MCLPTR
+                                    201 	.globl _g_MCLLEN
+                                    202 	.globl _g_SAVVOL
+                                    203 	.globl _g_VOICEN
+                                    204 	.globl _g_SAVSP
+                                    205 	.globl _g_PRSCNT
+                                    206 	.globl _g_LSTMOD
+                                    207 	.globl _g_LSTCOM
+                                    208 	.globl _g_COMMSK
+                                    209 	.globl _g_ESTBLS
+                                    210 	.globl _g_FLAGS
+                                    211 	.globl _g_ERRORS
+                                    212 	.globl _g_DATCNT
+                                    213 	.globl _g_DEVNUM
+                                    214 	.globl _g_OLDINT
+                                    215 	.globl _g_OLDSTT
+                                    216 	.globl _g_MEXBIh
+                                    217 	.globl _g_RSIQLN
+                                    218 	.globl _g_RSFCB
+                                    219 	.globl _g_TOCNT
+                                    220 	.globl _g_RSTMP
+                                    221 	.globl _g_YSAVE
+                                    222 	.globl _g_XSAVE
+                                    223 	.globl _g_NORUSE
+                                    224 	.globl _g_MODE
+                                    225 	.globl _g_ROMA
+                                    226 	.globl _g_CHRCNT
+                                    227 	.globl _g_EXBRSA
+                                    228 	.globl _g_AVCSAV
+                                    229 	.globl _g_ACPAGE
+                                    230 	.globl _g_DPPAGE
+                                    231 	.globl _g_RS2IQ
+                                    232 	.globl _g_VOICCQ
+                                    233 	.globl _g_VOICBQ
+                                    234 	.globl _g_VOICAQ
+                                    235 	.globl _g_QUEBAK
+                                    236 	.globl _g_QUETAB
+                                    237 	.globl _g_ASPCT2
+                                    238 	.globl _g_ASPCT1
+                                    239 	.globl _g_HEADER
+                                    240 	.globl _g_HIGH
+                                    241 	.globl _g_LOW
+                                    242 	.globl _g_CS240
+                                    243 	.globl _g_CS120
+                                    244 	.globl _g_GETPNT
+                                    245 	.globl _g_PUTPNT
+                                    246 	.globl _g_REPCNT
+                                    247 	.globl _g_SCNCNT
+                                    248 	.globl _g_FRCNEW
+                                    249 	.globl _g_QUEUES
+                                    250 	.globl _g_MINUPD
+                                    251 	.globl _g_MAXUPD
+                                    252 	.globl _g_TRGFLG
+                                    253 	.globl _g_STATFL
+                                    254 	.globl _g_RG7SAV
+                                    255 	.globl _g_RG6SAV
+                                    256 	.globl _g_RG5SAV
+                                    257 	.globl _g_RG4SAV
+                                    258 	.globl _g_RG3SAV
+                                    259 	.globl _g_RG2SAV
+                                    260 	.globl _g_RG1SAV
+                                    261 	.globl _g_RG0SAV
+                                    262 	.globl _g_CNSDFG
+                                    263 	.globl _g_USRTAB
+                                    264 	.globl _g_CLPRIM
+                                    265 	.globl _g_WRPRIM
+                                    266 	.globl _g_RDPRIM
+                                    267 	.globl _V9_InterruptVBlank
+                                    268 	.globl _V9_InterruptHBlank
+                                    269 	.globl _V9_InterruptCommand
+                                    270 	.globl _LoadP1LayerA
+                                    271 	.globl _LoadP1LayerB
+                                    272 	.globl _GameStart
+                                    273 	.globl _InitializeV9990
+                                    274 	.globl _LoadSprites
+                                    275 	.globl _main
+                                    276 ;--------------------------------------------------------
+                                    277 ; special function registers
+                                    278 ;--------------------------------------------------------
+                         000000A8   279 _g_PortPrimarySlot	=	0x00a8
+                         000000A9   280 _g_PortReadKeyboard	=	0x00a9
+                         000000AA   281 _g_PortAccessKeyboard	=	0x00aa
+                         000000AB   282 _g_PortControl	=	0x00ab
+                         00000098   283 _g_VDP_DataPort	=	0x0098
+                         00000099   284 _g_VDP_RegPort	=	0x0099
+                         00000099   285 _g_VDP_AddrPort	=	0x0099
+                         00000099   286 _g_VDP_StatPort	=	0x0099
+                         000000A0   287 _g_PSG_RegPort	=	0x00a0
+                         000000A1   288 _g_PSG_DataPort	=	0x00a1
+                         000000A2   289 _g_PSG_StatPort	=	0x00a2
+                         00000010   290 _g_PSG_Ext_RegPort	=	0x0010
+                         00000011   291 _g_PSG_Ext_DataPort	=	0x0011
+                         00000012   292 _g_PSG_Ext_StatPort	=	0x0012
+                         0000007C   293 _g_MSXMusic_IndexPort	=	0x007c
+                         0000007D   294 _g_MSXMusic_DataPort	=	0x007d
+                         000000C0   295 _g_MSXAudio_IndexPort	=	0x00c0
+                         000000C1   296 _g_MSXAudio_DataPort	=	0x00c1
+                         000000C2   297 _g_MSXAudio_IndexPort2	=	0x00c2
+                         000000C3   298 _g_MSXAudio_DataPort2	=	0x00c3
+                         000000B4   299 _g_RTC_AddrPort	=	0x00b4
+                         000000B5   300 _g_RTC_DataPort	=	0x00b5
+                         00000060   301 _g_V9_VRAMPort	=	0x0060
+                         00000061   302 _g_V9_PalettePort	=	0x0061
+                         00000062   303 _g_V9_CmdDataPort	=	0x0062
+                         00000063   304 _g_V9_RegDataPort	=	0x0063
+                         00000064   305 _g_V9_RegSelectPort	=	0x0064
+                         00000065   306 _g_V9_SatusPort	=	0x0065
+                         00000066   307 _g_V9_IntFlagPort	=	0x0066
+                         00000067   308 _g_V9_SysCtrlPort	=	0x0067
+                         00000068   309 _g_V9_KanjiAddrLPort	=	0x0068
+                         00000069   310 _g_V9_KanjiAddrHPort	=	0x0069
+                         00000069   311 _g_V9_KanjiDataPort	=	0x0069
+                         0000006A   312 _g_V9_Kanji2AddrLPort	=	0x006a
+                         0000006B   313 _g_V9_Kanji2AddrHPort	=	0x006b
+                         0000006B   314 _g_V9_Kanji2DataPort	=	0x006b
+                         0000006F   315 _g_V9_OutputCtrPort	=	0x006f
+                                    316 ;--------------------------------------------------------
+                                    317 ; ram data
+                                    318 ;--------------------------------------------------------
+                                    319 	.area _DATA
+                         0000F3AE   320 _g_LINL40	=	0xf3ae
+                         0000F3AF   321 _g_LINL32	=	0xf3af
+                         0000F3B0   322 _g_LINLEN	=	0xf3b0
+                         0000F3B1   323 _g_CRTCNT	=	0xf3b1
+                         0000F3B2   324 _g_CLMLST	=	0xf3b2
+                         0000F3B3   325 _g_TXTNAM	=	0xf3b3
+                         0000F3B5   326 _g_TXTCOL	=	0xf3b5
+                         0000F3B7   327 _g_TXTCGP	=	0xf3b7
+                         0000F3B9   328 _g_TXTATR	=	0xf3b9
+                         0000F3BB   329 _g_TXTPAT	=	0xf3bb
+                         0000F3BD   330 _g_T32NAM	=	0xf3bd
+                         0000F3BF   331 _g_T32COL	=	0xf3bf
+                         0000F3C1   332 _g_T32CGP	=	0xf3c1
+                         0000F3C3   333 _g_T32ATR	=	0xf3c3
+                         0000F3C5   334 _g_T32PAT	=	0xf3c5
+                         0000F3C7   335 _g_GRPNAM	=	0xf3c7
+                         0000F3C9   336 _g_GRPCOL	=	0xf3c9
+                         0000F3CB   337 _g_GRPCGP	=	0xf3cb
+                         0000F3CD   338 _g_GRPATR	=	0xf3cd
+                         0000F3CF   339 _g_GRPPAT	=	0xf3cf
+                         0000F3D1   340 _g_MLTNAM	=	0xf3d1
+                         0000F3D3   341 _g_MLTCOL	=	0xf3d3
+                         0000F3D5   342 _g_MLTCGP	=	0xf3d5
+                         0000F3D7   343 _g_MLTATR	=	0xf3d7
+                         0000F3D9   344 _g_MLTPAT	=	0xf3d9
+                         0000F3DB   345 _g_CLIKSW	=	0xf3db
+                         0000F3DC   346 _g_CSRY	=	0xf3dc
+                         0000F3DD   347 _g_CSRX	=	0xf3dd
+                         0000F3E9   348 _g_FORCLR	=	0xf3e9
+                         0000F3EA   349 _g_BAKCLR	=	0xf3ea
+                         0000F3EB   350 _g_BDRCLR	=	0xf3eb
+                         0000F3F2   351 _g_ATRBYT	=	0xf3f2
+                         0000F87F   352 _g_FNKSTR	=	0xf87f
+                         0000F92A   353 _g_CLOC	=	0xf92a
+                         0000F92C   354 _g_CMASK	=	0xf92c
+                         0000FB02   355 _g_LOGOPR	=	0xfb02
+                         0000FCB7   356 _g_GRPACX	=	0xfcb7
+                         0000FCB9   357 _g_GRPACY	=	0xfcb9
+                         0000FFFF   358 _g_SLTSL	=	0xffff
+    00000000                        359 _g_FrameCounter::
+    00000000                        360 	.ds 2
+    00000002                        361 _g_Team1PaletteId::
+    00000002                        362 	.ds 1
+    00000003                        363 _g_Team2PaletteId::
+    00000003                        364 	.ds 1
+    00000004                        365 _g_Team1Score::
+    00000004                        366 	.ds 1
+    00000005                        367 _g_Team2Score::
+    00000005                        368 	.ds 1
+    00000006                        369 _g_Players::
+    00000006                        370 	.ds 240
+    000000F6                        371 _g_Ball::
+    000000F6                        372 	.ds 9
+    000000FF                        373 _g_ActiveFieldZone::
+    000000FF                        374 	.ds 1
+    00000100                        375 _g_RestartKickTeamId::
+    00000100                        376 	.ds 1
+    00000101                        377 _g_SecondsToEndOfMatch::
+    00000101                        378 	.ds 1
+                                    379 ;--------------------------------------------------------
+                                    380 ; ram data
+                                    381 ;--------------------------------------------------------
+                                    382 	.area _INITIALIZED
+    00000000                        383 _g_VSynch::
+    00000000                        384 	.ds 1
+    00000001                        385 _g_FieldCurrentYPosition::
+    00000001                        386 	.ds 2
+    00000003                        387 _g_FieldScrollingActionInProgress::
+    00000003                        388 	.ds 1
+    00000004                        389 _g_PlayersPositioningPhaseCount::
+    00000004                        390 	.ds 1
+    00000005                        391 _g_MatchStatus::
+    00000005                        392 	.ds 1
+    00000006                        393 _g_FieldScrollSpeed::
+    00000006                        394 	.ds 1
+    00000007                        395 _g_Timer::
+    00000007                        396 	.ds 1
+                                    397 ;--------------------------------------------------------
+                                    398 ; absolute external ram data
+                                    399 ;--------------------------------------------------------
+                                    400 	.area _DABS (ABS)
+                                    401 ;--------------------------------------------------------
+                                    402 ; global & static initialisations
+                                    403 ;--------------------------------------------------------
+                                    404 	.area _HOME
+                                    405 	.area _GSINIT
+                                    406 	.area _GSFINAL
+                                    407 	.area _GSINIT
+                                    408 ;--------------------------------------------------------
+                                    409 ; Home
+                                    410 ;--------------------------------------------------------
+                                    411 	.area _HOME
+                                    412 	.area _HOME
+                                    413 ;--------------------------------------------------------
+                                    414 ; code
+                                    415 ;--------------------------------------------------------
+                                    416 	.area _CODE
+                                    417 ;./exsoccer.c:46: void V9_InterruptVBlank()
+                                    418 ;	---------------------------------
+                                    419 ; Function V9_InterruptVBlank
+                                    420 ; ---------------------------------
+    00000000                        421 _V9_InterruptVBlank::
+                                    422 ;./exsoccer.c:48: g_VSynch = TRUE;
+    00000000 21r00r00         [10]  423 	ld	hl, #_g_VSynch
+    00000003 36 01            [10]  424 	ld	(hl), #0x01
+                                    425 ;./exsoccer.c:49: }
+    00000005 C9               [10]  426 	ret
+                         0000F380   427 _g_RDPRIM	=	0xf380
+                         0000F385   428 _g_WRPRIM	=	0xf385
+                         0000F38C   429 _g_CLPRIM	=	0xf38c
+                         0000F39A   430 _g_USRTAB	=	0xf39a
+                         0000F3DE   431 _g_CNSDFG	=	0xf3de
+                         0000F3DF   432 _g_RG0SAV	=	0xf3df
+                         0000F3E0   433 _g_RG1SAV	=	0xf3e0
+                         0000F3E1   434 _g_RG2SAV	=	0xf3e1
+                         0000F3E2   435 _g_RG3SAV	=	0xf3e2
+                         0000F3E3   436 _g_RG4SAV	=	0xf3e3
+                         0000F3E4   437 _g_RG5SAV	=	0xf3e4
+                         0000F3E5   438 _g_RG6SAV	=	0xf3e5
+                         0000F3E6   439 _g_RG7SAV	=	0xf3e6
+                         0000F3E7   440 _g_STATFL	=	0xf3e7
+                         0000F3E8   441 _g_TRGFLG	=	0xf3e8
+                         0000F3EC   442 _g_MAXUPD	=	0xf3ec
+                         0000F3EF   443 _g_MINUPD	=	0xf3ef
+                         0000F3F3   444 _g_QUEUES	=	0xf3f3
+                         0000F3F5   445 _g_FRCNEW	=	0xf3f5
+                         0000F3F6   446 _g_SCNCNT	=	0xf3f6
+                         0000F3F7   447 _g_REPCNT	=	0xf3f7
+                         0000F3F8   448 _g_PUTPNT	=	0xf3f8
+                         0000F3FA   449 _g_GETPNT	=	0xf3fa
+                         0000F3FC   450 _g_CS120	=	0xf3fc
+                         0000F401   451 _g_CS240	=	0xf401
+                         0000F406   452 _g_LOW	=	0xf406
+                         0000F408   453 _g_HIGH	=	0xf408
+                         0000F40A   454 _g_HEADER	=	0xf40a
+                         0000F40B   455 _g_ASPCT1	=	0xf40b
+                         0000F40D   456 _g_ASPCT2	=	0xf40d
+                         0000F959   457 _g_QUETAB	=	0xf959
+                         0000F971   458 _g_QUEBAK	=	0xf971
+                         0000F975   459 _g_VOICAQ	=	0xf975
+                         0000F9F5   460 _g_VOICBQ	=	0xf9f5
+                         0000FA75   461 _g_VOICCQ	=	0xfa75
+                         0000FAF5   462 _g_RS2IQ	=	0xfaf5
+                         0000FAF5   463 _g_DPPAGE	=	0xfaf5
+                         0000FAF6   464 _g_ACPAGE	=	0xfaf6
+                         0000FAF7   465 _g_AVCSAV	=	0xfaf7
+                         0000FAF8   466 _g_EXBRSA	=	0xfaf8
+                         0000FAF9   467 _g_CHRCNT	=	0xfaf9
+                         0000FAFA   468 _g_ROMA	=	0xfafa
+                         0000FAFC   469 _g_MODE	=	0xfafc
+                         0000FAFD   470 _g_NORUSE	=	0xfafd
+                         0000FAFE   471 _g_XSAVE	=	0xfafe
+                         0000FB00   472 _g_YSAVE	=	0xfb00
+                         0000FB03   473 _g_RSTMP	=	0xfb03
+                         0000FB03   474 _g_TOCNT	=	0xfb03
+                         0000FB04   475 _g_RSFCB	=	0xfb04
+                         0000FB06   476 _g_RSIQLN	=	0xfb06
+                         0000FB07   477 _g_MEXBIh	=	0xfb07
+                         0000FB0C   478 _g_OLDSTT	=	0xfb0c
+                         0000FB0C   479 _g_OLDINT	=	0xfb0c
+                         0000FB16   480 _g_DEVNUM	=	0xfb16
+                         0000FB17   481 _g_DATCNT	=	0xfb17
+                         0000FB1A   482 _g_ERRORS	=	0xfb1a
+                         0000FB1B   483 _g_FLAGS	=	0xfb1b
+                         0000FB1C   484 _g_ESTBLS	=	0xfb1c
+                         0000FB1D   485 _g_COMMSK	=	0xfb1d
+                         0000FB1E   486 _g_LSTCOM	=	0xfb1e
+                         0000FB1F   487 _g_LSTMOD	=	0xfb1f
+                         0000FB35   488 _g_PRSCNT	=	0xfb35
+                         0000FB36   489 _g_SAVSP	=	0xfb36
+                         0000FB38   490 _g_VOICEN	=	0xfb38
+                         0000FB39   491 _g_SAVVOL	=	0xfb39
+                         0000FB3B   492 _g_MCLLEN	=	0xfb3b
+                         0000FB3C   493 _g_MCLPTR	=	0xfb3c
+                         0000FB3E   494 _g_QUEUEN	=	0xfb3e
+                         0000FB3F   495 _g_MUSICF	=	0xfb3f
+                         0000FB40   496 _g_PLYCNT	=	0xfb40
+                         0000FB41   497 _g_VCBA	=	0xfb41
+                         0000FB66   498 _g_VCBB	=	0xfb66
+                         0000FB8B   499 _g_VCBC	=	0xfb8b
+                         0000FBB0   500 _g_ENSTOP	=	0xfbb0
+                         0000FBB1   501 _g_BASROM	=	0xfbb1
+                         0000FBB2   502 _g_LINTTB	=	0xfbb2
+                         0000FBCA   503 _g_FSTPOS	=	0xfbca
+                         0000FBCC   504 _g_CODSAV	=	0xfbcc
+                         0000FBCD   505 _g_FNKSWI	=	0xfbcd
+                         0000FBCE   506 _g_FNKFLG	=	0xfbce
+                         0000FBD8   507 _g_ONGSBF	=	0xfbd8
+                         0000FBD9   508 _g_CLIKFL	=	0xfbd9
+                         0000FBDA   509 _g_OLDKEY	=	0xfbda
+                         0000FBE5   510 _g_NEWKEY	=	0xfbe5
+                         0000FBF0   511 _g_KEYBUF	=	0xfbf0
+                         0000FC18   512 _g_LINWRK	=	0xfc18
+                         0000FC40   513 _g_PATWRK	=	0xfc40
+                         0000FC48   514 _g_BOTTOM	=	0xfc48
+                         0000FC4A   515 _g_HIMEM	=	0xfc4a
+                         0000FC4C   516 _g_TRPTBL	=	0xfc4c
+                         0000FC9A   517 _g_RTYCNT	=	0xfc9a
+                         0000FC9B   518 _g_INTFLG	=	0xfc9b
+                         0000FC9C   519 _g_PADY	=	0xfc9c
+                         0000FC9D   520 _g_PADX	=	0xfc9d
+                         0000FC9E   521 _g_JIFFY	=	0xfc9e
+                         0000FCA0   522 _g_INTVAL	=	0xfca0
+                         0000FCA2   523 _g_INTCNT	=	0xfca2
+                         0000FCA4   524 _g_LOWLIM	=	0xfca4
+                         0000FCA5   525 _g_WINWID	=	0xfca5
+                         0000FCA6   526 _g_GRPHED	=	0xfca6
+                         0000FCA7   527 _g_ESCCNT	=	0xfca7
+                         0000FCA8   528 _g_INSFLG	=	0xfca8
+                         0000FCA9   529 _g_CSRSW	=	0xfca9
+                         0000FCAA   530 _g_CSTYLE	=	0xfcaa
+                         0000FCAB   531 _g_CAPST	=	0xfcab
+                         0000FCAC   532 _g_KANAST	=	0xfcac
+                         0000FCAD   533 _g_KANAMD	=	0xfcad
+                         0000FCAE   534 _g_FLBMEM	=	0xfcae
+                         0000FCAF   535 _g_SCRMOD	=	0xfcaf
+                         0000FCB0   536 _g_OLDSCR	=	0xfcb0
+                         0000FCB1   537 _g_CASPRV	=	0xfcb1
+                         0000FCB2   538 _g_BRDATR	=	0xfcb2
+                         0000FCB3   539 _g_GXPOS	=	0xfcb3
+                         0000FCB5   540 _g_GYPOS	=	0xfcb5
+                         0000FCBB   541 _g_DRWFLG	=	0xfcbb
+                         0000FCBC   542 _g_DRWSCL	=	0xfcbc
+                         0000FCBD   543 _g_DRWANG	=	0xfcbd
+                         0000FCC1   544 _g_MNROM	=	0xfcc1
+                         0000FCC1   545 _g_EXPTBL	=	0xfcc1
+                         0000FCC5   546 _g_SLTTBL	=	0xfcc5
+                         0000FCC9   547 _g_SLTATR	=	0xfcc9
+                         0000FD09   548 _g_SLTWRK	=	0xfd09
+                         0000FD89   549 _g_PROCNM	=	0xfd89
+                         0000FFE7   550 _g_RG08SAV	=	0xffe7
+                         0000FFE8   551 _g_RG09SAV	=	0xffe8
+                         0000FFE9   552 _g_RG10SAV	=	0xffe9
+                         0000FFEA   553 _g_RG11SAV	=	0xffea
+                         0000FFEB   554 _g_RG12SAV	=	0xffeb
+                         0000FFEC   555 _g_RG13SAV	=	0xffec
+                         0000FFED   556 _g_RG14SAV	=	0xffed
+                         0000FFEE   557 _g_RG15SAV	=	0xffee
+                         0000FFEF   558 _g_RG16SAV	=	0xffef
+                         0000FFF0   559 _g_RG17SAV	=	0xfff0
+                         0000FFF1   560 _g_RG18SAV	=	0xfff1
+                         0000FFF2   561 _g_RG19SAV	=	0xfff2
+                         0000FFF3   562 _g_RG20SAV	=	0xfff3
+                         0000FFF4   563 _g_RG21SAV	=	0xfff4
+                         0000FFF5   564 _g_RG22SAV	=	0xfff5
+                         0000FFF6   565 _g_RG23SAV	=	0xfff6
+                         0000FFF7   566 _g_MINROM	=	0xfff7
+                         0000FFF8   567 _g_SVFFF8	=	0xfff8
+                         0000FFFA   568 _g_RG25SAV	=	0xfffa
+                         0000FFFB   569 _g_RG26SAV	=	0xfffb
+                         0000FFFC   570 _g_RG27SAV	=	0xfffc
+                         0000FFFD   571 _g_SVFFFD	=	0xfffd
+                         00000004   572 _g_CGTABL	=	0x0004
+                         00000006   573 _g_VDP_DR	=	0x0006
+                         00000007   574 _g_VDP_DW	=	0x0007
+                         0000002B   575 _g_BASRVN	=	0x002b
+                         0000002B   576 _g_ROMVersion	=	0x002b
+                         0000002D   577 _g_MSXVER	=	0x002d
+                         0000002E   578 _g_MSXMID	=	0x002e
+                         00000034   579 _g_CHAR_16	=	0x0034
+                         00000000   580 _g_SUBRID	=	0x0000
+                         00000002   581 _g_STRSRC	=	0x0002
+                         0000F30F   582 _g_KANJTABLE	=	0xf30f
+                         0000F323   583 _g_DISKVE	=	0xf323
+                         0000F325   584 _g_BREAKV	=	0xf325
+                         0000F341   585 _g_RAMAD0	=	0xf341
+                         0000F342   586 _g_RAMAD1	=	0xf342
+                         0000F343   587 _g_RAMAD2	=	0xf343
+                         0000F344   588 _g_RAMAD3	=	0xf344
+                         0000F348   589 _g_MASTER	=	0xf348
+                         0000F37D   590 _g_BDOS	=	0xf37d
+                                    591 ;./exsoccer.c:52: void V9_InterruptHBlank()
+                                    592 ;	---------------------------------
+                                    593 ; Function V9_InterruptHBlank
+                                    594 ; ---------------------------------
+    00000006                        595 _V9_InterruptHBlank::
+                                    596 ;./exsoccer.c:55: }
+    00000006 C9               [10]  597 	ret
+                                    598 ;./exsoccer.c:58: void V9_InterruptCommand()
+                                    599 ;	---------------------------------
+                                    600 ; Function V9_InterruptCommand
+                                    601 ; ---------------------------------
+    00000007                        602 _V9_InterruptCommand::
+                                    603 ;./exsoccer.c:61: }
+    00000007 C9               [10]  604 	ret
+                                    605 ;./exsoccer.c:62: void InterruptHook()
+                                    606 ;	---------------------------------
+                                    607 ; Function InterruptHook
+                                    608 ; ---------------------------------
+    00000008                        609 _InterruptHook::
+                                    610 ;./exsoccer.c:80: __endasm;
+    00000008 DB 99            [11]  611 	in	a, (0x99)
+    0000000A DB 66            [11]  612 	in	a, (0x66)
+    0000000C D3 66            [11]  613 	out	(0x66), a
+    0000000E 1F               [ 4]  614 	rra
+    0000000F DCr00r00         [17]  615 	call	c, _V9_InterruptVBlank
+    00000012 1F               [ 4]  616 	rra
+    00000013 DCr06r00         [17]  617 	call	c, _V9_InterruptHBlank
+    00000016 1F               [ 4]  618 	rra
+    00000017 DCr07r00         [17]  619 	call	c, _V9_InterruptCommand
+                                    620 ;./exsoccer.c:81: }
+    0000001A C9               [10]  621 	ret
+                                    622 ;./exsoccer.c:84: void LoadP1LayerA(){
+                                    623 ;	---------------------------------
+                                    624 ; Function LoadP1LayerA
+                                    625 ; ---------------------------------
+    0000001B                        626 _LoadP1LayerA::
+                                    627 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:353: inline void V9_FillVRAM(u32 addr, u8 value, u16 count) { V9_SetWriteAddress(addr); V9_FillVRAM_CurrentAddr(value, count); }
+    0000001B 11 00 00         [10]  628 	ld	de, #0x0000
+    0000001E 21 00 00         [10]  629 	ld	hl, #0x0000
+    00000021 CDr00r00         [17]  630 	call	_V9_SetWriteAddress
+    00000024 11 00 6A         [10]  631 	ld	de, #0x6a00
+    00000027 AF               [ 4]  632 	xor	a, a
+    00000028 CDr00r00         [17]  633 	call	_V9_FillVRAM_CurrentAddr
+                                    634 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    0000002B 21r01r00         [10]  635 	ld	hl, #(_g_Bank0Segment + 1)
+    0000002E 36 08            [10]  636 	ld	(hl), #0x08
+                                    637 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    00000030 21 FF 77         [10]  638 	ld	hl, #0x77ff
+    00000033 36 08            [10]  639 	ld	(hl), #0x08
+                                    640 ;./exsoccer.c:87: V9_WriteVRAM(V9_P1_PGT_A, g_GameFieldLayerATiles, sizeof(g_GameFieldLayerATiles)); // Load fonts
+                                    641 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
+    00000035 11 00 00         [10]  642 	ld	de, #0x0000
+    00000038 21 00 00         [10]  643 	ld	hl, #0x0000
+    0000003B CDr00r00         [17]  644 	call	_V9_SetWriteAddress
+    0000003E 11 00 40         [10]  645 	ld	de, #0x4000
+    00000041 21r00r00         [10]  646 	ld	hl, #_g_GameFieldLayerATiles
+    00000044 CDr00r00         [17]  647 	call	_V9_WriteVRAM_CurrentAddr
+                                    648 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:362: inline void V9_FillVRAM16(u32 addr, u16 value, u16 count) { V9_SetWriteAddress(addr); V9_FillVRAM16_CurrentAddr(value, count); }
+    00000047 11 00 C0         [10]  649 	ld	de, #0xc000
+    0000004A 21 07 00         [10]  650 	ld	hl, #0x0007
+    0000004D CDr00r00         [17]  651 	call	_V9_SetWriteAddress
+    00000050 11 00 10         [10]  652 	ld	de, #0x1000
+    00000053 21 00 00         [10]  653 	ld	hl, #0x0000
+    00000056 CDr00r00         [17]  654 	call	_V9_FillVRAM16_CurrentAddr
+                                    655 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    00000059 21r01r00         [10]  656 	ld	hl, #(_g_Bank0Segment + 1)
+    0000005C 36 03            [10]  657 	ld	(hl), #0x03
+                                    658 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    0000005E 21 FF 77         [10]  659 	ld	hl, #0x77ff
+    00000061 36 03            [10]  660 	ld	(hl), #0x03
+                                    661 ;./exsoccer.c:93: for (u8 x=0;x<64;x++){
+    00000063 0E 00            [ 7]  662 	ld	c, #0x00
+    00000065                        663 00124$:
+    00000065 79               [ 4]  664 	ld	a, c
+    00000066 D6 40            [ 7]  665 	sub	a, #0x40
+    00000068 30 10            [12]  666 	jr	NC, 00101$
+                                    667 ;./exsoccer.c:94: V9_PutLayerATileAtPos(x,0,32);
+    0000006A C5               [11]  668 	push	bc
+    0000006B 21 20 00         [10]  669 	ld	hl, #0x0020
+    0000006E E5               [11]  670 	push	hl
+    0000006F 2E 00            [ 7]  671 	ld	l, #0x00
+                                    672 ;	spillPairReg hl
+                                    673 ;	spillPairReg hl
+    00000071 79               [ 4]  674 	ld	a, c
+    00000072 CDr00r00         [17]  675 	call	_V9_PutLayerATileAtPos
+    00000075 C1               [10]  676 	pop	bc
+                                    677 ;./exsoccer.c:93: for (u8 x=0;x<64;x++){
+    00000076 0C               [ 4]  678 	inc	c
+    00000077 C3r65r00         [10]  679 	jp	00124$
+    0000007A                        680 00101$:
+                                    681 ;./exsoccer.c:96: for (u8 y=1;y<64;y++){
+    0000007A 0E 01            [ 7]  682 	ld	c, #0x01
+    0000007C                        683 00130$:
+    0000007C 79               [ 4]  684 	ld	a, c
+    0000007D D6 40            [ 7]  685 	sub	a, #0x40
+    0000007F D0               [11]  686 	ret	NC
+                                    687 ;./exsoccer.c:97: for (u8 x=0;x<64;x++){
+    00000080 06 00            [ 7]  688 	ld	b, #0x00
+    00000082                        689 00127$:
+    00000082 78               [ 4]  690 	ld	a, b
+    00000083 D6 40            [ 7]  691 	sub	a, #0x40
+    00000085 30 0F            [12]  692 	jr	NC, 00131$
+                                    693 ;./exsoccer.c:98: V9_PutLayerATileAtPos(x,y,0);
+    00000087 C5               [11]  694 	push	bc
+    00000088 21 00 00         [10]  695 	ld	hl, #0x0000
+    0000008B E5               [11]  696 	push	hl
+    0000008C 69               [ 4]  697 	ld	l, c
+                                    698 ;	spillPairReg hl
+                                    699 ;	spillPairReg hl
+    0000008D 78               [ 4]  700 	ld	a, b
+    0000008E CDr00r00         [17]  701 	call	_V9_PutLayerATileAtPos
+    00000091 C1               [10]  702 	pop	bc
+                                    703 ;./exsoccer.c:97: for (u8 x=0;x<64;x++){
+    00000092 04               [ 4]  704 	inc	b
+    00000093 C3r82r00         [10]  705 	jp	00127$
+    00000096                        706 00131$:
+                                    707 ;./exsoccer.c:96: for (u8 y=1;y<64;y++){
+    00000096 0C               [ 4]  708 	inc	c
+                                    709 ;./exsoccer.c:102: }
+    00000097 C3r7Cr00         [10]  710 	jp	00130$
+                                    711 ;./exsoccer.c:105: void LoadP1LayerB(){
+                                    712 ;	---------------------------------
+                                    713 ; Function LoadP1LayerB
+                                    714 ; ---------------------------------
+    0000009A                        715 _LoadP1LayerB::
+                                    716 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:353: inline void V9_FillVRAM(u32 addr, u8 value, u16 count) { V9_SetWriteAddress(addr); V9_FillVRAM_CurrentAddr(value, count); }
+    0000009A 11 00 00         [10]  717 	ld	de, #0x0000
+    0000009D 21 04 00         [10]  718 	ld	hl, #0x0004
+    000000A0 CDr00r00         [17]  719 	call	_V9_SetWriteAddress
+    000000A3 11 00 6A         [10]  720 	ld	de, #0x6a00
+    000000A6 AF               [ 4]  721 	xor	a, a
+    000000A7 CDr00r00         [17]  722 	call	_V9_FillVRAM_CurrentAddr
+                                    723 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    000000AA 21r01r00         [10]  724 	ld	hl, #(_g_Bank0Segment + 1)
+    000000AD 36 04            [10]  725 	ld	(hl), #0x04
+                                    726 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    000000AF 21 FF 77         [10]  727 	ld	hl, #0x77ff
+    000000B2 36 04            [10]  728 	ld	(hl), #0x04
+                                    729 ;./exsoccer.c:108: V9_WriteVRAM(V9_P1_PGT_B, g_GameFieldLayerATiles_part1, sizeof(g_GameFieldLayerATiles_part1)); // Load tiles (part 1)
+                                    730 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
+    000000B4 11 00 00         [10]  731 	ld	de, #0x0000
+    000000B7 21 04 00         [10]  732 	ld	hl, #0x0004
+    000000BA CDr00r00         [17]  733 	call	_V9_SetWriteAddress
+    000000BD 11 00 40         [10]  734 	ld	de, #0x4000
+    000000C0 21r00r00         [10]  735 	ld	hl, #_g_GameFieldLayerATiles_part1
+    000000C3 CDr00r00         [17]  736 	call	_V9_WriteVRAM_CurrentAddr
+                                    737 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    000000C6 21r01r00         [10]  738 	ld	hl, #(_g_Bank0Segment + 1)
+    000000C9 36 05            [10]  739 	ld	(hl), #0x05
+                                    740 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    000000CB 21 FF 77         [10]  741 	ld	hl, #0x77ff
+    000000CE 36 05            [10]  742 	ld	(hl), #0x05
+                                    743 ;./exsoccer.c:110: V9_WriteVRAM(V9_P1_PGT_B + 16384, g_GameFieldLayerATiles_part2, sizeof(g_GameFieldLayerATiles_part2)); // Load tiles (part 2)
+                                    744 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
+    000000D0 11 00 40         [10]  745 	ld	de, #0x4000
+    000000D3 21 04 00         [10]  746 	ld	hl, #0x0004
+    000000D6 CDr00r00         [17]  747 	call	_V9_SetWriteAddress
+    000000D9 11 00 40         [10]  748 	ld	de, #0x4000
+    000000DC 21r00r00         [10]  749 	ld	hl, #_g_GameFieldLayerATiles_part2
+    000000DF CDr00r00         [17]  750 	call	_V9_WriteVRAM_CurrentAddr
+                                    751 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    000000E2 21r01r00         [10]  752 	ld	hl, #(_g_Bank0Segment + 1)
+    000000E5 36 06            [10]  753 	ld	(hl), #0x06
+                                    754 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    000000E7 21 FF 77         [10]  755 	ld	hl, #0x77ff
+    000000EA 36 06            [10]  756 	ld	(hl), #0x06
+                                    757 ;./exsoccer.c:112: V9_WriteVRAM(V9_P1_PGT_B + 16384L*2, g_GameFieldLayerATiles_part3, sizeof(g_GameFieldLayerATiles_part3)); // Load tiles (part 3)
+                                    758 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
+    000000EC 11 00 80         [10]  759 	ld	de, #0x8000
+    000000EF 21 04 00         [10]  760 	ld	hl, #0x0004
+    000000F2 CDr00r00         [17]  761 	call	_V9_SetWriteAddress
+    000000F5 11 00 40         [10]  762 	ld	de, #0x4000
+    000000F8 21r00r00         [10]  763 	ld	hl, #_g_GameFieldLayerATiles_part3
+    000000FB CDr00r00         [17]  764 	call	_V9_WriteVRAM_CurrentAddr
+                                    765 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    000000FE 21r01r00         [10]  766 	ld	hl, #(_g_Bank0Segment + 1)
+    00000101 36 07            [10]  767 	ld	(hl), #0x07
+                                    768 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    00000103 21 FF 77         [10]  769 	ld	hl, #0x77ff
+    00000106 36 07            [10]  770 	ld	(hl), #0x07
+                                    771 ;./exsoccer.c:114: V9_WriteVRAM(V9_P1_PGT_B + 16384L*3, g_GameFieldLayerATiles_part4, sizeof(g_GameFieldLayerATiles_part4)); // Load tiles (part 4)
+                                    772 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
+    00000108 11 00 C0         [10]  773 	ld	de, #0xc000
+    0000010B 21 04 00         [10]  774 	ld	hl, #0x0004
+    0000010E CDr00r00         [17]  775 	call	_V9_SetWriteAddress
+    00000111 11 00 38         [10]  776 	ld	de, #0x3800
+    00000114 21r00r00         [10]  777 	ld	hl, #_g_GameFieldLayerATiles_part4
+    00000117 CDr00r00         [17]  778 	call	_V9_WriteVRAM_CurrentAddr
+                                    779 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    0000011A 21r01r00         [10]  780 	ld	hl, #(_g_Bank0Segment + 1)
+    0000011D 36 03            [10]  781 	ld	(hl), #0x03
+                                    782 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    0000011F 21 FF 77         [10]  783 	ld	hl, #0x77ff
+    00000122 36 03            [10]  784 	ld	(hl), #0x03
+                                    785 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:362: inline void V9_FillVRAM16(u32 addr, u16 value, u16 count) { V9_SetWriteAddress(addr); V9_FillVRAM16_CurrentAddr(value, count); }
+    00000124 11 00 E0         [10]  786 	ld	de, #0xe000
+    00000127 21 07 00         [10]  787 	ld	hl, #0x0007
+    0000012A CDr00r00         [17]  788 	call	_V9_SetWriteAddress
+    0000012D 11 00 10         [10]  789 	ld	de, #0x1000
+    00000130 21 00 00         [10]  790 	ld	hl, #0x0000
+    00000133 CDr00r00         [17]  791 	call	_V9_FillVRAM16_CurrentAddr
+                                    792 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    00000136 21r01r00         [10]  793 	ld	hl, #(_g_Bank0Segment + 1)
+    00000139 36 03            [10]  794 	ld	(hl), #0x03
+                                    795 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    0000013B 21 FF 77         [10]  796 	ld	hl, #0x77ff
+    0000013E 36 03            [10]  797 	ld	(hl), #0x03
+                                    798 ;./exsoccer.c:118: u16 tileId=0;
+    00000140 01 00 00         [10]  799 	ld	bc, #0x0000
+                                    800 ;./exsoccer.c:119: for (u8 y=0;y<64;y++){
+    00000143 1E 00            [ 7]  801 	ld	e, #0x00
+    00000145                        802 00161$:
+    00000145 7B               [ 4]  803 	ld	a, e
+    00000146 D6 40            [ 7]  804 	sub	a, #0x40
+    00000148 D0               [11]  805 	ret	NC
+                                    806 ;./exsoccer.c:120: for (u8 x=0;x<32;x++){
+    00000149 16 00            [ 7]  807 	ld	d, #0x00
+    0000014B                        808 00158$:
+    0000014B 7A               [ 4]  809 	ld	a, d
+    0000014C D6 20            [ 7]  810 	sub	a, #0x20
+    0000014E 30 0F            [12]  811 	jr	NC, 00181$
+                                    812 ;./exsoccer.c:121: V9_PutLayerBTileAtPos(x,y,tileId);
+    00000150 C5               [11]  813 	push	bc
+    00000151 D5               [11]  814 	push	de
+    00000152 C5               [11]  815 	push	bc
+    00000153 6B               [ 4]  816 	ld	l, e
+                                    817 ;	spillPairReg hl
+                                    818 ;	spillPairReg hl
+    00000154 7A               [ 4]  819 	ld	a, d
+    00000155 CDr00r00         [17]  820 	call	_V9_PutLayerBTileAtPos
+    00000158 D1               [10]  821 	pop	de
+    00000159 C1               [10]  822 	pop	bc
+                                    823 ;./exsoccer.c:122: tileId++;
+    0000015A 03               [ 6]  824 	inc	bc
+                                    825 ;./exsoccer.c:120: for (u8 x=0;x<32;x++){
+    0000015B 14               [ 4]  826 	inc	d
+    0000015C C3r4Br01         [10]  827 	jp	00158$
+    0000015F                        828 00181$:
+                                    829 ;./exsoccer.c:119: for (u8 y=0;y<64;y++){
+    0000015F 1C               [ 4]  830 	inc	e
+                                    831 ;./exsoccer.c:125: }
+    00000160 C3r45r01         [10]  832 	jp	00161$
+                                    833 ;./exsoccer.c:127: void GameStart(){
+                                    834 ;	---------------------------------
+                                    835 ; Function GameStart
+                                    836 ; ---------------------------------
+    00000163                        837 _GameStart::
+                                    838 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
+    00000163 3E 08            [ 7]  839 	ld	a, #0x08
+    00000165 CDr00r00         [17]  840 	call	_V9_GetRegister
+    00000168 6F               [ 4]  841 	ld	l, a
+                                    842 ;	spillPairReg hl
+                                    843 ;	spillPairReg hl
+    00000169 CB BD            [ 8]  844 	res	7, l
+    0000016B 3E 08            [ 7]  845 	ld	a, #0x08
+    0000016D CDr00r00         [17]  846 	call	_V9_SetRegister
+                                    847 ;./exsoccer.c:129: g_SecondsToEndOfMatch=MATCH_DURATION;
+    00000170 21r01r01         [10]  848 	ld	hl, #_g_SecondsToEndOfMatch
+    00000173 36 78            [10]  849 	ld	(hl), #0x78
+                                    850 ;./exsoccer.c:130: g_RestartKickTeamId=TEAM_1;
+    00000175 21r00r01         [10]  851 	ld	hl, #_g_RestartKickTeamId
+    00000178 36 00            [10]  852 	ld	(hl), #0x00
+                                    853 ;./exsoccer.c:131: g_FieldScrollSpeed=FIELD_SCROLL_PRESENTATION_SPEED;
+    0000017A 21r06r00         [10]  854 	ld	hl, #_g_FieldScrollSpeed
+    0000017D 36 01            [10]  855 	ld	(hl), #0x01
+                                    856 ;./exsoccer.c:132: g_FieldScrollingActionInProgress=NO_VALUE;
+    0000017F 21r03r00         [10]  857 	ld	hl, #_g_FieldScrollingActionInProgress
+    00000182 36 FF            [10]  858 	ld	(hl), #0xff
+                                    859 ;./exsoccer.c:133: g_FieldCurrentYPosition=FIELD_TOP_Y;
+    00000184 21 01 00         [10]  860 	ld	hl, #0x0001
+    00000187 22r01r00         [16]  861 	ld	(_g_FieldCurrentYPosition), hl
+                                    862 ;./exsoccer.c:134: g_Team1Score=0;
+    0000018A AF               [ 4]  863 	xor	a, a
+    0000018B 32r04r00         [13]  864 	ld	(#_g_Team1Score), a
+                                    865 ;./exsoccer.c:135: g_Team2Score=0;
+    0000018E AF               [ 4]  866 	xor	a, a
+    0000018F 32r05r00         [13]  867 	ld	(#_g_Team2Score), a
+                                    868 ;./exsoccer.c:136: g_Team1PaletteId=TEAM_FRA;
+    00000192 3E 03            [ 7]  869 	ld	a, #0x03
+    00000194 32r02r00         [13]  870 	ld	(#_g_Team1PaletteId), a
+                                    871 ;./exsoccer.c:137: g_Team2PaletteId=TEAM_BRA;
+    00000197 3E 01            [ 7]  872 	ld	a, #0x01
+    00000199 32r03r00         [13]  873 	ld	(#_g_Team2PaletteId), a
+                                    874 ;./exsoccer.c:138: V9_SetScrollingY(0);
+    0000019C 6C               [ 4]  875 	ld	l, h
+    0000019D CDr00r00         [17]  876 	call	_V9_SetScrollingY
+                                    877 ;./exsoccer.c:139: V9_SetScrollingBY(1);
+    000001A0 21 01 00         [10]  878 	ld	hl, #0x0001
+    000001A3 CDr00r00         [17]  879 	call	_V9_SetScrollingBY
+                                    880 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    000001A6 21r01r00         [10]  881 	ld	hl, #(_g_Bank0Segment + 1)
+    000001A9 36 03            [10]  882 	ld	(hl), #0x03
+                                    883 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    000001AB 21 FF 77         [10]  884 	ld	hl, #0x77ff
+    000001AE 36 03            [10]  885 	ld	(hl), #0x03
+                                    886 ;./exsoccer.c:141: SetTeam1Palette();
+    000001B0 CDr00r00         [17]  887 	call	_SetTeam1Palette
+                                    888 ;./exsoccer.c:142: SetTeam2Palette();
+    000001B3 CDr00r00         [17]  889 	call	_SetTeam2Palette
+                                    890 ;./exsoccer.c:143: SetTeamsPresentationSpritesPosition();
+    000001B6 CDr00r00         [17]  891 	call	_SetTeamsPresentationSpritesPosition
+                                    892 ;./exsoccer.c:144: ShowFieldZone(FIELD_CENTRAL_ZONE);
+    000001B9 3E 01            [ 7]  893 	ld	a, #0x01
+    000001BB CDr00r00         [17]  894 	call	_ShowFieldZone
+                                    895 ;./exsoccer.c:145: ShowHeaderInfo();
+    000001BE CDr00r00         [17]  896 	call	_ShowHeaderInfo
+                                    897 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
+    000001C1 3E 08            [ 7]  898 	ld	a, #0x08
+    000001C3 CDr00r00         [17]  899 	call	_V9_GetRegister
+    000001C6 CB BF            [ 8]  900 	res	7, a
+    000001C8 6F               [ 4]  901 	ld	l, a
+                                    902 ;	spillPairReg hl
+                                    903 ;	spillPairReg hl
+    000001C9 CB FD            [ 8]  904 	set	7, l
+    000001CB 3E 08            [ 7]  905 	ld	a, #0x08
+                                    906 ;./exsoccer.c:146: V9_SetDisplayEnable(TRUE);
+                                    907 ;./exsoccer.c:147: }
+    000001CD C3r00r00         [10]  908 	jp	_V9_SetRegister
+                                    909 ;./exsoccer.c:150: void InitializeV9990()
+                                    910 ;	---------------------------------
+                                    911 ; Function InitializeV9990
+                                    912 ; ---------------------------------
+    000001D0                        913 _InitializeV9990::
+                                    914 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    000001D0 21r01r00         [10]  915 	ld	hl, #(_g_Bank0Segment + 1)
+    000001D3 36 03            [10]  916 	ld	(hl), #0x03
+                                    917 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    000001D5 21 FF 77         [10]  918 	ld	hl, #0x77ff
+    000001D8 36 03            [10]  919 	ld	(hl), #0x03
+                                    920 ;./exsoccer.c:153: V9_SetScreenMode(V9_MODE_P1);
+    000001DA AF               [ 4]  921 	xor	a, a
+    000001DB CDr00r00         [17]  922 	call	_V9_SetScreenMode
+                                    923 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
+    000001DE 3E 08            [ 7]  924 	ld	a, #0x08
+    000001E0 CDr00r00         [17]  925 	call	_V9_GetRegister
+    000001E3 6F               [ 4]  926 	ld	l, a
+                                    927 ;	spillPairReg hl
+                                    928 ;	spillPairReg hl
+    000001E4 CB BD            [ 8]  929 	res	7, l
+    000001E6 3E 08            [ 7]  930 	ld	a, #0x08
+    000001E8 CDr00r00         [17]  931 	call	_V9_SetRegister
+                                    932 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:574: inline void V9_SetInterrupt(u8 flags) { V9_SetRegister(9, flags); }
+    000001EB 2E 00            [ 7]  933 	ld	l, #0x00
+                                    934 ;	spillPairReg hl
+                                    935 ;	spillPairReg hl
+    000001ED 3E 09            [ 7]  936 	ld	a, #0x09
+    000001EF CDr00r00         [17]  937 	call	_V9_SetRegister
+                                    938 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:480: inline void V9_SetBackgroundColor(u8 color) { V9_SetRegister(15, color); }
+    000001F2 2E 01            [ 7]  939 	ld	l, #0x01
+                                    940 ;	spillPairReg hl
+                                    941 ;	spillPairReg hl
+    000001F4 3E 0F            [ 7]  942 	ld	a, #0x0f
+    000001F6 CDr00r00         [17]  943 	call	_V9_SetRegister
+                                    944 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
+    000001F9 3E 08            [ 7]  945 	ld	a, #0x08
+    000001FB CDr00r00         [17]  946 	call	_V9_GetRegister
+    000001FE 6F               [ 4]  947 	ld	l, a
+                                    948 ;	spillPairReg hl
+                                    949 ;	spillPairReg hl
+    000001FF CB B5            [ 8]  950 	res	6, l
+    00000201 3E 08            [ 7]  951 	ld	a, #0x08
+    00000203 CDr00r00         [17]  952 	call	_V9_SetRegister
+    00000206 3E 08            [ 7]  953 	ld	a, #0x08
+    00000208 CDr00r00         [17]  954 	call	_V9_GetRegister
+    0000020B CB BF            [ 8]  955 	res	7, a
+    0000020D 6F               [ 4]  956 	ld	l, a
+                                    957 ;	spillPairReg hl
+                                    958 ;	spillPairReg hl
+    0000020E CB FD            [ 8]  959 	set	7, l
+    00000210 3E 08            [ 7]  960 	ld	a, #0x08
+    00000212 CDr00r00         [17]  961 	call	_V9_SetRegister
+                                    962 ;./exsoccer.c:161: InitPalette();
+    00000215 CDr00r00         [17]  963 	call	_InitPalette
+                                    964 ;./exsoccer.c:163: LoadP1LayerA();
+    00000218 CDr1Br00         [17]  965 	call	_LoadP1LayerA
+                                    966 ;./exsoccer.c:164: LoadP1LayerB();
+    0000021B CDr9Ar00         [17]  967 	call	_LoadP1LayerB
+                                    968 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:574: inline void V9_SetInterrupt(u8 flags) { V9_SetRegister(9, flags); }
+    0000021E 2E 03            [ 7]  969 	ld	l, #0x03
+                                    970 ;	spillPairReg hl
+                                    971 ;	spillPairReg hl
+    00000220 3E 09            [ 7]  972 	ld	a, #0x09
+    00000222 CDr00r00         [17]  973 	call	_V9_SetRegister
+                                    974 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:606: inline void V9_SetInterruptLine(u16 line) { V9_SetRegister16(10, line); }
+    00000225 11 47 00         [10]  975 	ld	de, #0x0047
+    00000228 3E 0A            [ 7]  976 	ld	a, #0x0a
+    0000022A CDr00r00         [17]  977 	call	_V9_SetRegister16
+                                    978 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
+    0000022D 3E 08            [ 7]  979 	ld	a, #0x08
+    0000022F CDr00r00         [17]  980 	call	_V9_GetRegister
+    00000232 CB BF            [ 8]  981 	res	7, a
+    00000234 6F               [ 4]  982 	ld	l, a
+                                    983 ;	spillPairReg hl
+                                    984 ;	spillPairReg hl
+    00000235 CB FD            [ 8]  985 	set	7, l
+    00000237 3E 08            [ 7]  986 	ld	a, #0x08
+                                    987 ;./exsoccer.c:168: V9_SetDisplayEnable(TRUE);
+                                    988 ;./exsoccer.c:170: }
+    00000239 C3r00r00         [10]  989 	jp	_V9_SetRegister
+                                    990 ;./exsoccer.c:173: void LoadSprites(){
+                                    991 ;	---------------------------------
+                                    992 ; Function LoadSprites
+                                    993 ; ---------------------------------
+    0000023C                        994 _LoadSprites::
+                                    995 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    0000023C 21r01r00         [10]  996 	ld	hl, #(_g_Bank0Segment + 1)
+    0000023F 36 09            [10]  997 	ld	(hl), #0x09
+                                    998 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    00000241 21 FF 77         [10]  999 	ld	hl, #0x77ff
+    00000244 36 09            [10] 1000 	ld	(hl), #0x09
+                                   1001 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:739: inline void V9_SetSpritePatternAddr(u8 addr) { V9_SetRegister(25, addr); }
+    00000246 2E 02            [ 7] 1002 	ld	l, #0x02
+                                   1003 ;	spillPairReg hl
+                                   1004 ;	spillPairReg hl
+    00000248 3E 19            [ 7] 1005 	ld	a, #0x19
+    0000024A CDr00r00         [17] 1006 	call	_V9_SetRegister
+                                   1007 ;./exsoccer.c:177: V9_WriteVRAM(0x08000, g_Sprites1, sizeof(g_Sprites1));	
+                                   1008 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
+    0000024D 11 00 80         [10] 1009 	ld	de, #0x8000
+    00000250 21 00 00         [10] 1010 	ld	hl, #0x0000
+    00000253 CDr00r00         [17] 1011 	call	_V9_SetWriteAddress
+    00000256 11 00 40         [10] 1012 	ld	de, #0x4000
+    00000259 21r00r00         [10] 1013 	ld	hl, #_g_Sprites1
+    0000025C CDr00r00         [17] 1014 	call	_V9_WriteVRAM_CurrentAddr
+                                   1015 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    0000025F 21r01r00         [10] 1016 	ld	hl, #(_g_Bank0Segment + 1)
+    00000262 36 0A            [10] 1017 	ld	(hl), #0x0a
+                                   1018 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    00000264 21 FF 77         [10] 1019 	ld	hl, #0x77ff
+    00000267 36 0A            [10] 1020 	ld	(hl), #0x0a
+                                   1021 ;./exsoccer.c:179: V9_WriteVRAM(0x08000+sizeof(g_Sprites1), g_Sprites2, sizeof(g_Sprites2));	
+                                   1022 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
+    00000269 11 00 C0         [10] 1023 	ld	de, #0xc000
+    0000026C 21 00 00         [10] 1024 	ld	hl, #0x0000
+    0000026F CDr00r00         [17] 1025 	call	_V9_SetWriteAddress
+    00000272 11 00 40         [10] 1026 	ld	de, #0x4000
+    00000275 21r00r00         [10] 1027 	ld	hl, #_g_Sprites2
+    00000278 CDr00r00         [17] 1028 	call	_V9_WriteVRAM_CurrentAddr
+                                   1029 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    0000027B 21r01r00         [10] 1030 	ld	hl, #(_g_Bank0Segment + 1)
+    0000027E 36 03            [10] 1031 	ld	(hl), #0x03
+                                   1032 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    00000280 21 FF 77         [10] 1033 	ld	hl, #0x77ff
+    00000283 36 03            [10] 1034 	ld	(hl), #0x03
+                                   1035 ;./exsoccer.c:180: SET_BANK_SEGMENT(1, 3); // Bank 1 = Segment 3
+                                   1036 ;./exsoccer.c:181: }
+    00000285 C9               [10] 1037 	ret
+                                   1038 ;./exsoccer.c:184: void main()
+                                   1039 ;	---------------------------------
+                                   1040 ; Function main
+                                   1041 ; ---------------------------------
+    00000286                       1042 _main::
+    00000286 DD E5            [15] 1043 	push	ix
+    00000288 DD 21 00 00      [14] 1044 	ld	ix,#0
+    0000028C DD 39            [15] 1045 	add	ix,sp
+    0000028E 3B               [ 6] 1046 	dec	sp
+                                   1047 ;./exsoccer.c:186: DEBUG_INIT();
+    0000028F CDr00r00         [17] 1048 	call	_DEBUG_INIT
+                                   1049 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:250: g_Bank0Segment[b] = s;
+    00000292 21r01r00         [10] 1050 	ld	hl, #(_g_Bank0Segment + 1)
+    00000295 36 03            [10] 1051 	ld	(hl), #0x03
+                                   1052 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:101: inline void Poke(u16 addr, u8 val) { *(u8*)addr = val; }
+    00000297 21 FF 77         [10] 1053 	ld	hl, #0x77ff
+    0000029A 36 03            [10] 1054 	ld	(hl), #0x03
+                                   1055 ;./exsoccer.c:188: InitVariables();
+    0000029C CDr00r00         [17] 1056 	call	_InitVariables
+                                   1057 ;./exsoccer.c:190: V9_SetPort(V9_P15, 0);
+    0000029F 2E 00            [ 7] 1058 	ld	l, #0x00
+                                   1059 ;	spillPairReg hl
+                                   1060 ;	spillPairReg hl
+    000002A1 3E 6F            [ 7] 1061 	ld	a, #0x6f
+    000002A3 CDr00r00         [17] 1062 	call	_V9_SetPort
+                                   1063 ;./exsoccer.c:192: VDP_SetMode(VDP_MODE_SCREEN0);
+    000002A6 AF               [ 4] 1064 	xor	a, a
+    000002A7 CDr00r00         [17] 1065 	call	_VDP_SetMode
+                                   1066 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/vdp.h:712: inline void VDP_EnableVBlank(bool enable) { VDP_RegWriteBakMask(1, (u8)~R01_IE0, enable ? R01_IE0 : 0); }
+    000002AA AF               [ 4] 1067 	xor	a, a
+    000002AB F5               [11] 1068 	push	af
+    000002AC 33               [ 6] 1069 	inc	sp
+    000002AD 2E DF            [ 7] 1070 	ld	l, #0xdf
+                                   1071 ;	spillPairReg hl
+                                   1072 ;	spillPairReg hl
+    000002AF 3E 01            [ 7] 1073 	ld	a, #0x01
+    000002B1 CDr00r00         [17] 1074 	call	_VDP_RegWriteBakMask
+                                   1075 ;./exsoccer.c:194: VDP_ClearVRAM();
+    000002B4 CDr00r00         [17] 1076 	call	_VDP_ClearVRAM
+                                   1077 ;./exsoccer.c:197: Bios_SetHookDirectCallback(H_KEYI, InterruptHook);
+    000002B7 01r08r00         [10] 1078 	ld	bc, #_InterruptHook
+                                   1079 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/bios_hook.h:37: *((u8*)hook) = 0xC3; // JUMP
+    000002BA 21 9A FD         [10] 1080 	ld	hl, #0xfd9a
+    000002BD 36 C3            [10] 1081 	ld	(hl), #0xc3
+                                   1082 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/bios_hook.h:38: *((callback*)++hook) = cb; // Callback address
+    000002BF ED 43 9B FD      [20] 1083 	ld	(0xfd9b), bc
+                                   1084 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/bios_hook.h:62: *((u8*)hook) = 0xC9; // RET
+    000002C3 2E 9F            [ 7] 1085 	ld	l, #0x9f
+    000002C5 36 C9            [10] 1086 	ld	(hl), #0xc9
+                                   1087 ;./exsoccer.c:201: Print_SetTextFont(g_Font_MGL_Sample6, 1);
+    000002C7 3E 01            [ 7] 1088 	ld	a, #0x01
+    000002C9 F5               [11] 1089 	push	af
+    000002CA 33               [ 6] 1090 	inc	sp
+    000002CB 21r00r00         [10] 1091 	ld	hl, #_g_Font_MGL_Sample6
+    000002CE CDr00r00         [17] 1092 	call	_Print_SetTextFont
+                                   1093 ;./exsoccer.c:202: Print_SetColor(15, 1);
+    000002D1 2E 01            [ 7] 1094 	ld	l, #0x01
+                                   1095 ;	spillPairReg hl
+                                   1096 ;	spillPairReg hl
+    000002D3 3E 0F            [ 7] 1097 	ld	a, #0x0f
+    000002D5 CDr00r00         [17] 1098 	call	_Print_SetColor
+                                   1099 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:223: g_PrintData.CursorX = x;
+    000002D8 01r05r00         [10] 1100 	ld	bc, #_g_PrintData + 5
+    000002DB AF               [ 4] 1101 	xor	a, a
+    000002DC 02               [ 7] 1102 	ld	(bc), a
+                                   1103 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
+    000002DD 21r06r00         [10] 1104 	ld	hl, #(_g_PrintData + 6)
+    000002E0 36 00            [10] 1105 	ld	(hl), #0x00
+                                   1106 ;./exsoccer.c:204: Print_DrawText("EX Soccer - 2026 Fausto Pracek");
+    000002E2 C5               [11] 1107 	push	bc
+    000002E3 21r98r03         [10] 1108 	ld	hl, #___str_1
+    000002E6 CDr00r00         [17] 1109 	call	_Print_DrawText
+    000002E9 C1               [10] 1110 	pop	bc
+                                   1111 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:223: g_PrintData.CursorX = x;
+    000002EA AF               [ 4] 1112 	xor	a, a
+    000002EB 02               [ 7] 1113 	ld	(bc), a
+                                   1114 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
+    000002EC 21r06r00         [10] 1115 	ld	hl, #(_g_PrintData + 6)
+    000002EF 36 01            [10] 1116 	ld	(hl), #0x01
+                                   1117 ;./exsoccer.c:206: Print_DrawText("fpracek@gmail.com");
+    000002F1 C5               [11] 1118 	push	bc
+    000002F2 21rB7r03         [10] 1119 	ld	hl, #___str_2
+    000002F5 CDr00r00         [17] 1120 	call	_Print_DrawText
+    000002F8 C1               [10] 1121 	pop	bc
+                                   1122 ;./exsoccer.c:208: const c8* str = "V9990 not found!";
+    000002F9 11r87r03         [10] 1123 	ld	de, #___str_0+0
+                                   1124 ;./exsoccer.c:209: bool v9990IsFound=V9_Detect();
+    000002FC C5               [11] 1125 	push	bc
+    000002FD D5               [11] 1126 	push	de
+    000002FE CDr00r00         [17] 1127 	call	_V9_Detect
+    00000301 D1               [10] 1128 	pop	de
+    00000302 C1               [10] 1129 	pop	bc
+    00000303 DD 77 FF         [19] 1130 	ld	-1 (ix), a
+                                   1131 ;./exsoccer.c:211: if (v9990IsFound){
+    00000306 B7               [ 4] 1132 	or	a, a
+    00000307 28 14            [12] 1133 	jr	Z, 00102$
+                                   1134 ;./exsoccer.c:212: str = "V9990 found!";
+    00000309 11rC9r03         [10] 1135 	ld	de, #___str_3
+                                   1136 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:223: g_PrintData.CursorX = x;
+    0000030C AF               [ 4] 1137 	xor	a, a
+    0000030D 02               [ 7] 1138 	ld	(bc), a
+                                   1139 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
+    0000030E 21r06r00         [10] 1140 	ld	hl, #(_g_PrintData + 6)
+    00000311 36 07            [10] 1141 	ld	(hl), #0x07
+                                   1142 ;./exsoccer.c:214: Print_DrawText("The game is running on V9990 monitor.");
+    00000313 C5               [11] 1143 	push	bc
+    00000314 D5               [11] 1144 	push	de
+    00000315 21rD6r03         [10] 1145 	ld	hl, #___str_4
+    00000318 CDr00r00         [17] 1146 	call	_Print_DrawText
+    0000031B D1               [10] 1147 	pop	de
+    0000031C C1               [10] 1148 	pop	bc
+    0000031D                       1149 00102$:
+                                   1150 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:223: g_PrintData.CursorX = x;
+    0000031D AF               [ 4] 1151 	xor	a, a
+    0000031E 02               [ 7] 1152 	ld	(bc), a
+                                   1153 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
+    0000031F 21r06r00         [10] 1154 	ld	hl, #(_g_PrintData + 6)
+    00000322 36 03            [10] 1155 	ld	(hl), #0x03
+                                   1156 ;./exsoccer.c:217: Print_DrawText(str);
+    00000324 EB               [ 4] 1157 	ex	de, hl
+    00000325 CDr00r00         [17] 1158 	call	_Print_DrawText
+                                   1159 ;./exsoccer.c:218: if(!v9990IsFound){
+    00000328 DD 7E FF         [19] 1160 	ld	a, -1 (ix)
+    0000032B B7               [ 4] 1161 	or	a, a
+    0000032C 20 03            [12] 1162 	jr	NZ, 00105$
+    0000032E                       1163 00129$:
+    0000032E C3r2Er03         [10] 1164 	jp	00129$
+    00000331                       1165 00105$:
+                                   1166 ;./exsoccer.c:223: InitializeV9990();
+    00000331 CDrD0r01         [17] 1167 	call	_InitializeV9990
+                                   1168 ;./exsoccer.c:224: LoadSprites();
+    00000334 CDr3Cr02         [17] 1169 	call	_LoadSprites
+                                   1170 ;./exsoccer.c:225: V9_SetPort(V9_P15, 0x10);
+    00000337 2E 10            [ 7] 1171 	ld	l, #0x10
+                                   1172 ;	spillPairReg hl
+                                   1173 ;	spillPairReg hl
+    00000339 3E 6F            [ 7] 1174 	ld	a, #0x6f
+    0000033B CDr00r00         [17] 1175 	call	_V9_SetPort
+                                   1176 ;./exsoccer.c:227: GameStart();
+    0000033E CDr63r01         [17] 1177 	call	_GameStart
+    00000341                       1178 00130$:
+                                   1179 ;./exsoccer.c:229: UpdateV9990();
+    00000341 CDr00r00         [17] 1180 	call	_UpdateV9990
+                                   1181 ;./exsoccer.c:230: TickPlayerToOwnTarget();
+    00000344 CDr00r00         [17] 1182 	call	_TickPlayerToOwnTarget
+                                   1183 ;./exsoccer.c:231: TickActiveFieldZone();
+    00000347 CDr00r00         [17] 1184 	call	_TickActiveFieldZone
+                                   1185 ;./exsoccer.c:232: UpdateSpritesPositions();
+    0000034A CDr00r00         [17] 1186 	call	_UpdateSpritesPositions
+                                   1187 ;./exsoccer.c:233: TickUpdateTime();
+    0000034D CDr00r00         [17] 1188 	call	_TickUpdateTime
+                                   1189 ;./exsoccer.c:234: TickShowKickOff();
+    00000350 CDr00r00         [17] 1190 	call	_TickShowKickOff
+                                   1191 ;./exsoccer.c:245: if(g_FieldScrollingActionInProgress==NO_VALUE){
+    00000353 3Ar03r00         [13] 1192 	ld	a, (_g_FieldScrollingActionInProgress+0)
+    00000356 3C               [ 4] 1193 	inc	a
+    00000357 20 E8            [12] 1194 	jr	NZ, 00130$
+                                   1195 ;./exsoccer.c:246: g_Ball.PreviousY=g_Ball.Y;
+    00000359 ED 4BrF6r00      [20] 1196 	ld	bc, (#_g_Ball + 0)
+    0000035D ED 43rFDr00      [20] 1197 	ld	((_g_Ball + 7)), bc
+                                   1198 ;./exsoccer.c:247: if(GetJoystick1Direction()==JOYSTICK_DOWN){
+    00000361 CDr00r00         [17] 1199 	call	_GetJoystick1Direction
+    00000364 D6 05            [ 7] 1200 	sub	a, #0x05
+    00000366 20 09            [12] 1201 	jr	NZ, 00107$
+                                   1202 ;./exsoccer.c:248: g_Ball.Y++;
+    00000368 ED 4BrF6r00      [20] 1203 	ld	bc, (#_g_Ball + 0)
+    0000036C 03               [ 6] 1204 	inc	bc
+    0000036D ED 43rF6r00      [20] 1205 	ld	(_g_Ball), bc
+    00000371                       1206 00107$:
+                                   1207 ;./exsoccer.c:250: if(GetJoystick1Direction()==JOYSTICK_UP){
+    00000371 CDr00r00         [17] 1208 	call	_GetJoystick1Direction
+    00000374 3D               [ 4] 1209 	dec	a
+    00000375 20 CA            [12] 1210 	jr	NZ, 00130$
+                                   1211 ;./exsoccer.c:251: g_Ball.Y--;
+    00000377 ED 4BrF6r00      [20] 1212 	ld	bc, (#_g_Ball + 0)
+    0000037B 0B               [ 6] 1213 	dec	bc
+    0000037C ED 43rF6r00      [20] 1214 	ld	(_g_Ball), bc
+    00000380 C3r41r03         [10] 1215 	jp	00130$
+                                   1216 ;./exsoccer.c:256: Bios_Exit(0);
+                                   1217 ;./exsoccer.c:257: }
+    00000383 33               [ 6] 1218 	inc	sp
+    00000384 DD E1            [14] 1219 	pop	ix
+    00000386 C9               [10] 1220 	ret
+    00000387                       1221 ___str_0:
+    00000387 56 39 39 39 30 20 6E  1222 	.ascii "V9990 not found!"
+             6F 74 20 66 6F 75 6E
+             64 21
+    00000397 00                    1223 	.db 0x00
+    00000398                       1224 ___str_1:
+    00000398 45 58 20 53 6F 63 63  1225 	.ascii "EX Soccer - 2026 Fausto Pracek"
+             65 72 20 2D 20 32 30
+             32 36 20 46 61 75 73
+             74 6F 20 50 72 61 63
+             65 6B
+    000003B6 00                    1226 	.db 0x00
+    000003B7                       1227 ___str_2:
+    000003B7 66 70 72 61 63 65 6B  1228 	.ascii "fpracek@gmail.com"
+             40 67 6D 61 69 6C 2E
+             63 6F 6D
+    000003C8 00                    1229 	.db 0x00
+    000003C9                       1230 ___str_3:
+    000003C9 56 39 39 39 30 20 66  1231 	.ascii "V9990 found!"
+             6F 75 6E 64 21
+    000003D5 00                    1232 	.db 0x00
+    000003D6                       1233 ___str_4:
+    000003D6 54 68 65 20 67 61 6D  1234 	.ascii "The game is running on V9990 monitor."
+             65 20 69 73 20 72 75
+             6E 6E 69 6E 67 20 6F
+             6E 20 56 39 39 39 30
+             20 6D 6F 6E 69 74 6F
+             72 2E
+    000003FB 00                    1235 	.db 0x00
+                                   1236 	.area _CODE
+                                   1237 	.area _INITIALIZER
+    00000000                       1238 __xinit__g_VSynch:
+    00000000 00                    1239 	.db #0x00	; 0
+    00000001                       1240 __xinit__g_FieldCurrentYPosition:
+    00000001 00 00                 1241 	.dw #0x0000
+    00000003                       1242 __xinit__g_FieldScrollingActionInProgress:
+    00000003 00                    1243 	.db #0x00	; 0
+    00000004                       1244 __xinit__g_PlayersPositioningPhaseCount:
+    00000004 FF                    1245 	.db #0xff	; 255
+    00000005                       1246 __xinit__g_MatchStatus:
+    00000005 00                    1247 	.db #0x00	; 0
+    00000006                       1248 __xinit__g_FieldScrollSpeed:
+    00000006 01                    1249 	.db #0x01	; 1
+    00000007                       1250 __xinit__g_Timer:
+    00000007 FF                    1251 	.db #0xff	; 255
+                                   1252 	.area _CABS (ABS)
