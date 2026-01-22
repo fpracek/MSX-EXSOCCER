@@ -1286,7 +1286,7 @@
     00000399 CDr00r00         [17] 1286 	call	_ResetPlayersInfo
                                    1287 ;./exsoccer.c:242: SetPlayerTarget(REFEREE); 
     0000039C 3E 0E            [ 7] 1288 	ld	a, #0x0e
-    0000039E CDr61r26         [17] 1289 	call	_SetPlayerTarget
+    0000039E CDr6Dr26         [17] 1289 	call	_SetPlayerTarget
                                    1290 ;./exsoccer.c:244: for(u8 i=0;i<14;i++){
     000003A1 0E 00            [ 7] 1291 	ld	c, #0x00
     000003A3                       1292 00126$:
@@ -2773,7 +2773,7 @@
     00000C3A CE 00            [ 7] 2769 	adc	a, #0x00
     00000C3C DD 77 FC         [19] 2770 	ld	-4 (ix), a
     00000C3F DD 7E FD         [19] 2771 	ld	a, -3 (ix)
-    00000C42 CDr01r25         [17] 2772 	call	_GetNoMovingPlayerPatternId
+    00000C42 CDr0Dr25         [17] 2772 	call	_GetNoMovingPlayerPatternId
     00000C45 DD 6E FB         [19] 2773 	ld	l, -5 (ix)
     00000C48 DD 66 FC         [19] 2774 	ld	h, -4 (ix)
     00000C4B 77               [ 7] 2775 	ld	(hl), a
@@ -4128,7 +4128,7 @@
     0000191A DD 6E F4         [19] 4124 	ld	l, -12 (ix)
     0000191D DD 66 F5         [19] 4125 	ld	h, -11 (ix)
     00001920 7E               [ 7] 4126 	ld	a, (hl)
-    00001921 CDr01r25         [17] 4127 	call	_GetNoMovingPlayerPatternId
+    00001921 CDr0Dr25         [17] 4127 	call	_GetNoMovingPlayerPatternId
     00001924 DD 6E FC         [19] 4128 	ld	l, -4 (ix)
     00001927 DD 66 FD         [19] 4129 	ld	h, -3 (ix)
     0000192A 77               [ 7] 4130 	ld	(hl), a
@@ -4699,7 +4699,7 @@
     00001D25 CE 00            [ 7] 4695 	adc	a, #0x00
     00001D27 DD 77 FB         [19] 4696 	ld	-5 (ix), a
     00001D2A DD 7E F9         [19] 4697 	ld	a, -7 (ix)
-    00001D2D CDr01r25         [17] 4698 	call	_GetNoMovingPlayerPatternId
+    00001D2D CDr0Dr25         [17] 4698 	call	_GetNoMovingPlayerPatternId
     00001D30 DD 6E FA         [19] 4699 	ld	l, -6 (ix)
     00001D33 DD 66 FB         [19] 4700 	ld	h, -5 (ix)
     00001D36 77               [ 7] 4701 	ld	(hl), a
@@ -5397,7 +5397,7 @@
                                    5393 ;./exsoccer.c:980: SetPlayerTarget(i); 
     00002197 D5               [11] 5394 	push	de
     00002198 DD 7E FF         [19] 5395 	ld	a, -1 (ix)
-    0000219B CDr61r26         [17] 5396 	call	_SetPlayerTarget
+    0000219B CDr6Dr26         [17] 5396 	call	_SetPlayerTarget
     0000219E D1               [10] 5397 	pop	de
     0000219F                       5398 00181$:
                                    5399 ;./exsoccer.c:973: for(u8 i=0; i<15; i++){
@@ -5612,7 +5612,7 @@
                                    5594 ;./exsoccer.c:1046: SetPlayerTarget(i);
     00002304 C5               [11] 5595 	push	bc
     00002305 79               [ 4] 5596 	ld	a, c
-    00002306 CDr61r26         [17] 5597 	call	_SetPlayerTarget
+    00002306 CDr6Dr26         [17] 5597 	call	_SetPlayerTarget
     00002309 C1               [10] 5598 	pop	bc
                                    5599 ;./exsoccer.c:1045: for(u8 i=0;i<15;i++){
     0000230A 0C               [ 4] 5600 	inc	c
@@ -5866,7 +5866,7 @@
     00002471 79               [ 4] 5848 	ld	a, c
     00002472 D6 04            [ 7] 5849 	sub	a, #0x04
     00002474 B0               [ 4] 5850 	or	a, b
-    00002475 CArFCr24         [10] 5851 	jp	Z,00120$
+    00002475 CAr08r25         [10] 5851 	jp	Z,00122$
                                    5852 ;./exsoccer.c:1124: return;
     00002478 C3r7Br24         [10] 5853 	jp	00102$
     0000247B                       5854 00102$:
@@ -5894,7 +5894,7 @@
     00002499 E5               [11] 5876 	push	hl
     0000249A D5               [11] 5877 	push	de
     0000249B 78               [ 4] 5878 	ld	a, b
-    0000249C CDr01r25         [17] 5879 	call	_GetNoMovingPlayerPatternId
+    0000249C CDr0Dr25         [17] 5879 	call	_GetNoMovingPlayerPatternId
     0000249F D1               [10] 5880 	pop	de
     000024A0 E1               [10] 5881 	pop	hl
     000024A1 77               [ 7] 5882 	ld	(hl), a
@@ -5942,883 +5942,896 @@
     000024D1 21 05 00         [10] 5924 	ld	hl, #5
     000024D4 09               [11] 5925 	add	hl, bc
     000024D5 7E               [ 7] 5926 	ld	a, (hl)
-    000024D6 D6 0E            [ 7] 5927 	sub	a, #0x0e
-    000024D8 20 0F            [12] 5928 	jr	NZ, 00117$
-    000024DA 3Ar04r00         [13] 5929 	ld	a, (_g_MatchStatus+0)
-    000024DD 3D               [ 4] 5930 	dec	a
-    000024DE 20 09            [12] 5931 	jr	NZ, 00117$
-                                   5932 ;./exsoccer.c:1153: g_Players[playerId].PatternId=PLAYER_POSE_RIGHT;
-    000024E0 21 04 00         [10] 5933 	ld	hl, #0x0004
-    000024E3 19               [11] 5934 	add	hl, de
-    000024E4 36 9D            [10] 5935 	ld	(hl), #0x9d
-    000024E6 C3rFCr24         [10] 5936 	jp	00120$
-    000024E9                       5937 00117$:
-                                   5938 ;./exsoccer.c:1156: if(g_Players[playerId].Direction!=DIRECTION_NONE){
-    000024E9 E1               [10] 5939 	pop	hl
-    000024EA E5               [11] 5940 	push	hl
-    000024EB 7E               [ 7] 5941 	ld	a, (hl)
-    000024EC B7               [ 4] 5942 	or	a, a
-    000024ED 28 0D            [12] 5943 	jr	Z, 00120$
-                                   5944 ;./exsoccer.c:1157: g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
-    000024EF 13               [ 6] 5945 	inc	de
-    000024F0 13               [ 6] 5946 	inc	de
-    000024F1 13               [ 6] 5947 	inc	de
-    000024F2 13               [ 6] 5948 	inc	de
-    000024F3 D5               [11] 5949 	push	de
-    000024F4 DD 7E FF         [19] 5950 	ld	a, -1 (ix)
-    000024F7 CDrA7r25         [17] 5951 	call	_GetPatternIdByPoseAndDirection
-    000024FA D1               [10] 5952 	pop	de
-    000024FB 12               [ 7] 5953 	ld	(de), a
-    000024FC                       5954 00120$:
-                                   5955 ;./exsoccer.c:1160: }
-    000024FC DD F9            [10] 5956 	ld	sp, ix
-    000024FE DD E1            [14] 5957 	pop	ix
-    00002500 C9               [10] 5958 	ret
-                                   5959 ;./exsoccer.c:1163: u8 GetNoMovingPlayerPatternId(u8 direction){
-                                   5960 ;	---------------------------------
-                                   5961 ; Function GetNoMovingPlayerPatternId
-                                   5962 ; ---------------------------------
-    00002501                       5963 _GetNoMovingPlayerPatternId::
-    00002501 5F               [ 4] 5964 	ld	e, a
-                                   5965 ;./exsoccer.c:1164: u8 patternId=NO_VALUE;
-    00002502 0E FF            [ 7] 5966 	ld	c, #0xff
-                                   5967 ;./exsoccer.c:1165: switch (direction){
-    00002504 3E 08            [ 7] 5968 	ld	a, #0x08
-    00002506 93               [ 4] 5969 	sub	a, e
-    00002507 38 49            [12] 5970 	jr	C, 00109$
-    00002509 16 00            [ 7] 5971 	ld	d, #0x00
-    0000250B 21r12r25         [10] 5972 	ld	hl, #00117$
-    0000250E 19               [11] 5973 	add	hl, de
-    0000250F 19               [11] 5974 	add	hl, de
-    00002510 19               [11] 5975 	add	hl, de
-    00002511 E9               [ 4] 5976 	jp	(hl)
-    00002512                       5977 00117$:
-    00002512 C3r52r25         [10] 5978 	jp	00109$
-    00002515 C3r32r25         [10] 5979 	jp	00102$
-    00002518 C3r46r25         [10] 5980 	jp	00106$
-    0000251B C3r3Cr25         [10] 5981 	jp	00104$
-    0000251E C3r50r25         [10] 5982 	jp	00108$
-    00002521 C3r2Dr25         [10] 5983 	jp	00101$
-    00002524 C3r4Br25         [10] 5984 	jp	00107$
-    00002527 C3r37r25         [10] 5985 	jp	00103$
-    0000252A C3r41r25         [10] 5986 	jp	00105$
-                                   5987 ;./exsoccer.c:1166: case DIRECTION_DOWN:
-    0000252D                       5988 00101$:
-                                   5989 ;./exsoccer.c:1167: patternId=PLAYER_POSE_FRONT_PLAYING;
-    0000252D 0E 13            [ 7] 5990 	ld	c, #0x13
-                                   5991 ;./exsoccer.c:1168: break;
-    0000252F C3r52r25         [10] 5992 	jp	00109$
-                                   5993 ;./exsoccer.c:1169: case DIRECTION_UP:
-    00002532                       5994 00102$:
-                                   5995 ;./exsoccer.c:1170: patternId=PLAYER_POSE_BACK_PLAYING;
-    00002532 0E 16            [ 7] 5996 	ld	c, #0x16
-                                   5997 ;./exsoccer.c:1171: break;
-    00002534 C3r52r25         [10] 5998 	jp	00109$
-                                   5999 ;./exsoccer.c:1172: case DIRECTION_LEFT:
-    00002537                       6000 00103$:
-                                   6001 ;./exsoccer.c:1173: patternId=PLAYER_POSE_LEFT;
-    00002537 0E 12            [ 7] 6002 	ld	c, #0x12
-                                   6003 ;./exsoccer.c:1174: break;
-    00002539 C3r52r25         [10] 6004 	jp	00109$
-                                   6005 ;./exsoccer.c:1175: case DIRECTION_RIGHT:
-    0000253C                       6006 00104$:
-                                   6007 ;./exsoccer.c:1176: patternId=PLAYER_POSE_RIGHT;
-    0000253C 0E 9D            [ 7] 6008 	ld	c, #0x9d
-                                   6009 ;./exsoccer.c:1177: break;
-    0000253E C3r52r25         [10] 6010 	jp	00109$
-                                   6011 ;./exsoccer.c:1178: case DIRECTION_UP_LEFT:
-    00002541                       6012 00105$:
-                                   6013 ;./exsoccer.c:1179: patternId=PLAYER_POSE_MOVE_UP_LEFT_2;
-    00002541 0E 82            [ 7] 6014 	ld	c, #0x82
-                                   6015 ;./exsoccer.c:1180: break;
-    00002543 C3r52r25         [10] 6016 	jp	00109$
-                                   6017 ;./exsoccer.c:1181: case DIRECTION_UP_RIGHT:
-    00002546                       6018 00106$:
-                                   6019 ;./exsoccer.c:1182: patternId=PLAYER_POSE_MOVE_UP_RIGHT_1;
-    00002546 0E 0D            [ 7] 6020 	ld	c, #0x0d
-                                   6021 ;./exsoccer.c:1183: break;
-    00002548 C3r52r25         [10] 6022 	jp	00109$
-                                   6023 ;./exsoccer.c:1184: case DIRECTION_DOWN_LEFT:
-    0000254B                       6024 00107$:
-                                   6025 ;./exsoccer.c:1185: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_1;
-    0000254B 0E 09            [ 7] 6026 	ld	c, #0x09
-                                   6027 ;./exsoccer.c:1186: break;
-    0000254D C3r52r25         [10] 6028 	jp	00109$
-                                   6029 ;./exsoccer.c:1187: case DIRECTION_DOWN_RIGHT:
-    00002550                       6030 00108$:
-                                   6031 ;./exsoccer.c:1188: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_2;
-    00002550 0E 86            [ 7] 6032 	ld	c, #0x86
-                                   6033 ;./exsoccer.c:1190: }
-    00002552                       6034 00109$:
-                                   6035 ;./exsoccer.c:1191: return patternId;
-    00002552 79               [ 4] 6036 	ld	a, c
-                                   6037 ;./exsoccer.c:1192: }
-    00002553 C9               [10] 6038 	ret
-                                   6039 ;./exsoccer.c:1194: u8 GetNewPoseByDirection(u8 direction){
-                                   6040 ;	---------------------------------
-                                   6041 ; Function GetNewPoseByDirection
-                                   6042 ; ---------------------------------
-    00002554                       6043 _GetNewPoseByDirection::
-    00002554 5F               [ 4] 6044 	ld	e, a
-                                   6045 ;./exsoccer.c:1195: u8 pose=NO_VALUE;
-    00002555 0E FF            [ 7] 6046 	ld	c, #0xff
-                                   6047 ;./exsoccer.c:1196: switch (direction)
-    00002557 3E 08            [ 7] 6048 	ld	a, #0x08
-    00002559 93               [ 4] 6049 	sub	a, e
-    0000255A 38 49            [12] 6050 	jr	C, 00109$
-    0000255C 16 00            [ 7] 6051 	ld	d, #0x00
-    0000255E 21r65r25         [10] 6052 	ld	hl, #00117$
-    00002561 19               [11] 6053 	add	hl, de
-    00002562 19               [11] 6054 	add	hl, de
-    00002563 19               [11] 6055 	add	hl, de
-    00002564 E9               [ 4] 6056 	jp	(hl)
-    00002565                       6057 00117$:
-    00002565 C3rA5r25         [10] 6058 	jp	00109$
-    00002568 C3r85r25         [10] 6059 	jp	00102$
-    0000256B C3r94r25         [10] 6060 	jp	00105$
-    0000256E C3r8Fr25         [10] 6061 	jp	00104$
-    00002571 C3r99r25         [10] 6062 	jp	00106$
-    00002574 C3r80r25         [10] 6063 	jp	00101$
-    00002577 C3rA3r25         [10] 6064 	jp	00108$
-    0000257A C3r8Ar25         [10] 6065 	jp	00103$
-    0000257D C3r9Er25         [10] 6066 	jp	00107$
-                                   6067 ;./exsoccer.c:1198: case DIRECTION_DOWN:
-    00002580                       6068 00101$:
-                                   6069 ;./exsoccer.c:1199: pose=PLAYER_POSE_MOVE_DOWN_1;
-    00002580 0E 00            [ 7] 6070 	ld	c, #0x00
-                                   6071 ;./exsoccer.c:1200: break;
-    00002582 C3rA5r25         [10] 6072 	jp	00109$
-                                   6073 ;./exsoccer.c:1201: case DIRECTION_UP:
-    00002585                       6074 00102$:
-                                   6075 ;./exsoccer.c:1202: pose=PLAYER_POSE_MOVE_UP_1;
-    00002585 0E 02            [ 7] 6076 	ld	c, #0x02
-                                   6077 ;./exsoccer.c:1203: break;
-    00002587 C3rA5r25         [10] 6078 	jp	00109$
-                                   6079 ;./exsoccer.c:1204: case DIRECTION_LEFT:
-    0000258A                       6080 00103$:
-                                   6081 ;./exsoccer.c:1205: pose=PLAYER_POSE_MOVE_LEFT_1;
-    0000258A 0E 05            [ 7] 6082 	ld	c, #0x05
-                                   6083 ;./exsoccer.c:1206: break;	
-    0000258C C3rA5r25         [10] 6084 	jp	00109$
-                                   6085 ;./exsoccer.c:1207: case DIRECTION_RIGHT:
-    0000258F                       6086 00104$:
-                                   6087 ;./exsoccer.c:1208: pose=PLAYER_POSE_MOVE_RIGHT_1;
-    0000258F 0E 89            [ 7] 6088 	ld	c, #0x89
-                                   6089 ;./exsoccer.c:1209: break;	
-    00002591 C3rA5r25         [10] 6090 	jp	00109$
-                                   6091 ;./exsoccer.c:1210: case DIRECTION_UP_RIGHT:
-    00002594                       6092 00105$:
-                                   6093 ;./exsoccer.c:1211: pose=PLAYER_POSE_MOVE_UP_RIGHT_1;
-    00002594 0E 0D            [ 7] 6094 	ld	c, #0x0d
-                                   6095 ;./exsoccer.c:1212: break;	
-    00002596 C3rA5r25         [10] 6096 	jp	00109$
-                                   6097 ;./exsoccer.c:1213: case DIRECTION_DOWN_RIGHT:
-    00002599                       6098 00106$:
-                                   6099 ;./exsoccer.c:1214: pose=PLAYER_POSE_MOVE_DOWN_RIGHT_1;
-    00002599 0E 85            [ 7] 6100 	ld	c, #0x85
-                                   6101 ;./exsoccer.c:1215: break;	
-    0000259B C3rA5r25         [10] 6102 	jp	00109$
-                                   6103 ;./exsoccer.c:1216: case DIRECTION_UP_LEFT:
-    0000259E                       6104 00107$:
-                                   6105 ;./exsoccer.c:1217: pose=PLAYER_POSE_MOVE_UP_LEFT_1;
-    0000259E 0E 83            [ 7] 6106 	ld	c, #0x83
-                                   6107 ;./exsoccer.c:1218: break;	
-    000025A0 C3rA5r25         [10] 6108 	jp	00109$
-                                   6109 ;./exsoccer.c:1219: case DIRECTION_DOWN_LEFT:
-    000025A3                       6110 00108$:
-                                   6111 ;./exsoccer.c:1220: pose=PLAYER_POSE_MOVE_DOWN_LEFT_1;
-    000025A3 0E 09            [ 7] 6112 	ld	c, #0x09
-                                   6113 ;./exsoccer.c:1222: }
-    000025A5                       6114 00109$:
-                                   6115 ;./exsoccer.c:1223: return pose;
-    000025A5 79               [ 4] 6116 	ld	a, c
-                                   6117 ;./exsoccer.c:1224: }
-    000025A6 C9               [10] 6118 	ret
-                                   6119 ;./exsoccer.c:1226: u8 GetPatternIdByPoseAndDirection(u8 playerId){
-                                   6120 ;	---------------------------------
-                                   6121 ; Function GetPatternIdByPoseAndDirection
-                                   6122 ; ---------------------------------
-    000025A7                       6123 _GetPatternIdByPoseAndDirection::
-    000025A7 5F               [ 4] 6124 	ld	e, a
-                                   6125 ;./exsoccer.c:1227: u8 pose=g_Players[playerId].LastPose;
-    000025A8 01r06r00         [10] 6126 	ld	bc, #_g_Players+0
-    000025AB 16 00            [ 7] 6127 	ld	d, #0x00
-    000025AD 6B               [ 4] 6128 	ld	l, e
-    000025AE 62               [ 4] 6129 	ld	h, d
-    000025AF 29               [11] 6130 	add	hl, hl
-    000025B0 29               [11] 6131 	add	hl, hl
-    000025B1 29               [11] 6132 	add	hl, hl
-    000025B2 29               [11] 6133 	add	hl, hl
-    000025B3 19               [11] 6134 	add	hl, de
-    000025B4 09               [11] 6135 	add	hl, bc
-    000025B5 EB               [ 4] 6136 	ex	de, hl
-    000025B6 D5               [11] 6137 	push	de
-    000025B7 FD E1            [14] 6138 	pop	iy
-    000025B9 FD 4E 08         [19] 6139 	ld	c, 8 (iy)
-                                   6140 ;./exsoccer.c:1228: u8 direction=g_Players[playerId].Direction;
-    000025BC 21 06 00         [10] 6141 	ld	hl, #6
-    000025BF 19               [11] 6142 	add	hl, de
-    000025C0 46               [ 7] 6143 	ld	b, (hl)
-                                   6144 ;./exsoccer.c:1229: u8 patternId=NO_VALUE;
-    000025C1 1E FF            [ 7] 6145 	ld	e, #0xff
-                                   6146 ;./exsoccer.c:1230: switch(direction){
-    000025C3 3E 08            [ 7] 6147 	ld	a, #0x08
-    000025C5 90               [ 4] 6148 	sub	a, b
-    000025C6 DAr5Fr26         [10] 6149 	jp	C, 00134$
-    000025C9 58               [ 4] 6150 	ld	e, b
-    000025CA 16 00            [ 7] 6151 	ld	d, #0x00
-    000025CC 21rD3r25         [10] 6152 	ld	hl, #00182$
-    000025CF 19               [11] 6153 	add	hl, de
-    000025D0 19               [11] 6154 	add	hl, de
-    000025D1 19               [11] 6155 	add	hl, de
-    000025D2 E9               [ 4] 6156 	jp	(hl)
-    000025D3                       6157 00182$:
-    000025D3 C3rEEr25         [10] 6158 	jp	00101$
-    000025D6 C3rF6r25         [10] 6159 	jp	00102$
-    000025D9 C3r49r26         [10] 6160 	jp	00126$
-    000025DC C3r1Fr26         [10] 6161 	jp	00114$
-    000025DF C3r57r26         [10] 6162 	jp	00130$
-    000025E2 C3r04r26         [10] 6163 	jp	00106$
-    000025E5 C3r3Br26         [10] 6164 	jp	00122$
-    000025E8 C3r11r26         [10] 6165 	jp	00110$
-    000025EB C3r2Dr26         [10] 6166 	jp	00118$
-                                   6167 ;./exsoccer.c:1231: case DIRECTION_NONE:
-    000025EE                       6168 00101$:
-                                   6169 ;./exsoccer.c:1232: patternId=GetNoMovingPlayerPatternId(direction);
-    000025EE 78               [ 4] 6170 	ld	a, b
-    000025EF CDr01r25         [17] 6171 	call	_GetNoMovingPlayerPatternId
-    000025F2 5F               [ 4] 6172 	ld	e, a
-                                   6173 ;./exsoccer.c:1233: break;
-    000025F3 C3r5Fr26         [10] 6174 	jp	00134$
-                                   6175 ;./exsoccer.c:1234: case DIRECTION_UP:
-    000025F6                       6176 00102$:
-                                   6177 ;./exsoccer.c:1235: if(pose==0){
-    000025F6 79               [ 4] 6178 	ld	a, c
-    000025F7 B7               [ 4] 6179 	or	a, a
-    000025F8 20 05            [12] 6180 	jr	NZ, 00104$
-                                   6181 ;./exsoccer.c:1236: patternId=PLAYER_POSE_MOVE_UP_1;
-    000025FA 1E 02            [ 7] 6182 	ld	e, #0x02
-    000025FC C3r5Fr26         [10] 6183 	jp	00134$
-    000025FF                       6184 00104$:
-                                   6185 ;./exsoccer.c:1239: patternId=PLAYER_POSE_MOVE_UP_2;
-    000025FF 1E 03            [ 7] 6186 	ld	e, #0x03
-                                   6187 ;./exsoccer.c:1241: break;
-    00002601 C3r5Fr26         [10] 6188 	jp	00134$
-                                   6189 ;./exsoccer.c:1242: case DIRECTION_DOWN:
-    00002604                       6190 00106$:
-                                   6191 ;./exsoccer.c:1243: if(pose==0){
-    00002604 79               [ 4] 6192 	ld	a, c
-                                   6193 ;./exsoccer.c:1244: patternId=PLAYER_POSE_MOVE_DOWN_1;
-    00002605 B7               [ 4] 6194 	or	a,a
-    00002606 20 04            [12] 6195 	jr	NZ, 00108$
-    00002608 5F               [ 4] 6196 	ld	e,a
-    00002609 C3r5Fr26         [10] 6197 	jp	00134$
-    0000260C                       6198 00108$:
-                                   6199 ;./exsoccer.c:1247: patternId=PLAYER_POSE_MOVE_DOWN_2;
-    0000260C 1E 01            [ 7] 6200 	ld	e, #0x01
-                                   6201 ;./exsoccer.c:1249: break;
-    0000260E C3r5Fr26         [10] 6202 	jp	00134$
-                                   6203 ;./exsoccer.c:1250: case DIRECTION_LEFT:
-    00002611                       6204 00110$:
-                                   6205 ;./exsoccer.c:1251: if(pose==0){
-    00002611 79               [ 4] 6206 	ld	a, c
-    00002612 B7               [ 4] 6207 	or	a, a
-    00002613 20 05            [12] 6208 	jr	NZ, 00112$
-                                   6209 ;./exsoccer.c:1252: patternId=PLAYER_POSE_MOVE_LEFT_1;
-    00002615 1E 05            [ 7] 6210 	ld	e, #0x05
-    00002617 C3r5Fr26         [10] 6211 	jp	00134$
-    0000261A                       6212 00112$:
-                                   6213 ;./exsoccer.c:1255: patternId=PLAYER_POSE_MOVE_LEFT_2;
-    0000261A 1E 06            [ 7] 6214 	ld	e, #0x06
-                                   6215 ;./exsoccer.c:1257: break;
-    0000261C C3r5Fr26         [10] 6216 	jp	00134$
-                                   6217 ;./exsoccer.c:1258: case DIRECTION_RIGHT:
-    0000261F                       6218 00114$:
-                                   6219 ;./exsoccer.c:1259: if(pose==0){
-    0000261F 79               [ 4] 6220 	ld	a, c
-    00002620 B7               [ 4] 6221 	or	a, a
-    00002621 20 05            [12] 6222 	jr	NZ, 00116$
-                                   6223 ;./exsoccer.c:1260: patternId=PLAYER_POSE_MOVE_RIGHT_1;
-    00002623 1E 89            [ 7] 6224 	ld	e, #0x89
-    00002625 C3r5Fr26         [10] 6225 	jp	00134$
-    00002628                       6226 00116$:
-                                   6227 ;./exsoccer.c:1263: patternId=PLAYER_POSE_MOVE_RIGHT_2;
-    00002628 1E 8A            [ 7] 6228 	ld	e, #0x8a
-                                   6229 ;./exsoccer.c:1265: break;
-    0000262A C3r5Fr26         [10] 6230 	jp	00134$
-                                   6231 ;./exsoccer.c:1266: case DIRECTION_UP_LEFT:
-    0000262D                       6232 00118$:
-                                   6233 ;./exsoccer.c:1267: if(pose==0){
-    0000262D 79               [ 4] 6234 	ld	a, c
-    0000262E B7               [ 4] 6235 	or	a, a
-    0000262F 20 05            [12] 6236 	jr	NZ, 00120$
-                                   6237 ;./exsoccer.c:1268: patternId=PLAYER_POSE_MOVE_UP_LEFT_1;
-    00002631 1E 83            [ 7] 6238 	ld	e, #0x83
-    00002633 C3r5Fr26         [10] 6239 	jp	00134$
-    00002636                       6240 00120$:
-                                   6241 ;./exsoccer.c:1271: patternId=PLAYER_POSE_MOVE_UP_LEFT_2;
-    00002636 1E 82            [ 7] 6242 	ld	e, #0x82
-                                   6243 ;./exsoccer.c:1273: break;
-    00002638 C3r5Fr26         [10] 6244 	jp	00134$
-                                   6245 ;./exsoccer.c:1274: case DIRECTION_DOWN_LEFT:
-    0000263B                       6246 00122$:
-                                   6247 ;./exsoccer.c:1275: if(pose==0){
-    0000263B 79               [ 4] 6248 	ld	a, c
-    0000263C B7               [ 4] 6249 	or	a, a
-    0000263D 20 05            [12] 6250 	jr	NZ, 00124$
-                                   6251 ;./exsoccer.c:1276: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_1;
-    0000263F 1E 09            [ 7] 6252 	ld	e, #0x09
-    00002641 C3r5Fr26         [10] 6253 	jp	00134$
-    00002644                       6254 00124$:
-                                   6255 ;./exsoccer.c:1279: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_2;
-    00002644 1E 0A            [ 7] 6256 	ld	e, #0x0a
-                                   6257 ;./exsoccer.c:1281: break;
-    00002646 C3r5Fr26         [10] 6258 	jp	00134$
-                                   6259 ;./exsoccer.c:1282: case DIRECTION_UP_RIGHT:
-    00002649                       6260 00126$:
-                                   6261 ;./exsoccer.c:1283: if(pose==0){
-    00002649 79               [ 4] 6262 	ld	a, c
-    0000264A B7               [ 4] 6263 	or	a, a
-    0000264B 20 05            [12] 6264 	jr	NZ, 00128$
-                                   6265 ;./exsoccer.c:1284: patternId=PLAYER_POSE_MOVE_UP_RIGHT_1;
-    0000264D 1E 0D            [ 7] 6266 	ld	e, #0x0d
-    0000264F C3r5Fr26         [10] 6267 	jp	00134$
-    00002652                       6268 00128$:
-                                   6269 ;./exsoccer.c:1287: patternId=PLAYER_POSE_MOVE_UP_RIGHT_2;
-    00002652 1E 0E            [ 7] 6270 	ld	e, #0x0e
-                                   6271 ;./exsoccer.c:1289: break;
-    00002654 C3r5Fr26         [10] 6272 	jp	00134$
-                                   6273 ;./exsoccer.c:1290: case DIRECTION_DOWN_RIGHT:
-    00002657                       6274 00130$:
-                                   6275 ;./exsoccer.c:1291: if(pose==0){
-    00002657 79               [ 4] 6276 	ld	a, c
-    00002658 B7               [ 4] 6277 	or	a, a
-                                   6278 ;./exsoccer.c:1292: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_1;
-                                   6279 ;./exsoccer.c:1295: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_2;
-                                   6280 ;./exsoccer.c:1298: }
-    00002659 1E 85            [ 7] 6281 	ld	e, #0x85
-    0000265B 28 02            [12] 6282 	jr	Z, 00134$
-    0000265D 1E 86            [ 7] 6283 	ld	e, #0x86
-    0000265F                       6284 00134$:
-                                   6285 ;./exsoccer.c:1299: return patternId;
-    0000265F 7B               [ 4] 6286 	ld	a, e
-                                   6287 ;./exsoccer.c:1300: }
-    00002660 C9               [10] 6288 	ret
-                                   6289 ;./exsoccer.c:1301: void SetPlayerTarget(u8 playerId){
-                                   6290 ;	---------------------------------
-                                   6291 ; Function SetPlayerTarget
-                                   6292 ; ---------------------------------
-    00002661                       6293 _SetPlayerTarget::
-    00002661 DD E5            [15] 6294 	push	ix
-    00002663 DD 21 00 00      [14] 6295 	ld	ix,#0
-    00002667 DD 39            [15] 6296 	add	ix,sp
-    00002669 3B               [ 6] 6297 	dec	sp
-    0000266A 4F               [ 4] 6298 	ld	c, a
-                                   6299 ;./exsoccer.c:1302: if(g_FieldScrollingActionInProgress!=NO_VALUE && g_MatchStatus!=MATCH_BEFORE_KICK_OFF){
-    0000266B 3Ar04r00         [13] 6300 	ld	a, (_g_MatchStatus+0)
-    0000266E 3D               [ 4] 6301 	dec	a
-    0000266F 3E 01            [ 7] 6302 	ld	a, #0x01
-    00002671 28 01            [12] 6303 	jr	Z, 00198$
-    00002673 AF               [ 4] 6304 	xor	a, a
-    00002674                       6305 00198$:
-    00002674 5F               [ 4] 6306 	ld	e, a
-    00002675 3Ar02r00         [13] 6307 	ld	a, (_g_FieldScrollingActionInProgress+0)
-    00002678 3C               [ 4] 6308 	inc	a
-    00002679 28 05            [12] 6309 	jr	Z, 00102$
-    0000267B CB 43            [ 8] 6310 	bit	0, e
-                                   6311 ;./exsoccer.c:1303: return;
-    0000267D CAr59r28         [10] 6312 	jp	Z,00140$
-    00002680                       6313 00102$:
-                                   6314 ;./exsoccer.c:1305: switch(g_MatchStatus){
-    00002680 7B               [ 4] 6315 	ld	a, e
-    00002681 B7               [ 4] 6316 	or	a, a
-    00002682 CAr59r28         [10] 6317 	jp	Z, 00140$
-                                   6318 ;./exsoccer.c:1307: if(g_Players[playerId].TeamId==REFEREE){
-    00002685 11r06r00         [10] 6319 	ld	de, #_g_Players+0
-    00002688 06 00            [ 7] 6320 	ld	b, #0x00
-    0000268A 69               [ 4] 6321 	ld	l, c
-    0000268B 60               [ 4] 6322 	ld	h, b
-    0000268C 29               [11] 6323 	add	hl, hl
-    0000268D 29               [11] 6324 	add	hl, hl
-    0000268E 29               [11] 6325 	add	hl, hl
-    0000268F 29               [11] 6326 	add	hl, hl
-    00002690 09               [11] 6327 	add	hl, bc
-    00002691 19               [11] 6328 	add	hl, de
-    00002692 EB               [ 4] 6329 	ex	de, hl
-    00002693 D5               [11] 6330 	push	de
-    00002694 FD E1            [14] 6331 	pop	iy
-    00002696 FD 4E 05         [19] 6332 	ld	c, 5 (iy)
-    00002699 79               [ 4] 6333 	ld	a, c
-    0000269A D6 0E            [ 7] 6334 	sub	a, #0x0e
-    0000269C 20 15            [12] 6335 	jr	NZ, 00137$
-                                   6336 ;./exsoccer.c:1309: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
-    0000269E 21 0C 00         [10] 6337 	ld	hl, #0x000c
-    000026A1 19               [11] 6338 	add	hl, de
-    000026A2 36 5A            [10] 6339 	ld	(hl), #0x5a
-    000026A4 23               [ 6] 6340 	inc	hl
-    000026A5 36 00            [10] 6341 	ld	(hl), #0x00
-                                   6342 ;./exsoccer.c:1310: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
-    000026A7 21 0A 00         [10] 6343 	ld	hl, #0x000a
-    000026AA 19               [11] 6344 	add	hl, de
-    000026AB 36 CB            [10] 6345 	ld	(hl), #0xcb
-    000026AD 23               [ 6] 6346 	inc	hl
-    000026AE 36 00            [10] 6347 	ld	(hl), #0x00
-    000026B0 C3r59r28         [10] 6348 	jp	00140$
-    000026B3                       6349 00137$:
-                                   6350 ;./exsoccer.c:1314: switch (g_Players[playerId].Role)
-    000026B3 D5               [11] 6351 	push	de
-    000026B4 FD E1            [14] 6352 	pop	iy
-    000026B6 FD 7E 09         [19] 6353 	ld	a, 9 (iy)
-    000026B9 DD 77 FF         [19] 6354 	ld	-1 (ix), a
-    000026BC 3E 06            [ 7] 6355 	ld	a, #0x06
-    000026BE DD 96 FF         [19] 6356 	sub	a, -1 (ix)
-    000026C1 3E 00            [ 7] 6357 	ld	a, #0x00
-    000026C3 17               [ 4] 6358 	rla
-    000026C4 6F               [ 4] 6359 	ld	l, a
-                                   6360 ;	spillPairReg hl
-                                   6361 ;	spillPairReg hl
-                                   6362 ;./exsoccer.c:1313: if(g_Players[playerId].TeamId==TEAM_1){
-    000026C5 0D               [ 4] 6363 	dec	c
-    000026C6 C2r95r27         [10] 6364 	jp	NZ,00134$
-                                   6365 ;./exsoccer.c:1314: switch (g_Players[playerId].Role)
-    000026C9 7D               [ 4] 6366 	ld	a, l
-    000026CA B7               [ 4] 6367 	or	a, a
-    000026CB C2r59r28         [10] 6368 	jp	NZ, 00140$
-                                   6369 ;./exsoccer.c:1309: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
-    000026CE 21 0C 00         [10] 6370 	ld	hl, #0x000c
-    000026D1 19               [11] 6371 	add	hl, de
-    000026D2 4D               [ 4] 6372 	ld	c, l
-    000026D3 44               [ 4] 6373 	ld	b, h
-                                   6374 ;./exsoccer.c:1310: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
-    000026D4 21 0A 00         [10] 6375 	ld	hl, #0x000a
-    000026D7 19               [11] 6376 	add	hl, de
-                                   6377 ;./exsoccer.c:1314: switch (g_Players[playerId].Role)
-    000026D8 E5               [11] 6378 	push	hl
-    000026D9 DD 5E FF         [19] 6379 	ld	e, -1 (ix)
-    000026DC 16 00            [ 7] 6380 	ld	d, #0x00
-    000026DE 21rE6r26         [10] 6381 	ld	hl, #00204$
-    000026E1 19               [11] 6382 	add	hl, de
-    000026E2 19               [11] 6383 	add	hl, de
-    000026E3 19               [11] 6384 	add	hl, de
-    000026E4 D1               [10] 6385 	pop	de
-    000026E5 E9               [ 4] 6386 	jp	(hl)
-    000026E6                       6387 00204$:
-    000026E6 C3rFBr26         [10] 6388 	jp	00105$
-    000026E9 C3r0Br27         [10] 6389 	jp	00106$
-    000026EC C3r1Br27         [10] 6390 	jp	00107$
-    000026EF C3r2Br27         [10] 6391 	jp	00108$
-    000026F2 C3r50r27         [10] 6392 	jp	00112$
-    000026F5 C3r75r27         [10] 6393 	jp	00116$
-    000026F8 C3r85r27         [10] 6394 	jp	00117$
-                                   6395 ;./exsoccer.c:1316: case PLAYER_ROLE_GOALKEEPER:
-    000026FB                       6396 00105$:
-                                   6397 ;./exsoccer.c:1317: g_Players[playerId].TargetX=FIELD_POS_X_CENTER;
-    000026FB 3E 78            [ 7] 6398 	ld	a, #0x78
-    000026FD 02               [ 7] 6399 	ld	(bc), a
-    000026FE 03               [ 6] 6400 	inc	bc
-    000026FF AF               [ 4] 6401 	xor	a, a
-    00002700 02               [ 7] 6402 	ld	(bc), a
-                                   6403 ;./exsoccer.c:1318: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_GOALKEEPER;
-    00002701 3E A8            [ 7] 6404 	ld	a, #0xa8
-    00002703 12               [ 7] 6405 	ld	(de), a
-    00002704 13               [ 6] 6406 	inc	de
-    00002705 3E 01            [ 7] 6407 	ld	a, #0x01
-    00002707 12               [ 7] 6408 	ld	(de), a
-                                   6409 ;./exsoccer.c:1319: break;
-    00002708 C3r59r28         [10] 6410 	jp	00140$
-                                   6411 ;./exsoccer.c:1320: case PLAYER_ROLE_LEFT_DEFENDER:
-    0000270B                       6412 00106$:
-                                   6413 ;./exsoccer.c:1321: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-    0000270B 3E 28            [ 7] 6414 	ld	a, #0x28
-    0000270D 02               [ 7] 6415 	ld	(bc), a
-    0000270E 03               [ 6] 6416 	inc	bc
-    0000270F AF               [ 4] 6417 	xor	a, a
-    00002710 02               [ 7] 6418 	ld	(bc), a
-                                   6419 ;./exsoccer.c:1322: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_DEFENDERS;
-    00002711 3E 76            [ 7] 6420 	ld	a, #0x76
+                                   5927 ;./exsoccer.c:1128: if(g_Players[playerId].Direction!=g_Players[playerId].PreviousDirection){
+    000024D6 E1               [10] 5928 	pop	hl
+    000024D7 E5               [11] 5929 	push	hl
+    000024D8 4E               [ 7] 5930 	ld	c, (hl)
+                                   5931 ;./exsoccer.c:1152: if(g_Players[playerId].TeamId==REFEREE && g_MatchStatus==MATCH_BEFORE_KICK_OFF ){
+    000024D9 D6 0E            [ 7] 5932 	sub	a, #0x0e
+    000024DB 20 1A            [12] 5933 	jr	NZ, 00119$
+    000024DD 3Ar04r00         [13] 5934 	ld	a, (_g_MatchStatus+0)
+    000024E0 3D               [ 4] 5935 	dec	a
+    000024E1 20 14            [12] 5936 	jr	NZ, 00119$
+                                   5937 ;./exsoccer.c:1155: if(g_Players[playerId].Direction!=DIRECTION_NONE){
+    000024E3 79               [ 4] 5938 	ld	a, c
+    000024E4 B7               [ 4] 5939 	or	a, a
+    000024E5 28 21            [12] 5940 	jr	Z, 00122$
+                                   5941 ;./exsoccer.c:1156: g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
+    000024E7 13               [ 6] 5942 	inc	de
+    000024E8 13               [ 6] 5943 	inc	de
+    000024E9 13               [ 6] 5944 	inc	de
+    000024EA 13               [ 6] 5945 	inc	de
+    000024EB D5               [11] 5946 	push	de
+    000024EC DD 7E FF         [19] 5947 	ld	a, -1 (ix)
+    000024EF CDrB3r25         [17] 5948 	call	_GetPatternIdByPoseAndDirection
+    000024F2 D1               [10] 5949 	pop	de
+    000024F3 12               [ 7] 5950 	ld	(de), a
+    000024F4 C3r08r25         [10] 5951 	jp	00122$
+    000024F7                       5952 00119$:
+                                   5953 ;./exsoccer.c:1160: if(g_Players[playerId].Direction!=DIRECTION_NONE){
+    000024F7 79               [ 4] 5954 	ld	a, c
+    000024F8 B7               [ 4] 5955 	or	a, a
+    000024F9 28 0D            [12] 5956 	jr	Z, 00122$
+                                   5957 ;./exsoccer.c:1161: g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
+    000024FB 13               [ 6] 5958 	inc	de
+    000024FC 13               [ 6] 5959 	inc	de
+    000024FD 13               [ 6] 5960 	inc	de
+    000024FE 13               [ 6] 5961 	inc	de
+    000024FF D5               [11] 5962 	push	de
+    00002500 DD 7E FF         [19] 5963 	ld	a, -1 (ix)
+    00002503 CDrB3r25         [17] 5964 	call	_GetPatternIdByPoseAndDirection
+    00002506 D1               [10] 5965 	pop	de
+    00002507 12               [ 7] 5966 	ld	(de), a
+    00002508                       5967 00122$:
+                                   5968 ;./exsoccer.c:1164: }
+    00002508 DD F9            [10] 5969 	ld	sp, ix
+    0000250A DD E1            [14] 5970 	pop	ix
+    0000250C C9               [10] 5971 	ret
+                                   5972 ;./exsoccer.c:1167: u8 GetNoMovingPlayerPatternId(u8 direction){
+                                   5973 ;	---------------------------------
+                                   5974 ; Function GetNoMovingPlayerPatternId
+                                   5975 ; ---------------------------------
+    0000250D                       5976 _GetNoMovingPlayerPatternId::
+    0000250D 5F               [ 4] 5977 	ld	e, a
+                                   5978 ;./exsoccer.c:1168: u8 patternId=NO_VALUE;
+    0000250E 0E FF            [ 7] 5979 	ld	c, #0xff
+                                   5980 ;./exsoccer.c:1169: switch (direction){
+    00002510 3E 08            [ 7] 5981 	ld	a, #0x08
+    00002512 93               [ 4] 5982 	sub	a, e
+    00002513 38 49            [12] 5983 	jr	C, 00109$
+    00002515 16 00            [ 7] 5984 	ld	d, #0x00
+    00002517 21r1Er25         [10] 5985 	ld	hl, #00117$
+    0000251A 19               [11] 5986 	add	hl, de
+    0000251B 19               [11] 5987 	add	hl, de
+    0000251C 19               [11] 5988 	add	hl, de
+    0000251D E9               [ 4] 5989 	jp	(hl)
+    0000251E                       5990 00117$:
+    0000251E C3r5Er25         [10] 5991 	jp	00109$
+    00002521 C3r3Er25         [10] 5992 	jp	00102$
+    00002524 C3r52r25         [10] 5993 	jp	00106$
+    00002527 C3r48r25         [10] 5994 	jp	00104$
+    0000252A C3r5Cr25         [10] 5995 	jp	00108$
+    0000252D C3r39r25         [10] 5996 	jp	00101$
+    00002530 C3r57r25         [10] 5997 	jp	00107$
+    00002533 C3r43r25         [10] 5998 	jp	00103$
+    00002536 C3r4Dr25         [10] 5999 	jp	00105$
+                                   6000 ;./exsoccer.c:1170: case DIRECTION_DOWN:
+    00002539                       6001 00101$:
+                                   6002 ;./exsoccer.c:1171: patternId=PLAYER_POSE_FRONT_PLAYING;
+    00002539 0E 13            [ 7] 6003 	ld	c, #0x13
+                                   6004 ;./exsoccer.c:1172: break;
+    0000253B C3r5Er25         [10] 6005 	jp	00109$
+                                   6006 ;./exsoccer.c:1173: case DIRECTION_UP:
+    0000253E                       6007 00102$:
+                                   6008 ;./exsoccer.c:1174: patternId=PLAYER_POSE_BACK_PLAYING;
+    0000253E 0E 16            [ 7] 6009 	ld	c, #0x16
+                                   6010 ;./exsoccer.c:1175: break;
+    00002540 C3r5Er25         [10] 6011 	jp	00109$
+                                   6012 ;./exsoccer.c:1176: case DIRECTION_LEFT:
+    00002543                       6013 00103$:
+                                   6014 ;./exsoccer.c:1177: patternId=PLAYER_POSE_LEFT;
+    00002543 0E 12            [ 7] 6015 	ld	c, #0x12
+                                   6016 ;./exsoccer.c:1178: break;
+    00002545 C3r5Er25         [10] 6017 	jp	00109$
+                                   6018 ;./exsoccer.c:1179: case DIRECTION_RIGHT:
+    00002548                       6019 00104$:
+                                   6020 ;./exsoccer.c:1180: patternId=PLAYER_POSE_RIGHT;
+    00002548 0E 9D            [ 7] 6021 	ld	c, #0x9d
+                                   6022 ;./exsoccer.c:1181: break;
+    0000254A C3r5Er25         [10] 6023 	jp	00109$
+                                   6024 ;./exsoccer.c:1182: case DIRECTION_UP_LEFT:
+    0000254D                       6025 00105$:
+                                   6026 ;./exsoccer.c:1183: patternId=PLAYER_POSE_MOVE_UP_LEFT_2;
+    0000254D 0E 82            [ 7] 6027 	ld	c, #0x82
+                                   6028 ;./exsoccer.c:1184: break;
+    0000254F C3r5Er25         [10] 6029 	jp	00109$
+                                   6030 ;./exsoccer.c:1185: case DIRECTION_UP_RIGHT:
+    00002552                       6031 00106$:
+                                   6032 ;./exsoccer.c:1186: patternId=PLAYER_POSE_MOVE_UP_RIGHT_1;
+    00002552 0E 0D            [ 7] 6033 	ld	c, #0x0d
+                                   6034 ;./exsoccer.c:1187: break;
+    00002554 C3r5Er25         [10] 6035 	jp	00109$
+                                   6036 ;./exsoccer.c:1188: case DIRECTION_DOWN_LEFT:
+    00002557                       6037 00107$:
+                                   6038 ;./exsoccer.c:1189: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_1;
+    00002557 0E 09            [ 7] 6039 	ld	c, #0x09
+                                   6040 ;./exsoccer.c:1190: break;
+    00002559 C3r5Er25         [10] 6041 	jp	00109$
+                                   6042 ;./exsoccer.c:1191: case DIRECTION_DOWN_RIGHT:
+    0000255C                       6043 00108$:
+                                   6044 ;./exsoccer.c:1192: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_2;
+    0000255C 0E 86            [ 7] 6045 	ld	c, #0x86
+                                   6046 ;./exsoccer.c:1194: }
+    0000255E                       6047 00109$:
+                                   6048 ;./exsoccer.c:1195: return patternId;
+    0000255E 79               [ 4] 6049 	ld	a, c
+                                   6050 ;./exsoccer.c:1196: }
+    0000255F C9               [10] 6051 	ret
+                                   6052 ;./exsoccer.c:1198: u8 GetNewPoseByDirection(u8 direction){
+                                   6053 ;	---------------------------------
+                                   6054 ; Function GetNewPoseByDirection
+                                   6055 ; ---------------------------------
+    00002560                       6056 _GetNewPoseByDirection::
+    00002560 5F               [ 4] 6057 	ld	e, a
+                                   6058 ;./exsoccer.c:1199: u8 pose=NO_VALUE;
+    00002561 0E FF            [ 7] 6059 	ld	c, #0xff
+                                   6060 ;./exsoccer.c:1200: switch (direction)
+    00002563 3E 08            [ 7] 6061 	ld	a, #0x08
+    00002565 93               [ 4] 6062 	sub	a, e
+    00002566 38 49            [12] 6063 	jr	C, 00109$
+    00002568 16 00            [ 7] 6064 	ld	d, #0x00
+    0000256A 21r71r25         [10] 6065 	ld	hl, #00117$
+    0000256D 19               [11] 6066 	add	hl, de
+    0000256E 19               [11] 6067 	add	hl, de
+    0000256F 19               [11] 6068 	add	hl, de
+    00002570 E9               [ 4] 6069 	jp	(hl)
+    00002571                       6070 00117$:
+    00002571 C3rB1r25         [10] 6071 	jp	00109$
+    00002574 C3r91r25         [10] 6072 	jp	00102$
+    00002577 C3rA0r25         [10] 6073 	jp	00105$
+    0000257A C3r9Br25         [10] 6074 	jp	00104$
+    0000257D C3rA5r25         [10] 6075 	jp	00106$
+    00002580 C3r8Cr25         [10] 6076 	jp	00101$
+    00002583 C3rAFr25         [10] 6077 	jp	00108$
+    00002586 C3r96r25         [10] 6078 	jp	00103$
+    00002589 C3rAAr25         [10] 6079 	jp	00107$
+                                   6080 ;./exsoccer.c:1202: case DIRECTION_DOWN:
+    0000258C                       6081 00101$:
+                                   6082 ;./exsoccer.c:1203: pose=PLAYER_POSE_MOVE_DOWN_1;
+    0000258C 0E 00            [ 7] 6083 	ld	c, #0x00
+                                   6084 ;./exsoccer.c:1204: break;
+    0000258E C3rB1r25         [10] 6085 	jp	00109$
+                                   6086 ;./exsoccer.c:1205: case DIRECTION_UP:
+    00002591                       6087 00102$:
+                                   6088 ;./exsoccer.c:1206: pose=PLAYER_POSE_MOVE_UP_1;
+    00002591 0E 02            [ 7] 6089 	ld	c, #0x02
+                                   6090 ;./exsoccer.c:1207: break;
+    00002593 C3rB1r25         [10] 6091 	jp	00109$
+                                   6092 ;./exsoccer.c:1208: case DIRECTION_LEFT:
+    00002596                       6093 00103$:
+                                   6094 ;./exsoccer.c:1209: pose=PLAYER_POSE_MOVE_LEFT_1;
+    00002596 0E 05            [ 7] 6095 	ld	c, #0x05
+                                   6096 ;./exsoccer.c:1210: break;	
+    00002598 C3rB1r25         [10] 6097 	jp	00109$
+                                   6098 ;./exsoccer.c:1211: case DIRECTION_RIGHT:
+    0000259B                       6099 00104$:
+                                   6100 ;./exsoccer.c:1212: pose=PLAYER_POSE_MOVE_RIGHT_1;
+    0000259B 0E 89            [ 7] 6101 	ld	c, #0x89
+                                   6102 ;./exsoccer.c:1213: break;	
+    0000259D C3rB1r25         [10] 6103 	jp	00109$
+                                   6104 ;./exsoccer.c:1214: case DIRECTION_UP_RIGHT:
+    000025A0                       6105 00105$:
+                                   6106 ;./exsoccer.c:1215: pose=PLAYER_POSE_MOVE_UP_RIGHT_1;
+    000025A0 0E 0D            [ 7] 6107 	ld	c, #0x0d
+                                   6108 ;./exsoccer.c:1216: break;	
+    000025A2 C3rB1r25         [10] 6109 	jp	00109$
+                                   6110 ;./exsoccer.c:1217: case DIRECTION_DOWN_RIGHT:
+    000025A5                       6111 00106$:
+                                   6112 ;./exsoccer.c:1218: pose=PLAYER_POSE_MOVE_DOWN_RIGHT_1;
+    000025A5 0E 85            [ 7] 6113 	ld	c, #0x85
+                                   6114 ;./exsoccer.c:1219: break;	
+    000025A7 C3rB1r25         [10] 6115 	jp	00109$
+                                   6116 ;./exsoccer.c:1220: case DIRECTION_UP_LEFT:
+    000025AA                       6117 00107$:
+                                   6118 ;./exsoccer.c:1221: pose=PLAYER_POSE_MOVE_UP_LEFT_1;
+    000025AA 0E 83            [ 7] 6119 	ld	c, #0x83
+                                   6120 ;./exsoccer.c:1222: break;	
+    000025AC C3rB1r25         [10] 6121 	jp	00109$
+                                   6122 ;./exsoccer.c:1223: case DIRECTION_DOWN_LEFT:
+    000025AF                       6123 00108$:
+                                   6124 ;./exsoccer.c:1224: pose=PLAYER_POSE_MOVE_DOWN_LEFT_1;
+    000025AF 0E 09            [ 7] 6125 	ld	c, #0x09
+                                   6126 ;./exsoccer.c:1226: }
+    000025B1                       6127 00109$:
+                                   6128 ;./exsoccer.c:1227: return pose;
+    000025B1 79               [ 4] 6129 	ld	a, c
+                                   6130 ;./exsoccer.c:1228: }
+    000025B2 C9               [10] 6131 	ret
+                                   6132 ;./exsoccer.c:1230: u8 GetPatternIdByPoseAndDirection(u8 playerId){
+                                   6133 ;	---------------------------------
+                                   6134 ; Function GetPatternIdByPoseAndDirection
+                                   6135 ; ---------------------------------
+    000025B3                       6136 _GetPatternIdByPoseAndDirection::
+    000025B3 5F               [ 4] 6137 	ld	e, a
+                                   6138 ;./exsoccer.c:1231: u8 pose=g_Players[playerId].LastPose;
+    000025B4 01r06r00         [10] 6139 	ld	bc, #_g_Players+0
+    000025B7 16 00            [ 7] 6140 	ld	d, #0x00
+    000025B9 6B               [ 4] 6141 	ld	l, e
+    000025BA 62               [ 4] 6142 	ld	h, d
+    000025BB 29               [11] 6143 	add	hl, hl
+    000025BC 29               [11] 6144 	add	hl, hl
+    000025BD 29               [11] 6145 	add	hl, hl
+    000025BE 29               [11] 6146 	add	hl, hl
+    000025BF 19               [11] 6147 	add	hl, de
+    000025C0 09               [11] 6148 	add	hl, bc
+    000025C1 EB               [ 4] 6149 	ex	de, hl
+    000025C2 D5               [11] 6150 	push	de
+    000025C3 FD E1            [14] 6151 	pop	iy
+    000025C5 FD 4E 08         [19] 6152 	ld	c, 8 (iy)
+                                   6153 ;./exsoccer.c:1232: u8 direction=g_Players[playerId].Direction;
+    000025C8 21 06 00         [10] 6154 	ld	hl, #6
+    000025CB 19               [11] 6155 	add	hl, de
+    000025CC 46               [ 7] 6156 	ld	b, (hl)
+                                   6157 ;./exsoccer.c:1233: u8 patternId=NO_VALUE;
+    000025CD 1E FF            [ 7] 6158 	ld	e, #0xff
+                                   6159 ;./exsoccer.c:1234: switch(direction){
+    000025CF 3E 08            [ 7] 6160 	ld	a, #0x08
+    000025D1 90               [ 4] 6161 	sub	a, b
+    000025D2 DAr6Br26         [10] 6162 	jp	C, 00134$
+    000025D5 58               [ 4] 6163 	ld	e, b
+    000025D6 16 00            [ 7] 6164 	ld	d, #0x00
+    000025D8 21rDFr25         [10] 6165 	ld	hl, #00182$
+    000025DB 19               [11] 6166 	add	hl, de
+    000025DC 19               [11] 6167 	add	hl, de
+    000025DD 19               [11] 6168 	add	hl, de
+    000025DE E9               [ 4] 6169 	jp	(hl)
+    000025DF                       6170 00182$:
+    000025DF C3rFAr25         [10] 6171 	jp	00101$
+    000025E2 C3r02r26         [10] 6172 	jp	00102$
+    000025E5 C3r55r26         [10] 6173 	jp	00126$
+    000025E8 C3r2Br26         [10] 6174 	jp	00114$
+    000025EB C3r63r26         [10] 6175 	jp	00130$
+    000025EE C3r10r26         [10] 6176 	jp	00106$
+    000025F1 C3r47r26         [10] 6177 	jp	00122$
+    000025F4 C3r1Dr26         [10] 6178 	jp	00110$
+    000025F7 C3r39r26         [10] 6179 	jp	00118$
+                                   6180 ;./exsoccer.c:1235: case DIRECTION_NONE:
+    000025FA                       6181 00101$:
+                                   6182 ;./exsoccer.c:1236: patternId=GetNoMovingPlayerPatternId(direction);
+    000025FA 78               [ 4] 6183 	ld	a, b
+    000025FB CDr0Dr25         [17] 6184 	call	_GetNoMovingPlayerPatternId
+    000025FE 5F               [ 4] 6185 	ld	e, a
+                                   6186 ;./exsoccer.c:1237: break;
+    000025FF C3r6Br26         [10] 6187 	jp	00134$
+                                   6188 ;./exsoccer.c:1238: case DIRECTION_UP:
+    00002602                       6189 00102$:
+                                   6190 ;./exsoccer.c:1239: if(pose==0){
+    00002602 79               [ 4] 6191 	ld	a, c
+    00002603 B7               [ 4] 6192 	or	a, a
+    00002604 20 05            [12] 6193 	jr	NZ, 00104$
+                                   6194 ;./exsoccer.c:1240: patternId=PLAYER_POSE_MOVE_UP_1;
+    00002606 1E 02            [ 7] 6195 	ld	e, #0x02
+    00002608 C3r6Br26         [10] 6196 	jp	00134$
+    0000260B                       6197 00104$:
+                                   6198 ;./exsoccer.c:1243: patternId=PLAYER_POSE_MOVE_UP_2;
+    0000260B 1E 03            [ 7] 6199 	ld	e, #0x03
+                                   6200 ;./exsoccer.c:1245: break;
+    0000260D C3r6Br26         [10] 6201 	jp	00134$
+                                   6202 ;./exsoccer.c:1246: case DIRECTION_DOWN:
+    00002610                       6203 00106$:
+                                   6204 ;./exsoccer.c:1247: if(pose==0){
+    00002610 79               [ 4] 6205 	ld	a, c
+                                   6206 ;./exsoccer.c:1248: patternId=PLAYER_POSE_MOVE_DOWN_1;
+    00002611 B7               [ 4] 6207 	or	a,a
+    00002612 20 04            [12] 6208 	jr	NZ, 00108$
+    00002614 5F               [ 4] 6209 	ld	e,a
+    00002615 C3r6Br26         [10] 6210 	jp	00134$
+    00002618                       6211 00108$:
+                                   6212 ;./exsoccer.c:1251: patternId=PLAYER_POSE_MOVE_DOWN_2;
+    00002618 1E 01            [ 7] 6213 	ld	e, #0x01
+                                   6214 ;./exsoccer.c:1253: break;
+    0000261A C3r6Br26         [10] 6215 	jp	00134$
+                                   6216 ;./exsoccer.c:1254: case DIRECTION_LEFT:
+    0000261D                       6217 00110$:
+                                   6218 ;./exsoccer.c:1255: if(pose==0){
+    0000261D 79               [ 4] 6219 	ld	a, c
+    0000261E B7               [ 4] 6220 	or	a, a
+    0000261F 20 05            [12] 6221 	jr	NZ, 00112$
+                                   6222 ;./exsoccer.c:1256: patternId=PLAYER_POSE_MOVE_LEFT_1;
+    00002621 1E 05            [ 7] 6223 	ld	e, #0x05
+    00002623 C3r6Br26         [10] 6224 	jp	00134$
+    00002626                       6225 00112$:
+                                   6226 ;./exsoccer.c:1259: patternId=PLAYER_POSE_MOVE_LEFT_2;
+    00002626 1E 06            [ 7] 6227 	ld	e, #0x06
+                                   6228 ;./exsoccer.c:1261: break;
+    00002628 C3r6Br26         [10] 6229 	jp	00134$
+                                   6230 ;./exsoccer.c:1262: case DIRECTION_RIGHT:
+    0000262B                       6231 00114$:
+                                   6232 ;./exsoccer.c:1263: if(pose==0){
+    0000262B 79               [ 4] 6233 	ld	a, c
+    0000262C B7               [ 4] 6234 	or	a, a
+    0000262D 20 05            [12] 6235 	jr	NZ, 00116$
+                                   6236 ;./exsoccer.c:1264: patternId=PLAYER_POSE_MOVE_RIGHT_1;
+    0000262F 1E 89            [ 7] 6237 	ld	e, #0x89
+    00002631 C3r6Br26         [10] 6238 	jp	00134$
+    00002634                       6239 00116$:
+                                   6240 ;./exsoccer.c:1267: patternId=PLAYER_POSE_MOVE_RIGHT_2;
+    00002634 1E 8A            [ 7] 6241 	ld	e, #0x8a
+                                   6242 ;./exsoccer.c:1269: break;
+    00002636 C3r6Br26         [10] 6243 	jp	00134$
+                                   6244 ;./exsoccer.c:1270: case DIRECTION_UP_LEFT:
+    00002639                       6245 00118$:
+                                   6246 ;./exsoccer.c:1271: if(pose==0){
+    00002639 79               [ 4] 6247 	ld	a, c
+    0000263A B7               [ 4] 6248 	or	a, a
+    0000263B 20 05            [12] 6249 	jr	NZ, 00120$
+                                   6250 ;./exsoccer.c:1272: patternId=PLAYER_POSE_MOVE_UP_LEFT_1;
+    0000263D 1E 83            [ 7] 6251 	ld	e, #0x83
+    0000263F C3r6Br26         [10] 6252 	jp	00134$
+    00002642                       6253 00120$:
+                                   6254 ;./exsoccer.c:1275: patternId=PLAYER_POSE_MOVE_UP_LEFT_2;
+    00002642 1E 82            [ 7] 6255 	ld	e, #0x82
+                                   6256 ;./exsoccer.c:1277: break;
+    00002644 C3r6Br26         [10] 6257 	jp	00134$
+                                   6258 ;./exsoccer.c:1278: case DIRECTION_DOWN_LEFT:
+    00002647                       6259 00122$:
+                                   6260 ;./exsoccer.c:1279: if(pose==0){
+    00002647 79               [ 4] 6261 	ld	a, c
+    00002648 B7               [ 4] 6262 	or	a, a
+    00002649 20 05            [12] 6263 	jr	NZ, 00124$
+                                   6264 ;./exsoccer.c:1280: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_1;
+    0000264B 1E 09            [ 7] 6265 	ld	e, #0x09
+    0000264D C3r6Br26         [10] 6266 	jp	00134$
+    00002650                       6267 00124$:
+                                   6268 ;./exsoccer.c:1283: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_2;
+    00002650 1E 0A            [ 7] 6269 	ld	e, #0x0a
+                                   6270 ;./exsoccer.c:1285: break;
+    00002652 C3r6Br26         [10] 6271 	jp	00134$
+                                   6272 ;./exsoccer.c:1286: case DIRECTION_UP_RIGHT:
+    00002655                       6273 00126$:
+                                   6274 ;./exsoccer.c:1287: if(pose==0){
+    00002655 79               [ 4] 6275 	ld	a, c
+    00002656 B7               [ 4] 6276 	or	a, a
+    00002657 20 05            [12] 6277 	jr	NZ, 00128$
+                                   6278 ;./exsoccer.c:1288: patternId=PLAYER_POSE_MOVE_UP_RIGHT_1;
+    00002659 1E 0D            [ 7] 6279 	ld	e, #0x0d
+    0000265B C3r6Br26         [10] 6280 	jp	00134$
+    0000265E                       6281 00128$:
+                                   6282 ;./exsoccer.c:1291: patternId=PLAYER_POSE_MOVE_UP_RIGHT_2;
+    0000265E 1E 0E            [ 7] 6283 	ld	e, #0x0e
+                                   6284 ;./exsoccer.c:1293: break;
+    00002660 C3r6Br26         [10] 6285 	jp	00134$
+                                   6286 ;./exsoccer.c:1294: case DIRECTION_DOWN_RIGHT:
+    00002663                       6287 00130$:
+                                   6288 ;./exsoccer.c:1295: if(pose==0){
+    00002663 79               [ 4] 6289 	ld	a, c
+    00002664 B7               [ 4] 6290 	or	a, a
+                                   6291 ;./exsoccer.c:1296: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_1;
+                                   6292 ;./exsoccer.c:1299: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_2;
+                                   6293 ;./exsoccer.c:1302: }
+    00002665 1E 85            [ 7] 6294 	ld	e, #0x85
+    00002667 28 02            [12] 6295 	jr	Z, 00134$
+    00002669 1E 86            [ 7] 6296 	ld	e, #0x86
+    0000266B                       6297 00134$:
+                                   6298 ;./exsoccer.c:1303: return patternId;
+    0000266B 7B               [ 4] 6299 	ld	a, e
+                                   6300 ;./exsoccer.c:1304: }
+    0000266C C9               [10] 6301 	ret
+                                   6302 ;./exsoccer.c:1305: void SetPlayerTarget(u8 playerId){
+                                   6303 ;	---------------------------------
+                                   6304 ; Function SetPlayerTarget
+                                   6305 ; ---------------------------------
+    0000266D                       6306 _SetPlayerTarget::
+    0000266D DD E5            [15] 6307 	push	ix
+    0000266F DD 21 00 00      [14] 6308 	ld	ix,#0
+    00002673 DD 39            [15] 6309 	add	ix,sp
+    00002675 3B               [ 6] 6310 	dec	sp
+    00002676 4F               [ 4] 6311 	ld	c, a
+                                   6312 ;./exsoccer.c:1306: if(g_FieldScrollingActionInProgress!=NO_VALUE && g_MatchStatus!=MATCH_BEFORE_KICK_OFF){
+    00002677 3Ar04r00         [13] 6313 	ld	a, (_g_MatchStatus+0)
+    0000267A 3D               [ 4] 6314 	dec	a
+    0000267B 3E 01            [ 7] 6315 	ld	a, #0x01
+    0000267D 28 01            [12] 6316 	jr	Z, 00198$
+    0000267F AF               [ 4] 6317 	xor	a, a
+    00002680                       6318 00198$:
+    00002680 5F               [ 4] 6319 	ld	e, a
+    00002681 3Ar02r00         [13] 6320 	ld	a, (_g_FieldScrollingActionInProgress+0)
+    00002684 3C               [ 4] 6321 	inc	a
+    00002685 28 05            [12] 6322 	jr	Z, 00102$
+    00002687 CB 43            [ 8] 6323 	bit	0, e
+                                   6324 ;./exsoccer.c:1307: return;
+    00002689 CAr65r28         [10] 6325 	jp	Z,00140$
+    0000268C                       6326 00102$:
+                                   6327 ;./exsoccer.c:1309: switch(g_MatchStatus){
+    0000268C 7B               [ 4] 6328 	ld	a, e
+    0000268D B7               [ 4] 6329 	or	a, a
+    0000268E CAr65r28         [10] 6330 	jp	Z, 00140$
+                                   6331 ;./exsoccer.c:1311: if(g_Players[playerId].TeamId==REFEREE){
+    00002691 11r06r00         [10] 6332 	ld	de, #_g_Players+0
+    00002694 06 00            [ 7] 6333 	ld	b, #0x00
+    00002696 69               [ 4] 6334 	ld	l, c
+    00002697 60               [ 4] 6335 	ld	h, b
+    00002698 29               [11] 6336 	add	hl, hl
+    00002699 29               [11] 6337 	add	hl, hl
+    0000269A 29               [11] 6338 	add	hl, hl
+    0000269B 29               [11] 6339 	add	hl, hl
+    0000269C 09               [11] 6340 	add	hl, bc
+    0000269D 19               [11] 6341 	add	hl, de
+    0000269E EB               [ 4] 6342 	ex	de, hl
+    0000269F D5               [11] 6343 	push	de
+    000026A0 FD E1            [14] 6344 	pop	iy
+    000026A2 FD 4E 05         [19] 6345 	ld	c, 5 (iy)
+    000026A5 79               [ 4] 6346 	ld	a, c
+    000026A6 D6 0E            [ 7] 6347 	sub	a, #0x0e
+    000026A8 20 15            [12] 6348 	jr	NZ, 00137$
+                                   6349 ;./exsoccer.c:1313: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
+    000026AA 21 0C 00         [10] 6350 	ld	hl, #0x000c
+    000026AD 19               [11] 6351 	add	hl, de
+    000026AE 36 5A            [10] 6352 	ld	(hl), #0x5a
+    000026B0 23               [ 6] 6353 	inc	hl
+    000026B1 36 00            [10] 6354 	ld	(hl), #0x00
+                                   6355 ;./exsoccer.c:1314: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
+    000026B3 21 0A 00         [10] 6356 	ld	hl, #0x000a
+    000026B6 19               [11] 6357 	add	hl, de
+    000026B7 36 CB            [10] 6358 	ld	(hl), #0xcb
+    000026B9 23               [ 6] 6359 	inc	hl
+    000026BA 36 00            [10] 6360 	ld	(hl), #0x00
+    000026BC C3r65r28         [10] 6361 	jp	00140$
+    000026BF                       6362 00137$:
+                                   6363 ;./exsoccer.c:1318: switch (g_Players[playerId].Role)
+    000026BF D5               [11] 6364 	push	de
+    000026C0 FD E1            [14] 6365 	pop	iy
+    000026C2 FD 7E 09         [19] 6366 	ld	a, 9 (iy)
+    000026C5 DD 77 FF         [19] 6367 	ld	-1 (ix), a
+    000026C8 3E 06            [ 7] 6368 	ld	a, #0x06
+    000026CA DD 96 FF         [19] 6369 	sub	a, -1 (ix)
+    000026CD 3E 00            [ 7] 6370 	ld	a, #0x00
+    000026CF 17               [ 4] 6371 	rla
+    000026D0 6F               [ 4] 6372 	ld	l, a
+                                   6373 ;	spillPairReg hl
+                                   6374 ;	spillPairReg hl
+                                   6375 ;./exsoccer.c:1317: if(g_Players[playerId].TeamId==TEAM_1){
+    000026D1 0D               [ 4] 6376 	dec	c
+    000026D2 C2rA1r27         [10] 6377 	jp	NZ,00134$
+                                   6378 ;./exsoccer.c:1318: switch (g_Players[playerId].Role)
+    000026D5 7D               [ 4] 6379 	ld	a, l
+    000026D6 B7               [ 4] 6380 	or	a, a
+    000026D7 C2r65r28         [10] 6381 	jp	NZ, 00140$
+                                   6382 ;./exsoccer.c:1313: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
+    000026DA 21 0C 00         [10] 6383 	ld	hl, #0x000c
+    000026DD 19               [11] 6384 	add	hl, de
+    000026DE 4D               [ 4] 6385 	ld	c, l
+    000026DF 44               [ 4] 6386 	ld	b, h
+                                   6387 ;./exsoccer.c:1314: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
+    000026E0 21 0A 00         [10] 6388 	ld	hl, #0x000a
+    000026E3 19               [11] 6389 	add	hl, de
+                                   6390 ;./exsoccer.c:1318: switch (g_Players[playerId].Role)
+    000026E4 E5               [11] 6391 	push	hl
+    000026E5 DD 5E FF         [19] 6392 	ld	e, -1 (ix)
+    000026E8 16 00            [ 7] 6393 	ld	d, #0x00
+    000026EA 21rF2r26         [10] 6394 	ld	hl, #00204$
+    000026ED 19               [11] 6395 	add	hl, de
+    000026EE 19               [11] 6396 	add	hl, de
+    000026EF 19               [11] 6397 	add	hl, de
+    000026F0 D1               [10] 6398 	pop	de
+    000026F1 E9               [ 4] 6399 	jp	(hl)
+    000026F2                       6400 00204$:
+    000026F2 C3r07r27         [10] 6401 	jp	00105$
+    000026F5 C3r17r27         [10] 6402 	jp	00106$
+    000026F8 C3r27r27         [10] 6403 	jp	00107$
+    000026FB C3r37r27         [10] 6404 	jp	00108$
+    000026FE C3r5Cr27         [10] 6405 	jp	00112$
+    00002701 C3r81r27         [10] 6406 	jp	00116$
+    00002704 C3r91r27         [10] 6407 	jp	00117$
+                                   6408 ;./exsoccer.c:1320: case PLAYER_ROLE_GOALKEEPER:
+    00002707                       6409 00105$:
+                                   6410 ;./exsoccer.c:1321: g_Players[playerId].TargetX=FIELD_POS_X_CENTER;
+    00002707 3E 78            [ 7] 6411 	ld	a, #0x78
+    00002709 02               [ 7] 6412 	ld	(bc), a
+    0000270A 03               [ 6] 6413 	inc	bc
+    0000270B AF               [ 4] 6414 	xor	a, a
+    0000270C 02               [ 7] 6415 	ld	(bc), a
+                                   6416 ;./exsoccer.c:1322: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_GOALKEEPER;
+    0000270D 3E A8            [ 7] 6417 	ld	a, #0xa8
+    0000270F 12               [ 7] 6418 	ld	(de), a
+    00002710 13               [ 6] 6419 	inc	de
+    00002711 3E 01            [ 7] 6420 	ld	a, #0x01
     00002713 12               [ 7] 6421 	ld	(de), a
-    00002714 13               [ 6] 6422 	inc	de
-    00002715 3E 01            [ 7] 6423 	ld	a, #0x01
-    00002717 12               [ 7] 6424 	ld	(de), a
-                                   6425 ;./exsoccer.c:1323: break;
-    00002718 C3r59r28         [10] 6426 	jp	00140$
-                                   6427 ;./exsoccer.c:1324: case PLAYER_ROLE_RIGHT_DEFENDER:
-    0000271B                       6428 00107$:
-                                   6429 ;./exsoccer.c:1325: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-    0000271B 3E C6            [ 7] 6430 	ld	a, #0xc6
-    0000271D 02               [ 7] 6431 	ld	(bc), a
-    0000271E 03               [ 6] 6432 	inc	bc
-    0000271F AF               [ 4] 6433 	xor	a, a
-    00002720 02               [ 7] 6434 	ld	(bc), a
-                                   6435 ;./exsoccer.c:1326: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_DEFENDERS;
-    00002721 3E 76            [ 7] 6436 	ld	a, #0x76
+                                   6422 ;./exsoccer.c:1323: break;
+    00002714 C3r65r28         [10] 6423 	jp	00140$
+                                   6424 ;./exsoccer.c:1324: case PLAYER_ROLE_LEFT_DEFENDER:
+    00002717                       6425 00106$:
+                                   6426 ;./exsoccer.c:1325: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
+    00002717 3E 28            [ 7] 6427 	ld	a, #0x28
+    00002719 02               [ 7] 6428 	ld	(bc), a
+    0000271A 03               [ 6] 6429 	inc	bc
+    0000271B AF               [ 4] 6430 	xor	a, a
+    0000271C 02               [ 7] 6431 	ld	(bc), a
+                                   6432 ;./exsoccer.c:1326: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_DEFENDERS;
+    0000271D 3E 76            [ 7] 6433 	ld	a, #0x76
+    0000271F 12               [ 7] 6434 	ld	(de), a
+    00002720 13               [ 6] 6435 	inc	de
+    00002721 3E 01            [ 7] 6436 	ld	a, #0x01
     00002723 12               [ 7] 6437 	ld	(de), a
-    00002724 13               [ 6] 6438 	inc	de
-    00002725 3E 01            [ 7] 6439 	ld	a, #0x01
-    00002727 12               [ 7] 6440 	ld	(de), a
-                                   6441 ;./exsoccer.c:1327: break;
-    00002728 C3r59r28         [10] 6442 	jp	00140$
-                                   6443 ;./exsoccer.c:1328: case PLAYER_ROLE_LEFT_HALFFIELDER:
-    0000272B                       6444 00108$:
-                                   6445 ;./exsoccer.c:1329: if(g_RestartKickTeamId!=TEAM_1){
-    0000272B 3Ar22r01         [13] 6446 	ld	a, (_g_RestartKickTeamId+0)
-    0000272E 3D               [ 4] 6447 	dec	a
-    0000272F 28 10            [12] 6448 	jr	Z, 00110$
-                                   6449 ;./exsoccer.c:1330: g_Players[playerId].TargetX=FIELD_POS_X_LEFT+100;
-    00002731 3E 8C            [ 7] 6450 	ld	a, #0x8c
-    00002733 02               [ 7] 6451 	ld	(bc), a
-    00002734 03               [ 6] 6452 	inc	bc
-    00002735 AF               [ 4] 6453 	xor	a, a
-    00002736 02               [ 7] 6454 	ld	(bc), a
-                                   6455 ;./exsoccer.c:1331: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS+40;
-    00002737 3E 44            [ 7] 6456 	ld	a, #0x44
-    00002739 12               [ 7] 6457 	ld	(de), a
-    0000273A 13               [ 6] 6458 	inc	de
-    0000273B 3E 01            [ 7] 6459 	ld	a, #0x01
-    0000273D 12               [ 7] 6460 	ld	(de), a
-    0000273E C3r59r28         [10] 6461 	jp	00140$
-    00002741                       6462 00110$:
-                                   6463 ;./exsoccer.c:1334: g_Players[playerId].TargetX=FIELD_POS_X_CENTER-7;
-    00002741 3E 71            [ 7] 6464 	ld	a, #0x71
-    00002743 02               [ 7] 6465 	ld	(bc), a
-    00002744 03               [ 6] 6466 	inc	bc
-    00002745 AF               [ 4] 6467 	xor	a, a
-    00002746 02               [ 7] 6468 	ld	(bc), a
-                                   6469 ;./exsoccer.c:1335: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER;
-    00002747 3E F3            [ 7] 6470 	ld	a, #0xf3
-    00002749 12               [ 7] 6471 	ld	(de), a
-    0000274A 13               [ 6] 6472 	inc	de
-    0000274B AF               [ 4] 6473 	xor	a, a
-    0000274C 12               [ 7] 6474 	ld	(de), a
-                                   6475 ;./exsoccer.c:1337: break;
-    0000274D C3r59r28         [10] 6476 	jp	00140$
-                                   6477 ;./exsoccer.c:1338: case PLAYER_ROLE_RIGHT_HALFFIELDER:
-    00002750                       6478 00112$:
-                                   6479 ;./exsoccer.c:1339: if(g_RestartKickTeamId!=TEAM_1){
-    00002750 3Ar22r01         [13] 6480 	ld	a, (_g_RestartKickTeamId+0)
-    00002753 3D               [ 4] 6481 	dec	a
-    00002754 28 10            [12] 6482 	jr	Z, 00114$
-                                   6483 ;./exsoccer.c:1340: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT-100;
-    00002756 3E 62            [ 7] 6484 	ld	a, #0x62
-    00002758 02               [ 7] 6485 	ld	(bc), a
-    00002759 03               [ 6] 6486 	inc	bc
-    0000275A AF               [ 4] 6487 	xor	a, a
-    0000275B 02               [ 7] 6488 	ld	(bc), a
-                                   6489 ;./exsoccer.c:1341: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS+40;
-    0000275C 3E 44            [ 7] 6490 	ld	a, #0x44
-    0000275E 12               [ 7] 6491 	ld	(de), a
-    0000275F 13               [ 6] 6492 	inc	de
-    00002760 3E 01            [ 7] 6493 	ld	a, #0x01
-    00002762 12               [ 7] 6494 	ld	(de), a
-    00002763 C3r59r28         [10] 6495 	jp	00140$
-    00002766                       6496 00114$:
-                                   6497 ;./exsoccer.c:1344: g_Players[playerId].TargetX=FIELD_POS_X_CENTER+7;
-    00002766 3E 7F            [ 7] 6498 	ld	a, #0x7f
-    00002768 02               [ 7] 6499 	ld	(bc), a
-    00002769 03               [ 6] 6500 	inc	bc
-    0000276A AF               [ 4] 6501 	xor	a, a
-    0000276B 02               [ 7] 6502 	ld	(bc), a
-                                   6503 ;./exsoccer.c:1345: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER;
-    0000276C 3E F3            [ 7] 6504 	ld	a, #0xf3
-    0000276E 12               [ 7] 6505 	ld	(de), a
-    0000276F 13               [ 6] 6506 	inc	de
-    00002770 AF               [ 4] 6507 	xor	a, a
-    00002771 12               [ 7] 6508 	ld	(de), a
-                                   6509 ;./exsoccer.c:1347: break;
-    00002772 C3r59r28         [10] 6510 	jp	00140$
-                                   6511 ;./exsoccer.c:1348: case PLAYER_ROLE_LEFT_STRIKER:
-    00002775                       6512 00116$:
-                                   6513 ;./exsoccer.c:1349: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-    00002775 3E 28            [ 7] 6514 	ld	a, #0x28
+                                   6438 ;./exsoccer.c:1327: break;
+    00002724 C3r65r28         [10] 6439 	jp	00140$
+                                   6440 ;./exsoccer.c:1328: case PLAYER_ROLE_RIGHT_DEFENDER:
+    00002727                       6441 00107$:
+                                   6442 ;./exsoccer.c:1329: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
+    00002727 3E C6            [ 7] 6443 	ld	a, #0xc6
+    00002729 02               [ 7] 6444 	ld	(bc), a
+    0000272A 03               [ 6] 6445 	inc	bc
+    0000272B AF               [ 4] 6446 	xor	a, a
+    0000272C 02               [ 7] 6447 	ld	(bc), a
+                                   6448 ;./exsoccer.c:1330: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_DEFENDERS;
+    0000272D 3E 76            [ 7] 6449 	ld	a, #0x76
+    0000272F 12               [ 7] 6450 	ld	(de), a
+    00002730 13               [ 6] 6451 	inc	de
+    00002731 3E 01            [ 7] 6452 	ld	a, #0x01
+    00002733 12               [ 7] 6453 	ld	(de), a
+                                   6454 ;./exsoccer.c:1331: break;
+    00002734 C3r65r28         [10] 6455 	jp	00140$
+                                   6456 ;./exsoccer.c:1332: case PLAYER_ROLE_LEFT_HALFFIELDER:
+    00002737                       6457 00108$:
+                                   6458 ;./exsoccer.c:1333: if(g_RestartKickTeamId!=TEAM_1){
+    00002737 3Ar22r01         [13] 6459 	ld	a, (_g_RestartKickTeamId+0)
+    0000273A 3D               [ 4] 6460 	dec	a
+    0000273B 28 10            [12] 6461 	jr	Z, 00110$
+                                   6462 ;./exsoccer.c:1334: g_Players[playerId].TargetX=FIELD_POS_X_LEFT+100;
+    0000273D 3E 8C            [ 7] 6463 	ld	a, #0x8c
+    0000273F 02               [ 7] 6464 	ld	(bc), a
+    00002740 03               [ 6] 6465 	inc	bc
+    00002741 AF               [ 4] 6466 	xor	a, a
+    00002742 02               [ 7] 6467 	ld	(bc), a
+                                   6468 ;./exsoccer.c:1335: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS+40;
+    00002743 3E 44            [ 7] 6469 	ld	a, #0x44
+    00002745 12               [ 7] 6470 	ld	(de), a
+    00002746 13               [ 6] 6471 	inc	de
+    00002747 3E 01            [ 7] 6472 	ld	a, #0x01
+    00002749 12               [ 7] 6473 	ld	(de), a
+    0000274A C3r65r28         [10] 6474 	jp	00140$
+    0000274D                       6475 00110$:
+                                   6476 ;./exsoccer.c:1338: g_Players[playerId].TargetX=FIELD_POS_X_CENTER-7;
+    0000274D 3E 71            [ 7] 6477 	ld	a, #0x71
+    0000274F 02               [ 7] 6478 	ld	(bc), a
+    00002750 03               [ 6] 6479 	inc	bc
+    00002751 AF               [ 4] 6480 	xor	a, a
+    00002752 02               [ 7] 6481 	ld	(bc), a
+                                   6482 ;./exsoccer.c:1339: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER;
+    00002753 3E F3            [ 7] 6483 	ld	a, #0xf3
+    00002755 12               [ 7] 6484 	ld	(de), a
+    00002756 13               [ 6] 6485 	inc	de
+    00002757 AF               [ 4] 6486 	xor	a, a
+    00002758 12               [ 7] 6487 	ld	(de), a
+                                   6488 ;./exsoccer.c:1341: break;
+    00002759 C3r65r28         [10] 6489 	jp	00140$
+                                   6490 ;./exsoccer.c:1342: case PLAYER_ROLE_RIGHT_HALFFIELDER:
+    0000275C                       6491 00112$:
+                                   6492 ;./exsoccer.c:1343: if(g_RestartKickTeamId!=TEAM_1){
+    0000275C 3Ar22r01         [13] 6493 	ld	a, (_g_RestartKickTeamId+0)
+    0000275F 3D               [ 4] 6494 	dec	a
+    00002760 28 10            [12] 6495 	jr	Z, 00114$
+                                   6496 ;./exsoccer.c:1344: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT-100;
+    00002762 3E 62            [ 7] 6497 	ld	a, #0x62
+    00002764 02               [ 7] 6498 	ld	(bc), a
+    00002765 03               [ 6] 6499 	inc	bc
+    00002766 AF               [ 4] 6500 	xor	a, a
+    00002767 02               [ 7] 6501 	ld	(bc), a
+                                   6502 ;./exsoccer.c:1345: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS+40;
+    00002768 3E 44            [ 7] 6503 	ld	a, #0x44
+    0000276A 12               [ 7] 6504 	ld	(de), a
+    0000276B 13               [ 6] 6505 	inc	de
+    0000276C 3E 01            [ 7] 6506 	ld	a, #0x01
+    0000276E 12               [ 7] 6507 	ld	(de), a
+    0000276F C3r65r28         [10] 6508 	jp	00140$
+    00002772                       6509 00114$:
+                                   6510 ;./exsoccer.c:1348: g_Players[playerId].TargetX=FIELD_POS_X_CENTER+7;
+    00002772 3E 7F            [ 7] 6511 	ld	a, #0x7f
+    00002774 02               [ 7] 6512 	ld	(bc), a
+    00002775 03               [ 6] 6513 	inc	bc
+    00002776 AF               [ 4] 6514 	xor	a, a
     00002777 02               [ 7] 6515 	ld	(bc), a
-    00002778 03               [ 6] 6516 	inc	bc
-    00002779 AF               [ 4] 6517 	xor	a, a
-    0000277A 02               [ 7] 6518 	ld	(bc), a
-                                   6519 ;./exsoccer.c:1350: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS;
-    0000277B 3E 1C            [ 7] 6520 	ld	a, #0x1c
+                                   6516 ;./exsoccer.c:1349: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER;
+    00002778 3E F3            [ 7] 6517 	ld	a, #0xf3
+    0000277A 12               [ 7] 6518 	ld	(de), a
+    0000277B 13               [ 6] 6519 	inc	de
+    0000277C AF               [ 4] 6520 	xor	a, a
     0000277D 12               [ 7] 6521 	ld	(de), a
-    0000277E 13               [ 6] 6522 	inc	de
-    0000277F 3E 01            [ 7] 6523 	ld	a, #0x01
-    00002781 12               [ 7] 6524 	ld	(de), a
-                                   6525 ;./exsoccer.c:1351: break;
-    00002782 C3r59r28         [10] 6526 	jp	00140$
-                                   6527 ;./exsoccer.c:1352: case PLAYER_ROLE_RIGHT_STRIKER:
-    00002785                       6528 00117$:
-                                   6529 ;./exsoccer.c:1353: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-    00002785 3E C6            [ 7] 6530 	ld	a, #0xc6
-    00002787 02               [ 7] 6531 	ld	(bc), a
-    00002788 03               [ 6] 6532 	inc	bc
-    00002789 AF               [ 4] 6533 	xor	a, a
-    0000278A 02               [ 7] 6534 	ld	(bc), a
-                                   6535 ;./exsoccer.c:1354: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS;
-    0000278B 3E 1C            [ 7] 6536 	ld	a, #0x1c
+                                   6522 ;./exsoccer.c:1351: break;
+    0000277E C3r65r28         [10] 6523 	jp	00140$
+                                   6524 ;./exsoccer.c:1352: case PLAYER_ROLE_LEFT_STRIKER:
+    00002781                       6525 00116$:
+                                   6526 ;./exsoccer.c:1353: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
+    00002781 3E 28            [ 7] 6527 	ld	a, #0x28
+    00002783 02               [ 7] 6528 	ld	(bc), a
+    00002784 03               [ 6] 6529 	inc	bc
+    00002785 AF               [ 4] 6530 	xor	a, a
+    00002786 02               [ 7] 6531 	ld	(bc), a
+                                   6532 ;./exsoccer.c:1354: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS;
+    00002787 3E 1C            [ 7] 6533 	ld	a, #0x1c
+    00002789 12               [ 7] 6534 	ld	(de), a
+    0000278A 13               [ 6] 6535 	inc	de
+    0000278B 3E 01            [ 7] 6536 	ld	a, #0x01
     0000278D 12               [ 7] 6537 	ld	(de), a
-    0000278E 13               [ 6] 6538 	inc	de
-    0000278F 3E 01            [ 7] 6539 	ld	a, #0x01
-    00002791 12               [ 7] 6540 	ld	(de), a
-                                   6541 ;./exsoccer.c:1356: }
-    00002792 C3r59r28         [10] 6542 	jp	00140$
-    00002795                       6543 00134$:
-                                   6544 ;./exsoccer.c:1359: switch (g_Players[playerId].Role)
-    00002795 7D               [ 4] 6545 	ld	a, l
-    00002796 B7               [ 4] 6546 	or	a, a
-    00002797 C2r59r28         [10] 6547 	jp	NZ, 00140$
-                                   6548 ;./exsoccer.c:1309: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
-    0000279A 21 0C 00         [10] 6549 	ld	hl, #0x000c
-    0000279D 19               [11] 6550 	add	hl, de
-    0000279E 4D               [ 4] 6551 	ld	c, l
-    0000279F 44               [ 4] 6552 	ld	b, h
-                                   6553 ;./exsoccer.c:1310: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
-    000027A0 21 0A 00         [10] 6554 	ld	hl, #0x000a
-    000027A3 19               [11] 6555 	add	hl, de
-                                   6556 ;./exsoccer.c:1359: switch (g_Players[playerId].Role)
-    000027A4 E5               [11] 6557 	push	hl
-    000027A5 DD 5E FF         [19] 6558 	ld	e, -1 (ix)
-    000027A8 16 00            [ 7] 6559 	ld	d, #0x00
-    000027AA 21rB2r27         [10] 6560 	ld	hl, #00207$
-    000027AD 19               [11] 6561 	add	hl, de
-    000027AE 19               [11] 6562 	add	hl, de
-    000027AF 19               [11] 6563 	add	hl, de
-    000027B0 D1               [10] 6564 	pop	de
-    000027B1 E9               [ 4] 6565 	jp	(hl)
-    000027B2                       6566 00207$:
-    000027B2 C3rC7r27         [10] 6567 	jp	00119$
-    000027B5 C3rD6r27         [10] 6568 	jp	00120$
-    000027B8 C3rE5r27         [10] 6569 	jp	00121$
-    000027BB C3rF4r27         [10] 6570 	jp	00122$
-    000027BE C3r19r28         [10] 6571 	jp	00126$
-    000027C1 C3r3Er28         [10] 6572 	jp	00130$
-    000027C4 C3r4Dr28         [10] 6573 	jp	00131$
-                                   6574 ;./exsoccer.c:1361: case PLAYER_ROLE_GOALKEEPER:
-    000027C7                       6575 00119$:
-                                   6576 ;./exsoccer.c:1362: g_Players[playerId].TargetX=FIELD_POS_X_CENTER;
-    000027C7 3E 78            [ 7] 6577 	ld	a, #0x78
-    000027C9 02               [ 7] 6578 	ld	(bc), a
-    000027CA 03               [ 6] 6579 	inc	bc
-    000027CB AF               [ 4] 6580 	xor	a, a
-    000027CC 02               [ 7] 6581 	ld	(bc), a
-                                   6582 ;./exsoccer.c:1363: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_GOALKEEPER;
-    000027CD 3E 32            [ 7] 6583 	ld	a, #0x32
-    000027CF 12               [ 7] 6584 	ld	(de), a
-    000027D0 13               [ 6] 6585 	inc	de
-    000027D1 AF               [ 4] 6586 	xor	a, a
-    000027D2 12               [ 7] 6587 	ld	(de), a
-                                   6588 ;./exsoccer.c:1364: break;
-    000027D3 C3r59r28         [10] 6589 	jp	00140$
-                                   6590 ;./exsoccer.c:1365: case PLAYER_ROLE_LEFT_DEFENDER:
-    000027D6                       6591 00120$:
-                                   6592 ;./exsoccer.c:1366: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-    000027D6 3E 28            [ 7] 6593 	ld	a, #0x28
+                                   6538 ;./exsoccer.c:1355: break;
+    0000278E C3r65r28         [10] 6539 	jp	00140$
+                                   6540 ;./exsoccer.c:1356: case PLAYER_ROLE_RIGHT_STRIKER:
+    00002791                       6541 00117$:
+                                   6542 ;./exsoccer.c:1357: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
+    00002791 3E C6            [ 7] 6543 	ld	a, #0xc6
+    00002793 02               [ 7] 6544 	ld	(bc), a
+    00002794 03               [ 6] 6545 	inc	bc
+    00002795 AF               [ 4] 6546 	xor	a, a
+    00002796 02               [ 7] 6547 	ld	(bc), a
+                                   6548 ;./exsoccer.c:1358: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS;
+    00002797 3E 1C            [ 7] 6549 	ld	a, #0x1c
+    00002799 12               [ 7] 6550 	ld	(de), a
+    0000279A 13               [ 6] 6551 	inc	de
+    0000279B 3E 01            [ 7] 6552 	ld	a, #0x01
+    0000279D 12               [ 7] 6553 	ld	(de), a
+                                   6554 ;./exsoccer.c:1360: }
+    0000279E C3r65r28         [10] 6555 	jp	00140$
+    000027A1                       6556 00134$:
+                                   6557 ;./exsoccer.c:1363: switch (g_Players[playerId].Role)
+    000027A1 7D               [ 4] 6558 	ld	a, l
+    000027A2 B7               [ 4] 6559 	or	a, a
+    000027A3 C2r65r28         [10] 6560 	jp	NZ, 00140$
+                                   6561 ;./exsoccer.c:1313: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
+    000027A6 21 0C 00         [10] 6562 	ld	hl, #0x000c
+    000027A9 19               [11] 6563 	add	hl, de
+    000027AA 4D               [ 4] 6564 	ld	c, l
+    000027AB 44               [ 4] 6565 	ld	b, h
+                                   6566 ;./exsoccer.c:1314: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
+    000027AC 21 0A 00         [10] 6567 	ld	hl, #0x000a
+    000027AF 19               [11] 6568 	add	hl, de
+                                   6569 ;./exsoccer.c:1363: switch (g_Players[playerId].Role)
+    000027B0 E5               [11] 6570 	push	hl
+    000027B1 DD 5E FF         [19] 6571 	ld	e, -1 (ix)
+    000027B4 16 00            [ 7] 6572 	ld	d, #0x00
+    000027B6 21rBEr27         [10] 6573 	ld	hl, #00207$
+    000027B9 19               [11] 6574 	add	hl, de
+    000027BA 19               [11] 6575 	add	hl, de
+    000027BB 19               [11] 6576 	add	hl, de
+    000027BC D1               [10] 6577 	pop	de
+    000027BD E9               [ 4] 6578 	jp	(hl)
+    000027BE                       6579 00207$:
+    000027BE C3rD3r27         [10] 6580 	jp	00119$
+    000027C1 C3rE2r27         [10] 6581 	jp	00120$
+    000027C4 C3rF1r27         [10] 6582 	jp	00121$
+    000027C7 C3r00r28         [10] 6583 	jp	00122$
+    000027CA C3r25r28         [10] 6584 	jp	00126$
+    000027CD C3r4Ar28         [10] 6585 	jp	00130$
+    000027D0 C3r59r28         [10] 6586 	jp	00131$
+                                   6587 ;./exsoccer.c:1365: case PLAYER_ROLE_GOALKEEPER:
+    000027D3                       6588 00119$:
+                                   6589 ;./exsoccer.c:1366: g_Players[playerId].TargetX=FIELD_POS_X_CENTER;
+    000027D3 3E 78            [ 7] 6590 	ld	a, #0x78
+    000027D5 02               [ 7] 6591 	ld	(bc), a
+    000027D6 03               [ 6] 6592 	inc	bc
+    000027D7 AF               [ 4] 6593 	xor	a, a
     000027D8 02               [ 7] 6594 	ld	(bc), a
-    000027D9 03               [ 6] 6595 	inc	bc
-    000027DA AF               [ 4] 6596 	xor	a, a
-    000027DB 02               [ 7] 6597 	ld	(bc), a
-                                   6598 ;./exsoccer.c:1367: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_DEFENDERS;
-    000027DC 3E 82            [ 7] 6599 	ld	a, #0x82
+                                   6595 ;./exsoccer.c:1367: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_GOALKEEPER;
+    000027D9 3E 32            [ 7] 6596 	ld	a, #0x32
+    000027DB 12               [ 7] 6597 	ld	(de), a
+    000027DC 13               [ 6] 6598 	inc	de
+    000027DD AF               [ 4] 6599 	xor	a, a
     000027DE 12               [ 7] 6600 	ld	(de), a
-    000027DF 13               [ 6] 6601 	inc	de
-    000027E0 AF               [ 4] 6602 	xor	a, a
-    000027E1 12               [ 7] 6603 	ld	(de), a
-                                   6604 ;./exsoccer.c:1368: break;
-    000027E2 C3r59r28         [10] 6605 	jp	00140$
-                                   6606 ;./exsoccer.c:1369: case PLAYER_ROLE_RIGHT_DEFENDER:
-    000027E5                       6607 00121$:
-                                   6608 ;./exsoccer.c:1370: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-    000027E5 3E C6            [ 7] 6609 	ld	a, #0xc6
+                                   6601 ;./exsoccer.c:1368: break;
+    000027DF C3r65r28         [10] 6602 	jp	00140$
+                                   6603 ;./exsoccer.c:1369: case PLAYER_ROLE_LEFT_DEFENDER:
+    000027E2                       6604 00120$:
+                                   6605 ;./exsoccer.c:1370: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
+    000027E2 3E 28            [ 7] 6606 	ld	a, #0x28
+    000027E4 02               [ 7] 6607 	ld	(bc), a
+    000027E5 03               [ 6] 6608 	inc	bc
+    000027E6 AF               [ 4] 6609 	xor	a, a
     000027E7 02               [ 7] 6610 	ld	(bc), a
-    000027E8 03               [ 6] 6611 	inc	bc
-    000027E9 AF               [ 4] 6612 	xor	a, a
-    000027EA 02               [ 7] 6613 	ld	(bc), a
-                                   6614 ;./exsoccer.c:1371: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_DEFENDERS;
-    000027EB 3E 82            [ 7] 6615 	ld	a, #0x82
+                                   6611 ;./exsoccer.c:1371: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_DEFENDERS;
+    000027E8 3E 82            [ 7] 6612 	ld	a, #0x82
+    000027EA 12               [ 7] 6613 	ld	(de), a
+    000027EB 13               [ 6] 6614 	inc	de
+    000027EC AF               [ 4] 6615 	xor	a, a
     000027ED 12               [ 7] 6616 	ld	(de), a
-    000027EE 13               [ 6] 6617 	inc	de
-    000027EF AF               [ 4] 6618 	xor	a, a
-    000027F0 12               [ 7] 6619 	ld	(de), a
-                                   6620 ;./exsoccer.c:1372: break;
-    000027F1 C3r59r28         [10] 6621 	jp	00140$
-                                   6622 ;./exsoccer.c:1373: case PLAYER_ROLE_LEFT_HALFFIELDER:
-    000027F4                       6623 00122$:
-                                   6624 ;./exsoccer.c:1374: if(g_RestartKickTeamId!=TEAM_2){
-    000027F4 3Ar22r01         [13] 6625 	ld	a, (_g_RestartKickTeamId+0)
-    000027F7 D6 02            [ 7] 6626 	sub	a, #0x02
-    000027F9 28 0F            [12] 6627 	jr	Z, 00124$
-                                   6628 ;./exsoccer.c:1375: g_Players[playerId].TargetX=FIELD_POS_X_LEFT+100;
-    000027FB 3E 8C            [ 7] 6629 	ld	a, #0x8c
-    000027FD 02               [ 7] 6630 	ld	(bc), a
-    000027FE 03               [ 6] 6631 	inc	bc
-    000027FF AF               [ 4] 6632 	xor	a, a
-    00002800 02               [ 7] 6633 	ld	(bc), a
-                                   6634 ;./exsoccer.c:1376: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS-40;
-    00002801 3E B4            [ 7] 6635 	ld	a, #0xb4
-    00002803 12               [ 7] 6636 	ld	(de), a
-    00002804 13               [ 6] 6637 	inc	de
-    00002805 AF               [ 4] 6638 	xor	a, a
-    00002806 12               [ 7] 6639 	ld	(de), a
-    00002807 C3r59r28         [10] 6640 	jp	00140$
-    0000280A                       6641 00124$:
-                                   6642 ;./exsoccer.c:1379: g_Players[playerId].TargetX=FIELD_POS_X_CENTER-7;
-    0000280A 3E 71            [ 7] 6643 	ld	a, #0x71
-    0000280C 02               [ 7] 6644 	ld	(bc), a
-    0000280D 03               [ 6] 6645 	inc	bc
-    0000280E AF               [ 4] 6646 	xor	a, a
-    0000280F 02               [ 7] 6647 	ld	(bc), a
-                                   6648 ;./exsoccer.c:1380: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER-10;
-    00002810 3E E9            [ 7] 6649 	ld	a, #0xe9
-    00002812 12               [ 7] 6650 	ld	(de), a
-    00002813 13               [ 6] 6651 	inc	de
-    00002814 AF               [ 4] 6652 	xor	a, a
-    00002815 12               [ 7] 6653 	ld	(de), a
-                                   6654 ;./exsoccer.c:1382: break;
-    00002816 C3r59r28         [10] 6655 	jp	00140$
-                                   6656 ;./exsoccer.c:1383: case PLAYER_ROLE_RIGHT_HALFFIELDER:
-    00002819                       6657 00126$:
-                                   6658 ;./exsoccer.c:1384: if(g_RestartKickTeamId!=TEAM_2){
-    00002819 3Ar22r01         [13] 6659 	ld	a, (_g_RestartKickTeamId+0)
-    0000281C D6 02            [ 7] 6660 	sub	a, #0x02
-    0000281E 28 0F            [12] 6661 	jr	Z, 00128$
-                                   6662 ;./exsoccer.c:1385: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT-116;
-    00002820 3E 52            [ 7] 6663 	ld	a, #0x52
-    00002822 02               [ 7] 6664 	ld	(bc), a
-    00002823 03               [ 6] 6665 	inc	bc
-    00002824 AF               [ 4] 6666 	xor	a, a
-    00002825 02               [ 7] 6667 	ld	(bc), a
-                                   6668 ;./exsoccer.c:1386: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS-40;
-    00002826 3E B4            [ 7] 6669 	ld	a, #0xb4
-    00002828 12               [ 7] 6670 	ld	(de), a
-    00002829 13               [ 6] 6671 	inc	de
-    0000282A AF               [ 4] 6672 	xor	a, a
-    0000282B 12               [ 7] 6673 	ld	(de), a
-    0000282C C3r59r28         [10] 6674 	jp	00140$
-    0000282F                       6675 00128$:
-                                   6676 ;./exsoccer.c:1389: g_Players[playerId].TargetX=FIELD_POS_X_CENTER+7;
-    0000282F 3E 7F            [ 7] 6677 	ld	a, #0x7f
-    00002831 02               [ 7] 6678 	ld	(bc), a
-    00002832 03               [ 6] 6679 	inc	bc
-    00002833 AF               [ 4] 6680 	xor	a, a
-    00002834 02               [ 7] 6681 	ld	(bc), a
-                                   6682 ;./exsoccer.c:1390: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER-10;
-    00002835 3E E9            [ 7] 6683 	ld	a, #0xe9
-    00002837 12               [ 7] 6684 	ld	(de), a
-    00002838 13               [ 6] 6685 	inc	de
-    00002839 AF               [ 4] 6686 	xor	a, a
-    0000283A 12               [ 7] 6687 	ld	(de), a
-                                   6688 ;./exsoccer.c:1392: break;
-    0000283B C3r59r28         [10] 6689 	jp	00140$
-                                   6690 ;./exsoccer.c:1393: case PLAYER_ROLE_LEFT_STRIKER:
-    0000283E                       6691 00130$:
-                                   6692 ;./exsoccer.c:1394: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-    0000283E 3E 28            [ 7] 6693 	ld	a, #0x28
+                                   6617 ;./exsoccer.c:1372: break;
+    000027EE C3r65r28         [10] 6618 	jp	00140$
+                                   6619 ;./exsoccer.c:1373: case PLAYER_ROLE_RIGHT_DEFENDER:
+    000027F1                       6620 00121$:
+                                   6621 ;./exsoccer.c:1374: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
+    000027F1 3E C6            [ 7] 6622 	ld	a, #0xc6
+    000027F3 02               [ 7] 6623 	ld	(bc), a
+    000027F4 03               [ 6] 6624 	inc	bc
+    000027F5 AF               [ 4] 6625 	xor	a, a
+    000027F6 02               [ 7] 6626 	ld	(bc), a
+                                   6627 ;./exsoccer.c:1375: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_DEFENDERS;
+    000027F7 3E 82            [ 7] 6628 	ld	a, #0x82
+    000027F9 12               [ 7] 6629 	ld	(de), a
+    000027FA 13               [ 6] 6630 	inc	de
+    000027FB AF               [ 4] 6631 	xor	a, a
+    000027FC 12               [ 7] 6632 	ld	(de), a
+                                   6633 ;./exsoccer.c:1376: break;
+    000027FD C3r65r28         [10] 6634 	jp	00140$
+                                   6635 ;./exsoccer.c:1377: case PLAYER_ROLE_LEFT_HALFFIELDER:
+    00002800                       6636 00122$:
+                                   6637 ;./exsoccer.c:1378: if(g_RestartKickTeamId!=TEAM_2){
+    00002800 3Ar22r01         [13] 6638 	ld	a, (_g_RestartKickTeamId+0)
+    00002803 D6 02            [ 7] 6639 	sub	a, #0x02
+    00002805 28 0F            [12] 6640 	jr	Z, 00124$
+                                   6641 ;./exsoccer.c:1379: g_Players[playerId].TargetX=FIELD_POS_X_LEFT+100;
+    00002807 3E 8C            [ 7] 6642 	ld	a, #0x8c
+    00002809 02               [ 7] 6643 	ld	(bc), a
+    0000280A 03               [ 6] 6644 	inc	bc
+    0000280B AF               [ 4] 6645 	xor	a, a
+    0000280C 02               [ 7] 6646 	ld	(bc), a
+                                   6647 ;./exsoccer.c:1380: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS-40;
+    0000280D 3E B4            [ 7] 6648 	ld	a, #0xb4
+    0000280F 12               [ 7] 6649 	ld	(de), a
+    00002810 13               [ 6] 6650 	inc	de
+    00002811 AF               [ 4] 6651 	xor	a, a
+    00002812 12               [ 7] 6652 	ld	(de), a
+    00002813 C3r65r28         [10] 6653 	jp	00140$
+    00002816                       6654 00124$:
+                                   6655 ;./exsoccer.c:1383: g_Players[playerId].TargetX=FIELD_POS_X_CENTER-7;
+    00002816 3E 71            [ 7] 6656 	ld	a, #0x71
+    00002818 02               [ 7] 6657 	ld	(bc), a
+    00002819 03               [ 6] 6658 	inc	bc
+    0000281A AF               [ 4] 6659 	xor	a, a
+    0000281B 02               [ 7] 6660 	ld	(bc), a
+                                   6661 ;./exsoccer.c:1384: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER-10;
+    0000281C 3E E9            [ 7] 6662 	ld	a, #0xe9
+    0000281E 12               [ 7] 6663 	ld	(de), a
+    0000281F 13               [ 6] 6664 	inc	de
+    00002820 AF               [ 4] 6665 	xor	a, a
+    00002821 12               [ 7] 6666 	ld	(de), a
+                                   6667 ;./exsoccer.c:1386: break;
+    00002822 C3r65r28         [10] 6668 	jp	00140$
+                                   6669 ;./exsoccer.c:1387: case PLAYER_ROLE_RIGHT_HALFFIELDER:
+    00002825                       6670 00126$:
+                                   6671 ;./exsoccer.c:1388: if(g_RestartKickTeamId!=TEAM_2){
+    00002825 3Ar22r01         [13] 6672 	ld	a, (_g_RestartKickTeamId+0)
+    00002828 D6 02            [ 7] 6673 	sub	a, #0x02
+    0000282A 28 0F            [12] 6674 	jr	Z, 00128$
+                                   6675 ;./exsoccer.c:1389: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT-116;
+    0000282C 3E 52            [ 7] 6676 	ld	a, #0x52
+    0000282E 02               [ 7] 6677 	ld	(bc), a
+    0000282F 03               [ 6] 6678 	inc	bc
+    00002830 AF               [ 4] 6679 	xor	a, a
+    00002831 02               [ 7] 6680 	ld	(bc), a
+                                   6681 ;./exsoccer.c:1390: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS-40;
+    00002832 3E B4            [ 7] 6682 	ld	a, #0xb4
+    00002834 12               [ 7] 6683 	ld	(de), a
+    00002835 13               [ 6] 6684 	inc	de
+    00002836 AF               [ 4] 6685 	xor	a, a
+    00002837 12               [ 7] 6686 	ld	(de), a
+    00002838 C3r65r28         [10] 6687 	jp	00140$
+    0000283B                       6688 00128$:
+                                   6689 ;./exsoccer.c:1393: g_Players[playerId].TargetX=FIELD_POS_X_CENTER+7;
+    0000283B 3E 7F            [ 7] 6690 	ld	a, #0x7f
+    0000283D 02               [ 7] 6691 	ld	(bc), a
+    0000283E 03               [ 6] 6692 	inc	bc
+    0000283F AF               [ 4] 6693 	xor	a, a
     00002840 02               [ 7] 6694 	ld	(bc), a
-    00002841 03               [ 6] 6695 	inc	bc
-    00002842 AF               [ 4] 6696 	xor	a, a
-    00002843 02               [ 7] 6697 	ld	(bc), a
-                                   6698 ;./exsoccer.c:1395: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS;
-    00002844 3E DC            [ 7] 6699 	ld	a, #0xdc
+                                   6695 ;./exsoccer.c:1394: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER-10;
+    00002841 3E E9            [ 7] 6696 	ld	a, #0xe9
+    00002843 12               [ 7] 6697 	ld	(de), a
+    00002844 13               [ 6] 6698 	inc	de
+    00002845 AF               [ 4] 6699 	xor	a, a
     00002846 12               [ 7] 6700 	ld	(de), a
-    00002847 13               [ 6] 6701 	inc	de
-    00002848 AF               [ 4] 6702 	xor	a, a
-    00002849 12               [ 7] 6703 	ld	(de), a
-                                   6704 ;./exsoccer.c:1396: break;
-    0000284A C3r59r28         [10] 6705 	jp	00140$
-                                   6706 ;./exsoccer.c:1397: case PLAYER_ROLE_RIGHT_STRIKER:
-    0000284D                       6707 00131$:
-                                   6708 ;./exsoccer.c:1398: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-    0000284D 3E C6            [ 7] 6709 	ld	a, #0xc6
+                                   6701 ;./exsoccer.c:1396: break;
+    00002847 C3r65r28         [10] 6702 	jp	00140$
+                                   6703 ;./exsoccer.c:1397: case PLAYER_ROLE_LEFT_STRIKER:
+    0000284A                       6704 00130$:
+                                   6705 ;./exsoccer.c:1398: g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
+    0000284A 3E 28            [ 7] 6706 	ld	a, #0x28
+    0000284C 02               [ 7] 6707 	ld	(bc), a
+    0000284D 03               [ 6] 6708 	inc	bc
+    0000284E AF               [ 4] 6709 	xor	a, a
     0000284F 02               [ 7] 6710 	ld	(bc), a
-    00002850 03               [ 6] 6711 	inc	bc
-    00002851 AF               [ 4] 6712 	xor	a, a
-    00002852 02               [ 7] 6713 	ld	(bc), a
-                                   6714 ;./exsoccer.c:1399: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS;
-    00002853 3E DC            [ 7] 6715 	ld	a, #0xdc
+                                   6711 ;./exsoccer.c:1399: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS;
+    00002850 3E DC            [ 7] 6712 	ld	a, #0xdc
+    00002852 12               [ 7] 6713 	ld	(de), a
+    00002853 13               [ 6] 6714 	inc	de
+    00002854 AF               [ 4] 6715 	xor	a, a
     00002855 12               [ 7] 6716 	ld	(de), a
-    00002856 13               [ 6] 6717 	inc	de
-    00002857 AF               [ 4] 6718 	xor	a, a
-    00002858 12               [ 7] 6719 	ld	(de), a
-                                   6720 ;./exsoccer.c:1406: }
-    00002859                       6721 00140$:
-                                   6722 ;./exsoccer.c:1407: }
-    00002859 33               [ 6] 6723 	inc	sp
-    0000285A DD E1            [14] 6724 	pop	ix
-    0000285C C9               [10] 6725 	ret
-                                   6726 ;./exsoccer.c:1408: void SetPlayerBallPossession(u8 playerId){
-                                   6727 ;	---------------------------------
-                                   6728 ; Function SetPlayerBallPossession
-                                   6729 ; ---------------------------------
-    0000285D                       6730 _SetPlayerBallPossession::
-                                   6731 ;./exsoccer.c:1409: if (playerId == NO_VALUE) {
-    0000285D 4F               [ 4] 6732 	ld	c, a
-    0000285E 3C               [ 4] 6733 	inc	a
-    0000285F 20 0B            [12] 6734 	jr	NZ, 00102$
-                                   6735 ;./exsoccer.c:1410: g_Team1ActivePlayer=NO_VALUE;
-    00002861 21r07r00         [10] 6736 	ld	hl, #_g_Team1ActivePlayer
-    00002864 36 FF            [10] 6737 	ld	(hl), #0xff
-                                   6738 ;./exsoccer.c:1411: g_Team2ActivePlayer=NO_VALUE;
-    00002866 21r08r00         [10] 6739 	ld	hl, #_g_Team2ActivePlayer
-    00002869 36 FF            [10] 6740 	ld	(hl), #0xff
-                                   6741 ;./exsoccer.c:1412: return;
-    0000286B C9               [10] 6742 	ret
-    0000286C                       6743 00102$:
-                                   6744 ;./exsoccer.c:1415: if(g_Players[playerId].TeamId==TEAM_1){
-    0000286C 06 00            [ 7] 6745 	ld	b, #0x00
-    0000286E 69               [ 4] 6746 	ld	l, c
-    0000286F 60               [ 4] 6747 	ld	h, b
-    00002870 29               [11] 6748 	add	hl, hl
-    00002871 29               [11] 6749 	add	hl, hl
-    00002872 29               [11] 6750 	add	hl, hl
-    00002873 29               [11] 6751 	add	hl, hl
-    00002874 09               [11] 6752 	add	hl, bc
-    00002875 11r06r00         [10] 6753 	ld	de, #_g_Players
-    00002878 19               [11] 6754 	add	hl, de
-    00002879 11 05 00         [10] 6755 	ld	de, #0x0005
-    0000287C 19               [11] 6756 	add	hl, de
-    0000287D 7E               [ 7] 6757 	ld	a, (hl)
-    0000287E 3D               [ 4] 6758 	dec	a
-    0000287F 20 05            [12] 6759 	jr	NZ, 00104$
-                                   6760 ;./exsoccer.c:1416: g_Team1ActivePlayer=playerId;
-    00002881 21r07r00         [10] 6761 	ld	hl, #_g_Team1ActivePlayer
-    00002884 71               [ 7] 6762 	ld	(hl), c
-    00002885 C9               [10] 6763 	ret
-    00002886                       6764 00104$:
-                                   6765 ;./exsoccer.c:1419: g_Team2ActivePlayer=playerId;
-    00002886 21r08r00         [10] 6766 	ld	hl, #_g_Team2ActivePlayer
-    00002889 71               [ 7] 6767 	ld	(hl), c
-                                   6768 ;./exsoccer.c:1421: }
-    0000288A C9               [10] 6769 	ret
-                                   6770 	.area _CODE
-                                   6771 	.area _INITIALIZER
-    00000000                       6772 __xinit__g_FieldCurrentYPosition:
-    00000000 00 00                 6773 	.dw #0x0000
-    00000002                       6774 __xinit__g_FieldScrollingActionInProgress:
-    00000002 00                    6775 	.db #0x00	; 0
-    00000003                       6776 __xinit__g_PlayersPositioningPhaseCount:
-    00000003 FF                    6777 	.db #0xff	; 255
-    00000004                       6778 __xinit__g_MatchStatus:
-    00000004 00                    6779 	.db #0x00	; 0
-    00000005                       6780 __xinit__g_FieldScrollSpeed:
-    00000005 01                    6781 	.db #0x01	; 1
-    00000006                       6782 __xinit__g_Timer:
-    00000006 FF                    6783 	.db #0xff	; 255
-    00000007                       6784 __xinit__g_Team1ActivePlayer:
-    00000007 FF                    6785 	.db #0xff	; 255
-    00000008                       6786 __xinit__g_Team2ActivePlayer:
-    00000008 FF                    6787 	.db #0xff	; 255
-    00000009                       6788 __xinit__g_PassTargetPlayer:
-    00000009 FF                    6789 	.db #0xff	; 255
-    0000000A                       6790 __xinit__g_GameWith2Players:
-    0000000A 00                    6791 	.db #0x00	; 0
-    0000000B                       6792 __xinit__g_GameLevel:
-    0000000B 01                    6793 	.db #0x01	; 1
-    0000000C                       6794 __xinit__g_ActionCooldown:
-    0000000C 00                    6795 	.db #0x00	; 0
-    0000000D                       6796 __xinit__g_ShotCursorX:
-    0000000D 78 00                 6797 	.dw #0x0078
-    0000000F                       6798 __xinit__g_ShotCursorDir:
-    0000000F 04                    6799 	.db #0x04	;  4
-    00000010                       6800 __xinit__g_FioBre:
-    00000010 00                    6801 	.db #0x00	; 0
-    00000011                       6802 __xinit__g_GoalScorerId:
-    00000011 FF                    6803 	.db #0xff	; 255
-    00000012                       6804 __xinit__g_VSynch:
-    00000012 00                    6805 	.db #0x00	; 0
-                                   6806 	.area _CABS (ABS)
+                                   6717 ;./exsoccer.c:1400: break;
+    00002856 C3r65r28         [10] 6718 	jp	00140$
+                                   6719 ;./exsoccer.c:1401: case PLAYER_ROLE_RIGHT_STRIKER:
+    00002859                       6720 00131$:
+                                   6721 ;./exsoccer.c:1402: g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
+    00002859 3E C6            [ 7] 6722 	ld	a, #0xc6
+    0000285B 02               [ 7] 6723 	ld	(bc), a
+    0000285C 03               [ 6] 6724 	inc	bc
+    0000285D AF               [ 4] 6725 	xor	a, a
+    0000285E 02               [ 7] 6726 	ld	(bc), a
+                                   6727 ;./exsoccer.c:1403: g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS;
+    0000285F 3E DC            [ 7] 6728 	ld	a, #0xdc
+    00002861 12               [ 7] 6729 	ld	(de), a
+    00002862 13               [ 6] 6730 	inc	de
+    00002863 AF               [ 4] 6731 	xor	a, a
+    00002864 12               [ 7] 6732 	ld	(de), a
+                                   6733 ;./exsoccer.c:1410: }
+    00002865                       6734 00140$:
+                                   6735 ;./exsoccer.c:1411: }
+    00002865 33               [ 6] 6736 	inc	sp
+    00002866 DD E1            [14] 6737 	pop	ix
+    00002868 C9               [10] 6738 	ret
+                                   6739 ;./exsoccer.c:1412: void SetPlayerBallPossession(u8 playerId){
+                                   6740 ;	---------------------------------
+                                   6741 ; Function SetPlayerBallPossession
+                                   6742 ; ---------------------------------
+    00002869                       6743 _SetPlayerBallPossession::
+                                   6744 ;./exsoccer.c:1413: if (playerId == NO_VALUE) {
+    00002869 4F               [ 4] 6745 	ld	c, a
+    0000286A 3C               [ 4] 6746 	inc	a
+    0000286B 20 0B            [12] 6747 	jr	NZ, 00102$
+                                   6748 ;./exsoccer.c:1414: g_Team1ActivePlayer=NO_VALUE;
+    0000286D 21r07r00         [10] 6749 	ld	hl, #_g_Team1ActivePlayer
+    00002870 36 FF            [10] 6750 	ld	(hl), #0xff
+                                   6751 ;./exsoccer.c:1415: g_Team2ActivePlayer=NO_VALUE;
+    00002872 21r08r00         [10] 6752 	ld	hl, #_g_Team2ActivePlayer
+    00002875 36 FF            [10] 6753 	ld	(hl), #0xff
+                                   6754 ;./exsoccer.c:1416: return;
+    00002877 C9               [10] 6755 	ret
+    00002878                       6756 00102$:
+                                   6757 ;./exsoccer.c:1419: if(g_Players[playerId].TeamId==TEAM_1){
+    00002878 06 00            [ 7] 6758 	ld	b, #0x00
+    0000287A 69               [ 4] 6759 	ld	l, c
+    0000287B 60               [ 4] 6760 	ld	h, b
+    0000287C 29               [11] 6761 	add	hl, hl
+    0000287D 29               [11] 6762 	add	hl, hl
+    0000287E 29               [11] 6763 	add	hl, hl
+    0000287F 29               [11] 6764 	add	hl, hl
+    00002880 09               [11] 6765 	add	hl, bc
+    00002881 11r06r00         [10] 6766 	ld	de, #_g_Players
+    00002884 19               [11] 6767 	add	hl, de
+    00002885 11 05 00         [10] 6768 	ld	de, #0x0005
+    00002888 19               [11] 6769 	add	hl, de
+    00002889 7E               [ 7] 6770 	ld	a, (hl)
+    0000288A 3D               [ 4] 6771 	dec	a
+    0000288B 20 05            [12] 6772 	jr	NZ, 00104$
+                                   6773 ;./exsoccer.c:1420: g_Team1ActivePlayer=playerId;
+    0000288D 21r07r00         [10] 6774 	ld	hl, #_g_Team1ActivePlayer
+    00002890 71               [ 7] 6775 	ld	(hl), c
+    00002891 C9               [10] 6776 	ret
+    00002892                       6777 00104$:
+                                   6778 ;./exsoccer.c:1423: g_Team2ActivePlayer=playerId;
+    00002892 21r08r00         [10] 6779 	ld	hl, #_g_Team2ActivePlayer
+    00002895 71               [ 7] 6780 	ld	(hl), c
+                                   6781 ;./exsoccer.c:1425: }
+    00002896 C9               [10] 6782 	ret
+                                   6783 	.area _CODE
+                                   6784 	.area _INITIALIZER
+    00000000                       6785 __xinit__g_FieldCurrentYPosition:
+    00000000 00 00                 6786 	.dw #0x0000
+    00000002                       6787 __xinit__g_FieldScrollingActionInProgress:
+    00000002 00                    6788 	.db #0x00	; 0
+    00000003                       6789 __xinit__g_PlayersPositioningPhaseCount:
+    00000003 FF                    6790 	.db #0xff	; 255
+    00000004                       6791 __xinit__g_MatchStatus:
+    00000004 00                    6792 	.db #0x00	; 0
+    00000005                       6793 __xinit__g_FieldScrollSpeed:
+    00000005 01                    6794 	.db #0x01	; 1
+    00000006                       6795 __xinit__g_Timer:
+    00000006 FF                    6796 	.db #0xff	; 255
+    00000007                       6797 __xinit__g_Team1ActivePlayer:
+    00000007 FF                    6798 	.db #0xff	; 255
+    00000008                       6799 __xinit__g_Team2ActivePlayer:
+    00000008 FF                    6800 	.db #0xff	; 255
+    00000009                       6801 __xinit__g_PassTargetPlayer:
+    00000009 FF                    6802 	.db #0xff	; 255
+    0000000A                       6803 __xinit__g_GameWith2Players:
+    0000000A 00                    6804 	.db #0x00	; 0
+    0000000B                       6805 __xinit__g_GameLevel:
+    0000000B 01                    6806 	.db #0x01	; 1
+    0000000C                       6807 __xinit__g_ActionCooldown:
+    0000000C 00                    6808 	.db #0x00	; 0
+    0000000D                       6809 __xinit__g_ShotCursorX:
+    0000000D 78 00                 6810 	.dw #0x0078
+    0000000F                       6811 __xinit__g_ShotCursorDir:
+    0000000F 04                    6812 	.db #0x04	;  4
+    00000010                       6813 __xinit__g_FioBre:
+    00000010 00                    6814 	.db #0x00	; 0
+    00000011                       6815 __xinit__g_GoalScorerId:
+    00000011 FF                    6816 	.db #0xff	; 255
+    00000012                       6817 __xinit__g_VSynch:
+    00000012 00                    6818 	.db #0x00	; 0
+                                   6819 	.area _CABS (ABS)

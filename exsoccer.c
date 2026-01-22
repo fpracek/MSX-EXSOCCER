@@ -1150,7 +1150,11 @@ void UpdatePlayerPatternByDirection(u8 playerId){
 	}
 
 	if(g_Players[playerId].TeamId==REFEREE && g_MatchStatus==MATCH_BEFORE_KICK_OFF ){
-		g_Players[playerId].PatternId=PLAYER_POSE_RIGHT;
+		// DISABLED: Allow REFEREE to animate during return phase
+		// g_Players[playerId].PatternId=PLAYER_POSE_RIGHT;
+        if(g_Players[playerId].Direction!=DIRECTION_NONE){
+			g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
+		}
 	}
 	else{
 		if(g_Players[playerId].Direction!=DIRECTION_NONE){

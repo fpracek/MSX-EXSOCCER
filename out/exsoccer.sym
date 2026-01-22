@@ -17,10 +17,10 @@ Symbol Table
     _GetClosestPlayerToBall                                         ******** GX
     _GetJoystick1Direction                                          ******** GX
     _GetJoystick2Direction                                          ******** GX
-  0 _GetNewPoseByDirection                                          00002554 GR
-  0 _GetNoMovingPlayerPatternId                                     00002501 GR
+  0 _GetNewPoseByDirection                                          00002560 GR
+  0 _GetNoMovingPlayerPatternId                                     0000250D GR
   0 _GetOffsideLineY                                                000004D6 GR
-  0 _GetPatternIdByPoseAndDirection                                 000025A7 GR
+  0 _GetPatternIdByPoseAndDirection                                 000025B3 GR
   0 _GoalKick                                                       000006D7 GR
     _InitPalette                                                    ******** GX
   0 _InitVariables                                                  00000003 GR
@@ -39,8 +39,8 @@ Symbol Table
     _PutBallSprite                                                  ******** GX
     _ResetBallInfo                                                  ******** GX
     _ResetPlayersInfo                                               ******** GX
-  0 _SetPlayerBallPossession                                        0000285D GR
-  0 _SetPlayerTarget                                                00002661 GR
+  0 _SetPlayerBallPossession                                        00002869 GR
+  0 _SetPlayerTarget                                                0000266D GR
     _SetTeam1Palette                                                ******** GX
     _SetTeam2Palette                                                ******** GX
   0 _SetTeamsPresentationSpritesPosition                            000002A9 GR
@@ -431,7 +431,7 @@ Hexadecimal [32-Bits]
 
 Area Table
 
-   0 _CODE                                      size     288B   flags    0
+   0 _CODE                                      size     2897   flags    0
    1 _DATA                                      size      124   flags    0
    2 _INITIALIZED                               size       13   flags    0
    3 _DABS                                      size        0   flags    8
