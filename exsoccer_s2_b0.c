@@ -1195,20 +1195,7 @@ void TickPlayerToOwnTarget(){
                 }
 				
 				//DEBUG_LOGNUM("TEST",g_MatchStatus);
-				if(g_Players[i].TeamId==REFEREE){
-                    // Ensure Referee animates if moving not-in-position in other phases
-                    if (g_MatchStatus == MATCH_BEFORE_KICK_OFF) {
-                        // FORCE ANIMATION MANUALLY since automatic logic is failing for Referee return
-                        if (!playerInPosition) {
-                            // Toggle Pose
-                            g_Players[i].LastPose = !g_Players[i].LastPose;
-                            // Calculate Pattern 
-                            g_Players[i].PatternId = GetPatternIdByPoseAndDirection(i);
-                            // Set Status to POSITIONED to prevent UpdateSpritesPositions from animating (toggling) again
-                            g_Players[i].Status = PLAYER_STATUS_POSITIONED; 
-                        }
-                    }
-                }
+
 
 				if(g_MatchStatus==MATCH_BEFORE_KICK_OFF){
 					
