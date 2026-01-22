@@ -27,7 +27,7 @@ ProjModules = [ ProjName ];
 // ProjSegments = "";
 
 //-- List of library modules to build (array)
-LibModules = [ "v9990", "system", "bios", "vdp", "print", "input", "memory", "debug", "math" ];
+LibModules = [ "v9990", "system", "input", "vdp", "print", "input", "memory", "debug", "math" ];
 
 //-- Additional sources to be compiled and linked with the project (array)
 // AddSources = [];
@@ -69,10 +69,13 @@ Machine = "1";
 //   - ROM_KONAMI_SCC   .rom    Konami MegaROM SCC (aka Konami5): 8 KB segments for a total of 64 KB to 2 MB
 //   - ROM_NEO8         .rom    NEO-8: 8 KB segments for a total of 1 MB to 32 MB
 //   - ROM_NEO16        .rom    NEO-16: 16 KB segments for a total of 1 MB to 64 MB
-Target = "ROM_ASCII16";
+Target = "ROM_NEO16";
 
 //-- ROM mapper total size in KB (number). Must be a multiple of 8 or 16 depending on the mapper type (from 64 to 4096)
 ROMSize = 1024;
+
+
+
 
 //-- Postpone the ROM startup to let the other ROMs initialize like Disk controller or Network cartridge (boolean)
 // ROMDelayBoot = false;
@@ -91,7 +94,7 @@ AddROMSignature = true;
 CustomISR = "V9990";
 
 //-- Use automatic banked call and trampoline functions (boolean). For mapped ROM
-// BankedCall = 0;
+// BankedCall = true;
 
 //-- Overwrite RAM starting address (number). For example. 0xE0000 for 8K RAM machine
 // ForceRamAddr = 0;
@@ -169,11 +172,11 @@ BuildLibrary = true;
 // CompileOpt = "";
 
 //-- Skip file if compile data (REL) is newer than the source code (boolean)
-// CompileSkipOld = false;
+CompileSkipOld = true;
 
 //-- Additionnal link options (string)
 // LinkOpt = "";
-
+//
 //-- Automatic increment of build version in a header file (boolean)
 // BuildVersion = false;
 

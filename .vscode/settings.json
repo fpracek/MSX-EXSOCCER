@@ -1,3 +1,22 @@
 {
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "chat.tools.terminal.autoApprove": {
+        "dir": true,
+        ".\\build.bat": true,
+        "/^cmd /c \"build\\.bat > build_log\\.txt 2>&1\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "TARGET_ROM_ASCII16_1024K": true,
+        "MSX_1": true,
+        "/^cmd /c \"\"E:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\tools/sdcc/bin/sdcc\" -c -mz80 -DTARGET=TARGET_ROM_ASCII16_1024K -DMSX_VERSION=MSX_1 -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\projects\\\\exsoccer/ -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\engine/src -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\engine/content -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\tools/ --opt-code-speed -DAPPSIGN \\./exsoccer_s3_b1\\.c -o E:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\projects\\\\exsoccer/out/\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cmd /c \"\"E:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\tools/sdcc/bin/sdcc\" -c -mz80 -DTARGET=TARGET_ROM_ASCII16_1024K -DMSX_VERSION=MSX_1 -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\projects\\\\exsoccer/ -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\engine/src -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\engine/content -IE:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\tools/ --opt-code-speed -DAPPSIGN \\./exsoccer\\.c -o E:\\\\Dropbox\\\\FAUSTO\\\\SVILUPPI\\\\MSX\\\\CODE\\\\C\\\\MSXgl\\\\projects\\\\exsoccer/out/\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "type": true
+    }
 }

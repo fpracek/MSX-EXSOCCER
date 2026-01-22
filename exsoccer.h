@@ -6,6 +6,9 @@
 
 #ifndef STRUCTURES_DEFINITION
 #define STRUCTURES_DEFINITION
+
+extern u8 g_GoalScorerId;
+
 // STRUCTURES
 typedef struct PlayerInfo
 {
@@ -20,6 +23,7 @@ typedef struct PlayerInfo
 	u16     TargetY;
 	u16     TargetX;
 	u16     Status;   
+	u8      AiTickCounter;
 } PlayerInfo;
 typedef struct BallInfo
 {
@@ -29,6 +33,18 @@ typedef struct BallInfo
 	u8      Direction;
 	u8      PossessionPlayerId;
 	u16     PreviousY;
+	u16     OldX;
+	u16     OldY;
+	u8      KickMoveState;
+	u8      LastTouchTeamId;
+	u8      StealCooldown;
+	u8      PassTargetPlayerId; // ID of player being passed to (NO_VALUE if none)
+	u16     PassStartX;         // Starting X of pass (for parabola)
+	u16     PassStartY;         // Starting Y of pass
+	u16     PassTotalDist;      // Total distance of pass
+	u16     TargetX;            // For shots or fixed point passes
+	u16     TargetY;            // For shots or fixed point passes
+	u8      ShotActive;         // 1 if ball is flying as a shot
 } BallInfo;
 #endif
 
@@ -36,6 +52,22 @@ typedef struct BallInfo
 // *** GLOBAL DEFINES ***
 // =======================
 
+#define FIELD_BOUND_X_LEFT                  10
+#define FIELD_BOUND_X_RIGHT                 246
+#define FIELD_BOUND_Y_TOP                   50
+#define FIELD_BOUND_Y_BOTTOM                430
+
+#define GOAL_X_MIN                          96
+#define GOAL_X_MAX                          144
+#define GK_BOX_X_MIN                        80
+#define GK_BOX_X_MAX                        160
+#define GK_BOX_Y_TOP_MIN                    35
+#define GK_BOX_Y_TOP_MAX                    75
+#define GK_BOX_Y_BOTTOM_MIN                 405
+#define GK_BOX_Y_BOTTOM_MAX                 435
+
+#define DEFENDER_MAX_Y_UP                   180 // Difensori Team 1 non salgono oltre qui (met? campo alta)
+#define DEFENDER_MIN_Y_DOWN                 300 // Difensori Team 2 non scendono oltre qui (met? campo bassa)
 #define MATCH_DURATION                      120
 
 #define PLAYER_STATUS_NONE                  0
@@ -55,18 +87,18 @@ typedef struct BallInfo
 #define FIELD_BOTTOM_Y                      280
 #define FIELD_CENTRAL_Y                     140
 
-#define JOYSTICK_NONE  			            0
-#define JOYSTICK_UP    			            1
-#define JOYSTICK_UP_RIGHT  		            2
-#define JOYSTICK_RIGHT  		            3
-#define JOYSTICK_DOWN_RIGHT  	            4
-#define JOYSTICK_DOWN         	            5
-#define JOYSTICK_DOWN_LEFT  	            6
-#define JOYSTICK_LEFT  			            7
-#define JOYSTICK_UP_LEFT  		            8
+#define DIRECTION_NONE  			        0
+#define DIRECTION_UP    			        1
+#define DIRECTION_UP_RIGHT  		        2
+#define DIRECTION_RIGHT  		            3
+#define DIRECTION_DOWN_RIGHT  	            4
+#define DIRECTION_DOWN         	            5
+#define DIRECTION_DOWN_LEFT  	            6
+#define DIRECTION_LEFT  			        7
+#define DIRECTION_UP_LEFT  		            8
 
-#define TEAM_1                              0
-#define TEAM_2                              1
+#define TEAM_1                              1
+#define TEAM_2                              2
 #define REFEREE                             14
 
 #define TEAM_AUS                            0
@@ -76,18 +108,13 @@ typedef struct BallInfo
 #define TEAM_GBR                            4
 #define TEAM_GER                            5
 
-#define SPRITE_DIRECTION_NONE               0
-#define SPRITE_DIRECTION_UP    			    1
-#define SPRITE_DIRECTION_UP_RIGHT  		    2
-#define SPRITE_DIRECTION_RIGHT  		    3
-#define SPRITE_DIRECTION_DOWN_RIGHT  	    4
-#define SPRITE_DIRECTION_DOWN         	    5
-#define SPRITE_DIRECTION_DOWN_LEFT  	    6
-#define SPRITE_DIRECTION_LEFT  			    7
-#define SPRITE_DIRECTION_UP_LEFT  		    8
-
 #define PLAYER_POSE_FRONT                   16
 #define PLAYER_POSE_BACK                    17
+
+#define PLAYER_POSE_GK_H_MOVE_FRONT_1       43
+#define PLAYER_POSE_GK_H_MOVE_FRONT_2       44
+#define PLAYER_POSE_GK_H_MOVE_BACK_1        43
+#define PLAYER_POSE_GK_H_MOVE_BACK_2        44
 #define PLAYER_POSE_RIGHT                   157
 #define PLAYER_POSE_LEFT                    18
 #define PLAYER_POSE_MOVE_UP_RIGHT_1         13
@@ -106,6 +133,38 @@ typedef struct BallInfo
 #define PLAYER_POSE_MOVE_UP_LEFT_2          130
 #define PLAYER_POSE_MOVE_DOWN_LEFT_1        9
 #define PLAYER_POSE_MOVE_DOWN_LEFT_2        10
+#define PLAYER_POSE_FRONT_PLAYING           19
+#define PLAYER_POSE_BACK_PLAYING            22
+#define PLAYER_POSE_SHOT_FRONT    			24
+#define PLAYER_POSE_SHOT_BACK    			21
+#define PLAYER_POSE_SHOT_RIGHT    			27
+#define PLAYER_POSE_SHOT_LEFT    			164
+#define PLAYER_POSE_TACKLE_FROM_UP_LEFT		36
+#define PLAYER_POSE_TACKLE_FROM_UP_RIGHT	187
+#define PLAYER_POSE_TACKLE_FROM_DOWN_LEFT   34
+#define PLAYER_POSE_TACKLE_FROM_DOWN_RIGHT  189
+#define PLAYER_POSE_TEAM2_GK_BALL_FRONT     61
+#define PLAYER_POSE_TEAM2_GK_UP_RIGHT       62
+#define PLAYER_POSE_TEAM2_GK_DOWN_RIGHT     63
+#define PLAYER_POSE_TEAM2_GK_DOWN_LEFT      144
+#define PLAYER_POSE_TEAM2_GK_UP_LEFT        145
+#define PLAYER_POSE_TEAM2_RESTART_RIGHT     203
+#define PLAYER_POSE_TEAM2_RESTART_LEFT      68
+#define PLAYER_POSE_TEAM2_RESTART_FRONT     69
+
+#define PLAYER_POSE_TEAM1_GK_BALL_FRONT     155
+#define PLAYER_POSE_TEAM1_GK_UP_RIGHT       62
+#define PLAYER_POSE_TEAM1_GK_DOWN_RIGHT     63
+#define PLAYER_POSE_TEAM1_GK_DOWN_LEFT      160
+#define PLAYER_POSE_TEAM1_GK_UP_LEFT        161
+#define PLAYER_POSE_TEAM1_RESTART_RIGHT     203
+#define PLAYER_POSE_TEAM1_RESTART_LEFT      68
+#define PLAYER_POSE_TEAM1_RESTART_FRONT     69
+
+#define PLAYER_POSE_CELEBRATION_BACK_1 		50
+#define PLAYER_POSE_CELEBRATION_BACK_2 		51
+#define PLAYER_POSE_CELEBRATION_FRONT_1 	48
+#define PLAYER_POSE_CELEBRATION_FRONT_2 	49
 
 #define PLAYER_ROLE_GOALKEEPER              0
 #define PLAYER_ROLE_LEFT_DEFENDER           1
@@ -114,6 +173,12 @@ typedef struct BallInfo
 #define PLAYER_ROLE_RIGHT_HALFFIELDER       4 
 #define PLAYER_ROLE_LEFT_STRIKER            5
 #define PLAYER_ROLE_RIGHT_STRIKER           6
+
+#define PLAYER_POSE_CELEBRATION_BACK_1 		50
+#define PLAYER_POSE_CELEBRATION_BACK_2 		51
+#define PLAYER_POSE_CELEBRATION_FRONT_1 	48
+#define PLAYER_POSE_CELEBRATION_FRONT_2 	49
+
 
 #define BALL_SIZE_1                         57
 #define BALL_SIZE_2                         58
@@ -137,6 +202,10 @@ typedef struct BallInfo
 #define MATCH_GOAL_KICK                     10
 #define MATCH_PLAYERS_PRESENTATION          11
 #define MATCH_IN_ACTION                     12
+#define MATCH_BALL_ON_GOALKEEPER			13
+#define MATCH_BEFORE_OFFSIDE                14
+
+#define AI_TICK_SPEED						1
 
 #define FIELD_POS_X_CENTER                  120
 #define FIELD_POS_X_LEFT                    40
@@ -151,56 +220,83 @@ typedef struct BallInfo
 #define FIELD_POS_Y_TEAM2_HALFFIELDERS      220
 #define FIELD_POS_Y_TEAM2_STRIKERS          350
 
+#define BALL_DISTANCE_FROM_PLAYER			7
+
 #define NO_VALUE                            255
 // ===========================
 // *** FUNCTION PROTOTYPES ***
 // ===========================
 
 void main();
-void UpdateV9990();                                                     // Bank 1 = Segment 3
-void InitializeV9990();                                                 // Bank 1 = Segment 3
-void WaitV9990Synch();                                                  // Bank 1 = Segment 3
-void V9_InterruptCommand();                                             // Bank 1 = Segment 0
-void V9_InterruptHBlank();                                              // Bank 1 = Segment 0
-void V9_InterruptVBlank();                                              // Bank 1 = Segment 0
-void InitPalette();                                                     // Bank 1 = Segment 3
-void TickP1();                                                          // Bank 1 = Segment 3
-void V9_PutLayerATileAtPos(u8 x, u8 y, u16 tileId);                     // Bank 1 = Segment 3
-void V9_PutLayerBTileAtPos(u8 x, u8 y, u16 tileId);                     // Bank 1 = Segment 3
-void LoadP1LayerA();                                                    // Bank 1 = Segment 0
-void LoadP1LayerB();                                                    // Bank 1 = Segment 0
-void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str);              // Bank 1 = Segment 3
-void LoadSprites();                                                     // Bank 1 = Segment 0
-void PutPlayerSprite(u8 id);                                            // Bank 1 = Segment 3
-void SetTeam1Palette();                                                 // Bank 1 = Segment 3
-void SetTeam2Palette();                                                 // Bank 1 = Segment 3
-void ShowFieldZone(u8 zone);                                            // Bank 1 = Segment 3
-void InitVariables();                                                   // Bank 1 = Segment 3
-void TickFieldScrollingAction();                                        // Bank 1 = Segment 3
-void GameStart();                                                       // Bank 1 = Segment 0
-const u16* GetTeamPaletteById(u8 id);                                   // Bank 1 = Segment 3
-void ShowTeamsPresentation();                                           // Bank 1 = Segment 3
-void ShowHeaderInfo();                                                  // Bank 1 = Segment 3
-char *GetNumberString(u16 value);                                       // Bank 1 = Segment 3
-void SetTeamsPresentationSpritesPosition();                             // Bank 1 = Segment 3
-void UpdateSpritesPositions();                                          // Bank 1 = Segment 3
-void PutBallSprite();                                                   // Bank 1 = Segment 3
-void TickPlayerToOwnTarget();                                           // Bank 1 = Segment 3
-void UpdatePlayerPatternByDirection(u8 id);                             // Bank 1 = Segment 3
-u8 GetNewPoseByDirection(u8 direction);                                 // Bank 1 = Segment 3
-u8 GetPatternIdByPoseAndDirection(u8 direction, u8 pose);               // Bank 1 = Segment 3
-void SetPlayerTarget(u8 playerId);                                      // Bank 1 = Segment 3
-u8 GetJoystick1Direction();                                             // Bank 1 = Segment 3
-u8 GetJoystick2Direction();                                             // Bank 1 = Segment 3
-u8 CheckJoystickTriggerButtonPressed();                                 // Bank 1 = Segment 3
-void TickActiveFieldZone();                                             // Bank 1 = Segment 3
-void ResetPlayersInfo();                                                // Bank 1 = Segment 3
-void TickUpdateTime();                                                  // Bank 1 = Segment 3
-void TimeUp();                                                          // Bank 1 = Segment 3
-void TickShowKickOff();                                                 // Bank 1 = Segment 3
-void ClearTextFromLayerA(u8 x, u8 y, u8 length);                        // Bank 1 = Segment 3
-void PutBallOnPlayerFeet(u8 playerId);									// Bank 1 = Segment 3
-u8 GetPlayerIdByRole(u8 teamId, u8 role);								// Bank 1 = Segment 3
-
-
-
+void UpdateV9990();                                                     
+void InitializeV9990();                                                 
+void WaitV9990Synch();                                                  
+void V9_InterruptCommand();                                             
+void V9_InterruptHBlank();                                              
+void V9_InterruptVBlank();                                              
+void InitPalette();                                                     
+void TickP1();                                                          
+void V9_PutLayerATileAtPos(u8 x, u8 y, u16 tileId);                     
+void V9_PutLayerBTileAtPos(u8 x, u8 y, u16 tileId);                     
+void LoadP1LayerA();                                                    
+void LoadP1LayerB();                                                    
+void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str);              
+void LoadSprites();                                                     
+void PutPlayerSprite(u8 id);                                            
+void SetTeam1Palette();                                                 
+void SetTeam2Palette();                                                 
+void ShowFieldZone(u8 zone);                                            
+void InitVariables();                                                   
+void TickFieldScrollingAction();                                        
+void GameStart();                                                       
+const u16* GetTeamPaletteById(u8 id);                                   
+void ShowTeamsPresentation();                                           
+void ShowHeaderInfo();                                                  
+char *GetNumberString(u16 value);                                       
+void SetTeamsPresentationSpritesPosition();                             
+void UpdateSpritesPositions();                                          
+void PutBallSprite();                                                   
+void TickPlayerToOwnTarget();                                           
+void UpdatePlayerPatternByDirection(u8 playerId);		                
+u8 GetNewPoseByDirection(u8 direction);                                 
+u8 GetPatternIdByPoseAndDirection(u8 playerId);               			
+void SetPlayerTarget(u8 playerId);                                      
+u8 GetJoystick1Direction();                                             
+u8 GetJoystick2Direction();                                             
+bool IsTeamJoystickTriggerPressed(u8 teamId);                           
+void TickActiveFieldZone();                                             
+void ResetPlayersInfo();                                                
+void TickUpdateTime();                                                  
+void TimeUp();                                                          
+void TickShowKickOff();                                                 
+void ClearTextFromLayerA(u8 x, u8 y, u8 length);                        
+void PutBallOnPlayerFeet(u8 playerId);									
+u8 GetPlayerIdByRole(u8 teamId, u8 role);								
+void TickTeamJoystick(u8 teamId, u8 direction);   						
+void SetPlayerBallPossession(u8 playerId);								
+void ResetBallInfo(bool resetDirection);								
+u8 GetNoMovingPlayerPatternId(u8 direction);							
+void TickCheckBallBoundaries();											
+void BallInGoal(u8 teamScored);											
+void BallThrowIn(u8 teamId);											
+void GoalKick(u8 teamId);												
+void CornerKick(u8 teamId);												
+void TickGameAI();                                                      
+u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId);               
+void SwitchActivePlayer(u8 teamId);                                     
+void TickMoveAIPlayersToTarget();                                       
+void TickAI(u8 playerId);												
+void TickBallCollision();												
+void UpdatePassTarget();												
+u8 GetBestPassTarget(u8 passerId);										
+void PerformPass(u8 toPlayerId);										
+void PerformShot(u16 targetX, u16 targetY);                             
+void TickGoalkeeperAnimation();                                         
+void GoalkeeperWithBall(u8 teamId, bool isSteal);                       
+void TickBallFlying();													
+u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId);				
+void MainGameLoop();													
+u16 GetOffsideLineY(u8 attackingTeamId);								
+//void InterruptHook();
+void PerformPass(u8 toPlayerId);
+void PerformShot(u16 targetX, u16 targetY);
