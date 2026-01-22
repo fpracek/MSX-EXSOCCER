@@ -1102,11 +1102,19 @@ void ClearTextFromLayerA(u8 x, u8 y, u8 length){
 	}
 }
 void TickPlayerToOwnTarget(){
-    if(g_MatchStatus == MATCH_AFTER_IN_GOAL) return; // FIX: Don't interfere with celebration
+    //if(g_MatchStatus == MATCH_AFTER_IN_GOAL) return; // FIX: Referee moves during celebration
 	if(g_MatchStatus!=MATCH_NOT_STARTED){
 		bool allPlayersInPosition = true;
 		
 		for(u8 i=0;i<15;i++){
+			
+			if(g_MatchStatus == MATCH_AFTER_IN_GOAL) {
+				if(i != REFEREE) continue;
+				// Force Referee Target to KickOff Position immediately
+				g_Players[i].TargetX=FIELD_POS_X_CENTER - 30; 
+				g_Players[i].TargetY=FIELD_POS_Y_CENTER - 40; 
+			}
+
 			if (i == REFEREE && (g_MatchStatus == MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER)) continue;
 			
 			// SKIP ACTIVE PLAYERS (Controlled by Joystick)
@@ -1192,6 +1200,15 @@ void TickPlayerToOwnTarget(){
                 // Not Moving (In Position)
                 if(g_MatchStatus==MATCH_IN_ACTION){
 				    g_Players[i].Status=PLAYER_STATUS_POSITIONED;
+                }
+
+				if (g_Players[i].TeamId == REFEREE) {
+                     if(g_MatchStatus == MATCH_BEFORE_KICK_OFF || g_MatchStatus == MATCH_AFTER_IN_GOAL) {
+                          g_Players[i].Direction = DIRECTION_DOWN;
+                          g_Players[i].PatternId = PLAYER_POSE_FRONT;
+                          g_Players[i].Status = PLAYER_STATUS_POSITIONED;
+                          PutPlayerSprite(i);
+                     }
                 }
 				
 				//DEBUG_LOGNUM("TEST",g_MatchStatus);

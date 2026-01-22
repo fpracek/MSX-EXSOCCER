@@ -11,22 +11,22 @@ Symbol Table
     _BallThrowIn                                                    ******** GX
   7 _ClearTextFromLayerA                                            00002432 GR
     _CornerKick                                                     ******** GX
-  7 _GetBestPassTarget                                              00002CB7 GR
-  7 _GetClosestPlayerToBall                                         00002B7F GR
-  7 _GetJoystick1Direction                                          000029B5 GR
-  7 _GetJoystick2Direction                                          00002AB5 GR
-  7 _GetNumberString                                                0000294F GR
-  1 _GetNumberString_str_65536_1388                                 00000001 R
+  7 _GetBestPassTarget                                              00002D1E GR
+  7 _GetClosestPlayerToBall                                         00002BE6 GR
+  7 _GetJoystick1Direction                                          00002A1C GR
+  7 _GetJoystick2Direction                                          00002B1C GR
+  7 _GetNumberString                                                000029B6 GR
+  1 _GetNumberString_str_65536_1391                                 00000001 R
     _GetOffsideLineY                                                ******** GX
   7 _GetPlayerIdByRole                                              000018FD GR
     _GoalKick                                                       ******** GX
-  7 _GoalkeeperWithBall                                             000030E8 GR
-  7 _IsTeamJoystickTriggerPressed                                   0000298E GR
+  7 _GoalkeeperWithBall                                             0000314F GR
+  7 _IsTeamJoystickTriggerPressed                                   000029F5 GR
     _Joystick_Read                                                  ******** GX
     _Keyboard_IsKeyPressed                                          ******** GX
-  7 _Math_Abs32                                                     00002CA1 GR
+  7 _Math_Abs32                                                     00002D08 GR
     _PerformPass                                                    ******** GX
-  7 _PerformShot                                                    000033DE GR
+  7 _PerformShot                                                    00003445 GR
   7 _PutBallOnPlayerFeet                                            00001957 GR
   7 _PutBallSprite                                                  00001DD5 GR
   1 _PutBallSprite_s_StopCooldown_65538_1289                        00000000 R
@@ -34,19 +34,19 @@ Symbol Table
   7 _ResetPlayersInfo                                               000023D9 GR
     _SetPlayerBallPossession                                        ******** GX
     _SetPlayerTarget                                                ******** GX
-  7 _ShowFieldZone                                                  00002ABA GR
+  7 _ShowFieldZone                                                  00002B21 GR
   7 _ShowHeaderInfo                                                 00001F89 GR
   7 _TickAI                                                         0000002B GR
-  7 _TickBallFlying                                                 000036BA GR
-  7 _TickCheckBallBoundaries                                        00002ABE GR
+  7 _TickBallFlying                                                 00003721 GR
+  7 _TickCheckBallBoundaries                                        00002B25 GR
   7 _TickFieldScrollingAction                                       000017AC GR
-  7 _TickGoalkeeperAnimation                                        000031BD GR
+  7 _TickGoalkeeperAnimation                                        00003224 GR
   7 _TickP1                                                         000017A9 GR
   7 _TickPlayerToOwnTarget                                          00002453 GR
   7 _TickShowKickOff                                                0000189F GR
-  7 _TimeUp                                                         00002B7E GR
-  7 _UpdatePassTarget                                               000030B5 GR
-  1 _UpdatePassTarget_passUpdateTimer_65536_1456                    00000006 R
+  7 _TimeUp                                                         00002BE5 GR
+  7 _UpdatePassTarget                                               0000311C GR
+  1 _UpdatePassTarget_passUpdateTimer_65536_1459                    00000006 R
     _UpdatePlayerPatternByDirection                                 ******** GX
   7 _UpdateSpritesPositions                                         00001DC3 GR
     _V9_Poke16_CurrentAddr                                          ******** GX
@@ -385,7 +385,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size       10   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG2                                      size     3DEE   flags    0
+   7 _SEG2                                      size     3E55   flags    0
    8 _INITIALIZER                               size        3   flags    0
    9 _CABS                                      size        0   flags    8
 
