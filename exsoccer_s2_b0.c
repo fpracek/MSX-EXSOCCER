@@ -146,6 +146,12 @@ void TickAI(u8 playerId){
 
             // ANIMATION HANDLED BY STANDARD LOGIC (UpdatePlayerPatternByDirection)
             // No manual override here to allow standard inertia/facing logic.
+            // Wait, we need to ensure PreviousDirection is updated if it was NONE, otherwise first step might fail
+            if (moveDir != DIRECTION_NONE) {
+                 g_Players[playerId].Status = PLAYER_STATUS_NONE; // Force not positioned
+            } else {
+                 g_Players[playerId].Status = PLAYER_STATUS_POSITIONED; // Allow rest
+            }
 
             return;
         }

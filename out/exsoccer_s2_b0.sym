@@ -9,70 +9,70 @@ Symbol Table
     .__.H$L.                                                    =   00000000 L
     _BallInGoal                                                     ******** GX
     _BallThrowIn                                                    ******** GX
-  7 _ClearTextFromLayerA                                            00002417 GR
+  7 _ClearTextFromLayerA                                            00002432 GR
     _CornerKick                                                     ******** GX
-  7 _GetBestPassTarget                                              00002C95 GR
-  7 _GetClosestPlayerToBall                                         00002B5D GR
-  7 _GetJoystick1Direction                                          00002993 GR
-  7 _GetJoystick2Direction                                          00002A93 GR
-  7 _GetNumberString                                                0000292D GR
-  1 _GetNumberString_str_65536_1386                                 00000001 R
+  7 _GetBestPassTarget                                              00002CB0 GR
+  7 _GetClosestPlayerToBall                                         00002B78 GR
+  7 _GetJoystick1Direction                                          000029AE GR
+  7 _GetJoystick2Direction                                          00002AAE GR
+  7 _GetNumberString                                                00002948 GR
+  1 _GetNumberString_str_65536_1388                                 00000001 R
     _GetOffsideLineY                                                ******** GX
-  7 _GetPlayerIdByRole                                              000018E2 GR
+  7 _GetPlayerIdByRole                                              000018FD GR
     _GoalKick                                                       ******** GX
-  7 _GoalkeeperWithBall                                             000030C6 GR
-  7 _IsTeamJoystickTriggerPressed                                   0000296C GR
+  7 _GoalkeeperWithBall                                             000030E1 GR
+  7 _IsTeamJoystickTriggerPressed                                   00002987 GR
     _Joystick_Read                                                  ******** GX
     _Keyboard_IsKeyPressed                                          ******** GX
-  7 _Math_Abs32                                                     00002C7F GR
+  7 _Math_Abs32                                                     00002C9A GR
     _PerformPass                                                    ******** GX
-  7 _PerformShot                                                    000033BC GR
-  7 _PutBallOnPlayerFeet                                            0000193C GR
-  7 _PutBallSprite                                                  00001DBA GR
-  1 _PutBallSprite_s_StopCooldown_65538_1287                        00000000 R
-  7 _PutPlayerSprite                                                000021FB GR
-  7 _ResetPlayersInfo                                               000023BE GR
+  7 _PerformShot                                                    000033D7 GR
+  7 _PutBallOnPlayerFeet                                            00001957 GR
+  7 _PutBallSprite                                                  00001DD5 GR
+  1 _PutBallSprite_s_StopCooldown_65538_1289                        00000000 R
+  7 _PutPlayerSprite                                                00002216 GR
+  7 _ResetPlayersInfo                                               000023D9 GR
     _SetPlayerBallPossession                                        ******** GX
     _SetPlayerTarget                                                ******** GX
-  7 _ShowFieldZone                                                  00002A98 GR
-  7 _ShowHeaderInfo                                                 00001F6E GR
+  7 _ShowFieldZone                                                  00002AB3 GR
+  7 _ShowHeaderInfo                                                 00001F89 GR
   7 _TickAI                                                         0000002B GR
-  7 _TickBallFlying                                                 00003698 GR
-  7 _TickCheckBallBoundaries                                        00002A9C GR
-  7 _TickFieldScrollingAction                                       00001791 GR
-  7 _TickGoalkeeperAnimation                                        0000319B GR
-  7 _TickP1                                                         0000178E GR
-  7 _TickPlayerToOwnTarget                                          00002438 GR
-  7 _TickShowKickOff                                                00001884 GR
-  7 _TimeUp                                                         00002B5C GR
-  7 _UpdatePassTarget                                               00003093 GR
-  1 _UpdatePassTarget_passUpdateTimer_65536_1454                    00000006 R
+  7 _TickBallFlying                                                 000036B3 GR
+  7 _TickCheckBallBoundaries                                        00002AB7 GR
+  7 _TickFieldScrollingAction                                       000017AC GR
+  7 _TickGoalkeeperAnimation                                        000031B6 GR
+  7 _TickP1                                                         000017A9 GR
+  7 _TickPlayerToOwnTarget                                          00002453 GR
+  7 _TickShowKickOff                                                0000189F GR
+  7 _TimeUp                                                         00002B77 GR
+  7 _UpdatePassTarget                                               000030AE GR
+  1 _UpdatePassTarget_passUpdateTimer_65536_1456                    00000006 R
     _UpdatePlayerPatternByDirection                                 ******** GX
-  7 _UpdateSpritesPositions                                         00001DA8 GR
+  7 _UpdateSpritesPositions                                         00001DC3 GR
     _V9_Poke16_CurrentAddr                                          ******** GX
   7 _V9_PrintLayerAStringAtPos                                      00000000 GR
-  7 _V9_PutLayerATileAtPos                                          00002185 GR
-  7 _V9_PutLayerBTileAtPos                                          000021C0 GR
+  7 _V9_PutLayerATileAtPos                                          000021A0 GR
+  7 _V9_PutLayerBTileAtPos                                          000021DB GR
     _V9_SetScrollingBY                                              ******** GX
     _V9_SetWriteAddress                                             ******** GX
     _V9_WriteVRAM_CurrentAddr                                       ******** GX
     ___mulsint2slong                                                ******** GX
-  7 ___str_0                                                        000018D9 R
+  7 ___str_0                                                        000018F4 R
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
 Hexadecimal [32-Bits]
 
 Symbol Table
 
-  7 ___str_1                                                        00002163 R
-  7 ___str_10                                                       00002183 R
-  7 ___str_2                                                        00002167 R
-  7 ___str_3                                                        0000216B R
-  7 ___str_4                                                        0000216F R
-  7 ___str_5                                                        00002173 R
-  7 ___str_6                                                        00002177 R
-  7 ___str_7                                                        0000217B R
-  7 ___str_8                                                        0000217F R
-  7 ___str_9                                                        00002181 R
+  7 ___str_1                                                        0000217E R
+  7 ___str_10                                                       0000219E R
+  7 ___str_2                                                        00002182 R
+  7 ___str_3                                                        00002186 R
+  7 ___str_4                                                        0000218A R
+  7 ___str_5                                                        0000218E R
+  7 ___str_6                                                        00002192 R
+  7 ___str_7                                                        00002196 R
+  7 ___str_8                                                        0000219A R
+  7 ___str_9                                                        0000219C R
     __divsint                                                       ******** GX
     __divslong                                                      ******** GX
     __divuint                                                       ******** GX
@@ -385,7 +385,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size       10   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG2                                      size     3DCC   flags    0
+   7 _SEG2                                      size     3DE7   flags    0
    8 _INITIALIZER                               size        3   flags    0
    9 _CABS                                      size        0   flags    8
 
