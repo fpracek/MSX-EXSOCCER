@@ -261,10 +261,13 @@ void PutPlayerSprite(u8 playerId){
 		bool isHumanTeam = (g_Players[playerId].TeamId == TEAM_1) || (g_GameWith2Players && g_Players[playerId].TeamId == TEAM_2);
 		
 		if (isHumanTeam) {
-			if (playerId==g_Team1ActivePlayer || (g_GameWith2Players && playerId==g_Team2ActivePlayer)) {
-				// Ensure we are not highlighting REFEREE even if logic fails (safety check)
-				attr.Pattern=attr.Pattern+64;
+			// NEVER HIGHLIGHT GOALKEEPER
+			if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) {
+				if (playerId==g_Team1ActivePlayer || (g_GameWith2Players && playerId==g_Team2ActivePlayer)) {
+					// Ensure we are not highlighting REFEREE even if logic fails (safety check)
+					attr.Pattern=attr.Pattern+64;
 
+				}
 			}
 			// Highlight Pass Target if team has ball
 			if (playerId == g_PassTargetPlayer) {
@@ -755,8 +758,8 @@ u8 GetBestPassTarget(u8 passerId) {
 
 		// GK RESTRICTED KICK DISTANCE
 		if (g_Players[passerId].Role == PLAYER_ROLE_GOALKEEPER) {
-			// Limit to 80px. 
-			if (((i32)dx*(i32)dx + (i32)dy*(i32)dy) > 6400) continue;
+			// Limit to 200px (approx full screen height). 
+			if (((i32)dx*(i32)dx + (i32)dy*(i32)dy) > 40000) continue;
 		}
 
         dot = ((i32)dx * dirX) + ((i32)dy * dirY);
@@ -853,8 +856,14 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
     s_GkAnimTimer = 0;
     
     // Set Pose based on Team
-    if (teamId == TEAM_1) g_Players[gkId].PatternId = PLAYER_POSE_TEAM1_GK_BALL_FRONT;
-    else g_Players[gkId].PatternId = PLAYER_POSE_FRONT; // Team 2 GK plays like a player (feet)
+    if (teamId == TEAM_1) {
+        g_Players[gkId].PatternId = PLAYER_POSE_TEAM1_GK_BALL_FRONT;
+        g_Players[gkId].Direction = DIRECTION_UP; // Face Up (Attack Direction)
+    }
+    else {
+        g_Players[gkId].PatternId = PLAYER_POSE_FRONT; // Team 2 GK plays like a player (feet)
+        g_Players[gkId].Direction = DIRECTION_DOWN; // Face Down (Attack Direction)
+    }
     
     // Lock Pose
     g_Players[gkId].Status = PLAYER_STATUS_POSITIONED;
@@ -920,6 +929,9 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
 void TickGoalkeeperAnimation() {
     if (g_MatchStatus != MATCH_BALL_ON_GOALKEEPER) return;
     if (s_GkAnimPlayerId == NO_VALUE) return;
+	
+	// Ensure status is locked so main loop doesn't override PatternId
+	g_Players[s_GkAnimPlayerId].Status = PLAYER_STATUS_POSITIONED;
     
     s_GkAnimTimer++;
     
@@ -927,7 +939,7 @@ void TickGoalkeeperAnimation() {
 
     // Recoil Animation (First 30 frames)
     if (s_GkAnimTimer < kickTime) {
-        if (s_GkAnimTimer < 30 && (s_GkAnimTimer % 8) == 0 && s_GkRecoilY != 0) { // Slow movement
+        if (s_GkAnimTimer < 30 && (s_GkAnimTimer % 2) == 0 && s_GkRecoilY != 0) { // Faster movement (every 2 frames)
             g_Players[s_GkAnimPlayerId].Y += s_GkRecoilY;
             
             // Safety Clamp

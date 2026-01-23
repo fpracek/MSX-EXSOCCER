@@ -403,6 +403,7 @@ void TickAI(u8 playerId){
 							i32 threshold = isPanicPass ? -80 : 10;
 							
 							if (bestScore > threshold) {
+								if (g_Ball.PossessionTimer < 15) return; // Wait 15 frames before passing
 								PerformPass(bestT);
 								return; // End tick
 							}
@@ -714,11 +715,13 @@ void TickAI(u8 playerId){
 
 void PutBallOnPlayerFeet(u8 playerId){
 	
-	g_Ball.PossessionPlayerId=playerId;
-	g_Ball.LastTouchTeamId=g_Players[playerId].TeamId;
-	g_Ball.PassTargetPlayerId = NO_VALUE; // Clear any pending pass
-	g_Ball.ShotActive = 0; // Clear any pending shot
-	SetPlayerBallPossession(g_Ball.PossessionPlayerId);
+	if (g_Ball.PossessionPlayerId != playerId) {
+		g_Ball.PossessionPlayerId=playerId;
+		g_Ball.LastTouchTeamId=g_Players[playerId].TeamId;
+		g_Ball.PassTargetPlayerId = NO_VALUE; // Clear any pending pass
+		g_Ball.ShotActive = 0; // Clear any pending shot
+		SetPlayerBallPossession(g_Ball.PossessionPlayerId);
+	}
 
 	// Offset di base per la palla (distanza "attaccata" ai piedi) per ogni direzione
 	// Indicizzati: NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
@@ -787,6 +790,11 @@ void TickBallCollision(){
 	if(g_MatchStatus!=MATCH_IN_ACTION){
 		return;
 	}
+
+	// Increment Hold Timer if someone has the ball
+	if (g_Ball.PossessionPlayerId != NO_VALUE) {
+		if (g_Ball.PossessionTimer < 255) g_Ball.PossessionTimer++;
+	}
 	
 	// PASSING HEIGHT CHECK
     bool impossibleToReach = false;
@@ -834,15 +842,15 @@ void TickBallCollision(){
                 // if (g_Ball.Size >= 4 && g_Players[i].Role != PLAYER_ROLE_GOALKEEPER) continue;
 
                 // 2. Ignore Launcher (Double check distance from current shot start to prevent self-collision)
-                // Only apply this check during INITIAL HIGH SHOT/PASS phase (ShotActive == 1).
+                // Only apply this check during INITIAL HIGH SHOT/PASS phase (ShotActive == 1 or Pass Active).
                 // Once ball bounces or rolls (States 2, 3), the "Start" resets to the bounce point,
                 // so we must NOT enforce distance checks there (otherwise ball is un-pickupable at bounce spots).
-                if (g_Ball.ShotActive == 1) {
+                if (g_Ball.ShotActive == 1 || g_Ball.PassTargetPlayerId != NO_VALUE) {
                     i16 dxStart = (i16)g_Ball.X - (i16)g_Ball.PassStartX;
                     i16 dyStart = (i16)g_Ball.Y - (i16)g_Ball.PassStartY;
                     if (dxStart < 0) dxStart = -dxStart;
                     if (dyStart < 0) dyStart = -dyStart;
-                    if ((dxStart + dyStart) < 20) continue; 
+                    if ((dxStart + dyStart) < 24) continue; 
                 }
 
                 // 3. GK Interception Logic

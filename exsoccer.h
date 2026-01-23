@@ -45,6 +45,7 @@ typedef struct BallInfo
 	u16     TargetX;            // For shots or fixed point passes
 	u16     TargetY;            // For shots or fixed point passes
 	u8      ShotActive;         // 1 if ball is flying as a shot
+	u8      PossessionTimer;    // Frames since possession started
 } BallInfo;
 #endif
 

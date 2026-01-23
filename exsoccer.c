@@ -520,6 +520,13 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 		if (!inputActive || forceSwitch) {
 			
 			u8 closestId = GetClosestPlayerToBall(teamId, NO_VALUE);
+			
+			// BLOCK GOALKEEPER SELECTION
+			if (closestId != NO_VALUE && g_Players[closestId].Role == PLAYER_ROLE_GOALKEEPER) {
+				// If closest is GK, find the next closest field player
+				closestId = GetClosestPlayerToBall(teamId, closestId);
+			}
+
 			if (closestId != playerId && closestId != NO_VALUE) {
 				
 				if (forceSwitch) {
@@ -1445,9 +1452,11 @@ void SetPlayerBallPossession(u8 playerId){
 	}
 
 	if(g_Players[playerId].TeamId==TEAM_1){
-		g_Team1ActivePlayer=playerId;
+		if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team1ActivePlayer=playerId;
 	}
 	else{
-		g_Team2ActivePlayer=playerId;
+		if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team2ActivePlayer=playerId;
 	}
+
+	g_Ball.PossessionTimer = 0; // Reset hold timer
 }

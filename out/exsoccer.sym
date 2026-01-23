@@ -17,10 +17,10 @@ Symbol Table
     _GetClosestPlayerToBall                                         ******** GX
     _GetJoystick1Direction                                          ******** GX
     _GetJoystick2Direction                                          ******** GX
-  0 _GetNewPoseByDirection                                          00001E07 GR
-  0 _GetNoMovingPlayerPatternId                                     00001DB4 GR
+  0 _GetNewPoseByDirection                                          00001E69 GR
+  0 _GetNoMovingPlayerPatternId                                     00001E16 GR
   0 _GetOffsideLineY                                                00000507 GR
-  0 _GetPatternIdByPoseAndDirection                                 00001E5A GR
+  0 _GetPatternIdByPoseAndDirection                                 00001EBC GR
   0 _GoalKick                                                       00000708 GR
     _InitPalette                                                    ******** GX
   0 _InitVariables                                                  00000003 GR
@@ -29,7 +29,7 @@ Symbol Table
   0 _LoadP1LayerA                                                   00000036 GR
   0 _LoadP1LayerB                                                   000000B1 GR
   0 _LoadSprites                                                    000007C5 GR
-  0 _MainGameLoop                                                   00001B79 GR
+  0 _MainGameLoop                                                   00001BDB GR
     _PerformPass                                                    ******** GX
     _PerformShot                                                    ******** GX
     _Print_DrawText                                                 ******** GX
@@ -39,8 +39,8 @@ Symbol Table
     _PutBallSprite                                                  ******** GX
     _ResetBallInfo                                                  ******** GX
     _ResetPlayersInfo                                               ******** GX
-  0 _SetPlayerBallPossession                                        00002110 GR
-  0 _SetPlayerTarget                                                00001F14 GR
+  0 _SetPlayerBallPossession                                        00002172 GR
+  0 _SetPlayerTarget                                                00001F76 GR
     _SetTeam1Palette                                                ******** GX
     _SetTeam2Palette                                                ******** GX
   0 _SetTeamsPresentationSpritesPosition                            000002DA GR
@@ -51,7 +51,7 @@ Symbol Table
     _TickBallCollision                                              ******** GX
     _TickBallFlying                                                 ******** GX
     _TickCheckBallBoundaries                                        ******** GX
-  0 _TickGoalCelebration                                            000015F6 GR
+  0 _TickGoalCelebration                                            00001658 GR
     _TickGoalkeeperAnimation                                        ******** GX
     _TickPlayerToOwnTarget                                          ******** GX
     _TickShowKickOff                                                ******** GX
@@ -64,7 +64,7 @@ Hexadecimal [32-Bits]
 Symbol Table
 
     _UpdatePassTarget                                               ******** GX
-  0 _UpdatePlayerPatternByDirection                                 00001CEE GR
+  0 _UpdatePlayerPatternByDirection                                 00001D50 GR
     _UpdateSpritesPositions                                         ******** GX
   0 _UpdateV9990                                                    00000000 GR
     _V9_Detect                                                      ******** GX
@@ -93,11 +93,11 @@ Symbol Table
   0 ___str_1                                                        000006FF R
   0 ___str_2                                                        00000725 R
   0 ___str_3                                                        0000074B R
-  0 ___str_4                                                        00001B04 R
-  0 ___str_5                                                        00001B15 R
-  0 ___str_6                                                        00001B34 R
-  0 ___str_7                                                        00001B46 R
-  0 ___str_8                                                        00001B53 R
+  0 ___str_4                                                        00001B66 R
+  0 ___str_5                                                        00001B77 R
+  0 ___str_6                                                        00001B96 R
+  0 ___str_7                                                        00001BA8 R
+  0 ___str_8                                                        00001BB5 R
     __modsint                                                       ******** GX
   7 __xinit__g_ActionCooldown                                       0000000C R
   7 __xinit__g_FieldCurrentYPosition                                00000000 R
@@ -127,7 +127,7 @@ Symbol Table
     _g_ATRBYT                                                   =   0000F3F2 G
     _g_AVCSAV                                                   =   0000FAF7 G
   2 _g_ActionCooldown                                               0000000C GR
-  1 _g_ActiveFieldZone                                              00000121 GR
+  1 _g_ActiveFieldZone                                              00000122 GR
     _g_BAKCLR                                                   =   0000F3EA G
     _g_BASROM                                                   =   0000FBB1 G
     _g_BASRVN                                                   =   0000002B G
@@ -340,7 +340,7 @@ Symbol Table
     _g_RTC_AddrPort                                             =   000000B4 
     _g_RTC_DataPort                                             =   000000B5 
     _g_RTYCNT                                                   =   0000FC9A G
-  1 _g_RestartKickTeamId                                            00000122 GR
+  1 _g_RestartKickTeamId                                            00000123 GR
     _g_SAVSP                                                    =   0000FB36 G
     _g_SAVVOL                                                   =   0000FB39 G
     _g_SCNCNT                                                   =   0000F3F6 G
@@ -354,7 +354,7 @@ Symbol Table
     _g_SUBRID                                                   =   00000000 G
     _g_SVFFF8                                                   =   0000FFF8 G
     _g_SVFFFD                                                   =   0000FFFD G
-  1 _g_SecondsToEndOfMatch                                          00000123 GR
+  1 _g_SecondsToEndOfMatch                                          00000124 GR
   2 _g_ShotCursorDir                                                0000000F GR
   2 _g_ShotCursorX                                                  0000000D GR
     _g_Sprites1                                                     ******** GX
@@ -423,7 +423,7 @@ Hexadecimal [32-Bits]
 
 Symbol Table
 
-  0 _main                                                           00001A44 GR
+  0 _main                                                           00001AA6 GR
 
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 9
@@ -431,8 +431,8 @@ Hexadecimal [32-Bits]
 
 Area Table
 
-   0 _CODE                                      size     2135   flags    0
-   1 _DATA                                      size      124   flags    0
+   0 _CODE                                      size     21AE   flags    0
+   1 _DATA                                      size      125   flags    0
    2 _INITIALIZED                               size       13   flags    0
    3 _DABS                                      size        0   flags    8
    4 _HOME                                      size        0   flags    0
