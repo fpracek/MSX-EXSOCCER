@@ -63,7 +63,19 @@ void TickAI(u8 playerId){
             u16 refY = g_Players[playerId].Y;
             
             // 1. Follow Ball Y (Stay aligned horizontally mostly)
+            // But prefer stay slightly above/below depending on play to avoid crossing
             u16 targetY = ballY;
+            
+            // Kick-Off avoidance: If ball is at center (Kickoff), stay higher
+            if (ballY > 230 && ballY < 260 && ballX > 110 && ballX < 140) {
+                 targetY = ballY - 40; 
+            } else {
+                // Determine bias based on possession
+                if (g_Ball.PossessionPlayerId != NO_VALUE) {
+                    if (g_Players[g_Ball.PossessionPlayerId].TeamId == TEAM_1) targetY = ballY - 20;
+                    else targetY = ballY + 20;
+                }
+            }
 
             // 2. X-AXIS Logic (Follow ball but keep distance)
             u16 targetX = ballX;
@@ -241,7 +253,8 @@ void TickAI(u8 playerId){
 					}
 
 					// 2. BLOCKING PATH (Navigation)
-					if (isFront && relX > -10 && relX < 10) {
+					// Widen detection to 16px to trigger avoidance earlier
+					if (isFront && relX > -16 && relX < 16) {
 						obstacleFront = true;
 						if (g_Players[i].Role != PLAYER_ROLE_GOALKEEPER) obstacleFrontNonGK = true;
 					}
@@ -418,11 +431,12 @@ void TickAI(u8 playerId){
 				u16 finalTargetY = targetY_Goal;
 
 				if (obstacleFront) {
+					// Aggressive Avoidance (Zig Zag)
 					if (!obstacleRight) {
-						finalTargetX = g_Players[playerId].X + 24;
+						finalTargetX = g_Players[playerId].X + 32;
 						if (finalTargetX > FIELD_BOUND_X_RIGHT) finalTargetX = FIELD_BOUND_X_RIGHT;
 					} else if (!obstacleLeft) {
-						finalTargetX = g_Players[playerId].X - 24; 
+						finalTargetX = g_Players[playerId].X - 32; 
 						if (finalTargetX < FIELD_BOUND_X_LEFT) finalTargetX = FIELD_BOUND_X_LEFT;
 					}
 				}
@@ -1106,7 +1120,7 @@ void TickPlayerToOwnTarget(){
 			g_Timer=0;
 			g_GoalScorerId = NO_VALUE; // Reset scorer
 		}
-		//DEBUG_BREAK();
+		
 	}
 }
 
@@ -1397,7 +1411,7 @@ u8 GetBestPassTarget(u8 passerId) {
 
 		if(g_Players[i].TeamId != teamId) continue;
 		if(i == passerId) continue;
-        if(g_Players[i].Status == PLAYER_STATUS_NONE) continue;
+        // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // Allow passing to moving players!
 		if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue; 
 		
         // VISIBILITY CHECK (Moved up for optimization)
@@ -1423,7 +1437,13 @@ u8 GetBestPassTarget(u8 passerId) {
         dot = ((i32)dx * dirX) + ((i32)dy * dirY);
 		
 		// DIRECTION CHECK
-		if (dot <= 0) continue; 
+		if (dot <= 0) {
+            // RELAXED CHECK: Allow slight backward passes if very close?
+            // Or just allow wider cone (dot > -0.2?)
+            // Let's stick to 90 degrees but check if vector calculation is correct.
+            // If stopped, dirX/dirY might be tricky.
+            continue; 
+        }
 
         // Heuristic
         // Simplified scoring: Dot Product (Alignment) - Linear Distance Penalty
@@ -1435,6 +1455,39 @@ u8 GetBestPassTarget(u8 passerId) {
             bestTarget = i;
         }
 	}
+    
+    // --- FALLBACK ---
+    // If no target found with strict direction, try finding ANY closest teammate
+    // regardless of direction, but within reasonable distance (e.g. 80px)
+    if (bestTarget == NO_VALUE) {
+        for(i=0; i<14; i++) {
+             if(g_Players[i].TeamId != teamId) continue;
+             if(i == passerId) continue;
+             // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // Allow passing to moving players!
+             if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
+             
+             // Visibility
+             if (g_Players[i].Y < g_FieldCurrentYPosition || g_Players[i].Y > (g_FieldCurrentYPosition + 220)) continue;
+
+             i16 dx = (i16)g_Players[i].X - px;
+             i16 dy = (i16)g_Players[i].Y - py;
+             
+             // Ignore min distance check here?
+             
+             // Max Distance for fallback
+             i16 adx = (dx < 0) ? -dx : dx;
+             i16 ady = (dy < 0) ? -dy : dy;
+             if (adx + ady > 100) continue; // Only close teammates
+             
+             // Simple closeness score
+             i32 score = 1000 - (adx + ady);
+             if (score > bestScore) {
+                 bestScore = score;
+                 bestTarget = i;
+             }
+        }
+    }
+    
 	return bestTarget;
 }
 

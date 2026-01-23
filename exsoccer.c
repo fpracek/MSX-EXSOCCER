@@ -341,7 +341,7 @@ u16 GetOffsideLineY(u8 attackingTeamId) {
         
         for(u8 i=0; i<14; i++){
             if(g_Players[i].TeamId != defendingTeamId) continue;
-            if(g_Players[i].Status == PLAYER_STATUS_NONE) continue;
+            // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // INCLUDE MOVING PLAYERS!
             
             if (g_Players[i].Y < min1) {
                 min2 = min1;
@@ -359,7 +359,7 @@ u16 GetOffsideLineY(u8 attackingTeamId) {
         u16 max2 = 0;
          for(u8 i=0; i<14; i++){
             if(g_Players[i].TeamId != defendingTeamId) continue;
-            if(g_Players[i].Status == PLAYER_STATUS_NONE) continue;
+            // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // INCLUDE MOVING PLAYERS!
             
             if (g_Players[i].Y > max1) {
                 max2 = max1;
@@ -527,6 +527,9 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 					if (teamId == TEAM_1) g_Team1ActivePlayer = closestId;
 					else g_Team2ActivePlayer = closestId;
 					playerId = closestId; 
+					
+					// CONSUME TRIGGER forces switch to prevent immediate tackle in the same frame
+					frameTriggerPressed = false;
 				} else {
 					// HYSTERESIS: Only switch if new player is SIGNIFICANTLY closer
 					
@@ -560,6 +563,15 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 	
 	// Prevent accidental double-trigger (Steal -> Pass)
 	if (g_ActionCooldown > 0) frameTriggerPressed = false;
+
+    // AUTO-POSSESSION ON TRIGGER (For Loose Balls)
+    if (frameTriggerPressed && g_Ball.PossessionPlayerId == NO_VALUE) {
+        i16 dx = (i16)g_Players[playerId].X - (i16)g_Ball.X;
+        i16 dy = (i16)g_Players[playerId].Y - (i16)g_Ball.Y;
+        if (dx > -16 && dx < 16 && dy > -16 && dy < 16) {
+             PutBallOnPlayerFeet(playerId);
+        }
+    }
 
 	if(g_Ball.PossessionPlayerId==playerId){
 		
@@ -623,14 +635,23 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 				}
 			}
 	
-			if (g_PassTargetPlayer == NO_VALUE) {
-				
-				g_PassTargetPlayer = GetBestPassTarget(playerId);
+			// 2. PASS LOGIC
+			// If not shooting, always try to pass if Trigger is pressed.
+			
+			// UPDATE DIRECTION FOR ACCURATE TARGETING
+			// Ensure the targeting cone uses the current input direction, not the old facing
+			if(direction != DIRECTION_NONE){
+				g_Players[playerId].Direction = direction;
 			}
+
+			// Always recalculate best target when trigger is pressed
+			g_PassTargetPlayer = GetBestPassTarget(playerId);
+			
 			if (g_PassTargetPlayer != NO_VALUE) {
-				
 				// Execute Pass
 				PerformPass(g_PassTargetPlayer);
+				// Consume trigger event to avoid repeated calls
+				frameTriggerPressed = false;
 				return; 
 			}
 		}
@@ -1414,8 +1435,10 @@ void SetPlayerTarget(u8 playerId){
 }
 void SetPlayerBallPossession(u8 playerId){
 	if (playerId == NO_VALUE) {
-		g_Team1ActivePlayer=NO_VALUE;
-		g_Team2ActivePlayer=NO_VALUE;
+		// Do NOT clear active player cursor when ball is loose/passed!
+		// We want to retain control of the last player (or let auto-switch handle it).
+		// g_Team1ActivePlayer=NO_VALUE;
+		// g_Team2ActivePlayer=NO_VALUE;
 		return;
 	}
 

@@ -2054,9 +2054,9 @@ void TickBallCollision(){
 		if(g_Ball.PossessionPlayerId == i) continue; // Skip self
 
         // Determine effective hit distance
-        // Normal players: 10px radius (20x20 box)
+        // Normal players: 14px radius (20x20 box)
         // GK: 14px radius (28x28 box) -> INCREASED FOR DIVING
-        u8 hitDist = 10;
+        u8 hitDist = 14;
         if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
              if (g_Ball.ShotActive) hitDist = 20; // 15px + tolerance
              else hitDist = 14; 
@@ -2070,28 +2070,23 @@ void TickBallCollision(){
 			if (g_Ball.PossessionPlayerId == NO_VALUE) {
                 // --- BALL IS FREE ---
 
-                // New Conditional Breakpoint:
-                // Trigger if player touches ball, but it's not a high shot (so likely landing/rolling/stopped)
-                if (g_Ball.ShotActive != 1) {
-					DEBUG_LOGNUM(">>>>",g_MatchStatus);
-					DEBUG_LOGNUM("\nM:", g_FieldScrollingActionInProgress);
-                    DEBUG_BREAK();
-                }
+      
 
                 // 1. Check if unreachable (height or just kicked)
                 // if (impossibleToReach) continue; // MOVED check inside specific blocks (GK ignores height on shots)
                 
-                bool impossibleForPlayer = impossibleToReach;
-                if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER && g_Ball.ShotActive) impossibleForPlayer = false; // GK catches shots always
+                // bool impossibleForPlayer = impossibleToReach;
+                // if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER && g_Ball.ShotActive) impossibleForPlayer = false; // GK catches shots always
                 
-                if (impossibleForPlayer) continue; 
+                // if (impossibleForPlayer) continue; 
 
-                if (g_Ball.Size >= 4 && g_Players[i].Role != PLAYER_ROLE_GOALKEEPER) continue;
+                // if (g_Ball.Size >= 4 && g_Players[i].Role != PLAYER_ROLE_GOALKEEPER) continue;
 
                 // 2. Ignore Launcher (Double check distance from current shot start to prevent self-collision)
-                // Only apply this check if ball is actually in an active "shot/pass" state.
-                // If ball is stopped (ShotActive == 0), anyone can pick it up.
-                if (g_Ball.ShotActive != 0) {
+                // Only apply this check during INITIAL HIGH SHOT/PASS phase (ShotActive == 1).
+                // Once ball bounces or rolls (States 2, 3), the "Start" resets to the bounce point,
+                // so we must NOT enforce distance checks there (otherwise ball is un-pickupable at bounce spots).
+                if (g_Ball.ShotActive == 1) {
                     i16 dxStart = (i16)g_Ball.X - (i16)g_Ball.PassStartX;
                     i16 dyStart = (i16)g_Ball.Y - (i16)g_Ball.PassStartY;
                     if (dxStart < 0) dxStart = -dxStart;
@@ -2223,12 +2218,14 @@ void PerformPass(u8 toPlayerId) {
 
     // OFFSIDE CHECK
     // Ignore offside if passer is Goalkeeper
+	/*
     if (g_Players[fromId].Role != PLAYER_ROLE_GOALKEEPER) {
         if (IsOffside(toPlayerId)) {
             HandleOffside(toPlayerId);
             return;
         }
     }
+	*/
     
     // TURN PLAYER TOWARDS TARGET
     dx = (i16)g_Players[toPlayerId].X - (i16)g_Players[fromId].X;
