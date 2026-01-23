@@ -1961,6 +1961,77 @@ const unsigned char g_Font_MGL_Sample6[] =
 	0x00, /* ........ */ 
 };
 
+void PutBallOnPlayerFeet(u8 playerId){
+	
+	g_Ball.PossessionPlayerId=playerId;
+	g_Ball.LastTouchTeamId=g_Players[playerId].TeamId;
+	g_Ball.PassTargetPlayerId = NO_VALUE; // Clear any pending pass
+	g_Ball.ShotActive = 0; // Clear any pending shot
+	SetPlayerBallPossession(g_Ball.PossessionPlayerId);
+
+	// Offset di base per la palla (distanza "attaccata" ai piedi) per ogni direzione
+	// Indicizzati: NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
+	const u8 BallBaseDistX[] = { 0, 0, 4, 6, 4, 0, 4, 6, 4 };
+	const u8 BallBaseDistY[] = { 0, 6, 4, 0, 4, 6, 4, 2, 4 };
+	
+	const u8 DribbleAnimOffsets[] = {5, 4, 2, 0};
+	const u8 DribbleAnimOffsetsDiag[] = {3, 3, 1, 0};
+	
+	// Correzione fine posizione palla quando ferma (per allineamento perfetto ai piedi/sprite)
+	// Indicizzati: NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
+	const i8 BallAlignCorrectX[] = { 0, 0, 0, 0, 2, 0, -2, 0, 0 };
+	const i8 BallAlignCorrectY[] = { 0, 0, 0, 4, 2, 4, 2, 4, 0 };
+
+	u8 dir = g_Players[playerId].Direction;
+	if(dir == DIRECTION_NONE) dir = g_Players[playerId].PreviousDirection; // Fallback se fermo
+
+    // Use KickMoveState for animation if set
+    u8 animStep = g_Ball.KickMoveState;
+    if (animStep > 3) animStep = 3; // Default/Reset to 3 (Close) if NO_VALUE (255)
+
+	u8 currentOffset = DribbleAnimOffsets[animStep];
+	u8 currentOffsetDiag = DribbleAnimOffsetsDiag[animStep];
+
+	u8 distX = BallBaseDistX[dir] + ((dir==DIRECTION_UP || dir==DIRECTION_DOWN) ? 0 : (dir == DIRECTION_LEFT || dir == DIRECTION_RIGHT ? currentOffset : currentOffsetDiag));
+	u8 distY = BallBaseDistY[dir] + ((dir==DIRECTION_LEFT || dir==DIRECTION_RIGHT) ? 0 : (dir == DIRECTION_UP || dir == DIRECTION_DOWN ? currentOffset : currentOffsetDiag));
+	
+	switch (dir){
+		case DIRECTION_UP:
+			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
+			break;
+		case DIRECTION_DOWN:
+			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
+			break;
+		case DIRECTION_LEFT:
+			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[dir];
+			break;
+		case DIRECTION_RIGHT:
+			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[dir];
+			break;
+		case DIRECTION_UP_LEFT:
+			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
+			break;
+		case DIRECTION_UP_RIGHT:
+			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
+			break;
+		case DIRECTION_DOWN_LEFT:
+			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
+			break;
+		case DIRECTION_DOWN_RIGHT:
+			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
+			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
+			break;
+	}
+	g_Ball.PreviousY=g_Ball.Y;
+	g_Ball.Direction=dir;
+}
 void TickBallCollision(){
 	if(g_MatchStatus!=MATCH_IN_ACTION){
 		return;
@@ -1984,9 +2055,12 @@ void TickBallCollision(){
 
         // Determine effective hit distance
         // Normal players: 10px radius (20x20 box)
-        // GK: 14px radius (28x28 box)
+        // GK: 14px radius (28x28 box) -> INCREASED FOR DIVING
         u8 hitDist = 10;
-        if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) hitDist = 14;
+        if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
+             if (g_Ball.ShotActive) hitDist = 20; // 15px + tolerance
+             else hitDist = 14; 
+        }
 
         // Check proximity
 		u16 diffX = (g_Ball.X > g_Players[i].X) ? (g_Ball.X - g_Players[i].X) : (g_Players[i].X - g_Ball.X);
@@ -1996,21 +2070,66 @@ void TickBallCollision(){
 			if (g_Ball.PossessionPlayerId == NO_VALUE) {
                 // --- BALL IS FREE ---
 
+                // New Conditional Breakpoint:
+                // Trigger if player touches ball, but it's not a high shot (so likely landing/rolling/stopped)
+                if (g_Ball.ShotActive != 1) {
+					DEBUG_LOGNUM(">>>>",g_MatchStatus);
+					DEBUG_LOGNUM("\nM:", g_FieldScrollingActionInProgress);
+                    DEBUG_BREAK();
+                }
+
                 // 1. Check if unreachable (height or just kicked)
-                if (impossibleToReach) continue;
+                // if (impossibleToReach) continue; // MOVED check inside specific blocks (GK ignores height on shots)
+                
+                bool impossibleForPlayer = impossibleToReach;
+                if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER && g_Ball.ShotActive) impossibleForPlayer = false; // GK catches shots always
+                
+                if (impossibleForPlayer) continue; 
+
                 if (g_Ball.Size >= 4 && g_Players[i].Role != PLAYER_ROLE_GOALKEEPER) continue;
 
-                // 2. Ignore Launcher (Double check distance from start to prevent self-collision)
-                i16 dxStart = (i16)g_Ball.X - (i16)g_Ball.PassStartX;
-                i16 dyStart = (i16)g_Ball.Y - (i16)g_Ball.PassStartY;
-                if (dxStart < 0) dxStart = -dxStart;
-                if (dyStart < 0) dyStart = -dyStart;
-                if ((dxStart + dyStart) < 20) continue; 
+                // 2. Ignore Launcher (Double check distance from current shot start to prevent self-collision)
+                // Only apply this check if ball is actually in an active "shot/pass" state.
+                // If ball is stopped (ShotActive == 0), anyone can pick it up.
+                if (g_Ball.ShotActive != 0) {
+                    i16 dxStart = (i16)g_Ball.X - (i16)g_Ball.PassStartX;
+                    i16 dyStart = (i16)g_Ball.Y - (i16)g_Ball.PassStartY;
+                    if (dxStart < 0) dxStart = -dxStart;
+                    if (dyStart < 0) dyStart = -dyStart;
+                    if ((dxStart + dyStart) < 20) continue; 
+                }
 
                 // 3. GK Interception Logic
                 if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
-                     // Logic: Check if it's a shot or loose ball.
-                     // For now, GK grabs everything reachable.
+                     
+                     // DIVING LOGIC
+                     if (g_Ball.ShotActive) {
+                          i16 signedDiffX = (i16)g_Ball.X - (i16)g_Players[i].X;
+                          
+                          // Central Save (tolerance 5px)
+                          if (signedDiffX >= -5 && signedDiffX <= 5) {
+                               // Standard Catch
+                               // (Pose handles in GoalkeeperWithBall)
+                          } 
+                          else {
+                               // Diving Save (6px to 15px+)
+                               // Use Diving Poses
+                               u8 team = g_Players[i].TeamId;
+                               u8 divePose = 0;
+                               
+                               if (signedDiffX > 5) { // Ball to Right
+                                   if (team == TEAM_1) divePose = PLAYER_POSE_TEAM1_GK_DOWN_RIGHT;
+                                   else divePose = PLAYER_POSE_TEAM2_GK_DOWN_RIGHT;
+                               } else { // Ball to Left
+                                   if (team == TEAM_1) divePose = PLAYER_POSE_TEAM1_GK_DOWN_LEFT;
+                                   else divePose = PLAYER_POSE_TEAM2_GK_DOWN_LEFT;
+                               }
+                               
+                               g_Players[i].PatternId = divePose;
+                               g_Players[i].Status = PLAYER_STATUS_POSITIONED; // Lock it
+                          }
+                     }
+
                      PutBallOnPlayerFeet(i);
                      GoalkeeperWithBall(g_Players[i].TeamId, 0); 
                      
@@ -2025,7 +2144,8 @@ void TickBallCollision(){
                 // 4. Normal Player Logic
 				g_Ball.PassTargetPlayerId = NO_VALUE; 
                 g_Ball.ShotActive = 0; 
-				g_Ball.Size = 2; 
+                g_Ball.KickMoveState = 0;
+				g_Ball.Size = 1; // On feet = small
 				PutBallOnPlayerFeet(i);
 				g_Players[i].Status = PLAYER_STATUS_HAS_BALL;
 				return; // Stop checking
@@ -2102,9 +2222,12 @@ void PerformPass(u8 toPlayerId) {
     if (toPlayerId == NO_VALUE) return;
 
     // OFFSIDE CHECK
-    if (IsOffside(toPlayerId)) {
-        HandleOffside(toPlayerId);
-        return;
+    // Ignore offside if passer is Goalkeeper
+    if (g_Players[fromId].Role != PLAYER_ROLE_GOALKEEPER) {
+        if (IsOffside(toPlayerId)) {
+            HandleOffside(toPlayerId);
+            return;
+        }
     }
     
     // TURN PLAYER TOWARDS TARGET
@@ -2371,7 +2494,89 @@ const u16* GetTeamPaletteById(u8 id){
 }
 
 
+void TickFieldScrollingAction(){
 
+	if(g_FieldScrollingActionInProgress!=NO_VALUE){
+		
+		switch (g_FieldScrollingActionInProgress){
+			case FIELD_NORTH_ZONE:
+				g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
+				if(g_FieldCurrentYPosition<0){
+					g_FieldCurrentYPosition=1;
+					g_FieldScrollingActionInProgress=NO_VALUE;
+					g_ActiveFieldZone=FIELD_NORTH_ZONE;
+				}
+				break;
+			case FIELD_CENTRAL_ZONE:
+				if(g_FieldCurrentYPosition!=136){
+					if(g_FieldCurrentYPosition>FIELD_CENTRAL_Y){
+						g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
+					}
+					else{
+						g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
+					}
+
+				}
+				else{
+					g_FieldScrollingActionInProgress=NO_VALUE;
+					g_ActiveFieldZone=FIELD_CENTRAL_ZONE;
+					if(g_MatchStatus==MATCH_NOT_STARTED){
+						g_MatchStatus=MATCH_BEFORE_KICK_OFF;
+						for(u8 i=0;i<15;i++){
+							SetPlayerTarget(i);
+						}
+						TickPlayerToOwnTarget();
+						
+					}
+				}
+				break;
+			case FIELD_SOUTH_ZONE:
+				g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
+				if(g_FieldCurrentYPosition>=FIELD_BOTTOM_Y){
+					g_ActiveFieldZone=FIELD_SOUTH_ZONE;
+					g_FieldScrollingActionInProgress=NO_VALUE;
+				}
+				break;
+		}
+		V9_SetScrollingBY(g_FieldCurrentYPosition);
+	}
+}
+void TickShowKickOff(){
+	if(g_MatchStatus==MATCH_KICK_OFF){
+		if(g_Timer==1){
+			V9_PrintLayerAStringAtPos(12,18,"KICK OFF");
+			g_Timer=2;
+		}
+		if(g_Timer==3){
+			ClearTextFromLayerA(12,18,9);
+			g_Timer=NO_VALUE;
+			u8 playerId=NO_VALUE;
+			if(g_RestartKickTeamId==TEAM_1){
+				playerId=GetPlayerIdByRole(TEAM_1,PLAYER_ROLE_RIGHT_HALFFIELDER);
+			}
+			else{
+				playerId=GetPlayerIdByRole(TEAM_2,PLAYER_ROLE_LEFT_HALFFIELDER);
+			}
+			PutBallOnPlayerFeet(playerId);
+			g_MatchStatus=MATCH_IN_ACTION;
+		}
+	}
+    if(g_MatchStatus==MATCH_BEFORE_OFFSIDE){
+         if(g_Timer >= 2) { 
+             ClearTextFromLayerA(10,18,7);
+             g_Timer = NO_VALUE;
+             
+             u8 team = g_RestartKickTeamId; 
+             u8 newOwner = GetClosestPlayerToBall(team, NO_VALUE);
+             if (newOwner != NO_VALUE) {
+                 PutBallOnPlayerFeet(newOwner);
+                 g_Ball.KickMoveState = NO_VALUE;
+             }
+             
+             g_MatchStatus = MATCH_IN_ACTION;
+         }
+    }
+}
 
 void ResetBallInfo(bool resetPossessionPlayer){
 	g_Ball.PreviousY=g_Ball.Y;

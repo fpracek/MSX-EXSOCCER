@@ -49,13 +49,7 @@ void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str)
 		
 }
 
-// *** INIT FUNCTIONS ***
 
-
-
-
-// *** TICK ***
-//-----------------------------------------------------------------------------
 
 
 void TickAI(u8 playerId){
@@ -723,74 +717,7 @@ void TickAI(u8 playerId){
 void TickP1(){
 	TickFieldScrollingAction();
 }
-void TickFieldScrollingAction(){
 
-	if(g_FieldScrollingActionInProgress!=NO_VALUE){
-		
-		switch (g_FieldScrollingActionInProgress){
-			case FIELD_NORTH_ZONE:
-				g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
-				if(g_FieldCurrentYPosition<0){
-					g_FieldCurrentYPosition=1;
-					g_FieldScrollingActionInProgress=NO_VALUE;
-					g_ActiveFieldZone=FIELD_NORTH_ZONE;
-				}
-				break;
-			case FIELD_CENTRAL_ZONE:
-				if(g_FieldCurrentYPosition!=136){
-					if(g_FieldCurrentYPosition>FIELD_CENTRAL_Y){
-						g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
-					}
-					else{
-						g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
-					}
-
-				}
-				else{
-					g_FieldScrollingActionInProgress=NO_VALUE;
-					g_ActiveFieldZone=FIELD_CENTRAL_ZONE;
-					if(g_MatchStatus==MATCH_NOT_STARTED){
-						g_MatchStatus=MATCH_BEFORE_KICK_OFF;
-						for(u8 i=0;i<15;i++){
-							SetPlayerTarget(i);
-						}
-						TickPlayerToOwnTarget();
-						
-					}
-				}
-				break;
-			case FIELD_SOUTH_ZONE:
-				g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
-				if(g_FieldCurrentYPosition>=FIELD_BOTTOM_Y){
-					g_ActiveFieldZone=FIELD_SOUTH_ZONE;
-					g_FieldScrollingActionInProgress=NO_VALUE;
-				}
-				break;
-		}
-		V9_SetScrollingBY(g_FieldCurrentYPosition);
-	}
-}
-void TickShowKickOff(){
-	if(g_MatchStatus==MATCH_KICK_OFF){
-		if(g_Timer==1){
-			V9_PrintLayerAStringAtPos(12,18,"KICK OFF");
-			g_Timer=2;
-		}
-		if(g_Timer==3){
-			ClearTextFromLayerA(12,18,9);
-			g_Timer=NO_VALUE;
-			u8 playerId=NO_VALUE;
-			if(g_RestartKickTeamId==TEAM_1){
-				playerId=GetPlayerIdByRole(TEAM_1,PLAYER_ROLE_RIGHT_HALFFIELDER);
-			}
-			else{
-				playerId=GetPlayerIdByRole(TEAM_2,PLAYER_ROLE_LEFT_HALFFIELDER);
-			}
-			PutBallOnPlayerFeet(playerId);
-			g_MatchStatus=MATCH_IN_ACTION;
-		}
-	}
-}
 // *** SPRITE FUNCTIONS ***
 
 
@@ -804,76 +731,7 @@ u8 GetPlayerIdByRole(u8 teamId, u8 role){
 	}
 	return playerId;
 }
-void PutBallOnPlayerFeet(u8 playerId){
-	g_Ball.PossessionPlayerId=playerId;
-	g_Ball.LastTouchTeamId=g_Players[playerId].TeamId;
-	g_Ball.PassTargetPlayerId = NO_VALUE; // Clear any pending pass
-	g_Ball.ShotActive = 0; // Clear any pending shot
-	SetPlayerBallPossession(g_Ball.PossessionPlayerId);
 
-	// Offset di base per la palla (distanza "attaccata" ai piedi) per ogni direzione
-	// Indicizzati: NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
-	const u8 BallBaseDistX[] = { 0, 0, 4, 6, 4, 0, 4, 6, 4 };
-	const u8 BallBaseDistY[] = { 0, 6, 4, 0, 4, 6, 4, 2, 4 };
-	
-	const u8 DribbleAnimOffsets[] = {5, 4, 2, 0};
-	const u8 DribbleAnimOffsetsDiag[] = {3, 3, 1, 0};
-	
-	// Correzione fine posizione palla quando ferma (per allineamento perfetto ai piedi/sprite)
-	// Indicizzati: NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
-	const i8 BallAlignCorrectX[] = { 0, 0, 0, 0, 2, 0, -2, 0, 0 };
-	const i8 BallAlignCorrectY[] = { 0, 0, 0, 4, 2, 4, 2, 4, 0 };
-
-	u8 dir = g_Players[playerId].Direction;
-	if(dir == DIRECTION_NONE) dir = g_Players[playerId].PreviousDirection; // Fallback se fermo
-
-    // Use KickMoveState for animation if set
-    u8 animStep = g_Ball.KickMoveState;
-    if (animStep > 3) animStep = 3; // Default/Reset to 3 (Close) if NO_VALUE (255)
-
-	u8 currentOffset = DribbleAnimOffsets[animStep];
-	u8 currentOffsetDiag = DribbleAnimOffsetsDiag[animStep];
-
-	u8 distX = BallBaseDistX[dir] + ((dir==DIRECTION_UP || dir==DIRECTION_DOWN) ? 0 : (dir == DIRECTION_LEFT || dir == DIRECTION_RIGHT ? currentOffset : currentOffsetDiag));
-	u8 distY = BallBaseDistY[dir] + ((dir==DIRECTION_LEFT || dir==DIRECTION_RIGHT) ? 0 : (dir == DIRECTION_UP || dir == DIRECTION_DOWN ? currentOffset : currentOffsetDiag));
-	
-	switch (dir){
-		case DIRECTION_UP:
-			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
-			break;
-		case DIRECTION_DOWN:
-			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
-			break;
-		case DIRECTION_LEFT:
-			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[dir];
-			break;
-		case DIRECTION_RIGHT:
-			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[dir];
-			break;
-		case DIRECTION_UP_LEFT:
-			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
-			break;
-		case DIRECTION_UP_RIGHT:
-			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
-			break;
-		case DIRECTION_DOWN_LEFT:
-			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
-			break;
-		case DIRECTION_DOWN_RIGHT:
-			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
-			break;
-	}
-	g_Ball.PreviousY=g_Ball.Y;
-	g_Ball.Direction=dir;
-}
 
 void UpdateSpritesPositions(){
 	for (u8 i=0;i<15;i++){
@@ -1271,6 +1129,7 @@ char *GetNumberString(u16 value)
 // *** JOYSTICKS ***
 bool IsTeamJoystickTriggerPressed(u8 teamId){
 	if(teamId==TEAM_1){
+		
 		u8 joyStat = Joystick_Read(JOY_PORT_1);
 		if (IS_JOY_PRESSED(joyStat, JOY_INPUT_TRIGGER_A))
 		{
@@ -1366,6 +1225,61 @@ void TickCheckBallBoundaries(){
 	if(g_MatchStatus!=MATCH_IN_ACTION){
 		return;
 	}
+    // Prevent Goal/Corner checks if the ball is currently held by the Goalkeeper
+    // (This state can sometimes overlap with boundary positions during recoil animation)
+    if(g_MatchStatus == MATCH_BALL_ON_GOALKEEPER || g_Ball.PossessionPlayerId != NO_VALUE) {
+        if(g_Ball.PossessionPlayerId != NO_VALUE) {
+            if(g_Players[g_Ball.PossessionPlayerId].Role == PLAYER_ROLE_GOALKEEPER) return;
+        }
+    }
+    
+    // IGNORE BOUNDARIES IF BALL IS MOVING BACK INTO FIELD (e.g. GK Kick)
+    if (g_Ball.ShotActive != 0 || g_Ball.PassTargetPlayerId != NO_VALUE) {
+        
+        u16 destY = g_Ball.TargetY;
+        if (g_Ball.PassTargetPlayerId != NO_VALUE) {
+            destY = g_Players[g_Ball.PassTargetPlayerId].Y;
+        }
+        
+        // If Ball is ABOVE Top Line
+        if (g_Ball.Y < FIELD_BOUND_Y_TOP) {
+             // If destination is below current position (moving Down), it is returning.
+             if(destY > g_Ball.Y) return;
+        }
+        
+        // If Ball is BELOW Bottom Line
+        if (g_Ball.Y > FIELD_BOUND_Y_BOTTOM) {
+             // If destination is above current position (moving Up), it is returning.
+             if(destY < g_Ball.Y) return;
+        }
+    }
+    // YES! That is the problem.
+    // We need to ensure ball starts INSIDE the field when kicked by GK.
+    
+    // Let's fix it in PerformPass / PerformShot (or TickGoalkeeperAnimation) instead of here.
+    // But as a failsafe here: If Ball is ShotActive and LastTouch was Goalkeeper?
+    // We don't track who touched last beyond Team.
+    
+    // Valid Check: If ball is "Out" but moving INWARDS to the field, ignore it.
+    
+    i16 relY_Top = (i16)g_Ball.Y - FIELD_BOUND_Y_TOP;
+    i16 relY_Bottom = (i16)g_Ball.Y - FIELD_BOUND_Y_BOTTOM;
+    
+    // If Ball is ABOVE Top Line (relY_Top < 0)
+    if (g_Ball.Y < FIELD_BOUND_Y_TOP) {
+         // If moving DOWN (Direction is DOWN, DOWN_LEFT, DOWN_RIGHT), it is returning to field.
+         if (g_Ball.ShotActive && (g_Ball.Direction == DIRECTION_DOWN || g_Ball.Direction == DIRECTION_DOWN_LEFT || g_Ball.Direction == DIRECTION_DOWN_RIGHT)) {
+             return; 
+         }
+    }
+    
+    // If Ball is BELOW Bottom Line
+    if (g_Ball.Y > FIELD_BOUND_Y_BOTTOM) {
+         // If moving UP, it is returning to field.
+         if (g_Ball.ShotActive && (g_Ball.Direction == DIRECTION_UP || g_Ball.Direction == DIRECTION_UP_LEFT || g_Ball.Direction == DIRECTION_UP_RIGHT)) {
+             return;
+         }
+    }
 
 	u8 teamId = g_Ball.LastTouchTeamId;
 	if(teamId==NO_VALUE){
@@ -1502,8 +1416,8 @@ u8 GetBestPassTarget(u8 passerId) {
 
 		// GK RESTRICTED KICK DISTANCE
 		if (g_Players[passerId].Role == PLAYER_ROLE_GOALKEEPER) {
-			// Limit to 120px. 
-			if (((i32)dx*(i32)dx + (i32)dy*(i32)dy) > 14400) continue;
+			// Limit to 80px. 
+			if (((i32)dx*(i32)dx + (i32)dy*(i32)dy) > 6400) continue;
 		}
 
         dot = ((i32)dx * dirX) + ((i32)dy * dirY);
@@ -1585,6 +1499,43 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
     g_Ball.ShotActive = 0;
     
     g_MatchStatus = MATCH_BALL_ON_GOALKEEPER;
+
+    // TACTICAL MOVEMENT: All players move while GK recoils
+    for(u8 i=0; i<14; i++) {
+        if(i == gkId) continue;
+        if(g_Players[i].TeamId == REFEREE) continue;
+        
+        u16 tx, ty;
+        // Reset current targets
+        tx = g_Players[i].X;
+        ty = g_Players[i].Y;
+
+        if(g_Players[i].TeamId == teamId) {
+             // TEAMMATE (Defending team) -> Advance (Counter-Attack)
+             // Move towards center/opponent field
+             if(teamId == TEAM_1) { // Moving UP
+                  ty = (g_Players[i].Y > 50) ? (g_Players[i].Y - 40) : 50;
+             } else { // Moving DOWN
+                  ty = (g_Players[i].Y < 380) ? (g_Players[i].Y + 40) : 380;
+             }
+        } else {
+             // OPPONENT (Attacking team) -> Retreat to defense
+             // Move towards their own goal
+             if(teamId == TEAM_1) { // Opponent is Team 2 (Top) -> Retreat UP? No, Team 2 Defends Top.
+                  // Wait, if GK is Team 1 (Bottom Defending), Opponent IS Team 2 (Attack Down).
+                  // Opponent (Team 2) retreats to Top.
+                  ty = (g_Players[i].Y > 50) ? (g_Players[i].Y - 40) : 50;
+             } else { // GK is Team 2 (Top Defending). Opponent is Team 1 (Attack Up).
+                  // Opponent (Team 1) retreats to Bottom.
+                  ty = (g_Players[i].Y < 380) ? (g_Players[i].Y + 40) : 380;
+             }
+        }
+
+        // Apply Target
+        g_Players[i].TargetX = tx;
+        g_Players[i].TargetY = ty;
+        g_Players[i].Status = PLAYER_STATUS_NONE; // Unlock movement
+    }
 }
 
 void TickGoalkeeperAnimation() {
@@ -1635,6 +1586,10 @@ void TickGoalkeeperAnimation() {
              g_Players[s_GkAnimPlayerId].PatternId = pose;
              // Lock again
              g_Players[s_GkAnimPlayerId].Status = PLAYER_STATUS_POSITIONED;
+             
+             // UNLOCK GAME IMMEDIATELY
+             g_MatchStatus = MATCH_IN_ACTION;
+
         } else {
              // Fallback if no target (should rarely happen)
              u8 team = g_Players[s_GkAnimPlayerId].TeamId;
@@ -1653,11 +1608,14 @@ void TickGoalkeeperAnimation() {
              }
 
              PerformShot(tx, ty);
+             
+             // UNLOCK GAME IMMEDIATELY
+             g_MatchStatus = MATCH_IN_ACTION;
         }
         
     } else if (s_GkAnimTimer > (kickTime + 15)) {
         // End Animation
-        g_MatchStatus = MATCH_IN_ACTION;
+        // g_MatchStatus = MATCH_IN_ACTION; // Moved earlier to ensure gameplay resumes while ball flies
         g_Players[s_GkAnimPlayerId].Status = PLAYER_STATUS_NONE;
     }
 }
@@ -1744,6 +1702,7 @@ void TickBallFlying() {
 	u8 speed = 3; 
 	if (g_Ball.ShotActive == 1) speed = 5; // Fast High Shot/Kick
 	else if (g_Ball.ShotActive == 2) speed = 3; // Slower Bounce
+	else if (g_Ball.ShotActive == 3) speed = 2; // Rolling
 
 	// Check Arrival
 	if (dx > -speed && dx < speed && dy > -speed && dy < speed) {
@@ -1804,13 +1763,48 @@ void TickBallFlying() {
 						return; 
 					}
 				}
+			} else if (g_Ball.ShotActive == 2) {
+				// TRANSITION TO ROLL (State 3)
+				// Small forward movement on ground
+				
+				i16 vecX = (i16)g_Ball.TargetX - (i16)g_Ball.PassStartX;
+				i16 vecY = (i16)g_Ball.TargetY - (i16)g_Ball.PassStartY;
+				
+				g_Ball.PassStartX = g_Ball.X;
+				g_Ball.PassStartY = g_Ball.Y;
+				
+				// Roll distance = approx 1/4 of bounce distance (which was 1/4 of shot)
+				i16 rollDx = vecX / 4; 
+				i16 rollDy = vecY / 4; 
+				
+				// Ensure minimum roll if it was moving fast? 
+				// Just let it die purely if very slow.
+				
+				i16 rollTx = (i16)g_Ball.X + rollDx;
+				i16 rollTy = (i16)g_Ball.Y + rollDy;
+				
+				// Bounds Check
+				if (rollTx < FIELD_BOUND_X_LEFT) rollTx = FIELD_BOUND_X_LEFT;
+				else if (rollTx > FIELD_BOUND_X_RIGHT) rollTx = FIELD_BOUND_X_RIGHT;
+				if (rollTy < FIELD_BOUND_Y_TOP) rollTy = FIELD_BOUND_Y_TOP;
+				else if (rollTy > FIELD_BOUND_Y_BOTTOM) rollTy = FIELD_BOUND_Y_BOTTOM;
+
+				g_Ball.TargetX = rollTx;
+				g_Ball.TargetY = rollTy;
+				g_Ball.PassTotalDist = (u16)(Math_Abs32(rollDx) + Math_Abs32(rollDy));
+				
+				if (g_Ball.PassTotalDist > 2) {
+					g_Ball.ShotActive = 3; // ROLLING
+					return;
+				}
 			}
 
-			// STOP BALL (End of Bounce or Out of Bounds or blocked)
+			// STOP BALL (End of Bounce/Roll or Out of Bounds or blocked)
 			g_Ball.ShotActive = 0;
 			g_Ball.PassTargetPlayerId = NO_VALUE;
 			g_Ball.PossessionPlayerId = NO_VALUE;
-			g_Ball.Size = 2;
+			g_Ball.Size = 1;
+			
 			return;
 		}
 	}
@@ -1848,12 +1842,20 @@ void TickBallFlying() {
 		if (ratio < 20 || ratio > 80) g_Ball.Size = 2;
 		else g_Ball.Size = 3;
 	} 
+	else if (g_Ball.ShotActive == 3) {
+		// ROLLING (Ground)
+		g_Ball.Size = 1;
+	}
 	else if (g_Ball.ShotActive == 1) {
 		// SHOT ARC (High)
+		// User Request: Cap at Size 2 for shots
+		g_Ball.Size = 2;
+		/*
 		u16 ratio = (distCovered * 100) / totalDist;
 		if (ratio < 10 || ratio > 90) g_Ball.Size = 2;
 		else if (ratio < 25 || ratio > 75) g_Ball.Size = 3;
 		else g_Ball.Size = 4; // High
+		*/
 	}
 	else {
 		// PASS ARC (Medium)

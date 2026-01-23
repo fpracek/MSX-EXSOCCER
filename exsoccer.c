@@ -139,9 +139,11 @@ void V9_InterruptVBlank()
 			if (g_FieldCurrentYPosition != 136) {
 				if (g_FieldCurrentYPosition > FIELD_CENTRAL_Y) {
 					g_FieldCurrentYPosition = g_FieldCurrentYPosition - g_FieldScrollSpeed;
+					if(g_FieldCurrentYPosition < 136) g_FieldCurrentYPosition = 136;
 				}
 				else {
 					g_FieldCurrentYPosition = g_FieldCurrentYPosition + g_FieldScrollSpeed;
+					if(g_FieldCurrentYPosition > 136) g_FieldCurrentYPosition = 136;
 				}
 
 			}
@@ -407,6 +409,7 @@ void BallInGoal(u8 teamScored){
 		g_Team2Score++;
 	}
 	ShowHeaderInfo();
+
 	g_MatchStatus=MATCH_AFTER_IN_GOAL;
 	g_RestartKickTeamId = (teamScored == TEAM_1) ? TEAM_2 : TEAM_1;
 	g_Timer = 0; // Start timer for celebration/reset
