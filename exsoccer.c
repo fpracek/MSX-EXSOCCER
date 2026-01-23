@@ -341,7 +341,7 @@ u16 GetOffsideLineY(u8 attackingTeamId) {
         
         for(u8 i=0; i<14; i++){
             if(g_Players[i].TeamId != defendingTeamId) continue;
-            // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // INCLUDE MOVING PLAYERS!
+            if(g_Players[i].Status == PLAYER_STATUS_NONE) continue;
             
             if (g_Players[i].Y < min1) {
                 min2 = min1;
@@ -359,7 +359,7 @@ u16 GetOffsideLineY(u8 attackingTeamId) {
         u16 max2 = 0;
          for(u8 i=0; i<14; i++){
             if(g_Players[i].TeamId != defendingTeamId) continue;
-            // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // INCLUDE MOVING PLAYERS!
+            if(g_Players[i].Status == PLAYER_STATUS_NONE) continue;
             
             if (g_Players[i].Y > max1) {
                 max2 = max1;
@@ -1026,7 +1026,9 @@ void main()
 	//Bios_SetHookDirectCallback(H_KEYI, InterruptHook);
 	//Bios_ClearHook(H_TIMI);
 	
+	SET_BANK_SEGMENT(2, 10); 
 	Print_SetTextFont(g_Font_MGL_Sample6, 1);
+	SET_BANK_SEGMENT(2, 1); 
 	Print_SetColor(15, 1);
 	Print_SetPosition(0, 0);
 	Print_DrawText("EX Soccer - 2026 Fausto Pracek");

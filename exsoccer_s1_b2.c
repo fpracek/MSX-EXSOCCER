@@ -29,1937 +29,688 @@ extern u8          	g_Team2ActivePlayer;				// Bank 1 = Segment 0
 extern u8			g_PassTargetPlayer;					// Bank 1 = Segment 0
 extern u16          g_ShotCursorX;                      // Bank 1 = Segment 0
 extern bool         g_FioBre;							// Bank 1 = Segment 0
+extern u16 			g_FrameCounter; // Bank 1 = Segment 0
+extern bool 		g_VSynch; // Bank 1 = Segment 0
+extern bool 		g_GameWith2Players;
+
+void TickAI(u8 playerId){
+	if(g_MatchStatus==MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER){
+
+        // *** REFEREE LOGIC ***
+        if (playerId == REFEREE) {
+            u16 ballX = g_Ball.X;
+            u16 ballY = g_Ball.Y;
+            u16 refX = g_Players[playerId].X;
+            u16 refY = g_Players[playerId].Y;
+            
+            // 1. Follow Ball Y (Stay aligned horizontally mostly)
+            // But prefer stay slightly above/below depending on play to avoid crossing
+            u16 targetY = ballY;
+            
+            // Kick-Off avoidance: If ball is at center (Kickoff), stay higher
+            if (ballY > 230 && ballY < 260 && ballX > 110 && ballX < 140) {
+                 targetY = ballY - 40; 
+            } else {
+                // Determine bias based on possession
+                if (g_Ball.PossessionPlayerId != NO_VALUE) {
+                    if (g_Players[g_Ball.PossessionPlayerId].TeamId == TEAM_1) targetY = ballY - 20;
+                    else targetY = ballY + 20;
+                }
+            }
+
+            // 2. X-AXIS Logic (Follow ball but keep distance)
+            u16 targetX = ballX;
+            
+            // Preferred side? Stay on the inner side (towards center) usually better?
+            // Or just try to be at X=ballX +/- Distance.
+            // Let's bias towards Center X (128).
+            
+            if (ballX < 128) targetX = ballX + 60; // Ball Left -> Ref Right
+            else targetX = ballX - 60;             // Ball Right -> Ref Left
+            
+            // Clamp Target X
+            if (targetX < FIELD_BOUND_X_LEFT + 10) targetX = FIELD_BOUND_X_LEFT + 10;
+            if (targetX > FIELD_BOUND_X_RIGHT - 10) targetX = FIELD_BOUND_X_RIGHT - 10;
+            
+            // HYSTERESIS / SMOOTHING 
+            // Only change direction if significantly far from target
+            
+            u8 moveDir = DIRECTION_NONE;
+            i16 diffY = (i16)targetY - (i16)refY;
+            i16 diffX = (i16)targetX - (i16)refX;
+            
+            // Y Threshold (Tight)
+            if (diffY < -8) moveDir = DIRECTION_UP;
+            else if (diffY > 8) moveDir = DIRECTION_DOWN;
+            
+            // X Threshold (Loose to avoid flicker)
+            bool moveX = false;
+            if (diffX < -16) moveX = true; // Need to go Left
+            else if (diffX > 16) moveX = true; // Need to go Right
+            
+            if (moveX) {
+                if (moveDir == DIRECTION_UP) {
+                    if (diffX > 0) moveDir = DIRECTION_UP_RIGHT;
+                    else moveDir = DIRECTION_UP_LEFT;
+                } else if (moveDir == DIRECTION_DOWN) {
+                    if (diffX > 0) moveDir = DIRECTION_DOWN_RIGHT;
+                    else moveDir = DIRECTION_DOWN_LEFT;
+                } else {
+                    if (diffX > 0) moveDir = DIRECTION_RIGHT;
+                    else moveDir = DIRECTION_LEFT;
+                }
+            }
+            
+            g_Players[playerId].Direction = moveDir;
+
+            // Apply Movement
+            if (g_Players[playerId].Direction == DIRECTION_UP ||
+                g_Players[playerId].Direction == DIRECTION_UP_RIGHT ||
+                g_Players[playerId].Direction == DIRECTION_UP_LEFT) {
+                g_Players[playerId].Y--;
+            }
+            if (g_Players[playerId].Direction == DIRECTION_DOWN ||
+                g_Players[playerId].Direction == DIRECTION_DOWN_RIGHT ||
+                g_Players[playerId].Direction == DIRECTION_DOWN_LEFT) {
+                 g_Players[playerId].Y++;
+            }
+            if (g_Players[playerId].Direction == DIRECTION_LEFT ||
+                g_Players[playerId].Direction == DIRECTION_UP_LEFT ||
+                g_Players[playerId].Direction == DIRECTION_DOWN_LEFT) {
+                 g_Players[playerId].X--;
+            }
+            if (g_Players[playerId].Direction == DIRECTION_RIGHT ||
+                g_Players[playerId].Direction == DIRECTION_UP_RIGHT ||
+                g_Players[playerId].Direction == DIRECTION_DOWN_RIGHT) {
+                 g_Players[playerId].X++;
+            }
+             
+            // Boundaries
+            if(g_Players[playerId].Y < FIELD_BOUND_Y_TOP) g_Players[playerId].Y = FIELD_BOUND_Y_TOP;
+            if(g_Players[playerId].Y > FIELD_BOUND_Y_BOTTOM) g_Players[playerId].Y = FIELD_BOUND_Y_BOTTOM;
+            if(g_Players[playerId].X < FIELD_BOUND_X_LEFT) g_Players[playerId].X = FIELD_BOUND_X_LEFT;
+            if(g_Players[playerId].X > FIELD_BOUND_X_RIGHT) g_Players[playerId].X = FIELD_BOUND_X_RIGHT;
+
+            // ANIMATION HANDLED BY STANDARD LOGIC (UpdatePlayerPatternByDirection)
+            // No manual override here to allow standard inertia/facing logic.
+            // Wait, we need to ensure PreviousDirection is updated if it was NONE, otherwise first step might fail
+            if (moveDir != DIRECTION_NONE) {
+                 g_Players[playerId].Status = PLAYER_STATUS_NONE; // Force not positioned
+            } else {
+                 g_Players[playerId].Status = PLAYER_STATUS_POSITIONED; // Allow rest
+            }
+
+            return;
+        }
+		
+		u8 playerTeamId = g_Players[playerId].TeamId;
+		bool ballPossessionByPlayerTeam = false;
+
+        if (g_MatchStatus == MATCH_BALL_ON_GOALKEEPER) {
+            // Force possession logic based on which GK has the ball
+            // Only way to know is to check who is the "owner" (GK with ball is possession holder)
+            if (g_Ball.PossessionPlayerId != NO_VALUE) {
+                 if (g_Players[g_Ball.PossessionPlayerId].TeamId == playerTeamId) ballPossessionByPlayerTeam = true;
+            }
+        } else {
+            // Normal Logic
+            if (g_Ball.PossessionPlayerId != NO_VALUE) {
+                if (g_Players[g_Ball.PossessionPlayerId].TeamId == playerTeamId) {
+                    ballPossessionByPlayerTeam = true;
+                }
+            } else {
+                // STICKY POSSESSION
+                if (g_Ball.LastTouchTeamId == playerTeamId) {
+                    ballPossessionByPlayerTeam = true;
+                }
+            }
+        }
+
+		// ==========================================================================================
+		// PHASE 1: ATTACK (MY TEAM HAS BALL)
+		// ==========================================================================================
+		if (ballPossessionByPlayerTeam) {
+			
+			// A: I AM THE BALL CARRIER ----------------------------------------
+			if (g_Ball.PossessionPlayerId == playerId) {
+				
+				// GK SAFETY: Do not run attacking AI for GK (prevents leaving box)
+				if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER) return;
+
+				u16 goalTopY = GK_BOX_Y_TOP_MAX; 
+				u16 goalBottomY = GK_BOX_Y_BOTTOM_MIN;
+				u16 targetY_Goal, targetX_Goal; 
+
+				if (playerTeamId == TEAM_1) { 
+					targetY_Goal = goalTopY - 20; 
+				} else { 
+					targetY_Goal = goalBottomY + 20;
+				}
+				
+				// DYNAMIC LANES - SPREAD PLAY
+				targetX_Goal = g_Players[playerId].X;
+				if (targetX_Goal > 100 && targetX_Goal < 156) {
+					if ((g_Players[playerId].Role % 2) != 0) targetX_Goal = 60; // Go Left
+					else targetX_Goal = 190; // Go Right
+				}
+				
+				if (targetX_Goal < FIELD_BOUND_X_LEFT + 20) targetX_Goal = FIELD_BOUND_X_LEFT + 20;
+				if (targetX_Goal > FIELD_BOUND_X_RIGHT - 20) targetX_Goal = FIELD_BOUND_X_RIGHT - 20;
+
+				// OBSTACLE AVOIDANCE & PASSING
+				u8 obstacleDetDist = 32;
+				bool obstacleRight = false;
+				bool obstacleLeft = false;
+				bool obstacleFront = false;
+				bool obstacleFrontNonGK = false;
+				bool dangerousOpponent = false;
+
+				int i;
+				for(i=0; i<14; i++) { 
+					if (g_Players[i].TeamId == playerTeamId) continue;
+					if (g_Players[i].Status == PLAYER_STATUS_NONE) continue;
+					if (i == playerId) continue;
+
+					i16 relX = (i16)g_Players[i].X - (i16)g_Players[playerId].X;
+					i16 relY = (i16)g_Players[i].Y - (i16)g_Players[playerId].Y;
+					
+					// DANGEROUS OPPONENT LOGIC (RE-ENGINEERED)
+					// Only panic if opponent is VERY close (tackle risk) OR blocking frontally.
+					// Ignore opponents chasing from behind unless they are literally touching.
+					
+					bool isFront = false;
+					bool isBehind = false;
+					
+					if (playerTeamId == TEAM_1) { // Moving UP (Y decreases)
+						if (relY < 0 && relY > -obstacleDetDist) isFront = true;
+						if (relY >= 0) isBehind = true;
+					} else { // Moving DOWN (Y increases)
+						if (relY > 0 && relY < obstacleDetDist) isFront = true;
+						if (relY <= 0) isBehind = true;
+					}
+
+					// 1. TACKLE RISK (Proximity)
+					// If behind, allow closer proximity before panicking (let them chase)
+					u8 safeDist = isBehind ? 12 : 16; 
+					if (relX > -safeDist && relX < safeDist && relY > -safeDist && relY < safeDist) {
+						dangerousOpponent = true;
+					}
+
+					// 2. BLOCKING PATH (Navigation)
+					if (isFront && relX > -10 && relX < 10) {
+						obstacleFront = true;
+						if (g_Players[i].Role != PLAYER_ROLE_GOALKEEPER) obstacleFrontNonGK = true;
+					}
+					
+					if (isFront || (relY < 18 && relY > -18)) { 
+						if (relX >= 0 && relX < 24) obstacleRight = true; // Obstacle is to my right
+						if (relX < 0 && relX > -24) obstacleLeft = true; // Obstacle is to my left
+					}
+				}
+
+				bool inShootingRange = false;
+				if (playerTeamId == TEAM_1) { if(g_Players[playerId].Y < FIELD_TOP_Y + 180) inShootingRange = true; }
+				else { if(g_Players[playerId].Y > FIELD_BOTTOM_Y - 180) inShootingRange = true; }
+
+				// CPU CONTROL CHECK
+				bool isHumanControlled = false;
+				if ((playerTeamId == TEAM_1 && g_Team1ActivePlayer == playerId) || 
+					(playerTeamId == TEAM_2 && g_GameWith2Players && g_Team2ActivePlayer == playerId)) {
+					isHumanControlled = true;
+				}
+
+				if (!isHumanControlled) {
+					// 1. SHOOT CHECK
+					bool inRealShootingRange = false;
+					bool inDangerousZone = false;
+					u16 goalTargetY = 0;
+					
+					if (playerTeamId == TEAM_1) {
+                         // SHOOTING RANGE (Reduced to prevent midfield shots)
+						 // Goal at 50. Box top around 120? 
+						 // Original request was "last 100 pixels", so 50+100 = 150.
+						if (g_Players[playerId].Y < (FIELD_BOUND_Y_TOP + 90)) inRealShootingRange = true;
+						
+						// DANGEROUS ZONE (Inside the box)
+                        if (g_Players[playerId].Y < (FIELD_BOUND_Y_TOP + 60)) inDangerousZone = true; 
+						goalTargetY = FIELD_BOUND_Y_TOP - 10; 
+					} else {
+                        // SHOOTING RANGE
+						// Goal at 430. Range 430-90 = 340.
+						if (g_Players[playerId].Y > (FIELD_BOUND_Y_BOTTOM - 90)) inRealShootingRange = true;
+						
+						// DANGEROUS ZONE
+                        if (g_Players[playerId].Y > (FIELD_BOUND_Y_BOTTOM - 60)) inDangerousZone = true;
+						goalTargetY = FIELD_BOUND_Y_BOTTOM + 10; 
+					}
+					
+					// DISABLE SHOOTING FOR GOALKEEPER
+					if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER) {
+						inRealShootingRange = false;
+						inDangerousZone = false;
+					}
+
+					if (inRealShootingRange) {
+						// FREQUENCY IS ALREADY LIMITTED BY TICKAI LOOP (Once every 15 frames).
+						// So we check EVERY time this function is called if in dangerous zone/shooting range.
+						
+						bool shouldCheck = true;
+						// If in normal range (not dangerous), maybe skip half the time to vary timing?
+						// if (!inDangerousZone && (g_FrameCounter & 1)) shouldCheck = false; // DISABLED TO ENSURE SHOT
+
+						if (shouldCheck) { 
+							bool clearShot = !obstacleFrontNonGK;
+							
+							// Aggressive Mode: In dangerous zone, shoot even if blocked!
+                            if (inDangerousZone) clearShot = true;
+
+							// Aggressive Mode: In dangerous zone, shoot even if blocked if not TOO close?
+							// For now, rely on clear path but check often.
+							if (clearShot) {
+								u16 shotX = 86 + ((g_FrameCounter + playerId * 13) % 68);
+								PerformShot(shotX, goalTargetY);
+								return;
+							}
+						}
+					}
+				}
+
+				bool shouldPass = false;
+				bool isPanicPass = false;
+				
+				// Strategic Passing Check: Allow checking for pass even if in shooting range, 
+				// as long as we are not in the "Panic Zone" (Dangerous Zone close to goal).
+				// We prioritize shooting in the dangerous zone, but outside allow passing.
+				
+				bool checkPassing = false;
+				
+				if (dangerousOpponent) {
+					// Immediate threat? Pass.
+					shouldPass = true;
+					isPanicPass = true;
+				}
+				else if (obstacleFront) {
+					// Blocked in front. Can I sidestep?
+					// Check field boundaries for sidestep
+					bool canGoRight = (g_Players[playerId].X < FIELD_BOUND_X_RIGHT - 20) && !obstacleRight;
+					bool canGoLeft = (g_Players[playerId].X > FIELD_BOUND_X_LEFT + 20) && !obstacleLeft;
+					
+					if (canGoRight || canGoLeft) {
+						// I can dribble around! DO NOT PASS. 
+						shouldPass = false;
+					} else {
+						// Trapped front and sides? Pass.
+						shouldPass = true;
+						isPanicPass = true;
+					}
+				}
+				else {
+					// FREE ROAM (Not blocked, not threatened)
+					// Use 50% chance to check for passes every tick (tick is every 15 frames)
+					if ((g_FrameCounter & 1) == 0) checkPassing = true;
+				}
+				
+				if (checkPassing) {
+					// Logic: If I am in shooting range, only pass if I find a REALLY good target.
+					// If I am outside shooting range, pass more freely to advance the ball.
+					shouldPass = true; 
+					isPanicPass = false;
+				}
+
+				if (shouldPass) {
+					if (!isHumanControlled) {
+						u8 bestT = NO_VALUE;
+						i32 bestScore = -2100000000;
+						int t;
+						for(t=0; t<14; t++) {
+							if(g_Players[t].TeamId != playerTeamId) continue;
+							if(t == playerId) continue;
+							if(g_Players[t].Status == PLAYER_STATUS_NONE) continue;
+							if(g_Players[t].Role == PLAYER_ROLE_GOALKEEPER) continue;
+
+							i16 dx = (i16)g_Players[t].X - (i16)g_Players[playerId].X;
+							i16 dy = (i16)g_Players[t].Y - (i16)g_Players[playerId].Y;
+							u16 adx = (dx < 0) ? -dx : dx;
+							u16 ady = (dy < 0) ? -dy : dy;
+							if (adx < 40 && ady < 40) continue; // Minimum pass distance
+							
+							// Visibility Check (Expanded Margin to 300px)
+							if (g_Players[t].Y < g_FieldCurrentYPosition - 40 || 
+								g_Players[t].Y > (g_FieldCurrentYPosition + 252)) continue;
+
+							i32 advanceScore = (playerTeamId == TEAM_1) ? -dy : dy;
+							
+							// If not in trouble, only pass forward!
+							if (!isPanicPass) {
+								if (advanceScore < 40) continue; // Must gain at least 40px ground
+							} else {
+								// Panic? Just don't pass into own goal if possible
+								if (advanceScore < -150) continue;
+							}
+							
+							i32 score = advanceScore - (adx/4); // Minimal lateral penalty
+							
+							if (score > bestScore) {
+								bestScore = score;
+								bestT = t;
+							}
+						}
+						
+						// Found a target?
+						if (bestT != NO_VALUE) {
+							// If panic, any open player is fine (-80).
+							// If creative, must be a good forward pass (+10).
+							i32 threshold = isPanicPass ? -80 : 10;
+							
+							if (bestScore > threshold) {
+								PerformPass(bestT);
+								return; // End tick
+							}
+						}
+					}
+				}
+
+				u16 finalTargetX = targetX_Goal;
+				u16 finalTargetY = targetY_Goal;
+
+				if (obstacleFront) {
+					if (!obstacleRight) {
+						finalTargetX = g_Players[playerId].X + 24;
+						if (finalTargetX > FIELD_BOUND_X_RIGHT) finalTargetX = FIELD_BOUND_X_RIGHT;
+					} else if (!obstacleLeft) {
+						finalTargetX = g_Players[playerId].X - 24; 
+						if (finalTargetX < FIELD_BOUND_X_LEFT) finalTargetX = FIELD_BOUND_X_LEFT;
+					}
+				}
+				g_Players[playerId].TargetY = finalTargetY;
+				g_Players[playerId].TargetX = finalTargetX;
+				return; // IMPORTANT: Ball Carrier handled. Stop.
+			}
+
+			// B: LOOSE BALL RETRIEVAL (DURING ATTACK) -----------------------
+			// If I just passed it, or lost it momentarily, I might be closest.
+			// Sticky possession is ON, so we are here.
+			if (g_Ball.PossessionPlayerId == NO_VALUE) {
+				// If I am closest, go to ball
+				if (GetClosestPlayerToBall(playerTeamId, NO_VALUE) == playerId) {
+					g_Players[playerId].TargetX = g_Ball.X;
+					g_Players[playerId].TargetY = g_Ball.Y;
+					return;
+				}
+			}
+
+			// C: ATTACKING SUPPORT (TEAMMATE HAS BALL) -----------------------
+			// ----------------------------------------------------------------
+			u16 midFieldY = (FIELD_BOUND_Y_TOP + FIELD_BOUND_Y_BOTTOM) / 2;
+			
+			// Base positioning based on Role
+			if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_STRIKER || 
+				g_Players[playerId].Role == PLAYER_ROLE_RIGHT_STRIKER) {
+				
+				// STRIKERS: GO DEEP
+				if (playerTeamId == TEAM_1) g_Players[playerId].TargetY = GK_BOX_Y_TOP_MAX - 10;
+				else g_Players[playerId].TargetY = GK_BOX_Y_BOTTOM_MIN + 10;
+				
+				if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetX = 64;
+				else g_Players[playerId].TargetX = 192;
+				
+			} else if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_HALFFIELDER || 
+					   g_Players[playerId].Role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
+				
+				// MIDFIELDERS: SUPPORT AHEAD
+				if (playerTeamId == TEAM_1) g_Players[playerId].TargetY = g_Ball.Y - 60;
+				else g_Players[playerId].TargetY = g_Ball.Y + 60;
+				
+				if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetX = 48;
+				else g_Players[playerId].TargetX = 208;
+				
+			} else if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_DEFENDER || 
+					   g_Players[playerId].Role == PLAYER_ROLE_RIGHT_DEFENDER) {
+				
+				// DEFENDERS: SUPPORT BEHIND
+				if (playerTeamId == TEAM_1) {
+					g_Players[playerId].TargetY = g_Ball.Y + 30;
+					// Clamp (Max 30px into opponent half)
+					if (g_Players[playerId].TargetY < (midFieldY - 30)) g_Players[playerId].TargetY = (midFieldY - 30);
+				} else {
+					g_Players[playerId].TargetY = g_Ball.Y - 30;
+					if (g_Players[playerId].TargetY > (midFieldY + 30)) g_Players[playerId].TargetY = (midFieldY + 30);
+				}
+				
+				if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_DEFENDER) g_Players[playerId].TargetX = 80;
+				else g_Players[playerId].TargetX = 176;
+
+			} else if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER) {
+				g_Players[playerId].TargetX = FIELD_POS_X_CENTER;
+				if (playerTeamId == TEAM_1) g_Players[playerId].TargetY = GK_BOX_Y_BOTTOM_MIN + 20;
+				else g_Players[playerId].TargetY = GK_BOX_Y_TOP_MAX - 20;
+				return; // GK Done
+			}
+
+			// SEPARATION LOGIC
+			for(u8 i=0; i<14; i++) {
+				if (i == playerId) continue;
+				if (g_Players[i].Status == PLAYER_STATUS_NONE) continue;
+				if (g_Players[i].TeamId != playerTeamId) continue;
+				if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
+
+				i16 dx = (i16)g_Players[playerId].TargetX - (i16)g_Players[i].X;
+				i16 dy = (i16)g_Players[playerId].TargetY - (i16)g_Players[i].Y;
+				if (dx > -75 && dx < 75 && dy > -75 && dy < 75) {
+					if (dx >= 0) g_Players[playerId].TargetX += 12; else g_Players[playerId].TargetX -= 12;
+					if (dy >= 0) g_Players[playerId].TargetY += 12; else g_Players[playerId].TargetY -= 12;
+				}
+			}
+
+			// OFFSIDE PREVENTION (Stay onside)
+            u16 offsideY = GetOffsideLineY(playerTeamId);
+            u16 effectiveLimit;
+
+            if (playerTeamId == TEAM_1) { // Attacking UP (TargetY decreases)
+                 // Limit is the maximum of (Ball.Y, OffsideLineY) because we want Y >= Limit
+                 // ...
+                 
+                 effectiveLimit = (g_Ball.Y < offsideY) ? g_Ball.Y : offsideY;
+
+                 if (g_Players[playerId].TargetY < (effectiveLimit + 10)) { 
+                     g_Players[playerId].TargetY = effectiveLimit + 10;
+                 }
+            } else { // Attacking DOWN (TargetY increases)
+                 
+                 effectiveLimit = (g_Ball.Y > offsideY) ? g_Ball.Y : offsideY;
+
+                 if (g_Players[playerId].TargetY > (effectiveLimit - 10)) {
+                     g_Players[playerId].TargetY = effectiveLimit - 10;
+                 }
+            }
+
+			// End of Attack Phase for Teammates
+			return; 
+
+		} // END ATTACK PHASE
+
+		// ==========================================================================================
+		// PHASE 2: DEFENSE (OPPONENT HAS BALL)
+		// ==========================================================================================
+			
+		// A: GOALKEEPER LOGIC --------------------------------------------
+		if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER) {
+			u16 gkTargetX = FIELD_POS_X_CENTER;
+			u16 gkTargetY;
+			u16 boxXMin = GK_BOX_X_MIN; u16 boxXMax = GK_BOX_X_MAX; 
+			u16 boxYMin, boxYMax;
+
+			if (playerTeamId == TEAM_1) { 
+				gkTargetY = FIELD_POS_Y_TEAM1_GOALKEEPER;
+				boxYMin = GK_BOX_Y_BOTTOM_MIN; boxYMax = GK_BOX_Y_BOTTOM_MAX;
+			} else { 
+				gkTargetY = FIELD_POS_Y_TEAM2_GOALKEEPER;
+				boxYMin = GK_BOX_Y_TOP_MIN; boxYMax = GK_BOX_Y_TOP_MAX;
+			}
+
+			u8 closestId = GetClosestPlayerToBall(playerTeamId, NO_VALUE);
+			bool ballInBox = (g_Ball.X > (boxXMin-5) && g_Ball.X < (boxXMax+5) && 
+							  g_Ball.Y > (boxYMin-5) && g_Ball.Y < (boxYMax+5));
+			
+			if (ballInBox && closestId == playerId) {
+				gkTargetX = g_Ball.X;
+				gkTargetY = g_Ball.Y;
+			} else {
+				if (g_Ball.X > gkTargetX + 24) gkTargetX += 16;
+				else if (g_Ball.X < gkTargetX - 24) gkTargetX -= 16;
+				else gkTargetX = g_Ball.X; 
+			}
+
+			if (gkTargetX < boxXMin) gkTargetX = boxXMin;
+			if (gkTargetX > boxXMax) gkTargetX = boxXMax;
+			if (gkTargetY < boxYMin) gkTargetY = boxYMin;
+			if (gkTargetY > boxYMax) gkTargetY = boxYMax;
+			
+			g_Players[playerId].TargetX = gkTargetX;
+			g_Players[playerId].TargetY = gkTargetY;
+			return; 
+		}
+
+		// B: FIELD PLAYERS DEFENSE ---------------------------------------
+		u8 playerClosesestToBallId = GetClosestPlayerToBall(playerTeamId, NO_VALUE);
+		
+		bool amIEffectiveChaser = (playerClosesestToBallId == playerId);
+		
+		if (g_Players[playerClosesestToBallId].Role == PLAYER_ROLE_GOALKEEPER) {
+			u16 limitY = (playerTeamId == TEAM_1) ? GK_BOX_Y_BOTTOM_MIN : GK_BOX_Y_TOP_MAX;
+			bool ballFar = false;
+			if (playerTeamId == TEAM_1 && g_Ball.Y < limitY - 10) ballFar = true;
+			if (playerTeamId == TEAM_2 && g_Ball.Y > limitY + 10) ballFar = true;
+			
+			if (ballFar) {
+				u8 nextClosest = GetClosestPlayerToBall(playerTeamId, playerClosesestToBallId);
+				if (nextClosest == playerId) amIEffectiveChaser = true;
+			}
+		}
+
+		if (amIEffectiveChaser) {
+			// EFFECTIVE CHASER: GO TO BALL
+			if (g_Ball.PossessionPlayerId == NO_VALUE) {
+				g_Players[playerId].TargetX = g_Ball.X;
+				g_Players[playerId].TargetY = g_Ball.Y;
+			} else {
+				// OPPONENT POSSESSION: Contain or Tackle
+				
+				// CPU TACKLE CHECK
+				// If we are close enough, attempt to steal.
+				i16 dx = (i16)g_Players[playerId].X - (i16)g_Ball.X;
+				i16 dy = (i16)g_Players[playerId].Y - (i16)g_Ball.Y;
+				if (dx > -12 && dx < 12 && dy > -12 && dy < 12) {
+					// Very Close! 
+					// Human controlled players must press trigger (handled in exsoccer.c).
+					// CPU controlled players do it automatically (with a probability check if needed).
+					
+					bool isHumanControlled = false;
+					if ((playerTeamId == TEAM_1 && g_Team1ActivePlayer == playerId) || 
+						(playerTeamId == TEAM_2 && g_GameWith2Players && g_Team2ActivePlayer == playerId)) {
+						isHumanControlled = true;
+					}
+					
+					if (!isHumanControlled) {
+						// 25% chance per tick to steal if in range.
+						// This simulates "reaction time" or "struggle".
+						if ((g_FrameCounter % 4) == 0) {
+							PutBallOnPlayerFeet(playerId);
+							return;
+						}
+					}
+				}
+				
+                // SMART AGGRESSIVE: Chase with prediction (less mechanical)
+                // Aim slightly ahead of ball if it's moving
+                i16 targetX = g_Ball.X;
+                i16 targetY = g_Ball.Y;
+                
+                if (g_Ball.KickMoveState != 0) {
+                     // Simple predictive lead
+                     switch(g_Ball.Direction) {
+                         case DIRECTION_UP: targetY -= 16; break;
+                         case DIRECTION_DOWN: targetY += 16; break;
+                         case DIRECTION_LEFT: targetX -= 16; break;
+                         case DIRECTION_RIGHT: targetX += 16; break;
+                         case DIRECTION_UP_RIGHT: targetY -= 12; targetX += 12; break;
+                         case DIRECTION_UP_LEFT: targetY -= 12; targetX -= 12; break;
+                         case DIRECTION_DOWN_RIGHT: targetY += 12; targetX += 12; break;
+                         case DIRECTION_DOWN_LEFT: targetY += 12; targetX -= 12; break;
+                     }
+                }
+                g_Players[playerId].TargetX = targetX;
+                g_Players[playerId].TargetY = targetY;
+
+			}
+		} else {
+			// DEFENSIVE SUPPORT / RETREAT
+			u16 defGoalY = (playerTeamId == TEAM_1) ? FIELD_BOUND_Y_BOTTOM : FIELD_BOUND_Y_TOP;
+			bool chaserBeaten = false;
+			bool opponentHasBall = (g_Ball.PossessionPlayerId != NO_VALUE && g_Players[g_Ball.PossessionPlayerId].TeamId != playerTeamId);
+
+			if (opponentHasBall && playerClosesestToBallId != NO_VALUE) {
+				u16 chaserY = g_Players[playerClosesestToBallId].Y;
+				if (playerTeamId == TEAM_1) { if (g_Ball.Y > chaserY) chaserBeaten = true; } 
+				else { if (g_Ball.Y < chaserY) chaserBeaten = true; }
+			}
+
+			if (opponentHasBall && chaserBeaten) {
+				g_Players[playerId].TargetX = g_Ball.X;
+				if (playerTeamId == TEAM_1) g_Players[playerId].TargetY = g_Ball.Y + 15;
+				else g_Players[playerId].TargetY = g_Ball.Y - 15;
+			} else {
+				// FORMATION RETREAT
+				if (playerTeamId == TEAM_1) { // Defend Bottom (High Y)
+					if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetY = FIELD_POS_Y_CENTER - 40;
+					else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetY = (g_Ball.Y + defGoalY) / 2 - 50; 
+					else g_Players[playerId].TargetY = g_Ball.Y + 40; 
+					
+					if (g_Players[playerId].Role <= PLAYER_ROLE_RIGHT_DEFENDER && g_Players[playerId].TargetY < 300) 
+						g_Players[playerId].TargetY = 300;
+
+                    // DEFENSIVE LINE HOLD (Don't hug goal line prematurely)
+                    if (g_Players[playerId].TargetY > 380 && g_Ball.Y < 380) {
+                        g_Players[playerId].TargetY = 380;
+                    }
+						
+				} else { // Defend Top (Low Y)
+					if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetY = FIELD_POS_Y_CENTER + 40;
+					else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetY = (g_Ball.Y + defGoalY) / 2 + 50;
+					else g_Players[playerId].TargetY = g_Ball.Y - 40;
+					
+					if (g_Players[playerId].Role <= PLAYER_ROLE_RIGHT_DEFENDER && g_Players[playerId].TargetY > 180) 
+						g_Players[playerId].TargetY = 180;
+
+                    // DEFENSIVE LINE HOLD (Don't hug goal line prematurely)
+                     if (g_Players[playerId].TargetY < 100 && g_Ball.Y > 100) {
+                        g_Players[playerId].TargetY = 100;
+                    }
+				}
+
+				if (g_Players[playerId].Role % 2 != 0) g_Players[playerId].TargetX = g_Ball.X - 40; 
+				else g_Players[playerId].TargetX = g_Ball.X + 40; 
+				
+				if (g_Players[playerId].TargetX < FIELD_BOUND_X_LEFT + 20) g_Players[playerId].TargetX = FIELD_BOUND_X_LEFT + 20;
+				if (g_Players[playerId].TargetX > FIELD_BOUND_X_RIGHT - 20) g_Players[playerId].TargetX = FIELD_BOUND_X_RIGHT - 20;
+			}
+
+            // SEPARATION (DEFENSE)
+			for(u8 i=0; i<14; i++) {
+                if (i == playerId) continue;
+				if (g_Players[i].TeamId != playerTeamId) continue;
+				if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
+				i16 dx = (i16)g_Players[playerId].TargetX - (i16)g_Players[i].X;
+                i16 dy = (i16)g_Players[playerId].TargetY - (i16)g_Players[i].Y;
+                if (dx > -60 && dx < 60 && dy > -60 && dy < 60) {
+					if (dx >= 0) g_Players[playerId].TargetX += 12; else g_Players[playerId].TargetX -= 12;
+					if (dy >= 0) g_Players[playerId].TargetY += 12; else g_Players[playerId].TargetY -= 12;
+				}
+			}
+		}
+	}
+}
 
-
-
-const unsigned char g_Font_MGL_Sample6[] =
-{
-// Font header data
-	0x88, // Data size [x|y]
-	0x68, // Font size [x|y]
-	0x00, // First character ASCII code (
-	0xBF, // Last character ASCII code (¿)
-// // Sprite[0] (offset:4)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[1] (offset:12)
-
-	0xFC, /* ######.. */ 
-	0xC8, /* ##..#... */ 
-	0xC8, /* ##..#... */ 
-	0xC0, /* ##...... */ 
-	0x80, /* #....... */ 
-	0x94, /* #..#.#.. */ 
-	0x94, /* #..#.#.. */ 
-	0xFC, /* ######.. */ 
-// // Sprite[2] (offset:20)
-
-	0xFC, /* ######.. */ 
-	0x70, /* .###.... */ 
-	0x60, /* .##..... */ 
-	0x60, /* .##..... */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xFC, /* ######.. */ 
-// // Sprite[3] (offset:28)
-
-	0xFC, /* ######.. */ 
-	0x04, /* .....#.. */ 
-	0x00, /* ........ */ 
-	0xF0, /* ####.... */ 
-	0x30, /* ..##.... */ 
-	0x20, /* ..#..... */ 
-	0x64, /* .##..#.. */ 
-	0xFC, /* ######.. */ 
-// // Sprite[4] (offset:36)
-
-	0xFC, /* ######.. */ 
-	0xC8, /* ##..#... */ 
-	0x88, /* #...#... */ 
-	0x18, /* ...##... */ 
-	0x18, /* ...##... */ 
-	0x88, /* #...#... */ 
-	0xC8, /* ##..#... */ 
-	0xFC, /* ######.. */ 
-// // Sprite[5] (offset:44)
-
-	0xFC, /* ######.. */ 
-	0x00, /* ........ */ 
-	0x68, /* .##.#... */ 
-	0x88, /* #...#... */ 
-	0xA8, /* #.#.#... */ 
-	0x6C, /* .##.##.. */ 
-	0x00, /* ........ */ 
-	0xFC, /* ######.. */ 
-// // Sprite[6] (offset:52)
-
-	0xC0, /* ##...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0xC0, /* ##...... */ 
-// // Sprite[7] (offset:60)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x30, /* ..##.... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[8] (offset:68)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x30, /* ..##.... */ 
-	0x48, /* .#..#... */ 
-	0x48, /* .#..#... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[9] (offset:76)
-
-	0x00, /* ........ */ 
-	0x30, /* ..##.... */ 
-	0x48, /* .#..#... */ 
-	0x84, /* #....#.. */ 
-	0x84, /* #....#.. */ 
-	0x48, /* .#..#... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-// // Sprite[10] (offset:84)
-
-	0x00, /* ........ */ 
-	0x30, /* ..##.... */ 
-	0x78, /* .####... */ 
-	0xFC, /* ######.. */ 
-	0xFC, /* ######.. */ 
-	0x78, /* .####... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-// // Sprite[11] (offset:92)
-
-	0x00, /* ........ */ 
-	0xFC, /* ######.. */ 
-	0x84, /* #....#.. */ 
-	0x84, /* #....#.. */ 
-	0x84, /* #....#.. */ 
-	0x84, /* #....#.. */ 
-	0xFC, /* ######.. */ 
-	0x00, /* ........ */ 
-// // Sprite[12] (offset:100)
-
-	0x00, /* ........ */ 
-	0xFC, /* ######.. */ 
-	0x84, /* #....#.. */ 
-	0xB4, /* #.##.#.. */ 
-	0xB4, /* #.##.#.. */ 
-	0x84, /* #....#.. */ 
-	0xFC, /* ######.. */ 
-	0x00, /* ........ */ 
-// // Sprite[13] (offset:108)
-
-	0x78, /* .####... */ 
-	0x84, /* #....#.. */ 
-	0xB4, /* #.##.#.. */ 
-	0xA4, /* #.#..#.. */ 
-	0xB4, /* #.##.#.. */ 
-	0x84, /* #....#.. */ 
-	0x78, /* .####... */ 
-	0x00, /* ........ */ 
-// // Sprite[14] (offset:116)
-
-	0x08, /* ....#... */ 
-	0x44, /* .#...#.. */ 
-	0xD4, /* ##.#.#.. */ 
-	0xD4, /* ##.#.#.. */ 
-	0xD4, /* ##.#.#.. */ 
-	0x44, /* .#...#.. */ 
-	0x08, /* ....#... */ 
-	0x00, /* ........ */ 
-// // Sprite[15] (offset:124)
-
-	0x00, /* ........ */ 
-	0x40, /* .#...... */ 
-	0xD4, /* ##.#.#.. */ 
-	0xC8, /* ##..#... */ 
-	0xD4, /* ##.#.#.. */ 
-	0x40, /* .#...... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[16] (offset:132)
-
-	0x81, /* #......# */ 
-	0x42, /* .#....#. */ 
-	0x24, /* ..#..#.. */ 
-	0x18, /* ...##... */ 
-	0x18, /* ...##... */ 
-	0x24, /* ..#..#.. */ 
-	0x42, /* .#....#. */ 
-	0x81, /* #......# */ 
-// // Sprite[17] (offset:140)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[18] (offset:148)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[19] (offset:156)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0xF0, /* ####.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[20] (offset:164)
-
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x3F, /* ..###### */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-// // Sprite[21] (offset:172)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0xFF, /* ######## */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[22] (offset:180)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[23] (offset:188)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[24] (offset:196)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x1F, /* ...##### */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[25] (offset:204)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xF0, /* ####.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[26] (offset:212)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x1F, /* ...##### */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[27] (offset:220)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0xF0, /* ####.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[28] (offset:228)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xAA, /* #.#.#.#. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[29] (offset:236)
-
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[30] (offset:244)
-
-	0x04, /* .....#.. */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x80, /* #....... */ 
-// // Sprite[31] (offset:252)
-
-	0x80, /* #....... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x20, /* ..#..... */ 
-	0x10, /* ...#.... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x04, /* .....#.. */ 
-// // Sprite[32] (offset:260)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[33] (offset:268)
-
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-// // Sprite[34] (offset:276)
-
-	0x24, /* ..#..#.. */ 
-	0x24, /* ..#..#.. */ 
-	0x48, /* .#..#... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[35] (offset:284)
-
-	0x28, /* ..#.#... */ 
-	0x7C, /* .#####.. */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x7C, /* .#####.. */ 
-	0x28, /* ..#.#... */ 
-	0x00, /* ........ */ 
-// // Sprite[36] (offset:292)
-
-	0x10, /* ...#.... */ 
-	0x38, /* ..###... */ 
-	0x50, /* .#.#.... */ 
-	0x38, /* ..###... */ 
-	0x14, /* ...#.#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x38, /* ..###... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[37] (offset:300)
-
-	0x64, /* .##..#.. */ 
-	0x68, /* .##.#... */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x2C, /* ..#.##.. */ 
-	0x4C, /* .#..##.. */ 
-	0x00, /* ........ */ 
-// // Sprite[38] (offset:308)
-
-	0x30, /* ..##.... */ 
-	0x48, /* .#..#... */ 
-	0x48, /* .#..#... */ 
-	0x30, /* ..##.... */ 
-	0x54, /* .#.#.#.. */ 
-	0x48, /* .#..#... */ 
-	0x34, /* ..##.#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[39] (offset:316)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[40] (offset:324)
-
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x08, /* ....#... */ 
-	0x00, /* ........ */ 
-// // Sprite[41] (offset:332)
-
-	0x10, /* ...#.... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[42] (offset:340)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x28, /* ..#.#... */ 
-	0x10, /* ...#.... */ 
-	0x28, /* ..#.#... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[43] (offset:348)
-
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x7C, /* .#####.. */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[44] (offset:356)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-// // Sprite[45] (offset:364)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[46] (offset:372)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-// // Sprite[47] (offset:380)
-
-	0x04, /* .....#.. */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x40, /* .#...... */ 
-	0x00, /* ........ */ 
-// // Sprite[48] (offset:388)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x4C, /* .#..##.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x64, /* .##..#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[49] (offset:396)
-
-	0x10, /* ...#.... */ 
-	0x30, /* ..##.... */ 
-	0x50, /* .#.#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[50] (offset:404)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x04, /* .....#.. */ 
-	0x18, /* ...##... */ 
-	0x20, /* ..#..... */ 
-	0x40, /* .#...... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[51] (offset:412)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x04, /* .....#.. */ 
-	0x18, /* ...##... */ 
-	0x04, /* .....#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[52] (offset:420)
-
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x48, /* .#..#... */ 
-	0x7C, /* .#####.. */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x00, /* ........ */ 
-// // Sprite[53] (offset:428)
-
-	0x7C, /* .#####.. */ 
-	0x40, /* .#...... */ 
-	0x78, /* .####... */ 
-	0x04, /* .....#.. */ 
-	0x04, /* .....#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[54] (offset:436)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x40, /* .#...... */ 
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[55] (offset:444)
-
-	0x7C, /* .#####.. */ 
-	0x04, /* .....#.. */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[56] (offset:452)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[57] (offset:460)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x3C, /* ..####.. */ 
-	0x04, /* .....#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[58] (offset:468)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[59] (offset:476)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-// // Sprite[60] (offset:484)
-
-	0x04, /* .....#.. */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x10, /* ...#.... */ 
-	0x08, /* ....#... */ 
-	0x04, /* .....#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[61] (offset:492)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[62] (offset:500)
-
-	0x20, /* ..#..... */ 
-	0x10, /* ...#.... */ 
-	0x08, /* ....#... */ 
-	0x04, /* .....#.. */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-// // Sprite[63] (offset:508)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x04, /* .....#.. */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[64] (offset:516)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x04, /* .....#.. */ 
-	0x34, /* ..##.#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[65] (offset:524)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x7C, /* .#####.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[66] (offset:532)
-
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x78, /* .####... */ 
-	0x00, /* ........ */ 
-// // Sprite[67] (offset:540)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[68] (offset:548)
-
-	0x70, /* .###.... */ 
-	0x48, /* .#..#... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x48, /* .#..#... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-// // Sprite[69] (offset:556)
-
-	0x7C, /* .#####.. */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x70, /* .###.... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[70] (offset:564)
-
-	0x7C, /* .#####.. */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x70, /* .###.... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x00, /* ........ */ 
-// // Sprite[71] (offset:572)
-
-	0x38, /* ..###... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x4C, /* .#..##.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[72] (offset:580)
-
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x7C, /* .#####.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[73] (offset:588)
-
-	0x38, /* ..###... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[74] (offset:596)
-
-	0x3C, /* ..####.. */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x48, /* .#..#... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-// // Sprite[75] (offset:604)
-
-	0x44, /* .#...#.. */ 
-	0x48, /* .#..#... */ 
-	0x50, /* .#.#.... */ 
-	0x60, /* .##..... */ 
-	0x50, /* .#.#.... */ 
-	0x48, /* .#..#... */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[76] (offset:612)
-
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[77] (offset:620)
-
-	0x44, /* .#...#.. */ 
-	0x6C, /* .##.##.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[78] (offset:628)
-
-	0x44, /* .#...#.. */ 
-	0x64, /* .##..#.. */ 
-	0x64, /* .##..#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x4C, /* .#..##.. */ 
-	0x4C, /* .#..##.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[79] (offset:636)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[80] (offset:644)
-
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x78, /* .####... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x00, /* ........ */ 
-// // Sprite[81] (offset:652)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x48, /* .#..#... */ 
-	0x34, /* ..##.#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[82] (offset:660)
-
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[83] (offset:668)
-
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x40, /* .#...... */ 
-	0x38, /* ..###... */ 
-	0x04, /* .....#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[84] (offset:676)
-
-	0x7C, /* .#####.. */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[85] (offset:684)
-
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[86] (offset:692)
-
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[87] (offset:700)
-
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x28, /* ..#.#... */ 
-	0x00, /* ........ */ 
-// // Sprite[88] (offset:708)
-
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x28, /* ..#.#... */ 
-	0x10, /* ...#.... */ 
-	0x28, /* ..#.#... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[89] (offset:716)
-
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x28, /* ..#.#... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[90] (offset:724)
-
-	0x7C, /* .#####.. */ 
-	0x04, /* .....#.. */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x40, /* .#...... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[91] (offset:732)
-
-	0x38, /* ..###... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[92] (offset:740)
-
-	0x40, /* .#...... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x10, /* ...#.... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x04, /* .....#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[93] (offset:748)
-
-	0x38, /* ..###... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[94] (offset:756)
-
-	0x10, /* ...#.... */ 
-	0x28, /* ..#.#... */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[95] (offset:764)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[96] (offset:772)
-
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[97] (offset:780)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x38, /* ..###... */ 
-	0x04, /* .....#.. */ 
-	0x3C, /* ..####.. */ 
-	0x44, /* .#...#.. */ 
-	0x3C, /* ..####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[98] (offset:788)
-
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x78, /* .####... */ 
-	0x00, /* ........ */ 
-// // Sprite[99] (offset:796)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x40, /* .#...... */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[100] (offset:804)
-
-	0x04, /* .....#.. */ 
-	0x04, /* .....#.. */ 
-	0x04, /* .....#.. */ 
-	0x3C, /* ..####.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x3C, /* ..####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[101] (offset:812)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x7C, /* .#####.. */ 
-	0x40, /* .#...... */ 
-	0x3C, /* ..####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[102] (offset:820)
-
-	0x18, /* ...##... */ 
-	0x24, /* ..#..#.. */ 
-	0x20, /* ..#..... */ 
-	0x70, /* .###.... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-// // Sprite[103] (offset:828)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x3C, /* ..####.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x3C, /* ..####.. */ 
-	0x04, /* .....#.. */ 
-	0x78, /* .####... */ 
-// // Sprite[104] (offset:836)
-
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[105] (offset:844)
-
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x18, /* ...##... */ 
-	0x00, /* ........ */ 
-// // Sprite[106] (offset:852)
-
-	0x08, /* ....#... */ 
-	0x00, /* ........ */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x08, /* ....#... */ 
-	0x48, /* .#..#... */ 
-	0x30, /* ..##.... */ 
-// // Sprite[107] (offset:860)
-
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x24, /* ..#..#.. */ 
-	0x28, /* ..#.#... */ 
-	0x30, /* ..##.... */ 
-	0x28, /* ..#.#... */ 
-	0x24, /* ..#..#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[108] (offset:868)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x18, /* ...##... */ 
-	0x00, /* ........ */ 
-// // Sprite[109] (offset:876)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x68, /* .##.#... */ 
-	0x54, /* .#.#.#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[110] (offset:884)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x58, /* .#.##... */ 
-	0x64, /* .##..#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[111] (offset:892)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x38, /* ..###... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x38, /* ..###... */ 
-	0x00, /* ........ */ 
-// // Sprite[112] (offset:900)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x78, /* .####... */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x78, /* .####... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-// // Sprite[113] (offset:908)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x3C, /* ..####.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x3C, /* ..####.. */ 
-	0x04, /* .....#.. */ 
-	0x04, /* .....#.. */ 
-// // Sprite[114] (offset:916)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x58, /* .#.##... */ 
-	0x64, /* .##..#.. */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x40, /* .#...... */ 
-	0x00, /* ........ */ 
-// // Sprite[115] (offset:924)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x3C, /* ..####.. */ 
-	0x40, /* .#...... */ 
-	0x38, /* ..###... */ 
-	0x04, /* .....#.. */ 
-	0x78, /* .####... */ 
-	0x00, /* ........ */ 
-// // Sprite[116] (offset:932)
-
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x78, /* .####... */ 
-	0x20, /* ..#..... */ 
-	0x20, /* ..#..... */ 
-	0x24, /* ..#..#.. */ 
-	0x18, /* ...##... */ 
-	0x00, /* ........ */ 
-// // Sprite[117] (offset:940)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x4C, /* .#..##.. */ 
-	0x34, /* ..##.#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[118] (offset:948)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x28, /* ..#.#... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[119] (offset:956)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x54, /* .#.#.#.. */ 
-	0x28, /* ..#.#... */ 
-	0x00, /* ........ */ 
-// // Sprite[120] (offset:964)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x44, /* .#...#.. */ 
-	0x28, /* ..#.#... */ 
-	0x10, /* ...#.... */ 
-	0x28, /* ..#.#... */ 
-	0x44, /* .#...#.. */ 
-	0x00, /* ........ */ 
-// // Sprite[121] (offset:972)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x44, /* .#...#.. */ 
-	0x3C, /* ..####.. */ 
-	0x04, /* .....#.. */ 
-	0x78, /* .####... */ 
-// // Sprite[122] (offset:980)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x7C, /* .#####.. */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[123] (offset:988)
-
-	0x18, /* ...##... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x20, /* ..#..... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x18, /* ...##... */ 
-	0x00, /* ........ */ 
-// // Sprite[124] (offset:996)
-
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[125] (offset:1004)
-
-	0x30, /* ..##.... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x08, /* ....#... */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-// // Sprite[126] (offset:1012)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x14, /* ...#.#.. */ 
-	0x28, /* ..#.#... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[127] (offset:1020)
-
-	0x81, /* #......# */ 
-	0x42, /* .#....#. */ 
-	0x24, /* ..#..#.. */ 
-	0x18, /* ...##... */ 
-	0x18, /* ...##... */ 
-	0x24, /* ..#..#.. */ 
-	0x42, /* .#....#. */ 
-	0x81, /* #......# */ 
-// // Sprite[128] (offset:1028)
-
-	0x00, /* ........ */ 
-	0x20, /* ..#..... */ 
-	0x30, /* ..##.... */ 
-	0x38, /* ..###... */ 
-	0x30, /* ..##.... */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[129] (offset:1036)
-
-	0x00, /* ........ */ 
-	0x08, /* ....#... */ 
-	0x18, /* ...##... */ 
-	0x38, /* ..###... */ 
-	0x18, /* ...##... */ 
-	0x08, /* ....#... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[130] (offset:1044)
-
-	0x10, /* ...#.... */ 
-	0x38, /* ..###... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-	0x7C, /* .#####.. */ 
-	0x38, /* ..###... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[131] (offset:1052)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x44, /* .#...#.. */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-// // Sprite[132] (offset:1060)
-
-	0x04, /* .....#.. */ 
-	0x24, /* ..#..#.. */ 
-	0x64, /* .##..#.. */ 
-	0xFC, /* ######.. */ 
-	0x60, /* .##..... */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[133] (offset:1068)
-
-	0x00, /* ........ */ 
-	0x24, /* ..#..#.. */ 
-	0x64, /* .##..#.. */ 
-	0xFC, /* ######.. */ 
-	0x64, /* .##..#.. */ 
-	0x24, /* ..#..#.. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[134] (offset:1076)
-
-	0x10, /* ...#.... */ 
-	0x38, /* ..###... */ 
-	0x7C, /* .#####.. */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x7C, /* .#####.. */ 
-	0x10, /* ...#.... */ 
-	0x7C, /* .#####.. */ 
-// // Sprite[135] (offset:1084)
-
-	0x7C, /* .#####.. */ 
-	0x10, /* ...#.... */ 
-	0x7C, /* .#####.. */ 
-	0x10, /* ...#.... */ 
-	0x10, /* ...#.... */ 
-	0x7C, /* .#####.. */ 
-	0x38, /* ..###... */ 
-	0x10, /* ...#.... */ 
-// // Sprite[136] (offset:1092)
-
-	0x00, /* ........ */ 
-	0x30, /* ..##.... */ 
-	0x78, /* .####... */ 
-	0xFC, /* ######.. */ 
-	0x30, /* ..##.... */ 
-	0x30, /* ..##.... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-// // Sprite[137] (offset:1100)
-
-	0x00, /* ........ */ 
-	0x30, /* ..##.... */ 
-	0x30, /* ..##.... */ 
-	0x30, /* ..##.... */ 
-	0xFC, /* ######.. */ 
-	0x78, /* .####... */ 
-	0x30, /* ..##.... */ 
-	0x00, /* ........ */ 
-// // Sprite[138] (offset:1108)
-
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x18, /* ...##... */ 
-	0xFC, /* ######.. */ 
-	0xFC, /* ######.. */ 
-	0x18, /* ...##... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-// // Sprite[139] (offset:1116)
-
-	0x00, /* ........ */ 
-	0x20, /* ..#..... */ 
-	0x60, /* .##..... */ 
-	0xFC, /* ######.. */ 
-	0xFC, /* ######.. */ 
-	0x60, /* .##..... */ 
-	0x20, /* ..#..... */ 
-	0x00, /* ........ */ 
-// // Sprite[140] (offset:1124)
-
-	0x81, /* #......# */ 
-	0x42, /* .#....#. */ 
-	0x24, /* ..#..#.. */ 
-	0x18, /* ...##... */ 
-	0x18, /* ...##... */ 
-	0x24, /* ..#..#.. */ 
-	0x42, /* .#....#. */ 
-	0x81, /* #......# */ 
-// // Sprite[141] (offset:1132)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x28, /* ..#.#... */ 
-	0x6C, /* .##.##.. */ 
-	0x6C, /* .##.##.. */ 
-	0x28, /* ..#.#... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[142] (offset:1140)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x10, /* ...#.... */ 
-	0x38, /* ..###... */ 
-	0x7C, /* .#####.. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[143] (offset:1148)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x7C, /* .#####.. */ 
-	0x38, /* ..###... */ 
-	0x10, /* ...#.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[144] (offset:1156)
-
-	0x81, /* #......# */ 
-	0x42, /* .#....#. */ 
-	0x24, /* ..#..#.. */ 
-	0x18, /* ...##... */ 
-	0x18, /* ...##... */ 
-	0x24, /* ..#..#.. */ 
-	0x42, /* .#....#. */ 
-	0x81, /* #......# */ 
-// // Sprite[145] (offset:1164)
-
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0xEF, /* ###.#### */ 
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[146] (offset:1172)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0xEF, /* ###.#### */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-// // Sprite[147] (offset:1180)
-
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0xE8, /* ###.#... */ 
-	0x08, /* ....#... */ 
-	0xE8, /* ###.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-// // Sprite[148] (offset:1188)
-
-	0x50, /* .#.#.... */ 
-	0x50, /* .#.#.... */ 
-	0x5F, /* .#.##### */ 
-	0x40, /* .#...... */ 
-	0x5F, /* .#.##### */ 
-	0x50, /* .#.#.... */ 
-	0x50, /* .#.#.... */ 
-	0x50, /* .#.#.... */ 
-// // Sprite[149] (offset:1196)
-
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0xEF, /* ###.#### */ 
-	0x00, /* ........ */ 
-	0xEF, /* ###.#### */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-// // Sprite[150] (offset:1204)
-
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-// // Sprite[151] (offset:1212)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[152] (offset:1220)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x3F, /* ..###### */ 
-	0x20, /* ..#..... */ 
-	0x2F, /* ..#.#### */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-// // Sprite[153] (offset:1228)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xF8, /* #####... */ 
-	0x08, /* ....#... */ 
-	0xE8, /* ###.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-// // Sprite[154] (offset:1236)
-
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0x2F, /* ..#.#### */ 
-	0x20, /* ..#..... */ 
-	0x3F, /* ..###### */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[155] (offset:1244)
-
-	0x28, /* ..#.#... */ 
-	0x28, /* ..#.#... */ 
-	0xE8, /* ###.#... */ 
-	0x08, /* ....#... */ 
-	0xF8, /* #####... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[156] (offset:1252)
-
-	0x22, /* ..#...#. */ 
-	0x88, /* #...#... */ 
-	0x22, /* ..#...#. */ 
-	0x88, /* #...#... */ 
-	0x22, /* ..#...#. */ 
-	0x88, /* #...#... */ 
-	0x22, /* ..#...#. */ 
-	0x88, /* #...#... */ 
-// // Sprite[157] (offset:1260)
-
-	0xAA, /* #.#.#.#. */ 
-	0x55, /* .#.#.#.# */ 
-	0xAA, /* #.#.#.#. */ 
-	0x55, /* .#.#.#.# */ 
-	0xAA, /* #.#.#.#. */ 
-	0x55, /* .#.#.#.# */ 
-	0xAA, /* #.#.#.#. */ 
-	0x55, /* .#.#.#.# */ 
-// // Sprite[158] (offset:1268)
-
-	0xEE, /* ###.###. */ 
-	0xBB, /* #.###.## */ 
-	0xEE, /* ###.###. */ 
-	0xBB, /* #.###.## */ 
-	0xEE, /* ###.###. */ 
-	0xBB, /* #.###.## */ 
-	0xEE, /* ###.###. */ 
-	0xBB, /* #.###.## */ 
-// // Sprite[159] (offset:1276)
-
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-// // Sprite[160] (offset:1284)
-
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[161] (offset:1292)
-
-	0x00, /* ........ */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[162] (offset:1300)
-
-	0x00, /* ........ */ 
-	0xC0, /* ##...... */ 
-	0xC0, /* ##...... */ 
-	0xC0, /* ##...... */ 
-	0xC0, /* ##...... */ 
-	0xC0, /* ##...... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[163] (offset:1308)
-
-	0x00, /* ........ */ 
-	0xE0, /* ###..... */ 
-	0xE0, /* ###..... */ 
-	0xE0, /* ###..... */ 
-	0xE0, /* ###..... */ 
-	0xE0, /* ###..... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[164] (offset:1316)
-
-	0x00, /* ........ */ 
-	0xF0, /* ####.... */ 
-	0xF0, /* ####.... */ 
-	0xF0, /* ####.... */ 
-	0xF0, /* ####.... */ 
-	0xF0, /* ####.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[165] (offset:1324)
-
-	0x00, /* ........ */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[166] (offset:1332)
-
-	0x00, /* ........ */ 
-	0xFC, /* ######.. */ 
-	0xFC, /* ######.. */ 
-	0xFC, /* ######.. */ 
-	0xFC, /* ######.. */ 
-	0xFC, /* ######.. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[167] (offset:1340)
-
-	0x00, /* ........ */ 
-	0xFE, /* #######. */ 
-	0xFE, /* #######. */ 
-	0xFE, /* #######. */ 
-	0xFE, /* #######. */ 
-	0xFE, /* #######. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[168] (offset:1348)
-
-	0x81, /* #......# */ 
-	0x42, /* .#....#. */ 
-	0x24, /* ..#..#.. */ 
-	0x18, /* ...##... */ 
-	0x18, /* ...##... */ 
-	0x24, /* ..#..#.. */ 
-	0x42, /* .#....#. */ 
-	0x81, /* #......# */ 
-// // Sprite[169] (offset:1356)
-
-	0x81, /* #......# */ 
-	0x42, /* .#....#. */ 
-	0x24, /* ..#..#.. */ 
-	0x18, /* ...##... */ 
-	0x18, /* ...##... */ 
-	0x24, /* ..#..#.. */ 
-	0x42, /* .#....#. */ 
-	0x81, /* #......# */ 
-// // Sprite[170] (offset:1364)
-
-	0x04, /* .....#.. */ 
-	0x0C, /* ....##.. */ 
-	0x0C, /* ....##.. */ 
-	0x14, /* ...#.#.. */ 
-	0x24, /* ..#..#.. */ 
-	0x24, /* ..#..#.. */ 
-	0x44, /* .#...#.. */ 
-	0x87, /* #....### */ 
-// // Sprite[171] (offset:1372)
-
-	0x87, /* #....### */ 
-	0x44, /* .#...#.. */ 
-	0x24, /* ..#..#.. */ 
-	0x24, /* ..#..#.. */ 
-	0x14, /* ...#.#.. */ 
-	0x0C, /* ....##.. */ 
-	0x0C, /* ....##.. */ 
-	0x04, /* .....#.. */ 
-// // Sprite[172] (offset:1380)
-
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0xFF, /* ######## */ 
-// // Sprite[173] (offset:1388)
-
-	0xFF, /* ######## */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[174] (offset:1396)
-
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-	0x80, /* #....... */ 
-// // Sprite[175] (offset:1404)
-
-	0x07, /* .....### */ 
-	0x07, /* .....### */ 
-	0x07, /* .....### */ 
-	0x07, /* .....### */ 
-	0x07, /* .....### */ 
-	0x07, /* .....### */ 
-	0x07, /* .....### */ 
-	0x07, /* .....### */ 
-// // Sprite[176] (offset:1412)
-
-	0x00, /* ........ */ 
-	0x70, /* .###.... */ 
-	0xD8, /* ##.##... */ 
-	0x88, /* #...#... */ 
-	0xD8, /* ##.##... */ 
-	0x50, /* .#.#.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[177] (offset:1420)
-
-	0x00, /* ........ */ 
-	0x70, /* .###.... */ 
-	0xD8, /* ##.##... */ 
-	0x88, /* #...#... */ 
-	0x98, /* #..##... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[178] (offset:1428)
-
-	0x00, /* ........ */ 
-	0x70, /* .###.... */ 
-	0xD8, /* ##.##... */ 
-	0x08, /* ....#... */ 
-	0xD8, /* ##.##... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[179] (offset:1436)
-
-	0x00, /* ........ */ 
-	0x70, /* .###.... */ 
-	0x98, /* #..##... */ 
-	0x88, /* #...#... */ 
-	0xD8, /* ##.##... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[180] (offset:1444)
-
-	0x00, /* ........ */ 
-	0x50, /* .#.#.... */ 
-	0xD8, /* ##.##... */ 
-	0x88, /* #...#... */ 
-	0xD8, /* ##.##... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[181] (offset:1452)
-
-	0x00, /* ........ */ 
-	0x70, /* .###.... */ 
-	0xC8, /* ##..#... */ 
-	0x88, /* #...#... */ 
-	0xD8, /* ##.##... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[182] (offset:1460)
-
-	0x00, /* ........ */ 
-	0x70, /* .###.... */ 
-	0xD8, /* ##.##... */ 
-	0x80, /* #....... */ 
-	0xD8, /* ##.##... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[183] (offset:1468)
-
-	0x00, /* ........ */ 
-	0x70, /* .###.... */ 
-	0xD8, /* ##.##... */ 
-	0x88, /* #...#... */ 
-	0xC8, /* ##..#... */ 
-	0x70, /* .###.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[184] (offset:1476)
-
-	0x00, /* ........ */ 
-	0xD8, /* ##.##... */ 
-	0xD8, /* ##.##... */ 
-	0xD8, /* ##.##... */ 
-	0xD8, /* ##.##... */ 
-	0xD8, /* ##.##... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[185] (offset:1484)
-
-	0x00, /* ........ */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0xF8, /* #####... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[186] (offset:1492)
-
-	0x00, /* ........ */ 
-	0x88, /* #...#... */ 
-	0xC8, /* ##..#... */ 
-	0xE8, /* ###.#... */ 
-	0xC8, /* ##..#... */ 
-	0x88, /* #...#... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[187] (offset:1500)
-
-	0x00, /* ........ */ 
-	0x88, /* #...#... */ 
-	0x98, /* #..##... */ 
-	0xB8, /* #.###... */ 
-	0x98, /* #..##... */ 
-	0x88, /* #...#... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[188] (offset:1508)
-
-	0x00, /* ........ */ 
-	0x90, /* #..#.... */ 
-	0xD8, /* ##.##... */ 
-	0xFC, /* ######.. */ 
-	0xD8, /* ##.##... */ 
-	0x90, /* #..#.... */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[189] (offset:1516)
-
-	0x00, /* ........ */ 
-	0x24, /* ..#..#.. */ 
-	0x6C, /* .##.##.. */ 
-	0xFC, /* ######.. */ 
-	0x6C, /* .##.##.. */ 
-	0x24, /* ..#..#.. */ 
-	0x00, /* ........ */ 
-	0x00, /* ........ */ 
-// // Sprite[190] (offset:1524)
-
-	0x08, /* ....#... */ 
-	0x7C, /* .#####.. */ 
-	0x88, /* #...#... */ 
-	0x00, /* ........ */ 
-	0x44, /* .#...#.. */ 
-	0xF8, /* #####... */ 
-	0x40, /* .#...... */ 
-	0x00, /* ........ */ 
-// // Sprite[191] (offset:1532)
-
-	0x00, /* ........ */ 
-	0x4C, /* .#..##.. */ 
-	0xA0, /* #.#..... */ 
-	0x20, /* ..#..... */ 
-	0x28, /* ..#.#... */ 
-	0x9C, /* #..###.. */ 
-	0x08, /* ....#... */ 
-	0x00, /* ........ */ 
-};
 
 void PutBallOnPlayerFeet(u8 playerId){
 	

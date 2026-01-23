@@ -9,66 +9,64 @@ Symbol Table
     .__.H$L.                                                    =   00000000 L
     _BallInGoal                                                     ******** GX
     _BallThrowIn                                                    ******** GX
-  7 _ClearTextFromLayerA                                            00001E60 GR
+  7 _ClearTextFromLayerA                                            000006F7 GR
     _CornerKick                                                     ******** GX
-  7 _GetBestPassTarget                                              00002837 GR
-  7 _GetClosestPlayerToBall                                         000026FF GR
-  7 _GetJoystick1Direction                                          0000244A GR
-  7 _GetJoystick2Direction                                          0000254A GR
-  7 _GetNumberString                                                000023E4 GR
-  1 _GetNumberString_str_65536_1370                                 00000001 R
-    _GetOffsideLineY                                                ******** GX
-  7 _GetPlayerIdByRole                                              00001797 GR
+  7 _GetBestPassTarget                                              000010CE GR
+  7 _GetClosestPlayerToBall                                         00000F96 GR
+  7 _GetJoystick1Direction                                          00000CE1 GR
+  7 _GetJoystick2Direction                                          00000DE1 GR
+  7 _GetNumberString                                                00000C7B GR
+  1 _GetNumberString_str_65536_1241                                 00000001 R
+  7 _GetPlayerIdByRole                                              0000002E GR
     _GoalKick                                                       ******** GX
-  7 _GoalkeeperWithBall                                             00002ECE GR
-  7 _IsTeamJoystickTriggerPressed                                   00002423 GR
+  7 _GoalkeeperWithBall                                             00001765 GR
+  7 _IsTeamJoystickTriggerPressed                                   00000CBA GR
     _Joystick_Read                                                  ******** GX
     _Keyboard_IsKeyPressed                                          ******** GX
-  7 _Math_Abs32                                                     00002821 GR
+  7 _Math_Abs32                                                     000010B8 GR
     _PerformPass                                                    ******** GX
-  7 _PerformShot                                                    000032F8 GR
+  7 _PerformShot                                                    00001BA1 GR
     _PutBallOnPlayerFeet                                            ******** GX
-  7 _PutBallSprite                                                  00001803 GR
-  1 _PutBallSprite_s_StopCooldown_65538_1268                        00000000 R
-  7 _PutPlayerSprite                                                00001C44 GR
-  7 _ResetPlayersInfo                                               00001E07 GR
+  7 _PutBallSprite                                                  0000009A GR
+  1 _PutBallSprite_s_StopCooldown_65538_1139                        00000000 R
+  7 _PutPlayerSprite                                                000004DB GR
+  7 _ResetPlayersInfo                                               0000069E GR
     _SetPlayerBallPossession                                        ******** GX
-  7 _ShowFieldZone                                                  0000254F GR
-  7 _ShowHeaderInfo                                                 000019B7 GR
-  7 _TickAI                                                         0000002B GR
-  7 _TickBallFlying                                                 000035D4 GR
-  7 _TickCheckBallBoundaries                                        00002553 GR
+  7 _ShowFieldZone                                                  00000DE6 GR
+  7 _ShowHeaderInfo                                                 0000024E GR
+  7 _TickBallFlying                                                 00001E7D GR
+  7 _TickCheckBallBoundaries                                        00000DEA GR
     _TickFieldScrollingAction                                       ******** GX
-  7 _TickGoalkeeperAnimation                                        000030D2 GR
-  7 _TickP1                                                         00001794 GR
-  7 _TickPlayerToOwnTarget                                          00001E81 GR
-  7 _TimeUp                                                         000026FE GR
-  7 _UpdatePassTarget                                               00002E9B GR
-  1 _UpdatePassTarget_passUpdateTimer_65536_1456                    00000006 R
+  7 _TickGoalkeeperAnimation                                        00001987 GR
+  7 _TickP1                                                         0000002B GR
+  7 _TickPlayerToOwnTarget                                          00000718 GR
+  7 _TimeUp                                                         00000F95 GR
+  7 _UpdatePassTarget                                               00001732 GR
+  1 _UpdatePassTarget_passUpdateTimer_65536_1327                    00000006 R
     _UpdatePlayerPatternByDirection                                 ******** GX
-  7 _UpdateSpritesPositions                                         000017F1 GR
+  7 _UpdateSpritesPositions                                         00000088 GR
     _V9_Poke16_CurrentAddr                                          ******** GX
   7 _V9_PrintLayerAStringAtPos                                      00000000 GR
-  7 _V9_PutLayerATileAtPos                                          00001BCE GR
-  7 _V9_PutLayerBTileAtPos                                          00001C09 GR
+  7 _V9_PutLayerATileAtPos                                          00000465 GR
+  7 _V9_PutLayerBTileAtPos                                          000004A0 GR
     _V9_SetWriteAddress                                             ******** GX
     _V9_WriteVRAM_CurrentAddr                                       ******** GX
     ___mulsint2slong                                                ******** GX
-  7 ___str_0                                                        00001BAC R
-  7 ___str_1                                                        00001BB0 R
-  7 ___str_2                                                        00001BB4 R
-  7 ___str_3                                                        00001BB8 R
+  7 ___str_0                                                        00000443 R
+  7 ___str_1                                                        00000447 R
+  7 ___str_2                                                        0000044B R
+  7 ___str_3                                                        0000044F R
+  7 ___str_4                                                        00000453 R
+  7 ___str_5                                                        00000457 R
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
 Hexadecimal [32-Bits]
 
 Symbol Table
 
-  7 ___str_4                                                        00001BBC R
-  7 ___str_5                                                        00001BC0 R
-  7 ___str_6                                                        00001BC4 R
-  7 ___str_7                                                        00001BC8 R
-  7 ___str_8                                                        00001BCA R
-  7 ___str_9                                                        00001BCC R
+  7 ___str_6                                                        0000045B R
+  7 ___str_7                                                        0000045F R
+  7 ___str_8                                                        00000461 R
+  7 ___str_9                                                        00000463 R
     __divsint                                                       ******** GX
     __divslong                                                      ******** GX
     __divuint                                                       ******** GX
@@ -118,13 +116,13 @@ Symbol Table
     _g_DISKVE                                                   =   0000F323 G
     _g_DPPAGE                                                   =   0000FAF5 G
     _g_DRWANG                                                   =   0000FCBD G
+    _g_DRWFLG                                                   =   0000FCBB G
+    _g_DRWSCL                                                   =   0000FCBC G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 3
 Hexadecimal [32-Bits]
 
 Symbol Table
 
-    _g_DRWFLG                                                   =   0000FCBB G
-    _g_DRWSCL                                                   =   0000FCBC G
     _g_ENSTOP                                                   =   0000FBB0 G
     _g_ERRORS                                                   =   0000FB1A G
     _g_ESCCNT                                                   =   0000FCA7 G
@@ -178,13 +176,13 @@ Symbol Table
     _g_LOW                                                      =   0000F406 G
     _g_LOWLIM                                                   =   0000FCA4 G
     _g_LSTCOM                                                   =   0000FB1E G
+    _g_LSTMOD                                                   =   0000FB1F G
+    _g_MASTER                                                   =   0000F348 G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 4
 Hexadecimal [32-Bits]
 
 Symbol Table
 
-    _g_LSTMOD                                                   =   0000FB1F G
-    _g_MASTER                                                   =   0000F348 G
     _g_MAXUPD                                                   =   0000F3EC G
     _g_MCLLEN                                                   =   0000FB3B G
     _g_MCLPTR                                                   =   0000FB3C G
@@ -238,13 +236,13 @@ Symbol Table
     _g_QUETAB                                                   =   0000F959 G
     _g_QUEUEN                                                   =   0000FB3E G
     _g_QUEUES                                                   =   0000F3F3 G
+    _g_RAMAD0                                                   =   0000F341 G
+    _g_RAMAD1                                                   =   0000F342 G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 5
 Hexadecimal [32-Bits]
 
 Symbol Table
 
-    _g_RAMAD0                                                   =   0000F341 G
-    _g_RAMAD1                                                   =   0000F342 G
     _g_RAMAD2                                                   =   0000F343 G
     _g_RAMAD3                                                   =   0000F344 G
     _g_RDPRIM                                                   =   0000F380 G
@@ -298,13 +296,13 @@ Symbol Table
     _g_SUBRID                                                   =   00000000 G
     _g_SVFFF8                                                   =   0000FFF8 G
     _g_SVFFFD                                                   =   0000FFFD G
+    _g_SecondsToEndOfMatch                                          ******** GX
+    _g_T32ATR                                                   =   0000F3C3 G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 6
 Hexadecimal [32-Bits]
 
 Symbol Table
 
-    _g_SecondsToEndOfMatch                                          ******** GX
-    _g_T32ATR                                                   =   0000F3C3 G
     _g_T32CGP                                                   =   0000F3C1 G
     _g_T32COL                                                   =   0000F3BF G
     _g_T32NAM                                                   =   0000F3BD G
@@ -358,13 +356,12 @@ Symbol Table
     _g_XSAVE                                                    =   0000FAFE G
     _g_YSAVE                                                    =   0000FB00 G
   2 _s_GkAnimPlayerId                                               00000001 R
+  2 _s_GkAnimTimer                                                  00000000 R
+  2 _s_GkRecoilY                                                    00000002 R
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 7
 Hexadecimal [32-Bits]
 
 Symbol Table
-
-  2 _s_GkAnimTimer                                                  00000000 R
-  2 _s_GkRecoilY                                                    00000002 R
 
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 8
@@ -379,7 +376,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size       10   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG2                                      size     3E76   flags    0
+   7 _SEG2                                      size     271F   flags    0
    8 _INITIALIZER                               size        3   flags    0
    9 _CABS                                      size        0   flags    8
 
