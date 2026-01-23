@@ -11,30 +11,30 @@ Symbol Table
     _GetClosestPlayerToBall                                         ******** GX
     _GetOffsideLineY                                                ******** GX
     _GetPlayerIdByRole                                              ******** GX
-  7 _GetTeamPaletteById                                             000025DB GR
+  7 _GetTeamPaletteById                                             000028DD GR
     _GoalkeeperWithBall                                             ******** GX
-  7 _HandleOffside                                                  00001F3C GR
-  7 _InitPalette                                                    0000236C GR
-  7 _IsOffside                                                      00001F80 GR
-  7 _PerformPass                                                    0000208B GR
+  7 _HandleOffside                                                  0000224D GR
+  7 _InitPalette                                                    0000266E GR
+  7 _IsOffside                                                      00002291 GR
+  7 _PerformPass                                                    00002385 GR
     _PerformShot                                                    ******** GX
-  7 _PutBallOnPlayerFeet                                            0000177F GR
-  7 _ResetBallInfo                                                  000027A9 GR
+  7 _PutBallOnPlayerFeet                                            00001A90 GR
+  7 _ResetBallInfo                                                  00002AAB GR
     _SetPlayerBallPossession                                        ******** GX
     _SetPlayerTarget                                                ******** GX
-  7 _SetTeam1Palette                                                00002581 GR
-  7 _SetTeam2Palette                                                000025AE GR
+  7 _SetTeam1Palette                                                00002883 GR
+  7 _SetTeam2Palette                                                000028B0 GR
   7 _TickAI                                                         00000000 GR
-  7 _TickBallCollision                                              00001BF6 GR
-  7 _TickFieldScrollingAction                                       00002620 GR
+  7 _TickBallCollision                                              00001F07 GR
+  7 _TickFieldScrollingAction                                       00002922 GR
     _TickPlayerToOwnTarget                                          ******** GX
-  7 _TickShowKickOff                                                00002713 GR
+  7 _TickShowKickOff                                                00002A15 GR
     _V9_PrintLayerAStringAtPos                                      ******** GX
     _V9_SetPaletteEntry                                             ******** GX
     _V9_SetRegister                                                 ******** GX
     _V9_SetScrollingBY                                              ******** GX
-  7 ___str_0                                                        00001F78 R
-  7 ___str_1                                                        000027A0 R
+  7 ___str_0                                                        00002289 R
+  7 ___str_1                                                        00002AA2 R
     __moduint                                                       ******** GX
     _g_ACPAGE                                                   =   0000FAF6 G
     _g_ASPCT1                                                   =   0000F40B G
@@ -114,8 +114,8 @@ Symbol Table
     _g_GRPPAT                                                   =   0000F3CF G
     _g_GXPOS                                                    =   0000FCB3 G
     _g_GYPOS                                                    =   0000FCB5 G
-  7 _g_GameFieldLayerATilesPalette                                  000023D1 GR
-  7 _g_GameFieldLayerBTilesPalette                                  00002401 GR
+  7 _g_GameFieldLayerATilesPalette                                  000026D3 GR
+  7 _g_GameFieldLayerBTilesPalette                                  00002703 GR
     _g_GameWith2Players                                             ******** GX
     _g_HEADER                                                   =   0000F40A G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 3
@@ -263,13 +263,13 @@ Symbol Table
     _g_SUBRID                                                   =   00000000 G
     _g_SVFFF8                                                   =   0000FFF8 G
     _g_SVFFFD                                                   =   0000FFFD G
-  7 _g_Sprites1_palette_aus                                         00002461 GR
-  7 _g_Sprites1_palette_bra                                         00002521 GR
-  7 _g_Sprites1_palette_fio                                         00002551 GR
-  7 _g_Sprites1_palette_fra                                         00002491 GR
-  7 _g_Sprites1_palette_gbr                                         000024F1 GR
-  7 _g_Sprites1_palette_ger                                         000024C1 GR
-  7 _g_Sprites1_palette_ita                                         00002431 GR
+  7 _g_Sprites1_palette_aus                                         00002763 GR
+  7 _g_Sprites1_palette_bra                                         00002823 GR
+  7 _g_Sprites1_palette_fio                                         00002853 GR
+  7 _g_Sprites1_palette_fra                                         00002793 GR
+  7 _g_Sprites1_palette_gbr                                         000027F3 GR
+  7 _g_Sprites1_palette_ger                                         000027C3 GR
+  7 _g_Sprites1_palette_ita                                         00002733 GR
     _g_T32ATR                                                   =   0000F3C3 G
     _g_T32CGP                                                   =   0000F3C1 G
     _g_T32COL                                                   =   0000F3BF G
@@ -340,7 +340,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size        0   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG1                                      size     27CA   flags    0
+   7 _SEG1                                      size     2ACC   flags    0
    8 _INITIALIZER                               size        0   flags    0
    9 _CABS                                      size        0   flags    8
 

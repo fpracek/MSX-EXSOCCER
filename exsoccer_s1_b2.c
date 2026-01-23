@@ -458,9 +458,19 @@ void TickAI(u8 playerId){
 			} else if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_HALFFIELDER || 
 					   g_Players[playerId].Role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
 				
-				// MIDFIELDERS: SUPPORT AHEAD
-				if (playerTeamId == TEAM_1) g_Players[playerId].TargetY = g_Ball.Y - 60;
-				else g_Players[playerId].TargetY = g_Ball.Y + 60;
+				// MIDFIELDERS: SUPPORT AHEAD (Limited to 3/4)
+                u16 limitY;
+				if (playerTeamId == TEAM_1) {
+                    // Attack UP. 3/4 is ~106
+                    limitY = 106;
+                    g_Players[playerId].TargetY = g_Ball.Y - 40;
+                    if (g_Players[playerId].TargetY < limitY) g_Players[playerId].TargetY = limitY;
+                } else {
+                    // Attack DOWN. 3/4 is ~318
+                    limitY = 318;
+                    g_Players[playerId].TargetY = g_Ball.Y + 40;
+                    if (g_Players[playerId].TargetY > limitY) g_Players[playerId].TargetY = limitY;
+                }
 				
 				if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetX = 48;
 				else g_Players[playerId].TargetX = 208;
@@ -469,17 +479,37 @@ void TickAI(u8 playerId){
 					   g_Players[playerId].Role == PLAYER_ROLE_RIGHT_DEFENDER) {
 				
 				// DEFENDERS: SUPPORT BEHIND
-				if (playerTeamId == TEAM_1) {
+				if (playerTeamId == TEAM_1) { // Attacking UP
 					g_Players[playerId].TargetY = g_Ball.Y + 30;
-					// Clamp (Max 30px into opponent half)
-					if (g_Players[playerId].TargetY < (midFieldY - 30)) g_Players[playerId].TargetY = (midFieldY - 30);
-				} else {
+                    
+                    if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_DEFENDER) {
+                        // STAY BACK: Limit at Half of Own Half (~318)
+                        if (g_Players[playerId].TargetY < 318) g_Players[playerId].TargetY = 318;
+                    } else {
+                        // SUPPORT: Limit at Midfield + small push (~190)
+                        if (g_Players[playerId].TargetY < 190) g_Players[playerId].TargetY = 190;
+                    }
+
+				} else { // Attacking DOWN
 					g_Players[playerId].TargetY = g_Ball.Y - 30;
-					if (g_Players[playerId].TargetY > (midFieldY + 30)) g_Players[playerId].TargetY = (midFieldY + 30);
+                    
+                    if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_DEFENDER) {
+                        // STAY BACK: Limit at Half of Own Half (~106)
+                        if (g_Players[playerId].TargetY > 106) g_Players[playerId].TargetY = 106;
+                    } else {
+                        // SUPPORT: Limit at Midfield + small push (~234)
+                        if (g_Players[playerId].TargetY > 234) g_Players[playerId].TargetY = 234;
+                    }
 				}
 				
-				if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_DEFENDER) g_Players[playerId].TargetX = 80;
-				else g_Players[playerId].TargetX = 176;
+                // Shift Defenders towards ball slightly (Center weighted)
+                u16 defTargetX;
+				if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_DEFENDER) defTargetX = 80;
+				else defTargetX = 176;
+
+                // Influence by ball X (weight 0.5)
+                defTargetX = (defTargetX + g_Ball.X) / 2;
+                g_Players[playerId].TargetX = defTargetX;
 
 			} else if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER) {
 				g_Players[playerId].TargetX = FIELD_POS_X_CENTER;
@@ -663,34 +693,92 @@ void TickAI(u8 playerId){
 			} else {
 				// FORMATION RETREAT
 				if (playerTeamId == TEAM_1) { // Defend Bottom (High Y)
-					if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetY = FIELD_POS_Y_CENTER - 40;
-					else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetY = (g_Ball.Y + defGoalY) / 2 - 50; 
-					else g_Players[playerId].TargetY = g_Ball.Y + 40; 
-					
-					if (g_Players[playerId].Role <= PLAYER_ROLE_RIGHT_DEFENDER && g_Players[playerId].TargetY < 300) 
-						g_Players[playerId].TargetY = 300;
-
-                    // DEFENSIVE LINE HOLD (Don't hug goal line prematurely)
-                    if (g_Players[playerId].TargetY > 380 && g_Ball.Y < 380) {
-                        g_Players[playerId].TargetY = 380;
+					if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) {
+                        // Strikers -> Midfield
+                        g_Players[playerId].TargetY = FIELD_POS_Y_CENTER;
                     }
+					else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) {
+                        // Mids -> Half of Own Half
+                        g_Players[playerId].TargetY = 318; 
+                    }
+					else {
+                        // Defs -> Dynamic Defensive Line
+                        // Default: Edge of penalty area context (~350)
+                         u16 defenseLineY = 350;
+                         
+                         // Check if I am the last line of defense before GK
+                         // Count teammates with Y < Me (closer to midfield)
+                         u8 teammatesAhead = 0;
+                         for(u8 k=0; k<14; k++) {
+                             if (k==playerId) continue;
+                             if (g_Players[k].TeamId == playerTeamId && g_Players[k].Role != PLAYER_ROLE_GOALKEEPER) {
+                                  if (g_Players[k].Y < g_Players[playerId].Y) teammatesAhead++;
+                             }
+                         }
+                         
+                         // If few teammates ahead, or Ball is dangerously close, Step Up
+                         if (teammatesAhead < 2 || g_Ball.Y > 280) {
+                              // "Pronti ad andare verso la palla"
+                              // If ball is within range, don't retreat blindly. Hold ground or engage.
+                              if (g_Ball.Y < g_Players[playerId].Y) {
+                                   defenseLineY = g_Ball.Y + 40; // Maintain gap
+                                   if (defenseLineY > 380) defenseLineY = 380; // Cap
+                              }
+                         }
+                         g_Players[playerId].TargetY = defenseLineY; 
+                    } 
 						
 				} else { // Defend Top (Low Y)
-					if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetY = FIELD_POS_Y_CENTER + 40;
-					else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetY = (g_Ball.Y + defGoalY) / 2 + 50;
-					else g_Players[playerId].TargetY = g_Ball.Y - 40;
-					
-					if (g_Players[playerId].Role <= PLAYER_ROLE_RIGHT_DEFENDER && g_Players[playerId].TargetY > 180) 
-						g_Players[playerId].TargetY = 180;
+					if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) {
+                        // Strikers -> Midfield
+                        g_Players[playerId].TargetY = FIELD_POS_Y_CENTER;
+                    }
+					else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) {
+                        // Mids -> Half of Own Half
+                        g_Players[playerId].TargetY = 106;
+                    }
+					else {
+                        // Defs -> Dynamic Defensive Line
+                         // Default: Edge of penalty area context (~130)
+                         u16 defenseLineY = 130;
+                         
+                         // Count teammates with Y > Me (closer to midfield)
+                         u8 teammatesAhead = 0;
+                         for(u8 k=0; k<14; k++) {
+                             if (k==playerId) continue;
+                             if (g_Players[k].TeamId == playerTeamId && g_Players[k].Role != PLAYER_ROLE_GOALKEEPER) {
+                                  if (g_Players[k].Y > g_Players[playerId].Y) teammatesAhead++;
+                             }
+                         }
 
-                    // DEFENSIVE LINE HOLD (Don't hug goal line prematurely)
-                     if (g_Players[playerId].TargetY < 100 && g_Ball.Y > 100) {
-                        g_Players[playerId].TargetY = 100;
+                         if (teammatesAhead < 2 || g_Ball.Y < 200) {
+                              if (g_Ball.Y > g_Players[playerId].Y) {
+                                   defenseLineY = g_Ball.Y - 40;
+                                   if (defenseLineY < 100) defenseLineY = 100;
+                              }
+                         }
+                         g_Players[playerId].TargetY = defenseLineY;
                     }
 				}
 
-				if (g_Players[playerId].Role % 2 != 0) g_Players[playerId].TargetX = g_Ball.X - 40; 
-				else g_Players[playerId].TargetX = g_Ball.X + 40; 
+				if (g_Players[playerId].Role % 2 != 0) {
+                     // LEFT SIDE PLAYER
+                     // Ensure we don't drift too far Right
+                     u16 intendedX = g_Ball.X - 40;
+                     if (g_Ball.X > FIELD_POS_X_CENTER && intendedX > FIELD_POS_X_CENTER + 20) {
+                          intendedX = FIELD_POS_X_CENTER + 20; // Stay central
+                     }
+                     g_Players[playerId].TargetX = intendedX; 
+                } 
+				else {
+                     // RIGHT SIDE PLAYER
+                     // Ensure we don't drift too far Left
+                     u16 intendedX = g_Ball.X + 40;
+                     if (g_Ball.X < FIELD_POS_X_CENTER && intendedX < FIELD_POS_X_CENTER - 20) {
+                          intendedX = FIELD_POS_X_CENTER - 20; // Stay central
+                     }
+                     g_Players[playerId].TargetX = intendedX; 
+                }
 				
 				if (g_Players[playerId].TargetX < FIELD_BOUND_X_LEFT + 20) g_Players[playerId].TargetX = FIELD_BOUND_X_LEFT + 20;
 				if (g_Players[playerId].TargetX > FIELD_BOUND_X_RIGHT - 20) g_Players[playerId].TargetX = FIELD_BOUND_X_RIGHT - 20;
@@ -952,7 +1040,6 @@ bool IsOffside(u8 playerId) {
     // 3. Second Last Opponent Check
     for (i = 0; i < 14; i++) {
         if (g_Players[i].TeamId == teamId) continue;
-        if (g_Players[i].Status == PLAYER_STATUS_NONE) continue;
         
         // Check if opponent is nearer/equal to goal line than player
         if (teamId == TEAM_1) { // Attacking UP
@@ -977,14 +1064,12 @@ void PerformPass(u8 toPlayerId) {
 
     // OFFSIDE CHECK
     // Ignore offside if passer is Goalkeeper
-	/*
     if (g_Players[fromId].Role != PLAYER_ROLE_GOALKEEPER) {
         if (IsOffside(toPlayerId)) {
             HandleOffside(toPlayerId);
             return;
         }
     }
-	*/
     
     // TURN PLAYER TOWARDS TARGET
     dx = (i16)g_Players[toPlayerId].X - (i16)g_Players[fromId].X;

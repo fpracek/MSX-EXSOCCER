@@ -341,7 +341,6 @@ u16 GetOffsideLineY(u8 attackingTeamId) {
         
         for(u8 i=0; i<14; i++){
             if(g_Players[i].TeamId != defendingTeamId) continue;
-            if(g_Players[i].Status == PLAYER_STATUS_NONE) continue;
             
             if (g_Players[i].Y < min1) {
                 min2 = min1;
@@ -359,7 +358,6 @@ u16 GetOffsideLineY(u8 attackingTeamId) {
         u16 max2 = 0;
          for(u8 i=0; i<14; i++){
             if(g_Players[i].TeamId != defendingTeamId) continue;
-            if(g_Players[i].Status == PLAYER_STATUS_NONE) continue;
             
             if (g_Players[i].Y > max1) {
                 max2 = max1;
