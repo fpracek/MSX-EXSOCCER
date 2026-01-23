@@ -8,6 +8,9 @@
 #define STRUCTURES_DEFINITION
 
 extern u8 g_GoalScorerId;
+extern u8 g_CornerKickSide;
+extern u8 g_CornerKickTargetId;
+extern u8 g_ActionCooldown;
 
 // STRUCTURES
 typedef struct PlayerInfo
@@ -66,6 +69,9 @@ typedef struct BallInfo
 #define GK_BOX_Y_TOP_MAX                    75
 #define GK_BOX_Y_BOTTOM_MIN                 405
 #define GK_BOX_Y_BOTTOM_MAX                 435
+
+#define CORNER_SIDE_LEFT                    0
+#define CORNER_SIDE_RIGHT                   1
 
 #define DEFENDER_MAX_Y_UP                   180 // Difensori Team 1 non salgono oltre qui (met? campo alta)
 #define DEFENDER_MIN_Y_DOWN                 300 // Difensori Team 2 non scendono oltre qui (met? campo bassa)
@@ -292,8 +298,9 @@ void UpdatePassTarget();
 u8 GetBestPassTarget(u8 passerId);										
 void PerformPass(u8 toPlayerId);										
 void PerformShot(u16 targetX, u16 targetY);                             
-void TickGoalkeeperAnimation();                                         
-void GoalkeeperWithBall(u8 teamId, bool isSteal);                       
+void TickGoalkeeperAnimation();
+void TickCornerKick();
+void GoalkeeperWithBall(u8 teamId, bool isSteal);
 void TickBallFlying();													
 u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId);				
 void MainGameLoop();													
