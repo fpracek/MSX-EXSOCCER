@@ -1279,8 +1279,9 @@ void TickCornerKick() {
             for(u8 c=0; c<14; c++) {
                  if (g_Players[c].TeamId == TEAM_1 && c != kickerId) {
                       u8 tx = g_Players[c].TargetX;
-                      if (tx >= 50 && tx <= 95) candLeft = c;
-                      if (tx >= 145 && tx <= 190) candRight = c;
+                      // Widened ranges to ensure we catch the players even if they are slightly off
+                      if (tx >= 40 && tx <= 110) candLeft = c;
+                      if (tx >= 130 && tx <= 220) candRight = c;
                  }
             }
             if (candLeft == NO_VALUE) candLeft = GetPlayerIdByRole(TEAM_1, PLAYER_ROLE_LEFT_HALFFIELDER);
@@ -1304,9 +1305,26 @@ void TickCornerKick() {
                 joyMoved = false;
             }
             
-            // Correction
-            if (g_CornerKickTargetId != candLeft && g_CornerKickTargetId != candRight && candLeft != NO_VALUE) 
-                g_CornerKickTargetId = candLeft;
+            // Correction check: Only override if current target is invalid and we have a valid alternative
+            bool validTarget = (g_CornerKickTargetId == candLeft && candLeft != NO_VALUE) || 
+                               (g_CornerKickTargetId == candRight && candRight != NO_VALUE);
+
+            if (!validTarget) {
+                 if (candLeft != NO_VALUE) g_CornerKickTargetId = candLeft;
+                 else if (candRight != NO_VALUE) g_CornerKickTargetId = candRight;
+            }
+            
+            // --- KICKER LOCK RE-ENFORCE ---
+            // Re-apply kicker lock here to prevent Input from rotating him
+            if (kickerId != NO_VALUE) {
+                u8 kDir = (g_CornerKickSide == CORNER_SIDE_LEFT) ? DIRECTION_DOWN_RIGHT : DIRECTION_DOWN_LEFT;
+                g_Players[kickerId].Direction = kDir;
+                g_Players[kickerId].PatternId = GetNoMovingPlayerPatternId(kDir);
+                g_Players[kickerId].X = g_Players[kickerId].TargetX;
+                g_Players[kickerId].Y = g_Players[kickerId].TargetY;
+                // Override status so MovePlayer might skip him if he has ball
+                g_Players[kickerId].Status = PLAYER_STATUS_POSITIONED; 
+            }
 
             // Trigger
             bool t1Trigger = IsTeamJoystickTriggerPressed(TEAM_1);

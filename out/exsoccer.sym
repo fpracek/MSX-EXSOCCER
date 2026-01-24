@@ -51,9 +51,9 @@ Symbol Table
     _TickBallFlying                                                 ******** GX
     _TickCheckBallBoundaries                                        ******** GX
   0 _TickCornerKick                                                 0000175F GR
-  1 _TickCornerKick_joyMoved_196610_1654                            00000127 R
+  1 _TickCornerKick_joyMoved_196610_1657                            00000127 R
   1 _TickCornerKick_joyMoved_196611_1647                            00000125 R
-  1 _TickCornerKick_t1Latched_196612_1651                           00000126 R
+  1 _TickCornerKick_t1Latched_196613_1654                           00000126 R
   0 _TickGoalCelebration                                            00000C01 GR
     _TickGoalkeeperAnimation                                        ******** GX
     _TickPlayerToOwnTarget                                          ******** GX
@@ -437,7 +437,7 @@ Hexadecimal [32-Bits]
 
 Area Table
 
-   0 _CODE                                      size     1D64   flags    0
+   0 _CODE                                      size     1E21   flags    0
    1 _DATA                                      size      128   flags    0
    2 _INITIALIZED                               size       15   flags    0
    3 _DABS                                      size        0   flags    8
