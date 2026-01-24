@@ -10,6 +10,7 @@
 extern u8 g_GoalScorerId;
 extern u8 g_CornerKickSide;
 extern u8 g_CornerKickTargetId;
+extern u8 g_ThrowInPlayerId;
 extern u8 g_ActionCooldown;
 
 // STRUCTURES
@@ -172,7 +173,8 @@ typedef struct BallInfo
 #define PLAYER_POSE_CELEBRATION_BACK_2 		51
 #define PLAYER_POSE_CELEBRATION_FRONT_1 	48
 #define PLAYER_POSE_CELEBRATION_FRONT_2 	49
-
+#define PLAYER_POSE_THROWIN_RIGHT_1 		28
+#define PLAYER_POSE_THROWIN_LEFT_1 			147
 #define PLAYER_ROLE_GOALKEEPER              0
 #define PLAYER_ROLE_LEFT_DEFENDER           1
 #define PLAYER_ROLE_RIGHT_DEFENDER          2
@@ -300,6 +302,10 @@ void PerformPass(u8 toPlayerId);
 void PerformShot(u16 targetX, u16 targetY);                             
 void TickGoalkeeperAnimation();
 void TickCornerKick();
+extern u8 g_ThrowInPlayerId;
+void TickThrowIn();
+void TickGoalKick();
+extern u8 g_GoalKickSide;
 void GoalkeeperWithBall(u8 teamId, bool isSteal);
 void TickBallFlying();													
 u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId);				

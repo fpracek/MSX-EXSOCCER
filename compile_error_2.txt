@@ -1,0 +1,5 @@
+In file included from e:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/msxgl.h:12,
+                 from ./exsoccer.c:7:
+e:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/core.h:76:91: fatal error: msxgl_config.h: No such file or directory
+compilation terminated.
+cannot open peep rule file

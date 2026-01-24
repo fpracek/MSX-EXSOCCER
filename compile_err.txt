@@ -1,0 +1,8 @@
+./exsoccer.c:1329: warning 112: function 'Math_GetDistance' implicit declaration
+./exsoccer.c:1329: error 101: too many parameters 
+./exsoccer.c:1361: warning 112: function 'Math_GetDistance' implicit declaration
+./exsoccer.c:1361: error 101: too many parameters 
+./exsoccer.c:1319: error 26: '_Z' not a structure/union member
+./exsoccer.c:1320: error 26: '_SpeedX' not a structure/union member
+./exsoccer.c:1320: error 26: '_SpeedY' not a structure/union member
+./exsoccer.c:1320: error 26: '_SpeedZ' not a structure/union member

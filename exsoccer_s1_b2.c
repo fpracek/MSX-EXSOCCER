@@ -41,6 +41,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 		g_MatchStatus == MATCH_AFTER_IN_GOAL || 
         g_MatchStatus == MATCH_BEFORE_CORNER_KICK || 
         g_MatchStatus == MATCH_BEFORE_GOAL_KICK || 
+        g_MatchStatus == MATCH_BEFORE_THROW_IN ||
         g_MatchStatus == MATCH_BEFORE_OFFSIDE) {
 		return;
 	}
@@ -1860,3 +1861,5 @@ void ResetBallInfo(bool resetPossessionPlayer){
 		g_Ball.PossessionPlayerId=NO_VALUE;
 	}
 }
+
+
