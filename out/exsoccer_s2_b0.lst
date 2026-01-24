@@ -3496,9 +3496,9 @@
     00000F73 DD 7E FD         [19] 3496 	ld	a, -3 (ix)
     00000F76 B7               [ 4] 3497 	or	a, a
     00000F77 28 08            [12] 3498 	jr	Z, 00143$
-                                   3499 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:668: CornerKick(TEAM_1); // TEMPORARY FORCE CORNER (was GoalKick(TEAM_2)) GP_USER
-    00000F79 3E 01            [ 7] 3500 	ld	a, #0x01
-    00000F7B CDr00r00         [17] 3501 	call	_CornerKick
+                                   3499 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:668: GoalKick(TEAM_2);
+    00000F79 3E 02            [ 7] 3500 	ld	a, #0x02
+    00000F7B CDr00r00         [17] 3501 	call	_GoalKick
     00000F7E C3rBBr0F         [10] 3502 	jp	00160$
     00000F81                       3503 00143$:
                                    3504 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:671: CornerKick(TEAM_1);

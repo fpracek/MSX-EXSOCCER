@@ -1200,27 +1200,54 @@ void TickCornerKick() {
     // -------------------------------------------------------------------------
     // 2. SETUP PHASE (0-3 Seconds: Position Players)
     // -------------------------------------------------------------------------
-    if (g_Timer < 180) {
-        g_Timer++;
-        if (g_Timer == 60) ClearTextFromLayerA(10, 12, 11);
-
-        // LOCK KICKER TO CORNER (Force Exact Position)
-        if (kickerId != NO_VALUE) {
+    
+    // Check arrival (Kicker)
+    bool kickerArrived = false;
+    if (kickerId != NO_VALUE) {
+         i16 dx = (i16)g_Players[kickerId].X - (i16)g_Players[kickerId].TargetX;
+         i16 dy = (i16)g_Players[kickerId].Y - (i16)g_Players[kickerId].TargetY;
+         
+         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
+             kickerArrived = true;
              g_Players[kickerId].X = g_Players[kickerId].TargetX;
              g_Players[kickerId].Y = g_Players[kickerId].TargetY;
              g_Players[kickerId].Status = PLAYER_STATUS_POSITIONED;
              
-             // Ensure Possession
              if (g_Ball.PossessionPlayerId != kickerId) {
                  SetPlayerBallPossession(kickerId);
                  g_Ball.PossessionPlayerId = kickerId;
                  PutBallOnPlayerFeet(kickerId);
              }
+         }
+    }
+    
+    // Check arrival (Teammates)
+    bool teammatesArrived = true;
+    for(u8 i=0; i<14; i++) {
+        if (g_Players[i].TeamId == g_RestartKickTeamId && i != kickerId && g_Players[i].Role != PLAYER_ROLE_GOALKEEPER) {
+             // If not positioned, check distance
+             if (g_Players[i].Status != PLAYER_STATUS_POSITIONED) {
+                 i16 dx = (i16)g_Players[i].X - (i16)g_Players[i].TargetX;
+                 i16 dy = (i16)g_Players[i].Y - (i16)g_Players[i].TargetY;
+                 if (dx < -6 || dx > 6 || dy < -6 || dy > 6) {
+                     teammatesArrived = false; // Someone is still far away
+                 } else {
+                     // Force arrival if close
+                     g_Players[i].X = g_Players[i].TargetX;
+                     g_Players[i].Y = g_Players[i].TargetY;
+                     g_Players[i].Status = PLAYER_STATUS_POSITIONED;
+                 }
+             }
         }
+    }
+
+    // Wait until timer finishes AND everyone has arrived
+    if (g_Timer < 180 || (kickerId != NO_VALUE && !kickerArrived) || !teammatesArrived) {
+        if (g_Timer < 180) g_Timer++;
         
         // ORIENTATION UPDATE
         for(u8 i=0; i<14; i++) {
-             // Skip if player is not positioned (running to spot) - except kicker who is forced
+             // Skip if player is not positioned (running to spot) - except kicker (handled above)
              if (i != kickerId && g_Players[i].Status != PLAYER_STATUS_POSITIONED && 
                  !(g_Players[i].X == g_Players[i].TargetX && g_Players[i].Y == g_Players[i].TargetY)) continue;
              
@@ -1257,6 +1284,9 @@ void TickCornerKick() {
         }
         return; // END SETUP PHASE
     }
+
+    // Move Text Clearing to here: When actually starting the action
+    ClearTextFromLayerA(10, 12, 11);
 
     // -------------------------------------------------------------------------
     // 3. ACTION PHASE (Movement/Kick)
@@ -1305,14 +1335,7 @@ void TickCornerKick() {
                 joyMoved = false;
             }
             
-            // Correction check: Only override if current target is invalid and we have a valid alternative
-            bool validTarget = (g_CornerKickTargetId == candLeft && candLeft != NO_VALUE) || 
-                               (g_CornerKickTargetId == candRight && candRight != NO_VALUE);
-
-            if (!validTarget) {
-                 if (candLeft != NO_VALUE) g_CornerKickTargetId = candLeft;
-                 else if (candRight != NO_VALUE) g_CornerKickTargetId = candRight;
-            }
+            // Correction removed to avoid instability. We trust the selection.
             
             // --- KICKER LOCK RE-ENFORCE ---
             // Re-apply kicker lock here to prevent Input from rotating him

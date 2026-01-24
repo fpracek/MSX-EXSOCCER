@@ -665,7 +665,7 @@ void TickCheckBallBoundaries(){
 		}
 		else{
 			if(teamId == TEAM_1){ // Attacker touched last
-				CornerKick(TEAM_1); // TEMPORARY FORCE CORNER (was GoalKick(TEAM_2)) GP_USER
+				GoalKick(TEAM_2);
 			}
 			else{ // Defender touched last
 				CornerKick(TEAM_1);

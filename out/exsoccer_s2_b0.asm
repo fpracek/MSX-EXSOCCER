@@ -3496,9 +3496,9 @@ _TickCheckBallBoundaries::
 	ld	a, -3 (ix)
 	or	a, a
 	jr	Z, 00143$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:668: CornerKick(TEAM_1); // TEMPORARY FORCE CORNER (was GoalKick(TEAM_2)) GP_USER
-	ld	a, #0x01
-	call	_CornerKick
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:668: GoalKick(TEAM_2);
+	ld	a, #0x02
+	call	_GoalKick
 	jp	00160$
 00143$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:671: CornerKick(TEAM_1);
