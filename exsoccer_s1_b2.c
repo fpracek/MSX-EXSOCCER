@@ -33,6 +33,435 @@ extern u16 			g_FrameCounter; // Bank 1 = Segment 0
 extern bool 		g_VSynch; // Bank 1 = Segment 0
 extern bool 		g_GameWith2Players;
 
+void TickTeamJoystick(u8 teamId, u8 direction){
+
+	// Block input during non-interactive states (Presentation, Cutscenes, etc.)
+	if (g_MatchStatus == MATCH_NOT_STARTED || 
+		g_MatchStatus == MATCH_PLAYERS_PRESENTATION || 
+		g_MatchStatus == MATCH_AFTER_IN_GOAL || 
+        g_MatchStatus == MATCH_BEFORE_CORNER_KICK || 
+        g_MatchStatus == MATCH_BEFORE_GOAL_KICK || 
+        g_MatchStatus == MATCH_BEFORE_OFFSIDE) {
+		return;
+	}
+
+	u8 playerId=NO_VALUE;
+	if(teamId==TEAM_1){
+		if(g_Team1ActivePlayer==NO_VALUE){
+			return;
+		}
+		else{
+			playerId=g_Team1ActivePlayer;
+		}
+	}
+	else{
+		if(g_Team2ActivePlayer==NO_VALUE){
+			return;
+		}
+		else{
+			playerId=g_Team2ActivePlayer;
+		}
+	}
+	
+	// AUTO-SWITCH ACTIVE DEFENDER
+	// Capture trigger state ONCE for the whole function to avoid consumption issues
+	bool frameTriggerPressed = IsTeamJoystickTriggerPressed(teamId);
+
+	// Case A: Opponent has ball OR Ball is Loose
+	bool canSwitch = false;
+	if (g_Ball.PossessionPlayerId == NO_VALUE) {
+		canSwitch = true; // Always allow switch on loose ball
+	} else {
+		u8 ballOwner = g_Ball.PossessionPlayerId;
+		if (g_Players[ballOwner].TeamId != teamId) {
+			canSwitch = true;
+		}
+	}
+
+	if (canSwitch) {
+		
+		// 1. Check FORCE SWITCH (Trigger)
+		bool forceSwitch = frameTriggerPressed;
+
+		// 2. Check INPUT LOCK (Stick movement)
+		// Don't auto-switch if user is actively moving stick, UNLESS forcing it with trigger.
+		bool inputActive = (direction != DIRECTION_NONE);
+
+		if (!inputActive || forceSwitch) {
+			
+			u8 closestId = GetClosestPlayerToBall(teamId, NO_VALUE);
+			
+			// BLOCK GOALKEEPER SELECTION
+			if (closestId != NO_VALUE && g_Players[closestId].Role == PLAYER_ROLE_GOALKEEPER) {
+				// If closest is GK, find the next closest field player
+				closestId = GetClosestPlayerToBall(teamId, closestId);
+			}
+
+			if (closestId != playerId && closestId != NO_VALUE) {
+				
+				if (forceSwitch) {
+					// FORCE SWITCH: Ignore hysteresis
+					if (teamId == TEAM_1) g_Team1ActivePlayer = closestId;
+					else g_Team2ActivePlayer = closestId;
+					playerId = closestId; 
+					
+					// CONSUME TRIGGER forces switch to prevent immediate tackle in the same frame
+					frameTriggerPressed = false;
+				} else {
+					// HYSTERESIS: Only switch if new player is SIGNIFICANTLY closer
+					
+					// If ball is loose, use smaller hysteresis (easier to switch)
+					u8 histThreshold = (g_Ball.PossessionPlayerId == NO_VALUE) ? 10 : 30;
+
+					// Calculate distances (Manhattan)
+					u16 distX_Curr = (g_Players[playerId].X > g_Ball.X) ? (g_Players[playerId].X - g_Ball.X) : (g_Ball.X - g_Players[playerId].X);
+					u16 distY_Curr = (g_Players[playerId].Y > g_Ball.Y) ? (g_Players[playerId].Y - g_Ball.Y) : (g_Ball.Y - g_Players[playerId].Y);
+					u16 distCurr = distX_Curr + distY_Curr;
+
+					u16 distX_New = (g_Players[closestId].X > g_Ball.X) ? (g_Players[closestId].X - g_Ball.X) : (g_Ball.X - g_Players[closestId].X);
+					u16 distY_New = (g_Players[closestId].Y > g_Ball.Y) ? (g_Players[closestId].Y - g_Ball.Y) : (g_Ball.Y - g_Players[closestId].Y);
+					u16 distNew = distX_New + distY_New;
+
+					if (distNew < (distCurr - histThreshold)) {
+						if (teamId == TEAM_1) g_Team1ActivePlayer = closestId;
+						else g_Team2ActivePlayer = closestId;
+						playerId = closestId;
+					}
+				}
+			}
+		}
+	}
+	
+	if (g_Players[playerId].Status == PLAYER_STATUS_POSITIONED) return;
+
+	// -------------------------------------------------------------
+	// INPUT ACTION HANDLERS
+	// -------------------------------------------------------------
+	
+	// Prevent accidental double-trigger (Steal -> Pass)
+	if (g_ActionCooldown > 0) frameTriggerPressed = false;
+
+    // AUTO-POSSESSION ON TRIGGER (For Loose Balls)
+    if (frameTriggerPressed && g_Ball.PossessionPlayerId == NO_VALUE) {
+        i16 dx = (i16)g_Players[playerId].X - (i16)g_Ball.X;
+        i16 dy = (i16)g_Players[playerId].Y - (i16)g_Ball.Y;
+        if (dx > -16 && dx < 16 && dy > -16 && dy < 16) {
+             PutBallOnPlayerFeet(playerId);
+        }
+    }
+
+	if(g_Ball.PossessionPlayerId==playerId){
+		
+		// If recovering from tackle/action, do not update movement/animation
+		// if (g_ActionCooldown > 0) return; // DISABLED: Blocking passes unintentionally
+
+		if (frameTriggerPressed) {
+
+			// 1. SHOOT CHECK
+			// Only allow shots during actual gameplay
+			if (g_MatchStatus == MATCH_IN_ACTION) {
+				// Prevent shooting if cooldown is active
+				if (g_ActionCooldown > 0) {
+					// Do nothing (block shot)
+				} else {
+					bool isShooting = false;
+					u8 checkDir = direction;
+				
+				// Fallback: If input is neutral (e.g. stopped), use player's current facing
+				// However, since facing is cleared on stop, we rely on input primarily. 
+				// If the user effectively pressed direction+trigger, 'direction' is valid.
+				
+				u16 plY = g_Players[playerId].Y;
+				u16 plX = g_Players[playerId].X;
+
+				if (teamId == TEAM_1) { // Attacking UP (Towards Top)
+					// Shooting Zone: Up to 120 pixels from goal line
+					if (plY >= FIELD_BOUND_Y_TOP && plY <= (FIELD_BOUND_Y_TOP + 120)) { 
+						if (checkDir == DIRECTION_UP || checkDir == DIRECTION_UP_LEFT || checkDir == DIRECTION_UP_RIGHT) {
+							
+							// ANGLE CONSTRAINT (Near Goal Line < 20px)
+							bool allowed = true;
+							if (plY < (FIELD_BOUND_Y_TOP + 20)) {
+								if (plX < (GOAL_X_MIN - 15) || plX > (GOAL_X_MAX + 15)) allowed = false;
+							}
+							
+							if (allowed) {
+								isShooting = true;
+								PerformShot(g_ShotCursorX, FIELD_BOUND_Y_TOP - 10);
+							}
+						}
+					}
+				} else { // Attacking DOWN (Towards Bottom)
+					// Shooting Zone: Up to 120 pixels from goal line
+					if (plY <= FIELD_BOUND_Y_BOTTOM && plY >= (FIELD_BOUND_Y_BOTTOM - 120)) { 
+						if (checkDir == DIRECTION_DOWN || checkDir == DIRECTION_DOWN_LEFT || checkDir == DIRECTION_DOWN_RIGHT) {
+							
+							// ANGLE CONSTRAINT
+							bool allowed = true;
+							if (plY > (FIELD_BOUND_Y_BOTTOM - 20)) {
+								if (plX < (GOAL_X_MIN - 15) || plX > (GOAL_X_MAX + 15)) allowed = false;
+							}
+
+							if (allowed) {
+								isShooting = true;
+								PerformShot(g_ShotCursorX, FIELD_BOUND_Y_BOTTOM + 10);
+							}
+						}
+					}
+				}
+
+				if (isShooting) {
+					g_ActionCooldown = 20;
+					return;
+				}
+                } // Close cooldown check else
+			}
+	
+			// 2. PASS LOGIC
+			// If not shooting, always try to pass if Trigger is pressed.
+			
+			// UPDATE DIRECTION FOR ACCURATE TARGETING
+			// Ensure the targeting cone uses the current input direction, not the old facing
+			if(direction != DIRECTION_NONE){
+				g_Players[playerId].Direction = direction;
+			}
+
+			// Always recalculate best target when trigger is pressed
+			g_PassTargetPlayer = GetBestPassTarget(playerId);
+			
+			if (g_PassTargetPlayer != NO_VALUE) {
+				// Execute Pass
+				PerformPass(g_PassTargetPlayer);
+				// Consume trigger event to avoid repeated calls
+				frameTriggerPressed = false;
+				return; 
+			}
+		}
+
+		if((g_FrameCounter % 4)!=0){ 
+			return;
+		}
+
+		if(g_Ball.KickMoveState==NO_VALUE){
+			g_Ball.KickMoveState=0;
+		}
+
+		u8 moveDir = direction;
+		if(g_Ball.KickMoveState != 0){
+			moveDir = g_Players[playerId].Direction;
+		}
+
+		if(moveDir==DIRECTION_NONE){
+			g_Players[playerId].Status=PLAYER_STATUS_POSITIONED;
+			PutBallOnPlayerFeet(playerId);
+			if(g_Players[playerId].PreviousDirection!=DIRECTION_NONE){
+				g_Players[playerId].PatternId=GetNoMovingPlayerPatternId(g_Players[playerId].PreviousDirection);
+			}
+			g_Ball.KickMoveState=0;
+		}
+		else{
+			// Offset di base per la palla (distanza "attaccata" ai piedi) per ogni direzione
+			// Indicizzati: NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
+			// Modifica questi valori per aggiustare la posizione "zero" della palla
+			const u8 BallBaseDistX[] = { 0, 0, 4, 6, 4, 0, 4, 6, 4 };
+			const u8 BallBaseDistY[] = { 0, 6, 4, 0, 4, 6, 4, 0, 4 };
+			
+			// Correzione fine posizione palla quando ferma (per allineamento perfetto ai piedi/sprite)
+			// Queste correzioni vengono applicate anche durante il movimento per mantenere la palla all'altezza corretta
+			// Indicizzati: NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
+			
+			// DOWN_RIGHT: index 4 -> X+2, Y+2 (laterale dx e basso)
+			// DOWN_LEFT: index 6 -> X-2 (ma i valori sono di correzione assoluta per l'offset, quindi se voglio allontanare 
+			//                       dal corpo in X, e la formula usa X - distX, devo AUMENTARE distX o modificare BallAlignCorrectX negativamente?)
+			// 
+			// Formula LEFT/DOWN_LEFT: X = PlayerX - distX + BallAlignCorrectX
+			// Se voglio la palla pi? a sinistra (distante dal corpo), devo diminuire X, quindi BallAlignCorrectX negativo.
+			//
+			// Formula RIGHT/DOWN_RIGHT: X = PlayerX + distX + BallAlignCorrectX
+			// Se voglio la palla pi? a destra (distante dal corpo), devo aumentare X, quindi BallAlignCorrectX positivo.
+			//
+			// DOWN_RIGHT (4): +2px X, +2px Y.  => BallAlignCorrectX[4] = 2, BallAlignCorrectY[4] = 2
+			// DOWN_LEFT (6): -2px X, +2px Y. => BallAlignCorrectX[6] = -2, BallAlignCorrectY[6] = 2
+
+			const i8 BallAlignCorrectX[] = { 0, 0, 0, 0, 2, 0, -2, 0, 0 };
+			const i8 BallAlignCorrectY[] = { 0, 0, 0, 8, 2, -2, 2, 8, 0 };
+
+			const u8 DribbleAnimOffsets[] = {5, 4, 2, 0};
+			const u8 DribbleAnimOffsetsDiag[] = {3, 3, 1, 0};
+			
+			u8 animStep = g_Ball.KickMoveState;
+			u8 diagStep = (animStep % 2) ? 1 : 2;
+
+			u8 currentOffset = DribbleAnimOffsets[animStep];
+			u8 currentOffsetDiag = DribbleAnimOffsetsDiag[animStep];
+
+			u8 distX = BallBaseDistX[moveDir] + ((moveDir==DIRECTION_UP || moveDir==DIRECTION_DOWN) ? 0 : (moveDir == DIRECTION_LEFT || moveDir == DIRECTION_RIGHT ? currentOffset : currentOffsetDiag));
+			u8 distY = BallBaseDistY[moveDir] + ((moveDir==DIRECTION_LEFT || moveDir==DIRECTION_RIGHT) ? 0 : (moveDir == DIRECTION_UP || moveDir == DIRECTION_DOWN ? currentOffset : currentOffsetDiag));
+
+			switch(moveDir){
+				case DIRECTION_UP:
+					g_Players[playerId].Y -= 2;
+					g_Ball.Y = g_Players[playerId].Y - distY + BallAlignCorrectY[moveDir];
+					g_Ball.X = g_Players[playerId].X + BallAlignCorrectX[moveDir];
+					break;
+				case DIRECTION_DOWN:
+					g_Players[playerId].Y += 2;
+					g_Ball.Y = g_Players[playerId].Y + distY + BallAlignCorrectY[moveDir]+5;
+					g_Ball.X = g_Players[playerId].X + BallAlignCorrectX[moveDir];
+					break;
+				case DIRECTION_LEFT:
+					g_Players[playerId].X -= 2;
+					g_Ball.X = g_Players[playerId].X - distX + BallAlignCorrectX[moveDir];
+					g_Ball.Y = g_Players[playerId].Y + BallAlignCorrectY[moveDir]-4;
+					break;
+				case DIRECTION_RIGHT:
+					g_Players[playerId].X += 2;
+					g_Ball.X = g_Players[playerId].X + distX + BallAlignCorrectX[moveDir];
+					g_Ball.Y = g_Players[playerId].Y + BallAlignCorrectY[moveDir]-4;
+					break;
+				case DIRECTION_UP_RIGHT:
+					g_Players[playerId].Y -= diagStep;
+					g_Players[playerId].X += diagStep;
+					g_Ball.Y = g_Players[playerId].Y - distY + BallAlignCorrectY[moveDir];
+					g_Ball.X = g_Players[playerId].X + distX + BallAlignCorrectX[moveDir];
+					break;
+				case DIRECTION_UP_LEFT:
+					g_Players[playerId].Y -= diagStep;
+					g_Players[playerId].X -= diagStep;
+					g_Ball.Y = g_Players[playerId].Y - distY + BallAlignCorrectY[moveDir];
+					g_Ball.X = g_Players[playerId].X - distX + BallAlignCorrectX[moveDir];
+					break;
+				case DIRECTION_DOWN_RIGHT:
+					g_Players[playerId].Y += diagStep;
+					g_Players[playerId].X += diagStep;
+					g_Ball.Y = g_Players[playerId].Y + distY + BallAlignCorrectY[moveDir];
+					g_Ball.X = g_Players[playerId].X + distX + BallAlignCorrectX[moveDir];
+					break;
+				case DIRECTION_DOWN_LEFT:
+					g_Players[playerId].Y += diagStep;
+					g_Players[playerId].X -= diagStep;
+					g_Ball.Y = g_Players[playerId].Y + distY + BallAlignCorrectY[moveDir];
+					g_Ball.X = g_Players[playerId].X - distX + BallAlignCorrectX[moveDir];
+					break;
+			}
+			g_Players[playerId].TargetY=g_Players[playerId].Y;
+			g_Players[playerId].TargetX=g_Players[playerId].X;
+			g_Players[playerId].Status=PLAYER_STATUS_HAS_BALL; 
+			g_Players[playerId].Direction=moveDir;
+			
+			g_Players[playerId].PatternId=GetNoMovingPlayerPatternId(g_Players[playerId].PreviousDirection);
+			g_Players[playerId].PreviousDirection=g_Players[playerId].Direction;
+			
+			g_Ball.Direction = moveDir;
+
+			g_Ball.KickMoveState++;
+			if(g_Ball.KickMoveState>3){
+				g_Ball.KickMoveState=0;
+			}
+		}
+	}
+	else{
+		// 2. DEFENSE ACTION: TACKLE / STEAL
+		// If I don't have the ball, but I'm close to it (or the opponent who has it)
+		if (frameTriggerPressed) {
+			i16 dx = (i16)g_Players[playerId].X - (i16)g_Ball.X;
+			i16 dy = (i16)g_Players[playerId].Y - (i16)g_Ball.Y;
+			
+			// Hitbox for tackle: 16x16 pixels approx
+			if (dx > -16 && dx < 16 && dy > -16 && dy < 16) {
+				
+				// SLIDE TACKLE 'ALWAYS' LOGIC
+                // Select pose based on relative position (Quadrant)
+                u8 slidePose = 0;
+                
+                // dx = Player.X - Ball.X
+                // dy = Player.Y - Ball.Y
+                
+                if (dy < 0) {
+                    // Player is ABOVE Ball (Up)
+                    if (dx < 0) slidePose = PLAYER_POSE_TACKLE_FROM_UP_LEFT;    // UP-LEFT -> Slides towards Bottom-Right?
+                    else        slidePose = PLAYER_POSE_TACKLE_FROM_UP_RIGHT;   // UP-RIGHT -> Slides towards Bottom-Left?
+                } else {
+                    // Player is BELOW Ball (Down)
+                    if (dx < 0) slidePose = PLAYER_POSE_TACKLE_FROM_DOWN_LEFT;  // DOWN-LEFT -> Slides towards Top-Right?
+                    else        slidePose = PLAYER_POSE_TACKLE_FROM_DOWN_RIGHT; // DOWN-RIGHT -> Slides towards Top-Left?
+                }
+
+                if (slidePose != 0) {
+					g_Players[playerId].PatternId = slidePose;
+				}
+
+				// Steal the ball!
+				PutBallOnPlayerFeet(playerId);
+				
+				if (slidePose != 0) {
+					g_Players[playerId].Status = PLAYER_STATUS_POSITIONED; // Lock visual (Override HAS_BALL)
+				}
+				
+				g_ActionCooldown = 15; // Set 15 frames cooldown to avoid immediate pass
+				return;
+			}
+		}
+		
+		if((g_FrameCounter % 4)!=0){ 
+			return;
+		}
+
+		switch(direction){
+			case DIRECTION_UP:
+				g_Players[playerId].Y=g_Players[playerId].Y-2;
+				break;
+			case DIRECTION_DOWN:
+				g_Players[playerId].Y=g_Players[playerId].Y+2;
+				break;
+			case DIRECTION_LEFT:
+				g_Players[playerId].X=g_Players[playerId].X-2;
+				break;
+			case DIRECTION_RIGHT:
+				g_Players[playerId].X=g_Players[playerId].X+2;
+				break;
+			case DIRECTION_UP_RIGHT:
+				g_Players[playerId].Y=g_Players[playerId].Y-2;
+				g_Players[playerId].X=g_Players[playerId].X+2;
+				break;
+			case DIRECTION_UP_LEFT:
+				g_Players[playerId].Y=g_Players[playerId].Y-2;
+				g_Players[playerId].X=g_Players[playerId].X-2;
+				break;
+			case DIRECTION_DOWN_RIGHT:
+				g_Players[playerId].Y=g_Players[playerId].Y+2;
+				g_Players[playerId].X=g_Players[playerId].X+2;
+				break;
+			case DIRECTION_DOWN_LEFT:
+				g_Players[playerId].Y=g_Players[playerId].Y+2;
+				g_Players[playerId].X=g_Players[playerId].X-2;
+				break;
+		}
+
+		// Field Boundaries Clamp
+		if(g_Players[playerId].Y < FIELD_BOUND_Y_TOP) g_Players[playerId].Y = FIELD_BOUND_Y_TOP;
+		if(g_Players[playerId].Y > FIELD_BOUND_Y_BOTTOM) g_Players[playerId].Y = FIELD_BOUND_Y_BOTTOM;
+		
+		g_Players[playerId].TargetY=g_Players[playerId].Y;
+		g_Players[playerId].TargetX=g_Players[playerId].X;
+		if(direction==DIRECTION_NONE){
+			g_Players[playerId].Status=PLAYER_STATUS_POSITIONED;
+			if(g_Players[playerId].PreviousDirection!=DIRECTION_NONE){
+				g_Players[playerId].PatternId=GetNoMovingPlayerPatternId(g_Players[playerId].PreviousDirection);
+			}
+			
+		}
+		else{
+			g_Players[playerId].Status=PLAYER_STATUS_NONE;
+		}
+		
+		g_Players[playerId].Direction=direction;
+		g_Players[playerId].PreviousDirection=g_Players[playerId].Direction;
+	}
+
+	
+	
+}
 void TickAI(u8 playerId){
 	if(g_MatchStatus==MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER){
 

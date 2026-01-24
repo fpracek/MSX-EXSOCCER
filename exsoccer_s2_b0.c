@@ -317,11 +317,15 @@ void TickPlayerToOwnTarget(){
 
 			if (i == REFEREE && (g_MatchStatus == MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER)) continue;
 			
-			// SKIP ACTIVE PLAYERS (Controlled by Joystick)
-			if (g_Team1ActivePlayer != NO_VALUE && i == g_Team1ActivePlayer) continue;
-			if (g_GameWith2Players && g_Team2ActivePlayer != NO_VALUE && i == g_Team2ActivePlayer) continue;
-			if (g_GameWith2Players && i == g_Team2ActivePlayer) {
-				continue;
+			// SKIP ACTIVE PLAYERS (Controlled by Joystick) - UNLESS performing a set piece setup
+			bool isSetPieceSetup = (g_MatchStatus == MATCH_BEFORE_CORNER_KICK || g_MatchStatus == MATCH_BEFORE_GOAL_KICK || g_MatchStatus == MATCH_BEFORE_OFFSIDE);
+			
+			if (!isSetPieceSetup) {
+				if (g_Team1ActivePlayer != NO_VALUE && i == g_Team1ActivePlayer) continue;
+				if (g_GameWith2Players && g_Team2ActivePlayer != NO_VALUE && i == g_Team2ActivePlayer) continue;
+				if (g_GameWith2Players && i == g_Team2ActivePlayer) {
+					continue;
+				}
 			}
 			
 			// Check if this specific player is in position
@@ -386,17 +390,34 @@ void TickPlayerToOwnTarget(){
 		        if(g_Players[i].Y > FIELD_BOUND_Y_BOTTOM) g_Players[i].Y = FIELD_BOUND_Y_BOTTOM;
                 if(g_Players[i].X < FIELD_BOUND_X_LEFT) g_Players[i].X = FIELD_BOUND_X_LEFT;
 		        if(g_Players[i].X > FIELD_BOUND_X_RIGHT) g_Players[i].X = FIELD_BOUND_X_RIGHT;
+			}
+            
+            // PutBall Logic (Moved outside to ensure it runs even when stopped)
+            if (g_MatchStatus == MATCH_IN_ACTION || (isSetPieceSetup && g_Ball.PossessionPlayerId == i)) {
+                if (g_Ball.PossessionPlayerId == i) {
+                    // Only animate dribble if actually moving (not in position)
+                    if (!playerInPosition && g_MatchStatus == MATCH_IN_ACTION) {
+                        if (g_Ball.KickMoveState == NO_VALUE) g_Ball.KickMoveState = 0;
+                        g_Ball.KickMoveState++;
+                        if (g_Ball.KickMoveState > 3) g_Ball.KickMoveState = 0;
+                    } else {
+                        g_Ball.KickMoveState = 0;
+                    }
+                    PutBallOnPlayerFeet(i);
+                }
+            }
 
-				if (g_MatchStatus == MATCH_IN_ACTION) {
-                    if (g_Ball.PossessionPlayerId == i) {
-						if (g_Ball.KickMoveState == NO_VALUE) g_Ball.KickMoveState = 0;
-						g_Ball.KickMoveState++;
-						if (g_Ball.KickMoveState > 3) g_Ball.KickMoveState = 0;
-                        PutBallOnPlayerFeet(i);
+			if (playerInPosition) {
+                // Stop animation when in position (Fix Moonwalking)
+				if (g_MatchStatus == MATCH_BEFORE_CORNER_KICK || g_MatchStatus == MATCH_BEFORE_GOAL_KICK || g_MatchStatus == MATCH_BEFORE_OFFSIDE) {
+					if (g_Players[i].Status != PLAYER_STATUS_POSITIONED) {
+                        g_Players[i].Status = PLAYER_STATUS_POSITIONED;
+						g_Players[i].Direction = DIRECTION_NONE;
+                        u8 useDir = g_Players[i].PreviousDirection;
+                        if (useDir == DIRECTION_NONE) useDir = DIRECTION_DOWN; // Fallback
+						g_Players[i].PatternId = GetNoMovingPlayerPatternId(useDir);
 					}
 				}
-                // REMOVED manual LastPose toggling here to avoid double-toggle cancellation
-			} else {
                 // Not Moving (In Position)
                 if(g_MatchStatus==MATCH_IN_ACTION){
 				    g_Players[i].Status=PLAYER_STATUS_POSITIONED;
@@ -644,7 +665,7 @@ void TickCheckBallBoundaries(){
 		}
 		else{
 			if(teamId == TEAM_1){ // Attacker touched last
-				GoalKick(TEAM_2);
+				CornerKick(TEAM_1); // TEMPORARY FORCE CORNER (was GoalKick(TEAM_2)) GP_USER
 			}
 			else{ // Defender touched last
 				CornerKick(TEAM_1);
@@ -820,6 +841,11 @@ u8 GetBestPassTarget(u8 passerId) {
 }
 
 void UpdatePassTarget() {
+    // Skip auto-targeting during set pieces (Manual selection rules)
+    if (g_MatchStatus != MATCH_IN_ACTION && g_MatchStatus != MATCH_BALL_ON_GOALKEEPER) {
+        return; 
+    }
+
 	static u8 passUpdateTimer = 0;
 	u8 carrier = g_Ball.PossessionPlayerId;
     
