@@ -1962,13 +1962,13 @@ _CornerKick::
 	add	hl, sp
 	ld	sp, hl
 	ld	-2 (ix), a
-;./exsoccer.c:433: V9_PrintLayerAStringAtPos(18,18,"CORNER KICK");
+;./exsoccer.c:433: V9_PrintLayerAStringAtPos(10,12,"CORNER KICK");
 	ld	hl, #___str_3
 	push	hl
+	ld	l, #0x0c
 ;	spillPairReg hl
 ;	spillPairReg hl
-	ld	a,#0x12
-	ld	l,a
+	ld	a, #0x0a
 	call	_V9_PrintLayerAStringAtPos
 ;./exsoccer.c:434: g_MatchStatus=MATCH_BEFORE_CORNER_KICK;
 	ld	hl, #_g_MatchStatus
@@ -7102,17 +7102,17 @@ _TickCornerKick::
 	inc	(hl)
 ;./exsoccer.c:1589: TickPlayerToOwnTarget();
 	call	_TickPlayerToOwnTarget
-;./exsoccer.c:1590: if (g_Timer == 60) ClearTextFromLayerA(18, 18, 11);
+;./exsoccer.c:1590: if (g_Timer == 60) ClearTextFromLayerA(10, 12, 11);
 	ld	a, (_g_Timer+0)
 	sub	a, #0x3c
 	jr	NZ, 00104$
 	ld	a, #0x0b
 	push	af
 	inc	sp
+	ld	l, #0x0c
 ;	spillPairReg hl
 ;	spillPairReg hl
-	ld	a,#0x12
-	ld	l,a
+	ld	a, #0x0a
 	call	_ClearTextFromLayerA
 00104$:
 ;./exsoccer.c:1595: if (g_Ball.PossessionPlayerId != NO_VALUE) kickerId = g_Ball.PossessionPlayerId;

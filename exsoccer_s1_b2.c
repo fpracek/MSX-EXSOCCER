@@ -809,6 +809,9 @@ void PutBallOnPlayerFeet(u8 playerId){
 		g_Ball.PassTargetPlayerId = NO_VALUE; // Clear any pending pass
 		g_Ball.ShotActive = 0; // Clear any pending shot
 		SetPlayerBallPossession(g_Ball.PossessionPlayerId);
+        
+        // Prevent immediate action (Shot/Pass) upon receiving - INCREASED to 30 frames (0.5s)
+        g_ActionCooldown = 30;
 	}
 
 	// Offset di base per la palla (distanza "attaccata" ai piedi) per ogni direzione

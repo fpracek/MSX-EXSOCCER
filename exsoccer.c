@@ -430,7 +430,7 @@ void GoalKick(u8 teamId){
 }
 void CornerKick(u8 teamId){
 	// Placeholder for Corner Kick Logic
-	V9_PrintLayerAStringAtPos(18,18,"CORNER KICK");
+	V9_PrintLayerAStringAtPos(10,12,"CORNER KICK");
 	g_MatchStatus=MATCH_BEFORE_CORNER_KICK;
 	g_RestartKickTeamId = teamId;
 	g_Timer = 0;
@@ -1587,7 +1587,7 @@ void TickCornerKick() {
     if (g_Timer < 180) { // 60fps * 3s
         g_Timer++;
         TickPlayerToOwnTarget();
-        if (g_Timer == 60) ClearTextFromLayerA(18, 18, 11);
+        if (g_Timer == 60) ClearTextFromLayerA(10, 12, 11);
         
         // --- Added: Enforce Kicker Facing Direction after arrival ---
         // Determine Kicker ID

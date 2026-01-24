@@ -17,20 +17,20 @@ Symbol Table
     _GetClosestPlayerToBall                                         ******** GX
     _GetJoystick1Direction                                          ******** GX
     _GetJoystick2Direction                                          ******** GX
-  0 _GetNewPoseByDirection                                          00002264 GR
-  0 _GetNoMovingPlayerPatternId                                     00002211 GR
+  0 _GetNewPoseByDirection                                          00002265 GR
+  0 _GetNoMovingPlayerPatternId                                     00002212 GR
   0 _GetOffsideLineY                                                00000507 GR
-  0 _GetPatternIdByPoseAndDirection                                 000022B7 GR
+  0 _GetPatternIdByPoseAndDirection                                 000022B8 GR
     _GetPlayerIdByRole                                              ******** GX
   0 _GoalKick                                                       000006EB GR
     _InitPalette                                                    ******** GX
   0 _InitVariables                                                  00000003 GR
-  0 _InitializeV9990                                                00000B4F GR
+  0 _InitializeV9990                                                00000B50 GR
     _IsTeamJoystickTriggerPressed                                   ******** GX
   0 _LoadP1LayerA                                                   00000036 GR
   0 _LoadP1LayerB                                                   000000B1 GR
-  0 _LoadSprites                                                    00000BBD GR
-  0 _MainGameLoop                                                   00001FD3 GR
+  0 _LoadSprites                                                    00000BBE GR
+  0 _MainGameLoop                                                   00001FD4 GR
     _PerformPass                                                    ******** GX
     _PerformShot                                                    ******** GX
     _Print_DrawText                                                 ******** GX
@@ -40,8 +40,8 @@ Symbol Table
     _PutBallSprite                                                  ******** GX
     _ResetBallInfo                                                  ******** GX
     _ResetPlayersInfo                                               ******** GX
-  0 _SetPlayerBallPossession                                        0000256D GR
-  0 _SetPlayerTarget                                                00002371 GR
+  0 _SetPlayerBallPossession                                        0000256E GR
+  0 _SetPlayerTarget                                                00002372 GR
     _SetTeam1Palette                                                ******** GX
     _SetTeam2Palette                                                ******** GX
   0 _SetTeamsPresentationSpritesPosition                            000002DA GR
@@ -52,9 +52,9 @@ Symbol Table
     _TickBallCollision                                              ******** GX
     _TickBallFlying                                                 ******** GX
     _TickCheckBallBoundaries                                        ******** GX
-  0 _TickCornerKick                                                 000025A9 GR
+  0 _TickCornerKick                                                 000025AA GR
   1 _TickCornerKick_joyMoved_131074_1690                            00000125 R
-  0 _TickGoalCelebration                                            00001A50 GR
+  0 _TickGoalCelebration                                            00001A51 GR
     _TickGoalkeeperAnimation                                        ******** GX
     _TickPlayerToOwnTarget                                          ******** GX
     _TickShowKickOff                                                ******** GX
@@ -63,11 +63,11 @@ Hexadecimal [32-Bits]
 
 Symbol Table
 
-  0 _TickTeamJoystick                                               00000C02 GR
+  0 _TickTeamJoystick                                               00000C03 GR
   0 _TickUpdateTime                                                 000004D5 GR
     _TimeUp                                                         ******** GX
     _UpdatePassTarget                                               ******** GX
-  0 _UpdatePlayerPatternByDirection                                 0000214B GR
+  0 _UpdatePlayerPatternByDirection                                 0000214C GR
     _UpdateSpritesPositions                                         ******** GX
   0 _UpdateV9990                                                    00000000 GR
     _V9_Detect                                                      ******** GX
@@ -95,12 +95,12 @@ Symbol Table
   0 ___str_0                                                        000006BC R
   0 ___str_1                                                        000006E2 R
   0 ___str_2                                                        00000708 R
-  0 ___str_3                                                        00000B43 R
-  0 ___str_4                                                        00001F5E R
-  0 ___str_5                                                        00001F6F R
-  0 ___str_6                                                        00001F8E R
-  0 ___str_7                                                        00001FA0 R
-  0 ___str_8                                                        00001FAD R
+  0 ___str_3                                                        00000B44 R
+  0 ___str_4                                                        00001F5F R
+  0 ___str_5                                                        00001F70 R
+  0 ___str_6                                                        00001F8F R
+  0 ___str_7                                                        00001FA1 R
+  0 ___str_8                                                        00001FAE R
     __modsint                                                       ******** GX
   7 __xinit__g_ActionCooldown                                       0000000C R
   7 __xinit__g_CornerKickSide                                       00000012 R
@@ -430,14 +430,14 @@ Symbol Table
     _g_WRPRIM                                                   =   0000F385 G
     _g_XSAVE                                                    =   0000FAFE G
     _g_YSAVE                                                    =   0000FB00 G
-  0 _main                                                           00001E9E GR
+  0 _main                                                           00001E9F GR
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 9
 Hexadecimal [32-Bits]
 
 Area Table
 
-   0 _CODE                                      size     2886   flags    0
+   0 _CODE                                      size     2888   flags    0
    1 _DATA                                      size      126   flags    0
    2 _INITIALIZED                               size       15   flags    0
    3 _DABS                                      size        0   flags    8
