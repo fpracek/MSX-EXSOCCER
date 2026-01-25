@@ -278,7 +278,20 @@ void TickPlayerToOwnTarget(){
 	if(g_MatchStatus!=MATCH_NOT_STARTED){
 		bool allPlayersInPosition = true;
 		
+		static u8 s_GkMoveTick = 0;
+		s_GkMoveTick++;
 		for(u8 i=0;i<15;i++){
+			// --- Portieri seguono la X della palla SOLO in MATCH_IN_ACTION, aggiornando ogni 4 tick ---
+			if (g_MatchStatus == MATCH_IN_ACTION && g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
+				if ((s_GkMoveTick & 3) == 0) { // ogni 4 tick
+					u16 minX = GOAL_X_MIN;
+					u16 maxX = GOAL_X_MAX;
+					u16 ballX = g_Ball.X;
+					if (ballX < minX-3) ballX = minX;
+					if (ballX > maxX+3) ballX = maxX;
+					g_Players[i].X = ballX;
+				}
+			}
 			
 			if(g_MatchStatus == MATCH_AFTER_IN_GOAL) {
 				if(i != REFEREE) continue;

@@ -37,11 +37,11 @@ Area                                    Addr        Size        Decimal Bytes (A
      0000002E  _g_MSXMID                          print
      00000034  _g_CHAR_16                         print
      00000034  l__DRIVER1                      
-     0000005C  l__GSINIT                       
-     000001F3  l__DATA                         
+     00000064  l__GSINIT                       
+     000001F4  l__DATA                         
      000001F5  l__HOME                         
      00000604  l__SEG10                        
-     0000347F  l__SEG2                         
+     000034FB  l__SEG2                         
      0000383D  l__SEG1                         
      00003A3B  l__CODE                         
      00003C00  l__SEG6                         
@@ -56,7 +56,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00007C30  s__INITIALIZER                  
      00007C30  s__RODATA                       
      00007C53  s__GSINIT                       
-     00007CAF  s__GSFINAL                      
+     00007CB7  s__GSFINAL                      
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
@@ -67,10 +67,10 @@ Area                                    Addr        Size        Decimal Bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      0000C000  s__DATA                         
-     0000C1F3  s__INITIALIZED                  
-     0000C216  s__BSEG                         
-     0000C216  s__BSS                          
-     0000C216  s__HEAP                         
+     0000C1F4  s__INITIALIZED                  
+     0000C217  s__BSEG                         
+     0000C217  s__BSS                          
+     0000C217  s__HEAP                         
      0000F30F  _g_KANJTABLE                       exsoccer_s2_b0
      0000F323  _g_DISKVE                          exsoccer_s2_b0
      0000F325  _g_BREAKV                          exsoccer_s2_b0
@@ -510,7 +510,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_GSINIT                             00007C53    0000005C =          92. bytes (REL,CON)
+_GSINIT                             00007C53    00000064 =         100. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -519,11 +519,11 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_GSFINAL                            00007CAF    00000000 =           0. bytes (REL,CON)
+_GSFINAL                            00007CB7    00000000 =           0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00007CAF  _g_LastAddr                        crt0
+     00007CB7  _g_LastAddr                        crt0
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 14.
 Hexadecimal  [32-Bits]
@@ -541,7 +541,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_DATA                               0000C000    000001F3 =         499. bytes (REL,CON)
+_DATA                               0000C000    000001F4 =         500. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -563,50 +563,50 @@ _DATA                               0000C000    000001F3 =         499. bytes (R
      0000C169  _g_ActiveFieldZone                 exsoccer
      0000C16A  _g_RestartKickTeamId               exsoccer
      0000C16B  _g_SecondsToEndOfMatch             exsoccer
-     0000C184  _g_VDP_REGSAV                      vdp
-     0000C1A0  _g_VDP_Data                        vdp
-     0000C1A2  _g_VDP_Command                     vdp
-     0000C1B1  _g_VDP_Sprite                      vdp
-     0000C1B5  _g_ScreenLayoutLow                 vdp
-     0000C1B7  _g_ScreenColorLow                  vdp
-     0000C1B9  _g_ScreenPatternLow                vdp
-     0000C1BB  _g_SpriteAttributeLow              vdp
-     0000C1BD  _g_SpritePatternLow                vdp
-     0000C1BF  _g_SpriteColorLow                  vdp
-     0000C1C1  _g_PrintData                       print
+     0000C185  _g_VDP_REGSAV                      vdp
+     0000C1A1  _g_VDP_Data                        vdp
+     0000C1A3  _g_VDP_Command                     vdp
+     0000C1B2  _g_VDP_Sprite                      vdp
+     0000C1B6  _g_ScreenLayoutLow                 vdp
+     0000C1B8  _g_ScreenColorLow                  vdp
+     0000C1BA  _g_ScreenPatternLow                vdp
+     0000C1BC  _g_SpriteAttributeLow              vdp
+     0000C1BE  _g_SpritePatternLow                vdp
+     0000C1C0  _g_SpriteColorLow                  vdp
+     0000C1C2  _g_PrintData                       print
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_INITIALIZED                        0000C1F3    00000023 =          35. bytes (REL,CON)
+_INITIALIZED                        0000C1F4    00000023 =          35. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000C1F3  _g_FieldCurrentYPosition           exsoccer
-     0000C1F5  _g_FieldScrollingActionInProgres   exsoccer
-     0000C1F6  _g_PlayersPositioningPhaseCount    exsoccer
-     0000C1F7  _g_MatchStatus                     exsoccer
-     0000C1F8  _g_FieldScrollSpeed                exsoccer
-     0000C1F9  _g_Timer                           exsoccer
-     0000C1FA  _g_Team1ActivePlayer               exsoccer
-     0000C1FB  _g_Team2ActivePlayer               exsoccer
-     0000C1FC  _g_PassTargetPlayer                exsoccer
-     0000C1FD  _g_GameWith2Players                exsoccer
-     0000C1FE  _g_GameLevel                       exsoccer
-     0000C1FF  _g_ActionCooldown                  exsoccer
-     0000C200  _g_ShotCursorX                     exsoccer
-     0000C202  _g_ShotCursorDir                   exsoccer
-     0000C203  _g_FioBre                          exsoccer
-     0000C204  _g_GoalScorerId                    exsoccer
-     0000C205  _g_CornerKickSide                  exsoccer
-     0000C206  _g_GoalKickSide                    exsoccer
-     0000C207  _g_CornerKickTargetId              exsoccer
-     0000C208  _g_ThrowInPlayerId                 exsoccer
-     0000C209  _g_VSynch                          exsoccer
-     0000C20D  _g_VDPInitilized                   vdp
-     0000C20E  _g_PrintInvalid                    print
+     0000C1F4  _g_FieldCurrentYPosition           exsoccer
+     0000C1F6  _g_FieldScrollingActionInProgres   exsoccer
+     0000C1F7  _g_PlayersPositioningPhaseCount    exsoccer
+     0000C1F8  _g_MatchStatus                     exsoccer
+     0000C1F9  _g_FieldScrollSpeed                exsoccer
+     0000C1FA  _g_Timer                           exsoccer
+     0000C1FB  _g_Team1ActivePlayer               exsoccer
+     0000C1FC  _g_Team2ActivePlayer               exsoccer
+     0000C1FD  _g_PassTargetPlayer                exsoccer
+     0000C1FE  _g_GameWith2Players                exsoccer
+     0000C1FF  _g_GameLevel                       exsoccer
+     0000C200  _g_ActionCooldown                  exsoccer
+     0000C201  _g_ShotCursorX                     exsoccer
+     0000C203  _g_ShotCursorDir                   exsoccer
+     0000C204  _g_FioBre                          exsoccer
+     0000C205  _g_GoalScorerId                    exsoccer
+     0000C206  _g_CornerKickSide                  exsoccer
+     0000C207  _g_GoalKickSide                    exsoccer
+     0000C208  _g_CornerKickTargetId              exsoccer
+     0000C209  _g_ThrowInPlayerId                 exsoccer
+     0000C20A  _g_VSynch                          exsoccer
+     0000C20E  _g_VDPInitilized                   vdp
+     0000C20F  _g_PrintInvalid                    print
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
 Hexadecimal  [32-Bits]
@@ -646,7 +646,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG2                               00020100    0000347F =       13439. bytes (REL,CON)
+_SEG2                               00020100    000034FB =       13563. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -663,22 +663,22 @@ _SEG2                               00020100    0000347F =       13439. bytes (R
      0002076B  _ResetPlayersInfo                  exsoccer_s2_b0
      000207C5  _ClearTextFromLayerA               exsoccer_s2_b0
      000207E6  _TickPlayerToOwnTarget             exsoccer_s2_b0
-     00020D86  _GetNumberString                   exsoccer_s2_b0
-     00020DC5  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
-     00020DEC  _GetJoystick1Direction             exsoccer_s2_b0
-     00020EEC  _GetJoystick2Direction             exsoccer_s2_b0
-     00020EF1  _ShowFieldZone                     exsoccer_s2_b0
-     00020EF5  _TickCheckBallBoundaries           exsoccer_s2_b0
-     000210A2  _TimeUp                            exsoccer_s2_b0
-     000210A3  _GetClosestPlayerToBall            exsoccer_s2_b0
-     000211C6  _Math_Abs32                        exsoccer_s2_b0
-     000211DC  _GetBestPassTarget                 exsoccer_s2_b0
-     00021844  _UpdatePassTarget                  exsoccer_s2_b0
-     00021881  _GoalkeeperWithBall                exsoccer_s2_b0
-     00021AB3  _TickGoalkeeperAnimation           exsoccer_s2_b0
-     00021CF3  _PerformShot                       exsoccer_s2_b0
-     00021FD0  _TickBallFlying                    exsoccer_s2_b0
-     000228E0  _TickThrowIn                       exsoccer_s2_b0
+     00020E02  _GetNumberString                   exsoccer_s2_b0
+     00020E41  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
+     00020E68  _GetJoystick1Direction             exsoccer_s2_b0
+     00020F68  _GetJoystick2Direction             exsoccer_s2_b0
+     00020F6D  _ShowFieldZone                     exsoccer_s2_b0
+     00020F71  _TickCheckBallBoundaries           exsoccer_s2_b0
+     0002111E  _TimeUp                            exsoccer_s2_b0
+     0002111F  _GetClosestPlayerToBall            exsoccer_s2_b0
+     00021242  _Math_Abs32                        exsoccer_s2_b0
+     00021258  _GetBestPassTarget                 exsoccer_s2_b0
+     000218C0  _UpdatePassTarget                  exsoccer_s2_b0
+     000218FD  _GoalkeeperWithBall                exsoccer_s2_b0
+     00021B2F  _TickGoalkeeperAnimation           exsoccer_s2_b0
+     00021D6F  _PerformShot                       exsoccer_s2_b0
+     0002204C  _TickBallFlying                    exsoccer_s2_b0
+     0002295C  _TickThrowIn                       exsoccer_s2_b0
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 Hexadecimal  [32-Bits]
