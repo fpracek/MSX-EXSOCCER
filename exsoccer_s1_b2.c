@@ -1243,16 +1243,21 @@ void PutBallOnPlayerFeet(u8 playerId){
 	u8 dir = g_Players[playerId].Direction;
 	if(dir == DIRECTION_NONE) dir = g_Players[playerId].PreviousDirection; // Fallback se fermo
 
-    // Use KickMoveState for animation if set
-    u8 animStep = g_Ball.KickMoveState;
-    if (animStep > 3) animStep = 3; // Default/Reset to 3 (Close) if NO_VALUE (255)
+	// Use KickMoveState for animation if set
+	u8 animStep = g_Ball.KickMoveState;
+	if (animStep > 3) animStep = 3; // Default/Reset to 3 (Close) if NO_VALUE (255)
 
 	u8 currentOffset = DribbleAnimOffsets[animStep];
 	u8 currentOffsetDiag = DribbleAnimOffsetsDiag[animStep];
 
 	u8 distX = BallBaseDistX[dir] + ((dir==DIRECTION_UP || dir==DIRECTION_DOWN) ? 0 : (dir == DIRECTION_LEFT || dir == DIRECTION_RIGHT ? currentOffset : currentOffsetDiag));
 	u8 distY = BallBaseDistY[dir] + ((dir==DIRECTION_LEFT || dir==DIRECTION_RIGHT) ? 0 : (dir == DIRECTION_UP || dir == DIRECTION_DOWN ? currentOffset : currentOffsetDiag));
-	
+
+	// Special adjustment: if TEAM_2 goalkeeper, bring ball closer to body
+	if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER && g_Players[playerId].TeamId == TEAM_2) {
+		distY = (distY > 2) ? (distY - 2) : distY; // bring ball 2px closer vertically
+	}
+
 	switch (dir){
 		case DIRECTION_UP:
 			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[dir];

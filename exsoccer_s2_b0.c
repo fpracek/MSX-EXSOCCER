@@ -221,6 +221,9 @@ void PutPlayerSprite(u8 playerId){
 				}
 
 			}
+			else{
+				UpdatePlayerPatternByDirection(playerId);
+			}
 	}
 	attr.Pattern = g_Players[playerId].PatternId;
 	

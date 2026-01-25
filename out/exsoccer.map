@@ -41,8 +41,8 @@ Area                                    Addr        Size        Decimal Bytes (A
      000001F3  l__DATA                         
      000001F5  l__HOME                         
      00000604  l__SEG10                        
-     00003488  l__SEG2                         
-     0000380A  l__SEG1                         
+     0000347F  l__SEG2                         
+     0000383D  l__SEG1                         
      00003A3B  l__CODE                         
      00003C00  l__SEG6                         
      00004000  l__SEG3                         
@@ -428,7 +428,7 @@ _CODE                               00004000    00003A3B =       14907. bytes (R
      00006BE9  _VDP_LoadColor_GM2                 vdp
      00006C40  _VDP_WriteLayout_GM2               vdp
      00006C95  _VDP_FillLayout_GM2                vdp
-     00006CD7  _DEBUG_INIT                        debug
+     00006CD7  _Input_Detect                      input
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
 
@@ -438,17 +438,17 @@ _CODE                               00004000    00003A3B =       14907. bytes (R
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00006CD8  _DEBUG_BREAK                       debug
-     00006CDD  _DEBUG_ASSERT                      debug
-     00006CE3  _DEBUG_LOG                         debug
-     00006CF1  _DEBUG_LOGNUM                      debug
-     00006D17  _DEBUG_PRINT                       debug
-     00006D26  _Input_Detect                      input
-     00006D43  _Joystick_Read                     input
-     00006D58  _Keyboard_Read                     input
-     00006D63  _Keyboard_IsKeyPressed             input
-     00006D8E  __mulint                           
-     00006D90  __mul16                            
+     00006CF4  _Joystick_Read                     input
+     00006D09  _Keyboard_Read                     input
+     00006D14  _Keyboard_IsKeyPressed             input
+     00006D3F  __mulint                           
+     00006D41  __mul16                            
+     00006D56  _DEBUG_INIT                        debug
+     00006D57  _DEBUG_BREAK                       debug
+     00006D5C  _DEBUG_ASSERT                      debug
+     00006D62  _DEBUG_LOG                         debug
+     00006D70  _DEBUG_LOGNUM                      debug
+     00006D96  _DEBUG_PRINT                       debug
      00006DA5  _Print_Initialize                  print
      00006DFA  _g_HexChar                         print
      00006E0A  _Print_SetMode                     print
@@ -613,40 +613,40 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG1                               00018000    0000380A =       14346. bytes (REL,CON)
+_SEG1                               00018000    0000383D =       14397. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00018000  _TickTeamJoystick                  exsoccer_s1_b2
      00018D90  _TickAI                            exsoccer_s1_b2
      0001A7C5  _PutBallOnPlayerFeet               exsoccer_s1_b2
-     0001AC45  _TickBallCollision                 exsoccer_s1_b2
-     0001AF8D  _HandleOffside                     exsoccer_s1_b2
-     0001AFD2  _IsOffside                         exsoccer_s1_b2
-     0001B0C9  _PerformPass                       exsoccer_s1_b2
-     0001B3AC  _InitPalette                       exsoccer_s1_b2
-     0001B411  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
-     0001B441  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
-     0001B471  _g_Sprites1_palette_ita            exsoccer_s1_b2
-     0001B4A1  _g_Sprites1_palette_aus            exsoccer_s1_b2
-     0001B4D1  _g_Sprites1_palette_fra            exsoccer_s1_b2
-     0001B501  _g_Sprites1_palette_ger            exsoccer_s1_b2
-     0001B531  _g_Sprites1_palette_gbr            exsoccer_s1_b2
-     0001B561  _g_Sprites1_palette_bra            exsoccer_s1_b2
-     0001B591  _g_Sprites1_palette_fio            exsoccer_s1_b2
-     0001B5C1  _SetTeam1Palette                   exsoccer_s1_b2
-     0001B5EE  _SetTeam2Palette                   exsoccer_s1_b2
-     0001B61B  _GetTeamPaletteById                exsoccer_s1_b2
-     0001B660  _TickFieldScrollingAction          exsoccer_s1_b2
-     0001B753  _TickShowKickOff                   exsoccer_s1_b2
-     0001B7E9  _ResetBallInfo                     exsoccer_s1_b2
+     0001AC78  _TickBallCollision                 exsoccer_s1_b2
+     0001AFC0  _HandleOffside                     exsoccer_s1_b2
+     0001B005  _IsOffside                         exsoccer_s1_b2
+     0001B0FC  _PerformPass                       exsoccer_s1_b2
+     0001B3DF  _InitPalette                       exsoccer_s1_b2
+     0001B444  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
+     0001B474  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
+     0001B4A4  _g_Sprites1_palette_ita            exsoccer_s1_b2
+     0001B4D4  _g_Sprites1_palette_aus            exsoccer_s1_b2
+     0001B504  _g_Sprites1_palette_fra            exsoccer_s1_b2
+     0001B534  _g_Sprites1_palette_ger            exsoccer_s1_b2
+     0001B564  _g_Sprites1_palette_gbr            exsoccer_s1_b2
+     0001B594  _g_Sprites1_palette_bra            exsoccer_s1_b2
+     0001B5C4  _g_Sprites1_palette_fio            exsoccer_s1_b2
+     0001B5F4  _SetTeam1Palette                   exsoccer_s1_b2
+     0001B621  _SetTeam2Palette                   exsoccer_s1_b2
+     0001B64E  _GetTeamPaletteById                exsoccer_s1_b2
+     0001B693  _TickFieldScrollingAction          exsoccer_s1_b2
+     0001B786  _TickShowKickOff                   exsoccer_s1_b2
+     0001B81C  _ResetBallInfo                     exsoccer_s1_b2
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG2                               00020100    00003488 =       13448. bytes (REL,CON)
+_SEG2                               00020100    0000347F =       13439. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -660,25 +660,25 @@ _SEG2                               00020100    00003488 =       13448. bytes (R
      00020429  _V9_PutLayerATileAtPos             exsoccer_s2_b0
      00020464  _V9_PutLayerBTileAtPos             exsoccer_s2_b0
      0002049F  _PutPlayerSprite                   exsoccer_s2_b0
-     00020774  _ResetPlayersInfo                  exsoccer_s2_b0
-     000207CE  _ClearTextFromLayerA               exsoccer_s2_b0
-     000207EF  _TickPlayerToOwnTarget             exsoccer_s2_b0
-     00020D8F  _GetNumberString                   exsoccer_s2_b0
-     00020DCE  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
-     00020DF5  _GetJoystick1Direction             exsoccer_s2_b0
-     00020EF5  _GetJoystick2Direction             exsoccer_s2_b0
-     00020EFA  _ShowFieldZone                     exsoccer_s2_b0
-     00020EFE  _TickCheckBallBoundaries           exsoccer_s2_b0
-     000210AB  _TimeUp                            exsoccer_s2_b0
-     000210AC  _GetClosestPlayerToBall            exsoccer_s2_b0
-     000211CF  _Math_Abs32                        exsoccer_s2_b0
-     000211E5  _GetBestPassTarget                 exsoccer_s2_b0
-     0002184D  _UpdatePassTarget                  exsoccer_s2_b0
-     0002188A  _GoalkeeperWithBall                exsoccer_s2_b0
-     00021ABC  _TickGoalkeeperAnimation           exsoccer_s2_b0
-     00021CFC  _PerformShot                       exsoccer_s2_b0
-     00021FD9  _TickBallFlying                    exsoccer_s2_b0
-     000228E9  _TickThrowIn                       exsoccer_s2_b0
+     0002076B  _ResetPlayersInfo                  exsoccer_s2_b0
+     000207C5  _ClearTextFromLayerA               exsoccer_s2_b0
+     000207E6  _TickPlayerToOwnTarget             exsoccer_s2_b0
+     00020D86  _GetNumberString                   exsoccer_s2_b0
+     00020DC5  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
+     00020DEC  _GetJoystick1Direction             exsoccer_s2_b0
+     00020EEC  _GetJoystick2Direction             exsoccer_s2_b0
+     00020EF1  _ShowFieldZone                     exsoccer_s2_b0
+     00020EF5  _TickCheckBallBoundaries           exsoccer_s2_b0
+     000210A2  _TimeUp                            exsoccer_s2_b0
+     000210A3  _GetClosestPlayerToBall            exsoccer_s2_b0
+     000211C6  _Math_Abs32                        exsoccer_s2_b0
+     000211DC  _GetBestPassTarget                 exsoccer_s2_b0
+     00021844  _UpdatePassTarget                  exsoccer_s2_b0
+     00021881  _GoalkeeperWithBall                exsoccer_s2_b0
+     00021AB3  _TickGoalkeeperAnimation           exsoccer_s2_b0
+     00021CF3  _PerformShot                       exsoccer_s2_b0
+     00021FD0  _TickBallFlying                    exsoccer_s2_b0
+     000228E0  _TickThrowIn                       exsoccer_s2_b0
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 Hexadecimal  [32-Bits]
@@ -807,11 +807,11 @@ E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\tools/sdcc/lib/z80/z80.lib
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/msxgl.lib
                                           [ vdp.rel ]
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/msxgl.lib
-                                          [ debug.rel ]
-E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/msxgl.lib
                                           [ input.rel ]
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\tools/sdcc/lib/z80/z80.lib
                                           [ mul.rel ]
+E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/msxgl.lib
+                                          [ debug.rel ]
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\tools/sdcc/lib/z80/z80.lib
                                           [ _divslong.rel ]
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\tools/sdcc/lib/z80/z80.lib
