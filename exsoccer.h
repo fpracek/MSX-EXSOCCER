@@ -18,6 +18,8 @@ typedef struct PlayerInfo
 {
 	u16		Y;		
 	u16     X;	
+	u16     OldX;
+	u16     OldY;
 	u8      PatternId;
 	u8      TeamId;
 	u8      Direction;
@@ -121,8 +123,8 @@ typedef struct BallInfo
 
 #define PLAYER_POSE_GK_H_MOVE_FRONT_1       43
 #define PLAYER_POSE_GK_H_MOVE_FRONT_2       44
-#define PLAYER_POSE_GK_H_MOVE_BACK_1        43
-#define PLAYER_POSE_GK_H_MOVE_BACK_2        44
+#define PLAYER_POSE_GK_H_MOVE_BACK_1        164
+#define PLAYER_POSE_GK_H_MOVE_BACK_2        163
 #define PLAYER_POSE_RIGHT                   157
 #define PLAYER_POSE_LEFT                    18
 #define PLAYER_POSE_MOVE_UP_RIGHT_1         13

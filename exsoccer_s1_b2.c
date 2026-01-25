@@ -9,6 +9,9 @@
 #include "exsoccer.h"
 #include "debug.h"
 
+// Forward Declaration
+bool IsOffside(u8 playerId);
+
 // *** CONSTANTS ***
 extern u8 			g_FieldScrollingActionInProgress; 	// Bank 1 = Segment 0
 extern int  		g_FieldCurrentYPosition;			// Bank 1 = Segment 0
@@ -408,35 +411,12 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 			return;
 		}
 
-		switch(direction){
-			case DIRECTION_UP:
-				g_Players[playerId].Y=g_Players[playerId].Y-2;
-				break;
-			case DIRECTION_DOWN:
-				g_Players[playerId].Y=g_Players[playerId].Y+2;
-				break;
-			case DIRECTION_LEFT:
-				g_Players[playerId].X=g_Players[playerId].X-2;
-				break;
-			case DIRECTION_RIGHT:
-				g_Players[playerId].X=g_Players[playerId].X+2;
-				break;
-			case DIRECTION_UP_RIGHT:
-				g_Players[playerId].Y=g_Players[playerId].Y-2;
-				g_Players[playerId].X=g_Players[playerId].X+2;
-				break;
-			case DIRECTION_UP_LEFT:
-				g_Players[playerId].Y=g_Players[playerId].Y-2;
-				g_Players[playerId].X=g_Players[playerId].X-2;
-				break;
-			case DIRECTION_DOWN_RIGHT:
-				g_Players[playerId].Y=g_Players[playerId].Y+2;
-				g_Players[playerId].X=g_Players[playerId].X+2;
-				break;
-			case DIRECTION_DOWN_LEFT:
-				g_Players[playerId].Y=g_Players[playerId].Y+2;
-				g_Players[playerId].X=g_Players[playerId].X-2;
-				break;
+		static const i8 k_MoveDX[] = { 0, 0, 2, 2, 2, 0, -2, -2, -2 };
+		static const i8 k_MoveDY[] = { 0, -2, -2, 0, 2, 2, 2, 0, -2 };
+
+		if (direction <= 8) {
+			g_Players[playerId].X += k_MoveDX[direction];
+			g_Players[playerId].Y += k_MoveDY[direction];
 		}
 
 		// Field Boundaries Clamp
@@ -790,13 +770,16 @@ void TickAI(u8 playerId){
 				if (shouldPass) {
 					if (!isHumanControlled) {
 						u8 bestT = NO_VALUE;
-						i32 bestScore = -2100000000;
+						i16 bestScore = -30000;
 						int t;
 						for(t=0; t<14; t++) {
 							if(g_Players[t].TeamId != playerTeamId) continue;
 							if(t == playerId) continue;
 							if(g_Players[t].Status == PLAYER_STATUS_NONE) continue;
 							if(g_Players[t].Role == PLAYER_ROLE_GOALKEEPER) continue;
+
+                            // Prevent passing to offside players
+                            if (IsOffside(t)) continue;
 
 							i16 dx = (i16)g_Players[t].X - (i16)g_Players[playerId].X;
 							i16 dy = (i16)g_Players[t].Y - (i16)g_Players[playerId].Y;
@@ -808,7 +791,7 @@ void TickAI(u8 playerId){
 							if (g_Players[t].Y < g_FieldCurrentYPosition - 40 || 
 								g_Players[t].Y > (g_FieldCurrentYPosition + 252)) continue;
 
-							i32 advanceScore = (playerTeamId == TEAM_1) ? -dy : dy;
+							i16 advanceScore = (playerTeamId == TEAM_1) ? -dy : dy;
 							
 							// If not in trouble, only pass forward!
 							if (!isPanicPass) {
@@ -818,7 +801,7 @@ void TickAI(u8 playerId){
 								if (advanceScore < -150) continue;
 							}
 							
-							i32 score = advanceScore - (adx/4); // Minimal lateral penalty
+							i16 score = advanceScore - (adx/4); // Minimal lateral penalty
 							
 							if (score > bestScore) {
 								bestScore = score;
@@ -830,7 +813,7 @@ void TickAI(u8 playerId){
 						if (bestT != NO_VALUE) {
 							// If panic, any open player is fine (-80).
 							// If creative, must be a good forward pass (+10).
-							i32 threshold = isPanicPass ? -80 : 10;
+							i16 threshold = isPanicPass ? -80 : 10;
 							
 							if (bestScore > threshold) {
 								if (g_Ball.PossessionTimer < 15) return; // Wait 15 frames before passing
@@ -1495,11 +1478,11 @@ void PerformPass(u8 toPlayerId) {
     if (fromId == NO_VALUE) return;
     if (toPlayerId == NO_VALUE) return;
 
-    // OFFSIDE CHECK
+    // OFFSIDE CHECK (Prevent Pass)
     // Ignore offside if passer is Goalkeeper
     if (g_Players[fromId].Role != PLAYER_ROLE_GOALKEEPER) {
         if (IsOffside(toPlayerId)) {
-            HandleOffside(toPlayerId);
+            // Prevent pass to offside player
             return;
         }
     }

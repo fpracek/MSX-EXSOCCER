@@ -113,99 +113,45 @@ void PutBallSprite(){
 	// Use Global Frame Counter (bit 3 = change every 8 frames)
 	bool useAlt = isAnimating && ((g_FrameCounter & 8) != 0);
 	
-	switch (logicalSize){
-		case 1:
-			attr.Pattern = useAlt ? BALL_SIZE_2 : BALL_SIZE_1;
-			break;
-		case 2:
-			attr.Pattern = useAlt ? BALL_SIZE_4 : BALL_SIZE_3;
-			break;
-		case 3:
-			attr.Pattern = useAlt ? BALL_SIZE_6 : BALL_SIZE_5;
-			break;
-		case 4:
-			attr.Pattern = useAlt ? BALL_SIZE_8 : BALL_SIZE_7;
-			break;
-		default:
-			attr.Pattern = BALL_SIZE_1;
-	}
+    static const u8 k_BallPatterns[] = { 
+        BALL_SIZE_1, BALL_SIZE_2, BALL_SIZE_3, BALL_SIZE_4, 
+        BALL_SIZE_5, BALL_SIZE_6, BALL_SIZE_7, BALL_SIZE_8 
+    };
+
+    u8 idx = (logicalSize - 1) * 2 + (useAlt ? 1 : 0);
+    attr.Pattern = k_BallPatterns[idx & 7];
 
 	attr.X = g_Ball.X;
 	attr.P = attr.D;
 	V9_SetSpriteP1(15, &attr);
 }
+
+void PrintTeamName(u8 x, u8 teamPaletteId) {
+    const char* pName = 0;
+    if (g_FioBre) {
+        if (teamPaletteId == TEAM_AUS) pName = "FIO";
+        else if (teamPaletteId == TEAM_ITA) pName = "BRE";
+    }
+    
+    if (!pName) {
+        static const char* k_Names[] = { "AUS", "BRA", "AUS", "FRA", "GBR", "GER" };
+        if (teamPaletteId <= 5) pName = k_Names[teamPaletteId];
+        else pName = "   ";
+    }
+    V9_PrintLayerAStringAtPos(x, 0, pName);
+}
+
 void ShowHeaderInfo(){
-	u8 pos1=5;
-	u8 pos2=10;
-	if(g_Team1Score>=10){
-		pos1--;
-	}
-	if(g_Team2Score>=10){
-		pos2--;
-	}
-	switch (g_Team1PaletteId){
-		case TEAM_AUS:
-			if(g_FioBre){
-				V9_PrintLayerAStringAtPos(0,0,"FIO");
-			}
-			else{
-				V9_PrintLayerAStringAtPos(0,0,"AUS");
-			}
-			break; 
-		case TEAM_BRA:
-			V9_PrintLayerAStringAtPos(0,0,"BRA");
-			break;
-		case TEAM_ITA:
-			if(g_FioBre){
-				V9_PrintLayerAStringAtPos(0,0,"BRE");
-			}
-			else{
-				V9_PrintLayerAStringAtPos(0,0,"AUS");
-			}
-			break;
-		case TEAM_GBR:
-			V9_PrintLayerAStringAtPos(0,0,"GBR");
-			break;
-		case TEAM_GER:
-			V9_PrintLayerAStringAtPos(0,0,"GER");
-			break;
-		case TEAM_FRA:
-			V9_PrintLayerAStringAtPos(0,0,"FRA");
-			break;
-	}
-	V9_PrintLayerAStringAtPos(pos1,0,GetNumberString(g_Team1Score));
-	V9_PrintLayerAStringAtPos(7,0,"-");
-	V9_PrintLayerAStringAtPos(pos2,0,GetNumberString(g_Team2Score));
-	switch (g_Team2PaletteId){
-		case TEAM_AUS:
-			if(g_FioBre){
-				V9_PrintLayerAStringAtPos(12,0,"FIO");
-			}
-			else{
-				V9_PrintLayerAStringAtPos(12,0,"AUS");
-			}
-			break; 
-		case TEAM_BRA:
-			V9_PrintLayerAStringAtPos(12,0,"BRA");
-			break;
-		case TEAM_ITA:
-			if(g_FioBre){
-				V9_PrintLayerAStringAtPos(12,0,"BRE");
-			}
-			else{
-				V9_PrintLayerAStringAtPos(12,0,"AUS");
-			}
-			break;
-		case TEAM_GBR:
-			V9_PrintLayerAStringAtPos(12,0,"GBR");
-			break;
-		case TEAM_GER:
-			V9_PrintLayerAStringAtPos(12,0,"GER");
-			break;
-		case TEAM_FRA:
-			V9_PrintLayerAStringAtPos(12,0,"FRA");
-			break;
-	}
+	u8 pos1 = (g_Team1Score >= 10) ? 4 : 5;
+	u8 pos2 = (g_Team2Score >= 10) ? 9 : 10;
+    
+    PrintTeamName(0, g_Team1PaletteId);
+
+	V9_PrintLayerAStringAtPos(pos1, 0, GetNumberString(g_Team1Score));
+	V9_PrintLayerAStringAtPos(7, 0, "-");
+	V9_PrintLayerAStringAtPos(pos2, 0, GetNumberString(g_Team2Score));
+
+    PrintTeamName(12, g_Team2PaletteId);
 	u8 minutes=g_SecondsToEndOfMatch / 60;
 	u8 seconds=g_SecondsToEndOfMatch - minutes*60;
 	V9_PrintLayerAStringAtPos(28,0,GetNumberString(minutes));
@@ -237,9 +183,7 @@ void PutPlayerSprite(u8 playerId){
 	if(g_Players[playerId].TeamId==TEAM_2){
 		attr.SC=3;
 	}
-	if(g_Players[playerId].Role==PLAYER_ROLE_GOALKEEPER){
-		attr.SC=0;
-	}
+	  
 	if(g_Players[playerId].TeamId==REFEREE){
 		attr.SC=1;
 	}
@@ -251,7 +195,32 @@ void PutPlayerSprite(u8 playerId){
 		attr.D=1;
 	}
 	if(g_MatchStatus!=MATCH_NOT_STARTED && g_MatchStatus!=MATCH_KICK_OFF){
-		UpdatePlayerPatternByDirection(playerId);
+		if(g_Players[playerId].Role!=PLAYER_ROLE_GOALKEEPER){
+			UpdatePlayerPatternByDirection(playerId);
+		}
+	}
+	if(g_Players[playerId].Role==PLAYER_ROLE_GOALKEEPER){
+			   attr.SC=0;
+			// --- Goalkeeper horizontal movement animation logic ---
+			// Only animate during match in action
+			if (g_MatchStatus == MATCH_IN_ACTION) {
+				g_Players[playerId].Status=PLAYER_STATUS_POSITIONED;
+				u8 team = g_Players[playerId].TeamId;
+				// Horizontal movement (right/left)
+				if(g_Players[playerId].OldX!=g_Players[playerId].X || g_Players[playerId].OldY!=g_Players[playerId].Y){
+					if(g_Players[playerId].LastPose==0){
+						g_Players[playerId].PatternId = (team == TEAM_1) ? PLAYER_POSE_GK_H_MOVE_BACK_1 : PLAYER_POSE_GK_H_MOVE_FRONT_1;
+						g_Players[playerId].LastPose=1;
+					}
+					else{
+						g_Players[playerId].PatternId = (team == TEAM_1) ? PLAYER_POSE_GK_H_MOVE_BACK_2 : PLAYER_POSE_GK_H_MOVE_FRONT_2;
+						g_Players[playerId].LastPose=0;
+					}		
+					g_Players[playerId].OldX=g_Players[playerId].X;
+					g_Players[playerId].OldY=g_Players[playerId].Y;	
+				}
+
+			}
 	}
 	attr.Pattern = g_Players[playerId].PatternId;
 	
@@ -666,7 +635,8 @@ void TickCheckBallBoundaries(){
 
 	// Check Side Lines (Throw-in)
 	if(g_Ball.X < FIELD_BOUND_X_LEFT || g_Ball.X > FIELD_BOUND_X_RIGHT){
-		BallThrowIn(opponentTeamId);
+		BallThrowIn(opponentTeamId); //GP_USER
+		//BallThrowIn(teamId); // GP_USER
 		return;
 	}
 

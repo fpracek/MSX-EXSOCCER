@@ -94,12 +94,6 @@ void LoadP1LayerA(){
 	for (u8 x=0;x<64;x++){
 		V9_PutLayerATileAtPos(x,0,32);
 	}
-	for (u8 y=1;y<64;y++){
-		for (u8 x=0;x<64;x++){
-			V9_PutLayerATileAtPos(x,y,0);
-		}
-	}
-
 }
 //-----------------------------------------------------------------------------
 // Load Layer B
@@ -114,12 +108,12 @@ void LoadP1LayerB(){
 	SET_BANK_SEGMENT(2, 6); 
 	V9_WriteVRAM(V9_P1_PGT_B + 16384L*3, g_GameFieldLayerBTiles_part4, sizeof(g_GameFieldLayerBTiles_part4)); // Load tiles (part 4)
 	SET_BANK_SEGMENT(2, 1); 
-	V9_FillVRAM16(V9_P1_PNT_B, 0x0000, 64*64); // Init layer
+	// V9_FillVRAM16(V9_P1_PNT_B, 0x0000, 64*64); // REDUNDANT: Overwritten below
 	u16 tileId=0;
-	for (u8 y=0;y<64;y++){
+	// Fill 32x64 area (2048 tiles)
+    for (u8 y=0;y<64;y++){
 		for (u8 x=0;x<32;x++){
-			V9_PutLayerBTileAtPos(x,y,tileId);
-			tileId++;
+			V9_PutLayerBTileAtPos(x,y,tileId++);
 		}
 	}
 }
@@ -247,39 +241,15 @@ void SetTeamsPresentationSpritesPosition(){
 	ResetPlayersInfo();
 	SetPlayerTarget(REFEREE); 
 
+    static const u8 k_PlayerRoles[] = { 
+        PLAYER_ROLE_GOALKEEPER, PLAYER_ROLE_LEFT_DEFENDER, PLAYER_ROLE_RIGHT_HALFFIELDER, 
+        PLAYER_ROLE_LEFT_HALFFIELDER, PLAYER_ROLE_RIGHT_DEFENDER, PLAYER_ROLE_LEFT_STRIKER, 
+        PLAYER_ROLE_RIGHT_STRIKER 
+    };
+
 	for(u8 i=0;i<14;i++){
 		g_Players[i].AiTickCounter=0;
-		switch(i){
-			case 0:
-			case 7:
-				g_Players[i].Role=PLAYER_ROLE_GOALKEEPER;
-				break;
-			case 1:
-			case 8:
-				g_Players[i].Role=PLAYER_ROLE_LEFT_DEFENDER;
-				break;
-			case 4:
-			case 11:
-				g_Players[i].Role=PLAYER_ROLE_RIGHT_DEFENDER;
-				break;
-			case 3:
-			case 10:
-				g_Players[i].Role=PLAYER_ROLE_LEFT_HALFFIELDER;
-				break;
-			case 2:
-			case 9:
-				g_Players[i].Role=PLAYER_ROLE_RIGHT_HALFFIELDER;
-				break;
-			case 5:
-			case 12:
-				g_Players[i].Role=PLAYER_ROLE_LEFT_STRIKER;
-				break;
-			case 6:
-			case 13:
-				g_Players[i].Role=PLAYER_ROLE_RIGHT_STRIKER;
-				break;
-		}
-		
+        g_Players[i].Role = k_PlayerRoles[i % 7];
 	}
 	g_Ball.X=FIELD_POS_X_CENTER;
 	g_Ball.Y=FIELD_POS_Y_CENTER;
@@ -294,26 +264,16 @@ void TickActiveFieldZone(){
 	// Disable auto-camera zone switching during presentation/cutscenes
 	if (g_MatchStatus != MATCH_IN_ACTION) return;
 
-	if(g_ActiveFieldZone==FIELD_CENTRAL_ZONE){
-		if(g_Ball.Y<170){
-			ShowFieldZone(FIELD_NORTH_ZONE);
-		}
-		if(g_Ball.Y>320){
-			ShowFieldZone(FIELD_SOUTH_ZONE);
-		}
-	}
-	else{
-		if(g_ActiveFieldZone==FIELD_NORTH_ZONE){
-			if(g_Ball.Y>190){
-				ShowFieldZone(FIELD_CENTRAL_ZONE);
-			}
-		}
-		else{
-			if(g_Ball.Y<300){
-				ShowFieldZone(FIELD_CENTRAL_ZONE);
-			}
-		}
-	}
+    if (g_ActiveFieldZone == FIELD_CENTRAL_ZONE) {
+        if (g_Ball.Y < 170) ShowFieldZone(FIELD_NORTH_ZONE);
+        else if (g_Ball.Y > 320) ShowFieldZone(FIELD_SOUTH_ZONE);
+    } 
+    else if (g_ActiveFieldZone == FIELD_NORTH_ZONE) {
+        if (g_Ball.Y > 190) ShowFieldZone(FIELD_CENTRAL_ZONE);
+    }
+    else { // SOUTH
+        if (g_Ball.Y < 300) ShowFieldZone(FIELD_CENTRAL_ZONE);
+    }
 	g_Ball.PreviousY=g_Ball.Y;
 }
 void TickUpdateTime(){
@@ -336,66 +296,35 @@ void TickUpdateTime(){
 }
 u16 GetOffsideLineY(u8 attackingTeamId) {
     u8 defendingTeamId = (attackingTeamId == TEAM_1) ? TEAM_2 : TEAM_1;
-    u16 limitY;
+    bool findMin = (attackingTeamId == TEAM_1);
+    
+    // Initialize with worst possible values
+    u16 val1 = findMin ? 0xFFFF : 0;
+    u16 val2 = val1;
 
-    if (attackingTeamId == TEAM_1) {
-        // Find 2nd smallest Y in Team 2 (Defenders)
-        u16 min1 = 0xFFFF;
-        u16 min2 = 0xFFFF;
-        
-        for(u8 i=0; i<14; i++){
-            if(g_Players[i].TeamId != defendingTeamId) continue;
-            
-            if (g_Players[i].Y < min1) {
-                min2 = min1;
-                min1 = g_Players[i].Y;
-            } else if (g_Players[i].Y < min2) {
-                min2 = g_Players[i].Y;
-            }
+    for(u8 i=0; i<14; i++){
+        if(g_Players[i].TeamId != defendingTeamId) continue;
+        u16 y = g_Players[i].Y;
+
+        if (findMin) {
+            if (y < val1) { val2 = val1; val1 = y; }
+            else if (y < val2) { val2 = y; }
+        } else {
+            if (y > val1) { val2 = val1; val1 = y; }
+            else if (y > val2) { val2 = y; }
         }
-        if (min2 == 0xFFFF) return FIELD_BOUND_Y_TOP; 
-        limitY = min2;
-        
-    } else {
-        // Find 2nd largest Y in Team 1 (Defenders)
-        u16 max1 = 0;
-        u16 max2 = 0;
-         for(u8 i=0; i<14; i++){
-            if(g_Players[i].TeamId != defendingTeamId) continue;
-            
-            if (g_Players[i].Y > max1) {
-                max2 = max1;
-                max1 = g_Players[i].Y;
-            } else if (g_Players[i].Y > max2) {
-                max2 = g_Players[i].Y;
-            }
-        }
-        if (max2 == 0) return FIELD_BOUND_Y_BOTTOM;
-        limitY = max2;
     }
-    return limitY;
+
+    if (findMin) return (val2 == 0xFFFF) ? FIELD_BOUND_Y_TOP : val2;
+    return (val2 == 0) ? FIELD_BOUND_Y_BOTTOM : val2;
 }
 void BallInGoal(u8 teamScored){
 	// Placeholder for Goal Logic
 	V9_PrintLayerAStringAtPos(12,18,"IN  GOAL");
 
     g_GoalScorerId = g_Ball.PossessionPlayerId;
-    if(g_GoalScorerId==NO_VALUE){
-        for(u8 i=0;i<14;i++){
-            if(g_Players[i].TeamId==teamScored){
-                if(g_Ball.LastTouchTeamId==teamScored ){
-                    // Just a heuristic: last known possession or closest
-                    g_GoalScorerId=i; // This assumes index is consistent; probably player 0 or 7 (GK) shouldn't score often.
-                    break;
-                }
-            }
-        }
-    }
-    // If still no value, try logic based on team.
-    if(g_GoalScorerId == NO_VALUE && g_Ball.LastTouchTeamId != NO_VALUE){
-         // If we don't know the player, we can't animate the scorer.
-    }
-    // Better heuristic: if possession is NO_VALUE, use closest player of scoring team?
+    
+    // Better heuristic: if possession is NO_VALUE, use closest player of scoring team
     if (g_GoalScorerId == NO_VALUE) {
         g_GoalScorerId = GetClosestPlayerToBall(teamScored, NO_VALUE);
     }
@@ -649,8 +578,14 @@ void TickGoalCelebration(){
 			limitY_Top = FIELD_BOUND_Y_BOTTOM - 160;
 		}
 
+		// Move/Anim Lookup Tables
+        // Directions: NO, UP, UR, RI, DR, DO, DL, LE, UL
+        static const i8 k_CelebDX[] = { 0, 0, 1, 1, 1, 0, -1, -1, -1 };
+        static const i8 k_CelebDY[] = { 0, -1, -1, 0, 1, 1, 1, 0, -1 };
+
 		for(u8 i=0; i<15; i++){
 			if(i == REFEREE) continue;
+             u8 dir = g_Players[i].Direction;
 			
 			// Decide behavior based on team
 			if (g_Players[i].TeamId == scoringTeamId) {
@@ -659,61 +594,31 @@ void TickGoalCelebration(){
 				// Change direction every 19 frames to be erratic (prime number avoids X/Y axis locking)
 				if ((g_Timer % 19) == 0) {
 					// Pseudo-random direction (1 to 8)
-					// Use i and timer to mix it up, avoid oscillation
 					u8 rnd = (g_Timer * 3) + (i * 37); 
-					g_Players[i].Direction = (rnd % 8) + 1; 
+					dir = (rnd % 8) + 1; 
+                    g_Players[i].Direction = dir;
 				}
 
-				u8 dir = g_Players[i].Direction;
-				
-				// Move logic (Keep inside visible screen bounds)
-				bool movedNorth = false;
+                i8 dy = k_CelebDY[dir];
+                i8 dx = k_CelebDX[dir];
 
-				if (dir == DIRECTION_UP || dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT) {
-					if (g_Players[i].Y > limitY_Top) g_Players[i].Y--;
-					movedNorth = true;
-				}
-				else if (dir == DIRECTION_DOWN || dir == DIRECTION_DOWN_LEFT || dir == DIRECTION_DOWN_RIGHT) {
-					if (g_Players[i].Y < limitY_Bottom) g_Players[i].Y++;
-				}
-				else if (dir == DIRECTION_LEFT) {
-					if (g_Players[i].X > FIELD_BOUND_X_LEFT) g_Players[i].X--;
-				}
-				else if (dir == DIRECTION_RIGHT) {
-					if (g_Players[i].X < FIELD_BOUND_X_RIGHT) g_Players[i].X++;
-				}
-				
-				// Handle Diagonal X movement
-				if (dir == DIRECTION_UP_LEFT || dir == DIRECTION_DOWN_LEFT) {
-					if (g_Players[i].X > FIELD_BOUND_X_LEFT) g_Players[i].X--;
-				}
-				if (dir == DIRECTION_UP_RIGHT || dir == DIRECTION_DOWN_RIGHT) {
-					if (g_Players[i].X < FIELD_BOUND_X_RIGHT) g_Players[i].X++;
-				}
+                if (dy < 0 && g_Players[i].Y > limitY_Top) g_Players[i].Y--;
+                else if (dy > 0 && g_Players[i].Y < limitY_Bottom) g_Players[i].Y++;
+                
+                if (dx < 0 && g_Players[i].X > FIELD_BOUND_X_LEFT) g_Players[i].X--;
+                else if (dx > 0 && g_Players[i].X < FIELD_BOUND_X_RIGHT) g_Players[i].X++;
 
 				// ANIMATION: Hands Up!
-				// Toggle frame every 8 ticks
 				bool animFrame1 = ((g_Timer / 8) % 2) == 0;
+                bool isBack = (dy < 0);
 				
-				if (movedNorth) {
-					// Back View
-					g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_BACK_1 : PLAYER_POSE_CELEBRATION_BACK_2;
-				} else {
-					// Front View (South, Left, Right or None)
-					g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_FRONT_1 : PLAYER_POSE_CELEBRATION_FRONT_2;
-				}
+                if (isBack) g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_BACK_1 : PLAYER_POSE_CELEBRATION_BACK_2;
+                else g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_FRONT_1 : PLAYER_POSE_CELEBRATION_FRONT_2;
 
 			} else {
 				// --- LOSING TEAM: Stand Still ---
-				// Use Front/Back based on general direction logic
-				// Default to Front unless they were facing Up-ish
-				if (g_Players[i].Direction == DIRECTION_UP || 
-					g_Players[i].Direction == DIRECTION_UP_LEFT || 
-					g_Players[i].Direction == DIRECTION_UP_RIGHT) {
-					g_Players[i].PatternId = PLAYER_POSE_BACK;
-				} else {
-					g_Players[i].PatternId = PLAYER_POSE_FRONT;
-				}
+                bool isUp = (dir == DIRECTION_UP || dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT);
+                g_Players[i].PatternId = isUp ? PLAYER_POSE_BACK : PLAYER_POSE_FRONT;
 			}
 		}
 	}
@@ -1005,79 +910,32 @@ u8 GetNewPoseByDirection(u8 direction){
 }
 
 u8 GetPatternIdByPoseAndDirection(u8 playerId){
-	u8 pose=g_Players[playerId].LastPose;
-	u8 direction=g_Players[playerId].Direction;
-	u8 patternId=NO_VALUE;
-	switch(direction){
-		case DIRECTION_NONE:
-			patternId=GetNoMovingPlayerPatternId(direction);
-			break;
-		case DIRECTION_UP:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_UP_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_UP_2;
-			}
-			break;
-		case DIRECTION_DOWN:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_DOWN_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_DOWN_2;
-			}
-			break;
-		case DIRECTION_LEFT:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_LEFT_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_LEFT_2;
-			}
-			break;
-		case DIRECTION_RIGHT:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_RIGHT_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_RIGHT_2;
-			}
-			break;
-		case DIRECTION_UP_LEFT:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_UP_LEFT_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_UP_LEFT_2;
-			}
-			break;
-		case DIRECTION_DOWN_LEFT:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_DOWN_LEFT_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_DOWN_LEFT_2;
-			}
-			break;
-		case DIRECTION_UP_RIGHT:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_UP_RIGHT_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_UP_RIGHT_2;
-			}
-			break;
-		case DIRECTION_DOWN_RIGHT:
-			if(pose==0){
-				patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_1;
-			}
-			else{
-				patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_2;
-			}
-			break;
-	}
-	return patternId;
+	u8 pose = g_Players[playerId].LastPose;
+	u8 dir = g_Players[playerId].Direction;
+    
+    // Safety
+    if (dir > 8) dir = DIRECTION_NONE;
+
+    if (dir == DIRECTION_NONE) {
+        return GetNoMovingPlayerPatternId(dir); // Assuming logic for NONE inside
+    }
+    
+    // Lookup table for moving patterns (Pose 0, Pose 1)
+    // Indexes: NONE, UP, UR, RI, DR, DO, DL, LE, UL
+    // Note: NONE is handled above or uses index 0 (if valid)
+    static const u8 k_MovePats[] = { 
+        0, 0, // NONE
+        PLAYER_POSE_MOVE_UP_1,          PLAYER_POSE_MOVE_UP_2,
+        PLAYER_POSE_MOVE_UP_RIGHT_1,    PLAYER_POSE_MOVE_UP_RIGHT_2,
+        PLAYER_POSE_MOVE_RIGHT_1,       PLAYER_POSE_MOVE_RIGHT_2,
+        PLAYER_POSE_MOVE_DOWN_RIGHT_1,  PLAYER_POSE_MOVE_DOWN_RIGHT_2,
+        PLAYER_POSE_MOVE_DOWN_1,        PLAYER_POSE_MOVE_DOWN_2,
+        PLAYER_POSE_MOVE_DOWN_LEFT_1,   PLAYER_POSE_MOVE_DOWN_LEFT_2,
+        PLAYER_POSE_MOVE_LEFT_1,        PLAYER_POSE_MOVE_LEFT_2,
+        PLAYER_POSE_MOVE_UP_LEFT_1,     PLAYER_POSE_MOVE_UP_LEFT_2
+    };
+
+    return k_MovePats[dir * 2 + (pose ? 1 : 0)];
 }
 void SetPlayerTarget(u8 playerId){
 	if(g_FieldScrollingActionInProgress!=NO_VALUE && g_MatchStatus!=MATCH_BEFORE_KICK_OFF){
@@ -1085,104 +943,59 @@ void SetPlayerTarget(u8 playerId){
 	}
 	switch(g_MatchStatus){
 		case MATCH_BEFORE_KICK_OFF:
+        {
+            static const u8 k_KO_X[] = { 
+                FIELD_POS_X_CENTER, 
+                FIELD_POS_X_LEFT, FIELD_POS_X_RIGHT,
+                FIELD_POS_X_LEFT+100, FIELD_POS_X_RIGHT-100, 
+                FIELD_POS_X_LEFT, FIELD_POS_X_RIGHT 
+            };
+            static const u16 k_KO_Y_T1[] = {
+                FIELD_POS_Y_TEAM1_GOALKEEPER,
+                FIELD_POS_Y_TEAM1_DEFENDERS, FIELD_POS_Y_TEAM1_DEFENDERS,
+                FIELD_POS_Y_TEAM1_HALFFIELDERS+40, FIELD_POS_Y_TEAM1_HALFFIELDERS+40,
+                FIELD_POS_Y_TEAM1_HALFFIELDERS, FIELD_POS_Y_TEAM1_HALFFIELDERS
+            };
+            static const u16 k_KO_Y_T2[] = {
+                FIELD_POS_Y_TEAM2_GOALKEEPER,
+                FIELD_POS_Y_TEAM2_DEFENDERS, FIELD_POS_Y_TEAM2_DEFENDERS,
+                FIELD_POS_Y_TEAM2_HALFFIELDERS-40, FIELD_POS_Y_TEAM2_HALFFIELDERS-40,
+                FIELD_POS_Y_TEAM2_HALFFIELDERS, FIELD_POS_Y_TEAM2_HALFFIELDERS
+            };
+
 			if(g_Players[playerId].TeamId==REFEREE){
 				// Position near center but slightly offset to avoid overlapping ball/players
 				g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
 				g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
 			}
 			else{
-				if(g_Players[playerId].TeamId==TEAM_1){
-					switch (g_Players[playerId].Role)
-					{
-						case PLAYER_ROLE_GOALKEEPER:
-							g_Players[playerId].TargetX=FIELD_POS_X_CENTER;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_GOALKEEPER;
-							break;
-						case PLAYER_ROLE_LEFT_DEFENDER:
-							g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_DEFENDERS;
-							break;
-						case PLAYER_ROLE_RIGHT_DEFENDER:
-							g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_DEFENDERS;
-							break;
-						case PLAYER_ROLE_LEFT_HALFFIELDER:
-							if(g_RestartKickTeamId!=TEAM_1){
-								g_Players[playerId].TargetX=FIELD_POS_X_LEFT+100;
-								g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS+40;
-							}
-							else{
-								g_Players[playerId].TargetX=FIELD_POS_X_CENTER-7;
-								g_Players[playerId].TargetY=FIELD_POS_Y_CENTER;
-							}
-							break;
-						case PLAYER_ROLE_RIGHT_HALFFIELDER:
-							if(g_RestartKickTeamId!=TEAM_1){
-								g_Players[playerId].TargetX=FIELD_POS_X_RIGHT-100;
-								g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS+40;
-							}
-							else{
-								g_Players[playerId].TargetX=FIELD_POS_X_CENTER+7;
-								g_Players[playerId].TargetY=FIELD_POS_Y_CENTER;
-							}
-							break;
-						case PLAYER_ROLE_LEFT_STRIKER:
-							g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS;
-							break;
-						case PLAYER_ROLE_RIGHT_STRIKER:
-							g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM1_HALFFIELDERS;
-							break;
-					}
-				}
-				else{
-					switch (g_Players[playerId].Role)
-					{
-						case PLAYER_ROLE_GOALKEEPER:
-							g_Players[playerId].TargetX=FIELD_POS_X_CENTER;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_GOALKEEPER;
-							break;
-						case PLAYER_ROLE_LEFT_DEFENDER:
-							g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_DEFENDERS;
-							break;
-						case PLAYER_ROLE_RIGHT_DEFENDER:
-							g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_DEFENDERS;
-							break;
-						case PLAYER_ROLE_LEFT_HALFFIELDER:
-							if(g_RestartKickTeamId!=TEAM_2){
-								g_Players[playerId].TargetX=FIELD_POS_X_LEFT+100;
-								g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS-40;
-							}
-							else{
-								g_Players[playerId].TargetX=FIELD_POS_X_CENTER-7;
-								g_Players[playerId].TargetY=FIELD_POS_Y_CENTER-10;
-							}
-							break;
-						case PLAYER_ROLE_RIGHT_HALFFIELDER:
-							if(g_RestartKickTeamId!=TEAM_2){
-								g_Players[playerId].TargetX=FIELD_POS_X_RIGHT-116;
-								g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS-40;
-							}
-							else{
-								g_Players[playerId].TargetX=FIELD_POS_X_CENTER+7;
-								g_Players[playerId].TargetY=FIELD_POS_Y_CENTER-10;
-							}
-							break;
-						case PLAYER_ROLE_LEFT_STRIKER:
-							g_Players[playerId].TargetX=FIELD_POS_X_LEFT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS;
-							break;
-						case PLAYER_ROLE_RIGHT_STRIKER:
-							g_Players[playerId].TargetX=FIELD_POS_X_RIGHT;
-							g_Players[playerId].TargetY=FIELD_POS_Y_TEAM2_HALFFIELDERS;
-							break;
-					}
-				}
+                u8 role = g_Players[playerId].Role;
+                if (role > 6) role = 0; // Safety
+                
+                bool isTeam1 = (g_Players[playerId].TeamId == TEAM_1);
+                
+                // Base coordinates from tables
+                u16 tx = k_KO_X[role];
+                u16 ty = isTeam1 ? k_KO_Y_T1[role] : k_KO_Y_T2[role];
+
+                // Special handling for Team 2 X mirroring if needed
+                if (!isTeam1 && role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
+                     tx = FIELD_POS_X_RIGHT - 116; 
+                }
+
+                // Special handling for Kickoff taking team Halffielders
+                if ((role == PLAYER_ROLE_LEFT_HALFFIELDER || role == PLAYER_ROLE_RIGHT_HALFFIELDER) &&
+                    g_RestartKickTeamId == g_Players[playerId].TeamId) 
+                {
+                     ty = isTeam1 ? FIELD_POS_Y_CENTER : (FIELD_POS_Y_CENTER - 10);
+                     if (role == PLAYER_ROLE_LEFT_HALFFIELDER) tx = FIELD_POS_X_CENTER - 7;
+                     else tx = FIELD_POS_X_CENTER + 7;
+                }
+
+                g_Players[playerId].TargetX = tx;
+                g_Players[playerId].TargetY = ty;
 			}
-		
+        }
 			break;
 	}
 }
@@ -1215,8 +1028,14 @@ void TickGoalKick() {
     
     if (gkId == NO_VALUE) return; 
 
-    // Phase 1: Setup (First Frame)
-    if (g_Timer == 0) {
+    // WAITING PHASE (1 Second) to show ball out of bounds
+    if (g_Timer < 60) {
+        g_Timer++;
+        return;
+    }
+
+    // Phase 1: Setup (First Frame of Action)
+    if (g_Timer == 60) {
         // Coords
         u16 targetX;
         if (g_GoalKickSide == CORNER_SIDE_LEFT) targetX = GK_BOX_X_MIN;
@@ -1312,12 +1131,12 @@ void TickGoalKick() {
     
     if (arrived) {
          g_Timer++;
-         if (g_Timer > 60) { // 1 Second wait
+         if (g_Timer > 120) { // 1 Second wait AFTER arrival (Total 2s + walk time)
               ClearTextFromLayerA(10, 18, 9); // "GOAL KICK"
               GoalkeeperWithBall(g_RestartKickTeamId, true); // true = No Recoil
          }
     } else {
-         g_Timer = 1; // Hold at 1 until arrived
+         g_Timer = 61; // Hold at 61 until arrived
     }
 }
 
