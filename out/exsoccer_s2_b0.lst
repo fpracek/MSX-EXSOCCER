@@ -4747,7 +4747,7 @@
     00001855 EB               [ 4] 4747 	ex	de, hl
     00001856 21 08 00         [10] 4748 	ld	hl, #0x0008
     00001859 19               [11] 4749 	add	hl, de
-    0000185A 36 9B            [10] 4750 	ld	(hl), #0x9b
+    0000185A 36 9E            [10] 4750 	ld	(hl), #0x9e
                                    4751 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:887: g_Players[gkId].Direction = DIRECTION_UP; // Face Up (Attack Direction)
     0000185C 21 0A 00         [10] 4752 	ld	hl, #0x000a
     0000185F 19               [11] 4753 	add	hl, de
@@ -5201,7 +5201,7 @@
     00001B31 19               [11] 5201 	add	hl, de
     00001B32 0D               [ 4] 5202 	dec	c
     00001B33 20 05            [12] 5203 	jr	NZ, 00114$
-    00001B35 36 9B            [10] 5204 	ld	(hl), #0x9b
+    00001B35 36 9E            [10] 5204 	ld	(hl), #0x9e
     00001B37 C3r3Cr1B         [10] 5205 	jp	00115$
     00001B3A                       5206 00114$:
                                    5207 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:979: else g_Players[s_GkAnimPlayerId].PatternId = PLAYER_POSE_FRONT; // Team 2 GK plays like a player (feet)

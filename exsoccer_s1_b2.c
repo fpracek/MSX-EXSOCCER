@@ -1395,6 +1395,7 @@ void TickBallCollision(){
 
                      PutBallOnPlayerFeet(i);
                      GoalkeeperWithBall(g_Players[i].TeamId, 0); 
+                     GoalkeeperWithBall(g_Players[i].TeamId, !g_Ball.ShotActive); 
                      
                      // Reset Ball State
                      g_Ball.PassTargetPlayerId = NO_VALUE;
@@ -1416,6 +1417,19 @@ void TickBallCollision(){
             } else {
                 // --- BALL IS OWNED (STEAL) ---
 				u8 currentOwner = g_Ball.PossessionPlayerId;
+
+				// GK takes ball from anyone (Teammate or Opponent)
+				if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
+					PutBallOnPlayerFeet(i);
+					GoalkeeperWithBall(g_Players[i].TeamId, 1); // Treat as steal (no recoil)
+					
+					// Reset Ball State
+					g_Ball.PassTargetPlayerId = NO_VALUE;
+					g_Ball.ShotActive = 0;
+					g_Ball.Size = 2;
+					return;
+				}
+
 				if (g_Players[i].TeamId != g_Players[currentOwner].TeamId) {
 					// Opponent detected close to ball carrier -> Steal!
 					PutBallOnPlayerFeet(i);
@@ -1526,6 +1540,24 @@ void PerformPass(u8 toPlayerId) {
     
 	g_Ball.PassTargetPlayerId = toPlayerId;
 	g_Ball.ShotActive = 0; // Not a shot
+
+    // GK Pass Fix: Offset ball start to avoid immediate self-collision
+    if (g_Players[fromId].Role == PLAYER_ROLE_GOALKEEPER) {
+        i8 offX = 0; i8 offY = 0;
+        switch (newDir) {
+            case DIRECTION_UP:        offY = -30; break;
+            case DIRECTION_DOWN:      offY = 30; break;
+            case DIRECTION_LEFT:      offX = -30; break;
+            case DIRECTION_RIGHT:     offX = 30; break;
+            case DIRECTION_UP_LEFT:   offX = -21; offY = -21; break;
+            case DIRECTION_UP_RIGHT:  offX = 21; offY = -21; break;
+            case DIRECTION_DOWN_LEFT: offX = -21; offY = 21; break;
+            case DIRECTION_DOWN_RIGHT:offX = 21; offY = 21; break;
+        }
+        g_Ball.X += offX;
+        g_Ball.Y += offY;
+    }
+
     g_Ball.PassStartX = g_Ball.X;
     g_Ball.PassStartY = g_Ball.Y;
     
@@ -1849,5 +1881,3 @@ void ResetBallInfo(bool resetPossessionPlayer){
 		g_Ball.PossessionPlayerId=NO_VALUE;
 	}
 }
-
-

@@ -4747,7 +4747,7 @@ _GoalkeeperWithBall::
 	ex	de, hl
 	ld	hl, #0x0008
 	add	hl, de
-	ld	(hl), #0x9b
+	ld	(hl), #0x9e
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:887: g_Players[gkId].Direction = DIRECTION_UP; // Face Up (Attack Direction)
 	ld	hl, #0x000a
 	add	hl, de
@@ -5201,7 +5201,7 @@ _TickGoalkeeperAnimation::
 	add	hl, de
 	dec	c
 	jr	NZ, 00114$
-	ld	(hl), #0x9b
+	ld	(hl), #0x9e
 	jp	00115$
 00114$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:979: else g_Players[s_GkAnimPlayerId].PatternId = PLAYER_POSE_FRONT; // Team 2 GK plays like a player (feet)

@@ -42,7 +42,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      000001F5  l__HOME                         
      00000604  l__SEG10                        
      000034FB  l__SEG2                         
-     0000383D  l__SEG1                         
+     00003901  l__SEG1                         
      00003A3B  l__CODE                         
      00003C00  l__SEG6                         
      00004000  l__SEG3                         
@@ -613,7 +613,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG1                               00018000    0000383D =       14397. bytes (REL,CON)
+_SEG1                               00018000    00003901 =       14593. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -621,25 +621,25 @@ _SEG1                               00018000    0000383D =       14397. bytes (R
      00018D90  _TickAI                            exsoccer_s1_b2
      0001A7C5  _PutBallOnPlayerFeet               exsoccer_s1_b2
      0001AC78  _TickBallCollision                 exsoccer_s1_b2
-     0001AFC0  _HandleOffside                     exsoccer_s1_b2
-     0001B005  _IsOffside                         exsoccer_s1_b2
-     0001B0FC  _PerformPass                       exsoccer_s1_b2
-     0001B3DF  _InitPalette                       exsoccer_s1_b2
-     0001B444  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
-     0001B474  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
-     0001B4A4  _g_Sprites1_palette_ita            exsoccer_s1_b2
-     0001B4D4  _g_Sprites1_palette_aus            exsoccer_s1_b2
-     0001B504  _g_Sprites1_palette_fra            exsoccer_s1_b2
-     0001B534  _g_Sprites1_palette_ger            exsoccer_s1_b2
-     0001B564  _g_Sprites1_palette_gbr            exsoccer_s1_b2
-     0001B594  _g_Sprites1_palette_bra            exsoccer_s1_b2
-     0001B5C4  _g_Sprites1_palette_fio            exsoccer_s1_b2
-     0001B5F4  _SetTeam1Palette                   exsoccer_s1_b2
-     0001B621  _SetTeam2Palette                   exsoccer_s1_b2
-     0001B64E  _GetTeamPaletteById                exsoccer_s1_b2
-     0001B693  _TickFieldScrollingAction          exsoccer_s1_b2
-     0001B786  _TickShowKickOff                   exsoccer_s1_b2
-     0001B81C  _ResetBallInfo                     exsoccer_s1_b2
+     0001AFF3  _HandleOffside                     exsoccer_s1_b2
+     0001B038  _IsOffside                         exsoccer_s1_b2
+     0001B12F  _PerformPass                       exsoccer_s1_b2
+     0001B4A3  _InitPalette                       exsoccer_s1_b2
+     0001B508  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
+     0001B538  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
+     0001B568  _g_Sprites1_palette_ita            exsoccer_s1_b2
+     0001B598  _g_Sprites1_palette_aus            exsoccer_s1_b2
+     0001B5C8  _g_Sprites1_palette_fra            exsoccer_s1_b2
+     0001B5F8  _g_Sprites1_palette_ger            exsoccer_s1_b2
+     0001B628  _g_Sprites1_palette_gbr            exsoccer_s1_b2
+     0001B658  _g_Sprites1_palette_bra            exsoccer_s1_b2
+     0001B688  _g_Sprites1_palette_fio            exsoccer_s1_b2
+     0001B6B8  _SetTeam1Palette                   exsoccer_s1_b2
+     0001B6E5  _SetTeam2Palette                   exsoccer_s1_b2
+     0001B712  _GetTeamPaletteById                exsoccer_s1_b2
+     0001B757  _TickFieldScrollingAction          exsoccer_s1_b2
+     0001B84A  _TickShowKickOff                   exsoccer_s1_b2
+     0001B8E0  _ResetBallInfo                     exsoccer_s1_b2
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
 Hexadecimal  [32-Bits]
