@@ -13,6 +13,7 @@
 bool IsOffside(u8 playerId);
 
 // *** CONSTANTS ***
+
 extern u8 			g_FieldScrollingActionInProgress; 	// Bank 1 = Segment 0
 extern int  		g_FieldCurrentYPosition;			// Bank 1 = Segment 0
 extern u8       	g_Team1PaletteId;					// Bank 1 = Segment 0
@@ -37,6 +38,7 @@ extern bool 		g_VSynch; // Bank 1 = Segment 0
 extern bool 		g_GameWith2Players;
 extern i8           g_GkRecoilY; // From exsoccer_s2_b0.c
 extern bool         g_GkIsGroundKick; // From exsoccer_s2_b0.c
+extern u8           g_ShootCooldown; // From exsoccer.c
 
 void TickTeamJoystick(u8 teamId, u8 direction){
 
@@ -217,6 +219,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 				}
 
 				if (isShooting) {
+					if (g_ShootCooldown > 0) return; // Prevent shooting if cooldown active
 					g_ActionCooldown = 20;
 					return;
 				}
@@ -1253,6 +1256,11 @@ void PutBallOnPlayerFeet(u8 playerId){
         
         // Prevent immediate action (Shot/Pass) upon receiving - Reduced to 8 frames for responsiveness
         g_ActionCooldown = 8;
+		
+		if (g_Ball.ComingFromRestart) {
+			g_ShootCooldown = 45; // 0.75s ban on shooting after restart
+			g_Ball.ComingFromRestart = 0;
+		}
 	}
 
 	// Offset di base per la palla (distanza "attaccata" ai piedi) per ogni direzione

@@ -46,6 +46,7 @@ u8          g_PassTargetPlayer=NO_VALUE;
 bool		g_GameWith2Players=false;
 u8          g_GameLevel=1;
 u8          g_ActionCooldown=0; // Debounce for steal/pass
+u8          g_ShootCooldown=0;  // Cooldown specifically for shooting after restart
 u16         g_ShotCursorX = 120;
 i8          g_ShotCursorDir = 4;
 bool        g_FioBre=false;
@@ -67,6 +68,7 @@ void InitVariables(){
 	g_Ball.PassTargetPlayerId = NO_VALUE;
 	g_Ball.ShotActive = 0;
 	g_Ball.LastTouchTeamId = NO_VALUE;
+	g_Ball.ComingFromRestart = 0;
 	// Initialize other game variables if needed
 }
 // *** ISR ***
@@ -781,6 +783,10 @@ void MainGameLoop(){
                  g_Players[g_Team1ActivePlayer].Status = PLAYER_STATUS_NONE;
             if (g_GameWith2Players && g_Team2ActivePlayer != NO_VALUE && g_Players[g_Team2ActivePlayer].Status == PLAYER_STATUS_POSITIONED)
                  g_Players[g_Team2ActivePlayer].Status = PLAYER_STATUS_NONE;
+		}
+		
+		if (g_ShootCooldown > 0) {
+			g_ShootCooldown--;
 		}
 //
 		// Update Shot Cursor (Oscillate)

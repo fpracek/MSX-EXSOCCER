@@ -12,6 +12,7 @@ extern u8 g_CornerKickSide;
 extern u8 g_CornerKickTargetId;
 extern u8 g_ThrowInPlayerId;
 extern u8 g_ActionCooldown;
+extern u8 g_ShootCooldown;
 
 // STRUCTURES
 typedef struct PlayerInfo
@@ -52,6 +53,7 @@ typedef struct BallInfo
 	u16     TargetY;            // For shots or fixed point passes
 	u8      ShotActive;         // 1 if ball is flying as a shot
 	u8      PossessionTimer;    // Frames since possession started
+	u8      ComingFromRestart;  // 1 if pass originated from a restart
 } BallInfo;
 #endif
 
@@ -153,9 +155,9 @@ typedef struct BallInfo
 #define PLAYER_POSE_SHOT_RIGHT    			27
 #define PLAYER_POSE_SHOT_LEFT    			164
 #define PLAYER_POSE_TACKLE_FROM_UP_LEFT		36
-#define PLAYER_POSE_TACKLE_FROM_UP_RIGHT	187
+#define PLAYER_POSE_TACKLE_FROM_UP_RIGHT	172
 #define PLAYER_POSE_TACKLE_FROM_DOWN_LEFT   34
-#define PLAYER_POSE_TACKLE_FROM_DOWN_RIGHT  189
+#define PLAYER_POSE_TACKLE_FROM_DOWN_RIGHT  174
 #define PLAYER_POSE_TEAM2_GK_BALL_FRONT     61
 #define PLAYER_POSE_TEAM2_GK_UP_RIGHT       62
 #define PLAYER_POSE_TEAM2_GK_DOWN_RIGHT     63
