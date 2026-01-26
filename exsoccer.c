@@ -55,7 +55,7 @@ u8          g_GoalKickSide = CORNER_SIDE_LEFT;
 u8          g_CornerKickTargetId = NO_VALUE;
 u8          g_ThrowInPlayerId = NO_VALUE;
 bool 		g_VSynch = FALSE;
-
+i8          g_GkRecoilY = 0;
 
 void UpdateV9990()
 {
@@ -1033,7 +1033,7 @@ void TickGoalKick() {
         g_Timer++;
         return;
     }
-
+    g_Ball.Size = 1;
     // Phase 1: Setup (First Frame of Action)
     if (g_Timer == 60) {
         // Coords
@@ -1041,13 +1041,11 @@ void TickGoalKick() {
         if (g_GoalKickSide == CORNER_SIDE_LEFT) targetX = GK_BOX_X_MIN;
         else targetX = GK_BOX_X_MAX;
         
-        u16 ballY, gkTargetY;
+        u16 ballY;
         if (g_RestartKickTeamId == TEAM_1) { // Bottom Goal
              ballY = GK_BOX_Y_BOTTOM_MIN; 
-             gkTargetY = ballY + 15;
         } else { // Top Goal
              ballY = GK_BOX_Y_TOP_MAX; 
-             gkTargetY = ballY - 15; 
         }
         
         // Place Ball
@@ -1055,9 +1053,18 @@ void TickGoalKick() {
         g_Ball.Y = ballY;
         g_Ball.PossessionPlayerId = NO_VALUE;
         
-        // Set GK Target
+        // Set GK Target to RUN START POSITION (Further away for run-up)
+        u16 runStartY;
+        if (g_RestartKickTeamId == TEAM_1) {
+             runStartY = ballY + 32; 
+             if(runStartY > FIELD_BOUND_Y_BOTTOM) runStartY = FIELD_BOUND_Y_BOTTOM;
+        } else {
+             runStartY = ballY - 32;
+             if(runStartY < FIELD_BOUND_Y_TOP) runStartY = FIELD_BOUND_Y_TOP;
+        }
+
         g_Players[gkId].TargetX = targetX;
-        g_Players[gkId].TargetY = gkTargetY;
+        g_Players[gkId].TargetY = runStartY;
         g_Players[gkId].Status = PLAYER_STATUS_NONE; 
         
         if (g_RestartKickTeamId == TEAM_1) g_Players[gkId].Direction = DIRECTION_UP;
@@ -1117,26 +1124,45 @@ void TickGoalKick() {
     i16 dx = (i16)g_Players[gkId].X - (i16)g_Players[gkId].TargetX;
     i16 dy = (i16)g_Players[gkId].Y - (i16)g_Players[gkId].TargetY;
     
-    bool arrived = false;
-    if (dx >= -4 && dx <= 4 && dy >= -4 && dy <= 4) {
+    bool arrived = (dx >= -4 && dx <= 4 && dy >= -4 && dy <= 4);
+    
+    if (arrived) {
         g_Players[gkId].X = g_Players[gkId].TargetX;
         g_Players[gkId].Y = g_Players[gkId].TargetY;
-        arrived = true;
         
         if (g_RestartKickTeamId == TEAM_1) g_Players[gkId].Direction = DIRECTION_UP;
         else g_Players[gkId].Direction = DIRECTION_DOWN;
         g_Players[gkId].PatternId = GetNoMovingPlayerPatternId(g_Players[gkId].Direction);
         g_Players[gkId].Status = PLAYER_STATUS_POSITIONED;
-    }
-    
-    if (arrived) {
-         g_Timer++;
-         if (g_Timer > 120) { // 1 Second wait AFTER arrival (Total 2s + walk time)
-              ClearTextFromLayerA(10, 18, 9); // "GOAL KICK"
-              GoalkeeperWithBall(g_RestartKickTeamId, true); // true = No Recoil
-         }
+
+        // Run-up Logic
+        u16 distY = (g_Players[gkId].Y > g_Ball.Y) ? (g_Players[gkId].Y - g_Ball.Y) : (g_Ball.Y - g_Players[gkId].Y);
+        
+        if (distY > 16) {
+             // At Start Position
+             g_Timer++;
+             if (g_Timer > 100) {
+                 // Start Run
+                 u16 kickY;
+                 if (g_RestartKickTeamId == TEAM_1) kickY = g_Ball.Y + 6; 
+                 else kickY = g_Ball.Y - 6;
+                 
+                 g_Players[gkId].TargetY = kickY;
+                 g_Players[gkId].Status = PLAYER_STATUS_NONE;
+             }
+        } else {
+             // At Kick Position
+             g_Timer++;
+             if (g_Timer > 110) {
+                  ClearTextFromLayerA(10, 18, 9); 
+                  GoalkeeperWithBall(g_RestartKickTeamId, true); 
+                  g_GkRecoilY = 0;
+             }
+        }
     } else {
-         g_Timer = 61; // Hold at 61 until arrived
+         // Moving
+         if (g_Timer < 100) g_Timer = 61; // Hold at 61 while moving to start
+         else g_Timer = 101; // Hold at 101 while moving to ball
     }
 }
 

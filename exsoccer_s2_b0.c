@@ -28,7 +28,8 @@ extern u8          	g_Team1ActivePlayer;				// Bank 1 = Segment 0
 extern u8          	g_Team2ActivePlayer;				// Bank 1 = Segment 0
 extern u8			g_PassTargetPlayer;					// Bank 1 = Segment 0
 extern bool         g_FioBre;							// Bank 1 = Segment 0
-
+extern i8 			g_GkRecoilY;					    // Bank 1 = Segment 0
+bool                g_GkIsGroundKick = false;           // New global flag
 
 // VARIABLES
 extern u16 	g_FrameCounter; // Bank 1 = Segment 0
@@ -203,7 +204,7 @@ void PutPlayerSprite(u8 playerId){
 			   attr.SC=0;
 			// --- Goalkeeper horizontal movement animation logic ---
 			// Only animate during match in action
-			if (g_MatchStatus == MATCH_IN_ACTION) {
+			if (g_MatchStatus == MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER) {
 				g_Players[playerId].Status=PLAYER_STATUS_POSITIONED;
 				u8 team = g_Players[playerId].TeamId;
 				// Horizontal movement (right/left)
@@ -872,7 +873,7 @@ void UpdatePassTarget() {
 // Static vars for GK animation
 static u8 s_GkAnimTimer = 0;
 static u8 s_GkAnimPlayerId = NO_VALUE;
-static i8 s_GkRecoilY = 0;
+
 
 void GoalkeeperWithBall(u8 teamId, bool isSteal) {
     u8 gkId = GetPlayerIdByRole(teamId, PLAYER_ROLE_GOALKEEPER);
@@ -898,17 +899,20 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
     // Team 1 attacks UP (Shoots UP). Team 2 defends. GK 2 moves UP (-1).
     bool closeToLine = false;
     if (teamId == TEAM_2) { // GK 2 (Top)
-        s_GkRecoilY = -1;
+        g_GkRecoilY = -1;
         if (g_Players[gkId].Y <= FIELD_BOUND_Y_TOP + 4) closeToLine = true;
     } else { // GK 1 (Bottom)
-        s_GkRecoilY = 1;
+        g_GkRecoilY = 1;
         if (g_Players[gkId].Y >= FIELD_BOUND_Y_BOTTOM - 4) closeToLine = true;
     }
 
-    if (closeToLine || isSteal) s_GkRecoilY = 0; // No recoil for Steals
+    if (closeToLine || isSteal) g_GkRecoilY = 0; // No recoil for Steals
+    g_GkIsGroundKick = isSteal; // Track if this is a ground kick (no offset needed)
+    DEBUG_LOGNUM("GK_SET_GROUND", g_GkIsGroundKick);
     
     // Take Possession
     SetPlayerBallPossession(gkId);
+    g_Ball.PossessionPlayerId = gkId; // Fix: Ensure AI knows GK has ball immediately to prevent chasing
     g_Ball.ShotActive = 0;
     
     g_MatchStatus = MATCH_BALL_ON_GOALKEEPER;
@@ -962,11 +966,12 @@ void TickGoalkeeperAnimation() {
     s_GkAnimTimer++;
     
     u8 kickTime = 60; // 1 Second delay for all (was 30)
+    if (g_GkIsGroundKick) kickTime = 6; // Immediate kick for ground kicks
 
     // Recoil Animation (First 30 frames)
     if (s_GkAnimTimer < kickTime) {
-        if (s_GkAnimTimer < 30 && (s_GkAnimTimer % 2) == 0 && s_GkRecoilY != 0) { // Faster movement (every 2 frames)
-            g_Players[s_GkAnimPlayerId].Y += s_GkRecoilY;
+        if (s_GkAnimTimer < 30 && (s_GkAnimTimer % 2) == 0 && g_GkRecoilY != 0) { // Faster movement (every 2 frames)
+            g_Players[s_GkAnimPlayerId].Y += g_GkRecoilY;
             
             // Safety Clamp
            if(g_Players[s_GkAnimPlayerId].Y < FIELD_BOUND_Y_TOP) g_Players[s_GkAnimPlayerId].Y = FIELD_BOUND_Y_TOP;
@@ -982,6 +987,7 @@ void TickGoalkeeperAnimation() {
         
     } else if (s_GkAnimTimer == kickTime) {
         // KICK!
+        DEBUG_LOGNUM("GK_ANIM_KICK", s_GkAnimTimer);
         u8 targetId = GetBestPassTarget(s_GkAnimPlayerId); 
         
         if (targetId != NO_VALUE) {
@@ -1579,4 +1585,3 @@ void TickThrowIn() {
         }
     }
 }
-

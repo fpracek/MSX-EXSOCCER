@@ -35,6 +35,8 @@ extern bool         g_FioBre;							// Bank 1 = Segment 0
 extern u16 			g_FrameCounter; // Bank 1 = Segment 0
 extern bool 		g_VSynch; // Bank 1 = Segment 0
 extern bool 		g_GameWith2Players;
+extern i8           g_GkRecoilY; // From exsoccer_s2_b0.c
+extern bool         g_GkIsGroundKick; // From exsoccer_s2_b0.c
 
 void TickTeamJoystick(u8 teamId, u8 direction){
 
@@ -1243,6 +1245,15 @@ void PutBallOnPlayerFeet(u8 playerId){
 	u8 dir = g_Players[playerId].Direction;
 	if(dir == DIRECTION_NONE) dir = g_Players[playerId].PreviousDirection; // Fallback se fermo
 
+	// GK Logic: If moving sideways, treat ball position as Front (UP/DOWN)
+	u8 calcDir = dir;
+	bool isGkSideMove = false;
+	if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER && (dir == DIRECTION_LEFT || dir == DIRECTION_RIGHT)) {
+		isGkSideMove = true;
+		if (g_Players[playerId].TeamId == TEAM_1) calcDir = DIRECTION_UP;
+		else calcDir = DIRECTION_DOWN;
+	}
+
 	// Use KickMoveState for animation if set
 	u8 animStep = g_Ball.KickMoveState;
 	if (animStep > 3) animStep = 3; // Default/Reset to 3 (Close) if NO_VALUE (255)
@@ -1250,46 +1261,51 @@ void PutBallOnPlayerFeet(u8 playerId){
 	u8 currentOffset = DribbleAnimOffsets[animStep];
 	u8 currentOffsetDiag = DribbleAnimOffsetsDiag[animStep];
 
-	u8 distX = BallBaseDistX[dir] + ((dir==DIRECTION_UP || dir==DIRECTION_DOWN) ? 0 : (dir == DIRECTION_LEFT || dir == DIRECTION_RIGHT ? currentOffset : currentOffsetDiag));
-	u8 distY = BallBaseDistY[dir] + ((dir==DIRECTION_LEFT || dir==DIRECTION_RIGHT) ? 0 : (dir == DIRECTION_UP || dir == DIRECTION_DOWN ? currentOffset : currentOffsetDiag));
+	u8 distX = BallBaseDistX[calcDir] + ((calcDir==DIRECTION_UP || calcDir==DIRECTION_DOWN) ? 0 : (calcDir == DIRECTION_LEFT || calcDir == DIRECTION_RIGHT ? currentOffset : currentOffsetDiag));
+	u8 distY = BallBaseDistY[calcDir] + ((calcDir==DIRECTION_LEFT || calcDir==DIRECTION_RIGHT) ? 0 : (calcDir == DIRECTION_UP || calcDir == DIRECTION_DOWN ? currentOffset : currentOffsetDiag));
 
 	// Special adjustment: if TEAM_2 goalkeeper, bring ball closer to body
 	if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER && g_Players[playerId].TeamId == TEAM_2) {
 		distY = (distY > 2) ? (distY - 2) : distY; // bring ball 2px closer vertically
 	}
 
-	switch (dir){
+	i8 extraX = 0;
+	if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER && g_Players[playerId].TeamId == TEAM_1) {
+		if (!isGkSideMove && !g_GkIsGroundKick) extraX = -15; // Only offset if NOT ground kick
+	}
+
+	switch (calcDir){
 		case DIRECTION_UP:
-			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[calcDir] + extraX;
+			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[calcDir];
 			break;
 		case DIRECTION_DOWN:
-			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X + BallAlignCorrectX[calcDir];
+			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[calcDir];
 			break;
 		case DIRECTION_LEFT:
-			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[calcDir];
+			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[calcDir];
 			break;
 		case DIRECTION_RIGHT:
-			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[calcDir];
+			g_Ball.Y=g_Players[playerId].Y + BallAlignCorrectY[calcDir];
 			break;
 		case DIRECTION_UP_LEFT:
-			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[calcDir];
+			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[calcDir];
 			break;
 		case DIRECTION_UP_RIGHT:
-			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[calcDir];
+			g_Ball.Y=g_Players[playerId].Y - distY + BallAlignCorrectY[calcDir];
 			break;
 		case DIRECTION_DOWN_LEFT:
-			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X - distX + BallAlignCorrectX[calcDir];
+			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[calcDir];
 			break;
 		case DIRECTION_DOWN_RIGHT:
-			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[dir];
-			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[dir];
+			g_Ball.X=g_Players[playerId].X + distX + BallAlignCorrectX[calcDir];
+			g_Ball.Y=g_Players[playerId].Y + distY + BallAlignCorrectY[calcDir];
 			break;
 	}
 	g_Ball.PreviousY=g_Ball.Y;
@@ -1543,19 +1559,47 @@ void PerformPass(u8 toPlayerId) {
 
     // GK Pass Fix: Offset ball start to avoid immediate self-collision
     if (g_Players[fromId].Role == PLAYER_ROLE_GOALKEEPER) {
-        i8 offX = 0; i8 offY = 0;
-        switch (newDir) {
-            case DIRECTION_UP:        offY = -30; break;
-            case DIRECTION_DOWN:      offY = 30; break;
-            case DIRECTION_LEFT:      offX = -30; break;
-            case DIRECTION_RIGHT:     offX = 30; break;
-            case DIRECTION_UP_LEFT:   offX = -21; offY = -21; break;
-            case DIRECTION_UP_RIGHT:  offX = 21; offY = -21; break;
-            case DIRECTION_DOWN_LEFT: offX = -21; offY = 21; break;
-            case DIRECTION_DOWN_RIGHT:offX = 21; offY = 21; break;
+        DEBUG_LOGNUM("GK_PASS_X_PRE", g_Ball.X);
+        DEBUG_LOGNUM("GK_IS_GROUND", g_GkIsGroundKick);
+
+        bool applyOffset = true;
+        // Disable offset for Goal Kicks / Steals (Ground kicks where RecoilY is 0)
+        if (g_GkIsGroundKick) {
+            applyOffset = false;
+            
+            // FORCE RESET BALL POSITION for ground kicks to prevent "dribble" offsets
+            // This ensures the ball starts exactly where the GK is holding it (or at feet)
+            // without the 30px jump, and without any left/right shift from previous frames.
+            // We use the current ball position which is already aligned by PutBallOnPlayerFeet.
+            g_Ball.X = g_Ball.X; 
+            g_Ball.Y = g_Ball.Y;
         }
-        g_Ball.X += offX;
-        g_Ball.Y += offY;
+        
+        // Explicit User Request: Disable offset for Corner/Goal Kicks setup phases
+        if (g_MatchStatus == MATCH_CORNER_KICK || g_MatchStatus == MATCH_BEFORE_CORNER_KICK ||
+            g_MatchStatus == MATCH_GOAL_KICK || g_MatchStatus == MATCH_BEFORE_GOAL_KICK) {
+             applyOffset = false;
+        }
+
+        DEBUG_LOGNUM("GK_APPLY_OFF", applyOffset);
+
+        if (applyOffset) {
+            i8 offX = 0; i8 offY = 0;
+            switch (newDir) {
+                case DIRECTION_UP:        offY = -30; break;
+                case DIRECTION_DOWN:      offY = 30; break;
+                case DIRECTION_LEFT:      offX = -30; break;
+                case DIRECTION_RIGHT:     offX = 30; break;
+                case DIRECTION_UP_LEFT:   offX = -21; offY = -21; break;
+                case DIRECTION_UP_RIGHT:  offX = 21; offY = -21; break;
+                case DIRECTION_DOWN_LEFT: offX = -21; offY = 21; break;
+                case DIRECTION_DOWN_RIGHT:offX = 21; offY = 21; break;
+            }
+            g_Ball.X += offX;
+            g_Ball.Y += offY;
+            DEBUG_LOGNUM("GK_OFF_X", offX);
+        }
+        DEBUG_LOGNUM("GK_PASS_X_POST", g_Ball.X);
     }
 
     g_Ball.PassStartX = g_Ball.X;
