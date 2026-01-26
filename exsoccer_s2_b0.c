@@ -330,14 +330,16 @@ void TickPlayerToOwnTarget(){
             }
 
 			if(g_MatchStatus==MATCH_IN_ACTION){
-				// Don't force Positioned status to allow animation during skip frames
-				if(g_Players[i].AiTickCounter<AI_TICK_SPEED){
-					g_Players[i].AiTickCounter++;
+				// Speed up AI: Run 2 out of 3 frames (66% speed) to match Human speed
+				g_Players[i].AiTickCounter++;
+				if(g_Players[i].AiTickCounter >= 3) g_Players[i].AiTickCounter = 0;
+				
+				if(g_Players[i].AiTickCounter == 2){ // Skip 1 frame every 3
 					continue;
 				}
+			} else {
+				g_Players[i].AiTickCounter=0;
 			}
-			
-			g_Players[i].AiTickCounter=0;
 			
 			if(!playerInPosition){
 				g_Players[i].Status=PLAYER_STATUS_NONE;
@@ -434,8 +436,7 @@ void TickPlayerToOwnTarget(){
                      }
                 }
 				
-				//DEBUG_LOGNUM("TEST",g_MatchStatus);
-
+				
 
 				if(g_MatchStatus==MATCH_BEFORE_KICK_OFF){
 					
@@ -915,8 +916,7 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
 
     if (closeToLine || isSteal) g_GkRecoilY = 0; // No recoil for Steals
     g_GkIsGroundKick = isSteal; // Track if this is a ground kick (no offset needed)
-    DEBUG_LOGNUM("GK_SET_GROUND", g_GkIsGroundKick);
-    
+   
     // Take Possession
     SetPlayerBallPossession(gkId);
     g_Ball.PossessionPlayerId = gkId; // Fix: Ensure AI knows GK has ball immediately to prevent chasing
@@ -1001,7 +1001,7 @@ void TickGoalkeeperAnimation() {
         
     } else if (s_GkAnimTimer == kickTime) {
         // KICK!
-        DEBUG_LOGNUM("GK_ANIM_KICK", s_GkAnimTimer);
+       
         u8 targetId = GetBestPassTarget(s_GkAnimPlayerId); 
         
         if (targetId != NO_VALUE) {
@@ -1155,6 +1155,7 @@ void TickBallFlying() {
 
 		if (isMovingToPlayer) {
 			// Sticky Pass -> Magnet to player
+			g_Ball.KickMoveState = 3; // Force ball to snap to feet immediately (No visual lag)
 			PutBallOnPlayerFeet(g_Ball.PassTargetPlayerId);
 			g_Ball.PassTargetPlayerId = NO_VALUE;
 			g_Ball.Size = 1;

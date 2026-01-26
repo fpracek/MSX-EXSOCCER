@@ -875,9 +875,8 @@ _TickTeamJoystick::
 	xor	a, #0x80
 00742$:
 	jp	P, 00155$
-	ld	e, -11 (ix)
+	ld	a, -11 (ix)
 	ld	d, -10 (ix)
-	ld	a, e
 	sub	a, #0x10
 	ld	a, d
 	rla
@@ -1101,10 +1100,12 @@ _TickTeamJoystick::
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:243: return; 
 	jp	00259$
 00200$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:247: if((g_FrameCounter % 4)!=0){ 
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:247: if((g_FrameCounter % 3)!=0){ 
 	ld	hl, (_g_FrameCounter)
-	ld	a, l
-	and	a, #0x03
+	ld	de, #0x0003
+	call	__moduint
+	ld	a, d
+	or	a, e
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:248: return;
 	jp	NZ,00259$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:251: if(g_Ball.KickMoveState==NO_VALUE){
@@ -1271,16 +1272,16 @@ _TickTeamJoystick::
 	ld	a, -11 (ix)
 	dec	a
 	ld	a, #0x01
-	jr	Z, 00762$
+	jr	Z, 00761$
 	xor	a, a
-00762$:
+00761$:
 	ld	-5 (ix), a
 	ld	a, -11 (ix)
 	sub	a, #0x07
 	ld	a, #0x01
-	jr	Z, 00764$
+	jr	Z, 00763$
 	xor	a, a
-00764$:
+00763$:
 	ld	-4 (ix), a
 	bit	0, -5 (ix)
 	jr	NZ, 00276$
@@ -1354,12 +1355,12 @@ _TickTeamJoystick::
 	jp	C, 00217$
 	ld	e, -11 (ix)
 	ld	d, #0x00
-	ld	hl, #00773$
+	ld	hl, #00772$
 	add	hl, de
 	add	hl, de
 	add	hl, de
 	jp	(hl)
-00773$:
+00772$:
 	jp	00217$
 	jp	00209$
 	jp	00213$
@@ -2213,9 +2214,9 @@ _TickTeamJoystick::
 	cp	a, c
 	ld	a, #0xff
 	sbc	a, b
-	jp	PO, 00774$
+	jp	PO, 00773$
 	xor	a, #0x80
-00774$:
+00773$:
 	jp	P, 00242$
 	ld	a, c
 	sub	a, #0x10
@@ -2229,9 +2230,9 @@ _TickTeamJoystick::
 	cp	a, e
 	ld	a, #0xff
 	sbc	a, d
-	jp	PO, 00775$
+	jp	PO, 00774$
 	xor	a, #0x80
-00775$:
+00774$:
 	jp	P, 00242$
 	ld	a, e
 	sub	a, #0x10
@@ -2303,10 +2304,12 @@ _TickTeamJoystick::
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:408: return;
 	jp	00259$
 00242$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:412: if((g_FrameCounter % 4)!=0){ 
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:412: if((g_FrameCounter % 3)!=0){ 
 	ld	hl, (_g_FrameCounter)
-	ld	a, l
-	and	a, #0x03
+	ld	de, #0x0003
+	call	__moduint
+	ld	a, d
+	or	a, e
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:413: return;
 	jp	NZ,00259$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:152: i16 dx = (i16)g_Players[playerId].X - (i16)g_Ball.X;
@@ -6809,9 +6812,9 @@ _PutBallOnPlayerFeet::
 	ld	a, c
 	call	_SetPlayerBallPossession
 	pop	de
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1255: g_ActionCooldown = 30;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1255: g_ActionCooldown = 8;
 	ld	iy, #_g_ActionCooldown
-	ld	0 (iy), #0x1e
+	ld	0 (iy), #0x08
 00102$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1260: const u8 BallBaseDistX[] = { 0, 0, 4, 6, 4, 0, 4, 6, 4 };
 	ld	-55 (ix), #0x00
@@ -8067,9 +8070,9 @@ _TickBallCollision::
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1451: g_Ball.ShotActive = 0; 
 	ld	hl, #(_g_Ball + 27)
 	ld	(hl), #0x00
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1452: g_Ball.KickMoveState = 0;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1452: g_Ball.KickMoveState = 3; // Force ball to snap to feet immediately (No visual lag)
 	ld	hl, #(_g_Ball + 13)
-	ld	(hl), #0x00
+	ld	(hl), #0x03
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1453: g_Ball.Size = 1; // On feet = small
 	ld	hl, #(_g_Ball + 4)
 	ld	(hl), #0x01

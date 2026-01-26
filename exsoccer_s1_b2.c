@@ -244,7 +244,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 			}
 		}
 
-		if((g_FrameCounter % 4)!=0){ 
+		if((g_FrameCounter % 3)!=0){ 
 			return;
 		}
 
@@ -409,7 +409,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 			}
 		}
 		
-		if((g_FrameCounter % 4)!=0){ 
+		if((g_FrameCounter % 3)!=0){ 
 			return;
 		}
 
@@ -1251,8 +1251,8 @@ void PutBallOnPlayerFeet(u8 playerId){
 		g_Ball.ShotActive = 0; // Clear any pending shot
 		SetPlayerBallPossession(g_Ball.PossessionPlayerId);
         
-        // Prevent immediate action (Shot/Pass) upon receiving - INCREASED to 30 frames (0.5s)
-        g_ActionCooldown = 30;
+        // Prevent immediate action (Shot/Pass) upon receiving - Reduced to 8 frames for responsiveness
+        g_ActionCooldown = 8;
 	}
 
 	// Offset di base per la palla (distanza "attaccata" ai piedi) per ogni direzione
@@ -1449,7 +1449,7 @@ void TickBallCollision(){
                 // 4. Normal Player Logic
 				g_Ball.PassTargetPlayerId = NO_VALUE; 
                 g_Ball.ShotActive = 0; 
-                g_Ball.KickMoveState = 0;
+                g_Ball.KickMoveState = 3; // Force ball to snap to feet immediately (No visual lag)
 				g_Ball.Size = 1; // On feet = small
 				PutBallOnPlayerFeet(i);
 				g_Players[i].Status = PLAYER_STATUS_HAS_BALL;
