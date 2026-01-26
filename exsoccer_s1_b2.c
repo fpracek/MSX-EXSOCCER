@@ -857,6 +857,31 @@ void TickAI(u8 playerId){
 
 			// C: ATTACKING SUPPORT (TEAMMATE HAS BALL) -----------------------
 			// ----------------------------------------------------------------
+            
+            // SPECIAL CASE: GK HAS BALL (Restart) -> Move to Attack Formation
+            if (g_MatchStatus == MATCH_BALL_ON_GOALKEEPER) {
+                 // Override targets for teammates
+                 if (playerTeamId == TEAM_1) { // Moving UP
+                      if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetY = 160;
+                      else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetY = 240;
+                      else g_Players[playerId].TargetY = 350;
+                 } else { // Moving DOWN
+                      if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetY = 320;
+                      else if (g_Players[playerId].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetY = 240;
+                      else g_Players[playerId].TargetY = 130;
+                 }
+                 
+                 // X Coords (Standard spread)
+                 if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_STRIKER) g_Players[playerId].TargetX = 64;
+                 else if (g_Players[playerId].Role == PLAYER_ROLE_RIGHT_STRIKER) g_Players[playerId].TargetX = 192;
+                 else if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_HALFFIELDER) g_Players[playerId].TargetX = 48;
+                 else if (g_Players[playerId].Role == PLAYER_ROLE_RIGHT_HALFFIELDER) g_Players[playerId].TargetX = 208;
+                 else if (g_Players[playerId].Role == PLAYER_ROLE_LEFT_DEFENDER) g_Players[playerId].TargetX = 80;
+                 else if (g_Players[playerId].Role == PLAYER_ROLE_RIGHT_DEFENDER) g_Players[playerId].TargetX = 176;
+                 
+                 return;
+            }
+
 			u16 midFieldY = (FIELD_BOUND_Y_TOP + FIELD_BOUND_Y_BOTTOM) / 2;
 			
 			// Base positioning based on Role
@@ -1095,13 +1120,14 @@ void TickAI(u8 playerId){
 			bool chaserBeaten = false;
 			bool opponentHasBall = (g_Ball.PossessionPlayerId != NO_VALUE && g_Players[g_Ball.PossessionPlayerId].TeamId != playerTeamId);
 
-			if (opponentHasBall && playerClosesestToBallId != NO_VALUE) {
+            bool forceRetreat = (g_MatchStatus == MATCH_BALL_ON_GOALKEEPER);
+			if (opponentHasBall && playerClosesestToBallId != NO_VALUE && !forceRetreat) {
 				u16 chaserY = g_Players[playerClosesestToBallId].Y;
 				if (playerTeamId == TEAM_1) { if (g_Ball.Y > chaserY) chaserBeaten = true; } 
 				else { if (g_Ball.Y < chaserY) chaserBeaten = true; }
 			}
 
-			if (opponentHasBall && chaserBeaten) {
+			if (opponentHasBall && chaserBeaten && !forceRetreat) {
 				g_Players[playerId].TargetX = g_Ball.X;
 				if (playerTeamId == TEAM_1) g_Players[playerId].TargetY = g_Ball.Y + 15;
 				else g_Players[playerId].TargetY = g_Ball.Y - 15;
@@ -1609,6 +1635,36 @@ void PerformPass(u8 toPlayerId) {
     g_Ball.PassTotalDist = (u16)((dx<0?-dx:dx) + (dy<0?-dy:dy)); 
 }
 
+void EnforcePenaltyBoxRestriction() {
+    if (g_MatchStatus != MATCH_BALL_ON_GOALKEEPER) {
+        return;
+    }
+
+    u8 gkOwnerId = g_Ball.PossessionPlayerId;
+    // Check if a goalkeeper actually has the ball
+    if (gkOwnerId == NO_VALUE || g_Players[gkOwnerId].Role != PLAYER_ROLE_GOALKEEPER) {
+        return;
+    }
+
+    u8 gkTeamId = g_Players[gkOwnerId].TeamId;
+    
+    // Loop through all field players
+    for (u8 i = 0; i < 14; i++) { 
+        if (i == gkOwnerId) continue; // Skip the GK himself
+
+        if (gkTeamId == TEAM_1) { // Bottom GK has ball, players can't be in y > PENALTY_BOX_Y_BOTTOM
+            if (g_Players[i].TargetY > PENALTY_BOX_Y_BOTTOM) {
+                g_Players[i].TargetY = PENALTY_BOX_Y_BOTTOM;
+                g_Players[i].Status = PLAYER_STATUS_NONE;
+            }
+        } else { // Top GK has ball, players can't be in y < PENALTY_BOX_Y_TOP
+            if (g_Players[i].TargetY < PENALTY_BOX_Y_TOP) {
+                g_Players[i].TargetY = PENALTY_BOX_Y_TOP;
+                g_Players[i].Status = PLAYER_STATUS_NONE;
+            }
+        }
+    }
+}
 
 
 // ===============

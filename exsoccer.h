@@ -73,6 +73,9 @@ typedef struct BallInfo
 #define GK_BOX_Y_BOTTOM_MIN                 405
 #define GK_BOX_Y_BOTTOM_MAX                 435
 
+#define PENALTY_BOX_Y_TOP                   130 // FIELD_BOUND_Y_TOP + 80
+#define PENALTY_BOX_Y_BOTTOM                350 // FIELD_BOUND_Y_BOTTOM - 80
+
 #define CORNER_SIDE_LEFT                    0
 #define CORNER_SIDE_RIGHT                   1
 
@@ -314,5 +317,6 @@ u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId);
 void MainGameLoop();													
 u16 GetOffsideLineY(u8 attackingTeamId);								
 //void InterruptHook();
+void EnforcePenaltyBoxRestriction();
 void PerformPass(u8 toPlayerId);
 void PerformShot(u16 targetX, u16 targetY);

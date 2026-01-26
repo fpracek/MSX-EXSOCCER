@@ -8,30 +8,31 @@ Symbol Table
     .__.CPU.                                                    =   00000000 L
     .__.H$L.                                                    =   00000000 L
     _ClearTextFromLayerA                                            ******** GX
+  7 _EnforcePenaltyBoxRestriction                                   0000376F GR
     _GetBestPassTarget                                              ******** GX
     _GetClosestPlayerToBall                                         ******** GX
     _GetNoMovingPlayerPatternId                                     ******** GX
     _GetOffsideLineY                                                ******** GX
     _GetPlayerIdByRole                                              ******** GX
-  7 _GetTeamPaletteById                                             000037AD GR
+  7 _GetTeamPaletteById                                             00003A90 GR
     _GoalkeeperWithBall                                             ******** GX
-  7 _HandleOffside                                                  0000305B GR
-  7 _InitPalette                                                    0000353E GR
-  7 _IsOffside                                                      000030A0 GR
+  7 _HandleOffside                                                  0000328C GR
+  7 _InitPalette                                                    00003821 GR
+  7 _IsOffside                                                      000032D1 GR
     _IsTeamJoystickTriggerPressed                                   ******** GX
-  7 _PerformPass                                                    00003197 GR
+  7 _PerformPass                                                    000033C8 GR
     _PerformShot                                                    ******** GX
-  7 _PutBallOnPlayerFeet                                            000027C5 GR
-  7 _ResetBallInfo                                                  0000397B GR
+  7 _PutBallOnPlayerFeet                                            000029F6 GR
+  7 _ResetBallInfo                                                  00003C5E GR
     _SetPlayerBallPossession                                        ******** GX
     _SetPlayerTarget                                                ******** GX
-  7 _SetTeam1Palette                                                00003753 GR
-  7 _SetTeam2Palette                                                00003780 GR
+  7 _SetTeam1Palette                                                00003A36 GR
+  7 _SetTeam2Palette                                                00003A63 GR
   7 _TickAI                                                         00000D90 GR
-  7 _TickBallCollision                                              00002CBB GR
-  7 _TickFieldScrollingAction                                       000037F2 GR
+  7 _TickBallCollision                                              00002EEC GR
+  7 _TickFieldScrollingAction                                       00003AD5 GR
     _TickPlayerToOwnTarget                                          ******** GX
-  7 _TickShowKickOff                                                000038E5 GR
+  7 _TickShowKickOff                                                00003BC8 GR
   7 _TickTeamJoystick                                               00000000 GR
   7 _TickTeamJoystick_k_MoveDX_131075_1184                          00000D7E R
   7 _TickTeamJoystick_k_MoveDY_131075_1184                          00000D87 R
@@ -39,8 +40,8 @@ Symbol Table
     _V9_SetPaletteEntry                                             ******** GX
     _V9_SetRegister                                                 ******** GX
     _V9_SetScrollingBY                                              ******** GX
-  7 ___str_0                                                        00003098 R
-  7 ___str_1                                                        00003972 R
+  7 ___str_0                                                        000032C9 R
+  7 ___str_1                                                        00003C55 R
     __moduint                                                       ******** GX
     _g_ACPAGE                                                   =   0000FAF6 G
     _g_ASPCT1                                                   =   0000F40B G
@@ -57,12 +58,12 @@ Symbol Table
     _g_BOTTOM                                                   =   0000FC48 G
     _g_BRDATR                                                   =   0000FCB2 G
     _g_BREAKV                                                   =   0000F325 G
-    _g_Ball                                                         ******** GX
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
 Hexadecimal [32-Bits]
 
 Symbol Table
 
+    _g_Ball                                                         ******** GX
     _g_CAPST                                                    =   0000FCAB G
     _g_CASPRV                                                   =   0000FCB1 G
     _g_CGTABL                                                   =   00000004 G
@@ -117,17 +118,17 @@ Symbol Table
     _g_GRPCGP                                                   =   0000F3CB G
     _g_GRPCOL                                                   =   0000F3C9 G
     _g_GRPHED                                                   =   0000FCA6 G
-    _g_GRPNAM                                                   =   0000F3C7 G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 3
 Hexadecimal [32-Bits]
 
 Symbol Table
 
+    _g_GRPNAM                                                   =   0000F3C7 G
     _g_GRPPAT                                                   =   0000F3CF G
     _g_GXPOS                                                    =   0000FCB3 G
     _g_GYPOS                                                    =   0000FCB5 G
-  7 _g_GameFieldLayerATilesPalette                                  000035A3 GR
-  7 _g_GameFieldLayerBTilesPalette                                  000035D3 GR
+  7 _g_GameFieldLayerATilesPalette                                  00003886 GR
+  7 _g_GameFieldLayerBTilesPalette                                  000038B6 GR
     _g_GameWith2Players                                             ******** GX
     _g_GkIsGroundKick                                               ******** GX
     _g_HEADER                                                   =   0000F40A G
@@ -177,12 +178,12 @@ Symbol Table
     _g_MUSICF                                                   =   0000FB3F G
     _g_MatchStatus                                                  ******** GX
     _g_NEWKEY                                                   =   0000FBE5 G
-    _g_NORUSE                                                   =   0000FAFD G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 4
 Hexadecimal [32-Bits]
 
 Symbol Table
 
+    _g_NORUSE                                                   =   0000FAFD G
     _g_OLDINT                                                   =   0000FB0C G
     _g_OLDKEY                                                   =   0000FBDA G
     _g_OLDSCR                                                   =   0000FCB0 G
@@ -237,12 +238,12 @@ Symbol Table
     _g_RG23SAV                                                  =   0000FFF6 G
     _g_RG25SAV                                                  =   0000FFFA G
     _g_RG26SAV                                                  =   0000FFFB G
-    _g_RG27SAV                                                  =   0000FFFC G
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 5
 Hexadecimal [32-Bits]
 
 Symbol Table
 
+    _g_RG27SAV                                                  =   0000FFFC G
     _g_RG2SAV                                                   =   0000F3E1 G
     _g_RG3SAV                                                   =   0000F3E2 G
     _g_RG4SAV                                                   =   0000F3E3 G
@@ -273,13 +274,13 @@ Symbol Table
     _g_SVFFF8                                                   =   0000FFF8 G
     _g_SVFFFD                                                   =   0000FFFD G
     _g_ShotCursorX                                                  ******** GX
-  7 _g_Sprites1_palette_aus                                         00003633 GR
-  7 _g_Sprites1_palette_bra                                         000036F3 GR
-  7 _g_Sprites1_palette_fio                                         00003723 GR
-  7 _g_Sprites1_palette_fra                                         00003663 GR
-  7 _g_Sprites1_palette_gbr                                         000036C3 GR
-  7 _g_Sprites1_palette_ger                                         00003693 GR
-  7 _g_Sprites1_palette_ita                                         00003603 GR
+  7 _g_Sprites1_palette_aus                                         00003916 GR
+  7 _g_Sprites1_palette_bra                                         000039D6 GR
+  7 _g_Sprites1_palette_fio                                         00003A06 GR
+  7 _g_Sprites1_palette_fra                                         00003946 GR
+  7 _g_Sprites1_palette_gbr                                         000039A6 GR
+  7 _g_Sprites1_palette_ger                                         00003976 GR
+  7 _g_Sprites1_palette_ita                                         000038E6 GR
     _g_T32ATR                                                   =   0000F3C3 G
     _g_T32CGP                                                   =   0000F3C1 G
     _g_T32COL                                                   =   0000F3BF G
@@ -297,12 +298,12 @@ Symbol Table
     _g_Team1PaletteId                                               ******** GX
     _g_Team2ActivePlayer                                            ******** GX
     _g_Team2PaletteId                                               ******** GX
-    _g_Timer                                                        ******** GX
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 6
 Hexadecimal [32-Bits]
 
 Symbol Table
 
+    _g_Timer                                                        ******** GX
     _g_USRTAB                                                   =   0000F39A G
     _g_V9_CmdDataPort                                           =   00000062 
     _g_V9_IntFlagPort                                           =   00000066 
@@ -337,7 +338,6 @@ Symbol Table
     _g_XSAVE                                                    =   0000FAFE G
     _g_YSAVE                                                    =   0000FB00 G
 
-
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 7
 Hexadecimal [32-Bits]
 
@@ -350,7 +350,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size        0   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG1                                      size     399C   flags    0
+   7 _SEG1                                      size     3C7F   flags    0
    8 _INITIALIZER                               size        0   flags    0
    9 _CABS                                      size        0   flags    8
 

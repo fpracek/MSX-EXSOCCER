@@ -314,13 +314,11 @@ void TickPlayerToOwnTarget(){
 			
 			// SKIP ACTIVE PLAYERS (Controlled by Joystick) - UNLESS performing a set piece setup
 			bool isSetPieceSetup = (g_MatchStatus == MATCH_BEFORE_CORNER_KICK || g_MatchStatus == MATCH_BEFORE_GOAL_KICK || g_MatchStatus == MATCH_BEFORE_OFFSIDE || g_MatchStatus == MATCH_BEFORE_THROW_IN);
+			bool isGkRestart = (g_MatchStatus == MATCH_BALL_ON_GOALKEEPER);
 			
-			if (!isSetPieceSetup) {
+			if (!isSetPieceSetup && !isGkRestart) {
 				if (g_Team1ActivePlayer != NO_VALUE && i == g_Team1ActivePlayer) continue;
 				if (g_GameWith2Players && g_Team2ActivePlayer != NO_VALUE && i == g_Team2ActivePlayer) continue;
-				if (g_GameWith2Players && i == g_Team2ActivePlayer) {
-					continue;
-				}
 			}
 			
 			// Check if this specific player is in position
@@ -941,20 +939,27 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
              // TEAMMATE (Defending team) -> Advance (Counter-Attack)
              // Move towards center/opponent field
              if(teamId == TEAM_1) { // Moving UP
-                  ty = (g_Players[i].Y > 50) ? (g_Players[i].Y - 40) : 50;
+                  if (g_Players[i].Role >= PLAYER_ROLE_LEFT_STRIKER) ty = 160;
+                  else if (g_Players[i].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) ty = 240;
+                  else ty = 350;
              } else { // Moving DOWN
-                  ty = (g_Players[i].Y < 380) ? (g_Players[i].Y + 40) : 380;
+                  if (g_Players[i].Role >= PLAYER_ROLE_LEFT_STRIKER) ty = 320;
+                  else if (g_Players[i].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) ty = 240;
+                  else ty = 130;
              }
         } else {
              // OPPONENT (Attacking team) -> Retreat to defense
              // Move towards their own goal
              if(teamId == TEAM_1) { // Opponent is Team 2 (Top) -> Retreat UP? No, Team 2 Defends Top.
-                  // Wait, if GK is Team 1 (Bottom Defending), Opponent IS Team 2 (Attack Down).
-                  // Opponent (Team 2) retreats to Top.
-                  ty = (g_Players[i].Y > 50) ? (g_Players[i].Y - 40) : 50;
+                  // Opponent (Team 2) retreats to Top (Move UP).
+                  if (g_Players[i].Role >= PLAYER_ROLE_LEFT_STRIKER) ty = 243; // Midfield
+                  else if (g_Players[i].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) ty = 106;
+                  else ty = 130;
              } else { // GK is Team 2 (Top Defending). Opponent is Team 1 (Attack Up).
-                  // Opponent (Team 1) retreats to Bottom.
-                  ty = (g_Players[i].Y < 380) ? (g_Players[i].Y + 40) : 380;
+                  // Opponent (Team 1) retreats to Bottom (Move DOWN).
+                  if (g_Players[i].Role >= PLAYER_ROLE_LEFT_STRIKER) ty = 243;
+                  else if (g_Players[i].Role >= PLAYER_ROLE_LEFT_HALFFIELDER) ty = 318;
+                  else ty = 350;
              }
         }
 

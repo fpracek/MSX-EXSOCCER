@@ -753,6 +753,8 @@ void MainGameLoop(){
             }
 		}
 		
+		EnforcePenaltyBoxRestriction();
+
 		UpdateSpritesPositions();
 		TickUpdateTime();
 		TickShowKickOff();
