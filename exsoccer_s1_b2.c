@@ -1264,15 +1264,12 @@ void PutBallOnPlayerFeet(u8 playerId){
 	u8 distX = BallBaseDistX[calcDir] + ((calcDir==DIRECTION_UP || calcDir==DIRECTION_DOWN) ? 0 : (calcDir == DIRECTION_LEFT || calcDir == DIRECTION_RIGHT ? currentOffset : currentOffsetDiag));
 	u8 distY = BallBaseDistY[calcDir] + ((calcDir==DIRECTION_LEFT || calcDir==DIRECTION_RIGHT) ? 0 : (calcDir == DIRECTION_UP || calcDir == DIRECTION_DOWN ? currentOffset : currentOffsetDiag));
 
-	// Special adjustment: if TEAM_2 goalkeeper, bring ball closer to body
-	if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER && g_Players[playerId].TeamId == TEAM_2) {
+	// Special adjustment: Goalkeepers closer to body (Both Teams)
+	if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER) {
 		distY = (distY > 2) ? (distY - 2) : distY; // bring ball 2px closer vertically
 	}
 
 	i8 extraX = 0;
-	if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER && g_Players[playerId].TeamId == TEAM_1) {
-		if (!isGkSideMove && !g_GkIsGroundKick) extraX = -15; // Only offset if NOT ground kick
-	}
 
 	switch (calcDir){
 		case DIRECTION_UP:
@@ -1413,6 +1410,7 @@ void TickBallCollision(){
 
                      PutBallOnPlayerFeet(i);
                      GoalkeeperWithBall(g_Players[i].TeamId, !wasShot); 
+                     if (!wasShot) g_GkIsGroundKick = false; // Force Slow/Hand mode for Steals
                      
                      // Reset Ball State
                      g_Ball.PassTargetPlayerId = NO_VALUE;
@@ -1439,6 +1437,7 @@ void TickBallCollision(){
 				if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
 					PutBallOnPlayerFeet(i);
 					GoalkeeperWithBall(g_Players[i].TeamId, 1); // Treat as steal (no recoil)
+                    g_GkIsGroundKick = false; // Force Slow/Hand mode for Steals
 					
 					// Reset Ball State
 					g_Ball.PassTargetPlayerId = NO_VALUE;

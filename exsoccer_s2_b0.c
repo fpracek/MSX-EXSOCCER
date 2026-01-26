@@ -282,16 +282,25 @@ void TickPlayerToOwnTarget(){
 		static u8 s_GkMoveTick = 0;
 		s_GkMoveTick++;
 		for(u8 i=0;i<15;i++){
-			// --- Portieri seguono la X della palla SOLO in MATCH_IN_ACTION, aggiornando ogni 4 tick ---
+			// --- Portieri seguono la X della palla SOLO in MATCH_IN_ACTION ---
 			if (g_MatchStatus == MATCH_IN_ACTION && g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
-				if ((s_GkMoveTick & 3) == 0) { // ogni 4 tick
+				// Movimento mitigato (ogni 2 tick) per evitare tremolio e scatti
+				if ((s_GkMoveTick & 1) == 0) { 
 					u16 minX = GOAL_X_MIN;
 					u16 maxX = GOAL_X_MAX;
-					u16 ballX = g_Ball.X;
-					if (ballX < minX-3) ballX = minX;
-					if (ballX > maxX+3) ballX = maxX;
-					g_Players[i].X = ballX;
+					u16 desiredX = g_Ball.X;
+					
+					if (desiredX < minX) desiredX = minX;
+					if (desiredX > maxX) desiredX = maxX;
+					
+					i16 diff = (i16)desiredX - (i16)g_Players[i].X;
+					
+					// Deadzone di 2px per evitare micro-aggiustamenti continui
+					if (diff > 2) g_Players[i].X++;
+					else if (diff < -2) g_Players[i].X--;
 				}
+				// Sincronizza TargetX per evitare conflitti con la logica di movimento generica
+				g_Players[i].TargetX = g_Players[i].X;
 			}
 			
 			if(g_MatchStatus == MATCH_AFTER_IN_GOAL) {

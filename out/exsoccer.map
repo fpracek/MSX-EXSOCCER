@@ -41,8 +41,8 @@ Area                                    Addr        Size        Decimal Bytes (A
      000001F4  l__DATA                         
      000001F5  l__HOME                         
      00000604  l__SEG10                        
-     00003547  l__SEG2                         
-     00003AEC  l__SEG1                         
+     000035AA  l__SEG2                         
+     0000399C  l__SEG1                         
      00003B81  l__CODE                         
      00003C00  l__SEG6                         
      00004000  l__SEG3                         
@@ -615,40 +615,40 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG1                               00018000    00003AEC =       15084. bytes (REL,CON)
+_SEG1                               00018000    0000399C =       14748. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00018000  _TickTeamJoystick                  exsoccer_s1_b2
      00018D90  _TickAI                            exsoccer_s1_b2
      0001A7C5  _PutBallOnPlayerFeet               exsoccer_s1_b2
-     0001ACEA  _TickBallCollision                 exsoccer_s1_b2
-     0001B07A  _HandleOffside                     exsoccer_s1_b2
-     0001B0BF  _IsOffside                         exsoccer_s1_b2
-     0001B1B6  _PerformPass                       exsoccer_s1_b2
-     0001B68E  _InitPalette                       exsoccer_s1_b2
-     0001B6F3  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
-     0001B723  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
-     0001B753  _g_Sprites1_palette_ita            exsoccer_s1_b2
-     0001B783  _g_Sprites1_palette_aus            exsoccer_s1_b2
-     0001B7B3  _g_Sprites1_palette_fra            exsoccer_s1_b2
-     0001B7E3  _g_Sprites1_palette_ger            exsoccer_s1_b2
-     0001B813  _g_Sprites1_palette_gbr            exsoccer_s1_b2
-     0001B843  _g_Sprites1_palette_bra            exsoccer_s1_b2
-     0001B873  _g_Sprites1_palette_fio            exsoccer_s1_b2
-     0001B8A3  _SetTeam1Palette                   exsoccer_s1_b2
-     0001B8D0  _SetTeam2Palette                   exsoccer_s1_b2
-     0001B8FD  _GetTeamPaletteById                exsoccer_s1_b2
-     0001B942  _TickFieldScrollingAction          exsoccer_s1_b2
-     0001BA35  _TickShowKickOff                   exsoccer_s1_b2
-     0001BACB  _ResetBallInfo                     exsoccer_s1_b2
+     0001ACBB  _TickBallCollision                 exsoccer_s1_b2
+     0001B05B  _HandleOffside                     exsoccer_s1_b2
+     0001B0A0  _IsOffside                         exsoccer_s1_b2
+     0001B197  _PerformPass                       exsoccer_s1_b2
+     0001B53E  _InitPalette                       exsoccer_s1_b2
+     0001B5A3  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
+     0001B5D3  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
+     0001B603  _g_Sprites1_palette_ita            exsoccer_s1_b2
+     0001B633  _g_Sprites1_palette_aus            exsoccer_s1_b2
+     0001B663  _g_Sprites1_palette_fra            exsoccer_s1_b2
+     0001B693  _g_Sprites1_palette_ger            exsoccer_s1_b2
+     0001B6C3  _g_Sprites1_palette_gbr            exsoccer_s1_b2
+     0001B6F3  _g_Sprites1_palette_bra            exsoccer_s1_b2
+     0001B723  _g_Sprites1_palette_fio            exsoccer_s1_b2
+     0001B753  _SetTeam1Palette                   exsoccer_s1_b2
+     0001B780  _SetTeam2Palette                   exsoccer_s1_b2
+     0001B7AD  _GetTeamPaletteById                exsoccer_s1_b2
+     0001B7F2  _TickFieldScrollingAction          exsoccer_s1_b2
+     0001B8E5  _TickShowKickOff                   exsoccer_s1_b2
+     0001B97B  _ResetBallInfo                     exsoccer_s1_b2
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG2                               00020100    00003547 =       13639. bytes (REL,CON)
+_SEG2                               00020100    000035AA =       13738. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -665,22 +665,22 @@ _SEG2                               00020100    00003547 =       13639. bytes (R
      0002076F  _ResetPlayersInfo                  exsoccer_s2_b0
      000207C9  _ClearTextFromLayerA               exsoccer_s2_b0
      000207EA  _TickPlayerToOwnTarget             exsoccer_s2_b0
-     00020E06  _GetNumberString                   exsoccer_s2_b0
-     00020E45  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
-     00020E6C  _GetJoystick1Direction             exsoccer_s2_b0
-     00020F6C  _GetJoystick2Direction             exsoccer_s2_b0
-     00020F71  _ShowFieldZone                     exsoccer_s2_b0
-     00020F75  _TickCheckBallBoundaries           exsoccer_s2_b0
-     00021122  _TimeUp                            exsoccer_s2_b0
-     00021123  _GetClosestPlayerToBall            exsoccer_s2_b0
-     00021246  _Math_Abs32                        exsoccer_s2_b0
-     0002125C  _GetBestPassTarget                 exsoccer_s2_b0
-     000218C4  _UpdatePassTarget                  exsoccer_s2_b0
-     00021901  _GoalkeeperWithBall                exsoccer_s2_b0
-     00021B56  _TickGoalkeeperAnimation           exsoccer_s2_b0
-     00021DBB  _PerformShot                       exsoccer_s2_b0
-     00022098  _TickBallFlying                    exsoccer_s2_b0
-     000229A8  _TickThrowIn                       exsoccer_s2_b0
+     00020E69  _GetNumberString                   exsoccer_s2_b0
+     00020EA8  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
+     00020ECF  _GetJoystick1Direction             exsoccer_s2_b0
+     00020FCF  _GetJoystick2Direction             exsoccer_s2_b0
+     00020FD4  _ShowFieldZone                     exsoccer_s2_b0
+     00020FD8  _TickCheckBallBoundaries           exsoccer_s2_b0
+     00021185  _TimeUp                            exsoccer_s2_b0
+     00021186  _GetClosestPlayerToBall            exsoccer_s2_b0
+     000212A9  _Math_Abs32                        exsoccer_s2_b0
+     000212BF  _GetBestPassTarget                 exsoccer_s2_b0
+     00021927  _UpdatePassTarget                  exsoccer_s2_b0
+     00021964  _GoalkeeperWithBall                exsoccer_s2_b0
+     00021BB9  _TickGoalkeeperAnimation           exsoccer_s2_b0
+     00021E1E  _PerformShot                       exsoccer_s2_b0
+     000220FB  _TickBallFlying                    exsoccer_s2_b0
+     00022A0B  _TickThrowIn                       exsoccer_s2_b0
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 Hexadecimal  [32-Bits]
