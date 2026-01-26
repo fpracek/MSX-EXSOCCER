@@ -193,7 +193,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 							
 							if (allowed) {
 								isShooting = true;
-								PerformShot(g_ShotCursorX, FIELD_BOUND_Y_TOP - 10);
+								PerformShot(g_ShotCursorX, FIELD_BOUND_Y_TOP - 40);
 							}
 						}
 					}
@@ -210,7 +210,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 
 							if (allowed) {
 								isShooting = true;
-								PerformShot(g_ShotCursorX, FIELD_BOUND_Y_BOTTOM + 10);
+								PerformShot(g_ShotCursorX, FIELD_BOUND_Y_BOTTOM + 40);
 							}
 						}
 					}
@@ -685,7 +685,7 @@ void TickAI(u8 playerId){
 						
 						// DANGEROUS ZONE (Inside the box)
                         if (g_Players[playerId].Y < (FIELD_BOUND_Y_TOP + 60)) inDangerousZone = true; 
-						goalTargetY = FIELD_BOUND_Y_TOP - 10; 
+						goalTargetY = FIELD_BOUND_Y_TOP - 40; 
 					} else {
                         // SHOOTING RANGE
 						// Goal at 430. Range 430-90 = 340.
@@ -693,7 +693,7 @@ void TickAI(u8 playerId){
 						
 						// DANGEROUS ZONE
                         if (g_Players[playerId].Y > (FIELD_BOUND_Y_BOTTOM - 60)) inDangerousZone = true;
-						goalTargetY = FIELD_BOUND_Y_BOTTOM + 10; 
+						goalTargetY = FIELD_BOUND_Y_BOTTOM + 40; 
 					}
 					
 					// DISABLE SHOOTING FOR GOALKEEPER
@@ -1381,6 +1381,8 @@ void TickBallCollision(){
                 // 3. GK Interception Logic
                 if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
                      
+                     bool wasShot = (g_Ball.ShotActive != 0);
+
                      // DIVING LOGIC
                      if (g_Ball.ShotActive) {
                           i16 signedDiffX = (i16)g_Ball.X - (i16)g_Players[i].X;
@@ -1410,8 +1412,7 @@ void TickBallCollision(){
                      }
 
                      PutBallOnPlayerFeet(i);
-                     GoalkeeperWithBall(g_Players[i].TeamId, 0); 
-                     GoalkeeperWithBall(g_Players[i].TeamId, !g_Ball.ShotActive); 
+                     GoalkeeperWithBall(g_Players[i].TeamId, !wasShot); 
                      
                      // Reset Ball State
                      g_Ball.PassTargetPlayerId = NO_VALUE;
@@ -1559,8 +1560,7 @@ void PerformPass(u8 toPlayerId) {
 
     // GK Pass Fix: Offset ball start to avoid immediate self-collision
     if (g_Players[fromId].Role == PLAYER_ROLE_GOALKEEPER) {
-        DEBUG_LOGNUM("GK_PASS_X_PRE", g_Ball.X);
-        DEBUG_LOGNUM("GK_IS_GROUND", g_GkIsGroundKick);
+   
 
         bool applyOffset = true;
         // Disable offset for Goal Kicks / Steals (Ground kicks where RecoilY is 0)
@@ -1581,7 +1581,7 @@ void PerformPass(u8 toPlayerId) {
              applyOffset = false;
         }
 
-        DEBUG_LOGNUM("GK_APPLY_OFF", applyOffset);
+       
 
         if (applyOffset) {
             i8 offX = 0; i8 offY = 0;
@@ -1597,9 +1597,9 @@ void PerformPass(u8 toPlayerId) {
             }
             g_Ball.X += offX;
             g_Ball.Y += offY;
-            DEBUG_LOGNUM("GK_OFF_X", offX);
+
         }
-        DEBUG_LOGNUM("GK_PASS_X_POST", g_Ball.X);
+      
     }
 
     g_Ball.PassStartX = g_Ball.X;
