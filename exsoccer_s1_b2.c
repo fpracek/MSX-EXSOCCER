@@ -1020,6 +1020,9 @@ void TickAI(u8 playerId){
 			
 		// A: GOALKEEPER LOGIC --------------------------------------------
 		if (g_Players[playerId].Role == PLAYER_ROLE_GOALKEEPER) {
+            // Stop GK from tracking ball during shot (Reaction delay)
+            if (g_Ball.ShotActive) return;
+
 			u16 gkTargetX = FIELD_POS_X_CENTER;
 			u16 gkTargetY;
 			u16 boxXMin = GK_BOX_X_MIN; u16 boxXMax = GK_BOX_X_MAX; 
@@ -1384,7 +1387,7 @@ void TickBallCollision(){
         // GK: 14px radius (28x28 box) -> INCREASED FOR DIVING
         u8 hitDist = 14;
         if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
-             if (g_Ball.ShotActive) hitDist = 16; // Reduced from 20 to allow corner goals
+             if (g_Ball.ShotActive) hitDist = 12; // Reduced from 16 to allow corner goals
              else hitDist = 14; 
         }
 

@@ -44,7 +44,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00003788  l__SEG2                         
      00003B75  l__CODE                         
      00003C00  l__SEG6                         
-     00003D22  l__SEG1                         
+     00003D29  l__SEG1                         
      00004000  l__SEG3                         
      00004000  l__SEG4                         
      00004000  l__SEG5                         
@@ -618,34 +618,34 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG1                               00018000    00003D22 =       15650. bytes (REL,CON)
+_SEG1                               00018000    00003D29 =       15657. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00018000  _TickTeamJoystick                  exsoccer_s1_b2
      00018DA0  _TickAI                            exsoccer_s1_b2
-     0001AA6B  _PutBallOnPlayerFeet               exsoccer_s1_b2
-     0001AF72  _TickBallCollision                 exsoccer_s1_b2
-     0001B312  _HandleOffside                     exsoccer_s1_b2
-     0001B357  _IsOffside                         exsoccer_s1_b2
-     0001B44E  _PerformPass                       exsoccer_s1_b2
-     0001B812  _EnforcePenaltyBoxRestriction      exsoccer_s1_b2
-     0001B8C4  _InitPalette                       exsoccer_s1_b2
-     0001B929  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
-     0001B959  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
-     0001B989  _g_Sprites1_palette_ita            exsoccer_s1_b2
-     0001B9B9  _g_Sprites1_palette_aus            exsoccer_s1_b2
-     0001B9E9  _g_Sprites1_palette_fra            exsoccer_s1_b2
-     0001BA19  _g_Sprites1_palette_ger            exsoccer_s1_b2
-     0001BA49  _g_Sprites1_palette_gbr            exsoccer_s1_b2
-     0001BA79  _g_Sprites1_palette_bra            exsoccer_s1_b2
-     0001BAA9  _g_Sprites1_palette_fio            exsoccer_s1_b2
-     0001BAD9  _SetTeam1Palette                   exsoccer_s1_b2
-     0001BB06  _SetTeam2Palette                   exsoccer_s1_b2
-     0001BB33  _GetTeamPaletteById                exsoccer_s1_b2
-     0001BB78  _TickFieldScrollingAction          exsoccer_s1_b2
-     0001BC6B  _TickShowKickOff                   exsoccer_s1_b2
-     0001BD01  _ResetBallInfo                     exsoccer_s1_b2
+     0001AA72  _PutBallOnPlayerFeet               exsoccer_s1_b2
+     0001AF79  _TickBallCollision                 exsoccer_s1_b2
+     0001B319  _HandleOffside                     exsoccer_s1_b2
+     0001B35E  _IsOffside                         exsoccer_s1_b2
+     0001B455  _PerformPass                       exsoccer_s1_b2
+     0001B819  _EnforcePenaltyBoxRestriction      exsoccer_s1_b2
+     0001B8CB  _InitPalette                       exsoccer_s1_b2
+     0001B930  _g_GameFieldLayerATilesPalette     exsoccer_s1_b2
+     0001B960  _g_GameFieldLayerBTilesPalette     exsoccer_s1_b2
+     0001B990  _g_Sprites1_palette_ita            exsoccer_s1_b2
+     0001B9C0  _g_Sprites1_palette_aus            exsoccer_s1_b2
+     0001B9F0  _g_Sprites1_palette_fra            exsoccer_s1_b2
+     0001BA20  _g_Sprites1_palette_ger            exsoccer_s1_b2
+     0001BA50  _g_Sprites1_palette_gbr            exsoccer_s1_b2
+     0001BA80  _g_Sprites1_palette_bra            exsoccer_s1_b2
+     0001BAB0  _g_Sprites1_palette_fio            exsoccer_s1_b2
+     0001BAE0  _SetTeam1Palette                   exsoccer_s1_b2
+     0001BB0D  _SetTeam2Palette                   exsoccer_s1_b2
+     0001BB3A  _GetTeamPaletteById                exsoccer_s1_b2
+     0001BB7F  _TickFieldScrollingAction          exsoccer_s1_b2
+     0001BC72  _TickShowKickOff                   exsoccer_s1_b2
+     0001BD08  _ResetBallInfo                     exsoccer_s1_b2
 ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
 Hexadecimal  [32-Bits]
 
