@@ -190,7 +190,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 							// ANGLE CONSTRAINT (Near Goal Line < 20px)
 							bool allowed = true;
 							if (plY < (FIELD_BOUND_Y_TOP + 20)) {
-								if (plX < (GOAL_X_MIN - 15) || plX > (GOAL_X_MAX + 15)) allowed = false;
+								if (plX < (GOAL_X_MIN - 5) || plX > (GOAL_X_MAX + 5)) allowed = false;
 							}
 							
 							if (allowed) {
@@ -207,7 +207,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 							// ANGLE CONSTRAINT
 							bool allowed = true;
 							if (plY > (FIELD_BOUND_Y_BOTTOM - 20)) {
-								if (plX < (GOAL_X_MIN - 15) || plX > (GOAL_X_MAX + 15)) allowed = false;
+								if (plX < (GOAL_X_MIN - 5) || plX > (GOAL_X_MAX + 5)) allowed = false;
 							}
 
 							if (allowed) {
@@ -718,6 +718,17 @@ void TickAI(u8 playerId){
 							
 							// Aggressive Mode: In dangerous zone, shoot even if blocked!
                             if (inDangerousZone) clearShot = true;
+
+                            // ANGLE CONSTRAINT (Prevent shots from tight angles near goal line)
+                            if (playerTeamId == TEAM_1) {
+                                if (g_Players[playerId].Y < (FIELD_BOUND_Y_TOP + 20)) {
+                                    if (g_Players[playerId].X < (GOAL_X_MIN - 5) || g_Players[playerId].X > (GOAL_X_MAX + 5)) clearShot = false;
+                                }
+                            } else {
+                                if (g_Players[playerId].Y > (FIELD_BOUND_Y_BOTTOM - 20)) {
+                                    if (g_Players[playerId].X < (GOAL_X_MIN - 5) || g_Players[playerId].X > (GOAL_X_MAX + 5)) clearShot = false;
+                                }
+                            }
 
 							// Aggressive Mode: In dangerous zone, shoot even if blocked if not TOO close?
 							// For now, rely on clear path but check often.
@@ -1373,7 +1384,7 @@ void TickBallCollision(){
         // GK: 14px radius (28x28 box) -> INCREASED FOR DIVING
         u8 hitDist = 14;
         if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
-             if (g_Ball.ShotActive) hitDist = 20; // 15px + tolerance
+             if (g_Ball.ShotActive) hitDist = 16; // Reduced from 20 to allow corner goals
              else hitDist = 14; 
         }
 
@@ -1546,6 +1557,9 @@ void PerformPass(u8 toPlayerId) {
 
     if (fromId == NO_VALUE) return;
     if (toPlayerId == NO_VALUE) return;
+
+    // Prevent passing TO Goalkeeper
+    if (g_Players[toPlayerId].Role == PLAYER_ROLE_GOALKEEPER) return;
 
     // OFFSIDE CHECK (Prevent Pass)
     // Ignore offside if passer is Goalkeeper

@@ -333,7 +333,7 @@ void BallInGoal(u8 teamScored){
     
 	if(teamScored==TEAM_1){
 		// Scored UP (North)
-		g_Ball.Y = FIELD_BOUND_Y_TOP - 20;
+		g_Ball.Y = FIELD_BOUND_Y_TOP - 12;
 		g_Team1Score++;
 	}
 	else{
@@ -346,6 +346,9 @@ void BallInGoal(u8 teamScored){
 	g_MatchStatus=MATCH_AFTER_IN_GOAL;
 	g_RestartKickTeamId = (teamScored == TEAM_1) ? TEAM_2 : TEAM_1;
 	g_Timer = 0; // Start timer for celebration/reset
+    g_Ball.ShotActive = 0;
+    g_Ball.PassTargetPlayerId = NO_VALUE;
+    g_Ball.PossessionPlayerId = NO_VALUE;
 }
 void BallThrowIn(u8 teamId){
 	u8 i; // C89 declaration
@@ -791,12 +794,12 @@ void MainGameLoop(){
 //
 		// Update Shot Cursor (Oscillate)
 		g_ShotCursorX += g_ShotCursorDir;
-		if (g_ShotCursorX < (GOAL_X_MIN - 20)) {
-			g_ShotCursorX = (GOAL_X_MIN - 20);
+		if (g_ShotCursorX < (GOAL_X_MIN - 30)) {
+			g_ShotCursorX = (GOAL_X_MIN - 30);
 			g_ShotCursorDir = -g_ShotCursorDir;
 		}
-		if (g_ShotCursorX > (GOAL_X_MAX + 20)) {
-			g_ShotCursorX = (GOAL_X_MAX + 20);
+		if (g_ShotCursorX > (GOAL_X_MAX + 30)) {
+			g_ShotCursorX = (GOAL_X_MAX + 30);
 			g_ShotCursorDir = -g_ShotCursorDir;
 		}
 	}
@@ -1313,6 +1316,9 @@ void TickThrowIn() {
 void TickCornerKick() {
     if (g_MatchStatus != MATCH_BEFORE_CORNER_KICK) return;
 
+    static u16 s_ForceKickTimer = 0;
+    if (g_Timer == 0) s_ForceKickTimer = 0;
+
     // -------------------------------------------------------------------------
     // 1. DETERMINE KICKER ID (Centralized)
     // -------------------------------------------------------------------------
@@ -1432,6 +1438,9 @@ void TickCornerKick() {
     
     bool isHuman = (g_RestartKickTeamId == TEAM_1 || (g_GameWith2Players && g_RestartKickTeamId == TEAM_2));
     
+    // Timeout Logic (4 seconds = 240 frames)
+    if (isHuman) s_ForceKickTimer++;
+
     if (isHuman) {
         if (g_RestartKickTeamId == TEAM_1) {
             // --- TEAM 1 HUMAN (North) ---
@@ -1439,7 +1448,7 @@ void TickCornerKick() {
             u8 candRight = NO_VALUE;
             
             for(u8 c=0; c<14; c++) {
-                 if (g_Players[c].TeamId == TEAM_1 && c != kickerId) {
+                 if (g_Players[c].TeamId == TEAM_1 && c != kickerId && g_Players[c].Role != PLAYER_ROLE_GOALKEEPER) {
                       u8 tx = g_Players[c].TargetX;
                       // Widened ranges to ensure we catch the players even if they are slightly off
                       if (tx >= 40 && tx <= 110) candLeft = c;
@@ -1493,7 +1502,7 @@ void TickCornerKick() {
                 g_PassTargetPlayer = g_CornerKickTargetId;
             }
 
-            if (t1Trigger && !t1Latched && g_CornerKickTargetId != NO_VALUE) {
+            if ((t1Trigger && !t1Latched || s_ForceKickTimer > 240) && g_CornerKickTargetId != NO_VALUE) {
                 PerformPass(g_CornerKickTargetId);
                 g_MatchStatus = MATCH_IN_ACTION;
                 g_CornerKickTargetId = NO_VALUE;
@@ -1526,7 +1535,7 @@ void TickCornerKick() {
                 g_PassTargetPlayer = g_CornerKickTargetId;
             }
 
-            if (trigger && g_CornerKickTargetId != NO_VALUE) {
+            if ((trigger || s_ForceKickTimer > 240) && g_CornerKickTargetId != NO_VALUE) {
                 PerformPass(g_CornerKickTargetId);
                 g_MatchStatus = MATCH_IN_ACTION;
                 g_CornerKickTargetId = NO_VALUE;

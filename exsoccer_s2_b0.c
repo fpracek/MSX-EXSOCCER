@@ -284,6 +284,9 @@ void TickPlayerToOwnTarget(){
 		for(u8 i=0;i<15;i++){
 			// --- Portieri seguono la X della palla SOLO in MATCH_IN_ACTION ---
 			if (g_MatchStatus == MATCH_IN_ACTION && g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
+                // Stop tracking if ball is being shot (prevent magnetic save)
+                if (g_Ball.ShotActive) continue; 
+
 				// Movimento mitigato (ogni 2 tick) per evitare tremolio e scatti
 				if ((s_GkMoveTick & 1) == 0) { 
 					u16 minX = GOAL_X_MIN;
@@ -1321,10 +1324,12 @@ void TickThrowIn() {
     // Internal State vars
     static u8 s_ThrowTargetId = NO_VALUE;
     static bool s_JoyMoved = false;
+    static u16 s_ForceThrowTimer = 0;
 
     if (g_Timer == 0) {
         s_ThrowTargetId = NO_VALUE;
         s_JoyMoved = false;
+        s_ForceThrowTimer = 0;
 
 		// 1. Clamp Ball Position to bounds (Leave it where it crossed, just ensure on line)
 		if (g_Ball.X < FIELD_POS_X_CENTER) {
@@ -1560,8 +1565,11 @@ void TickThrowIn() {
                        // Visualize Target
                        g_PassTargetPlayer = s_ThrowTargetId; 
                        
+                       // Timeout Logic (4 seconds = 240 frames)
+                       s_ForceThrowTimer++;
+
                        // Execute
-                       if (trig && s_ThrowTargetId != NO_VALUE) {
+                       if ((trig || s_ForceThrowTimer > 240) && s_ThrowTargetId != NO_VALUE) {
                             g_Ball.PossessionPlayerId = g_ThrowInPlayerId;
                             SetPlayerBallPossession(g_ThrowInPlayerId);
                             g_Ball.Y = g_Players[g_ThrowInPlayerId].Y; // Reset to feet
