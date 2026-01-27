@@ -41,6 +41,7 @@ extern bool g_GameWith2Players;
 u8 g_ponPonPatternIndex=0;
 u8 g_PonPonGrilsPoseCounter=0;
 bool g_peopleState=false;
+u8   g_ponPonGirlsInitailized=false;
 
 // CONSTANTS
 
@@ -191,9 +192,14 @@ void InitPonPonGirls(){
 }
 void TickPonPonGirlsAnimation(){
 	if(g_MatchStatus!=MATCH_AFTER_IN_GOAL){
+		if(!g_ponPonGirlsInitailized){
+			InitPonPonGirls();
+			g_ponPonGirlsInitailized=true;
+		
+		}
 		return;
 	}
-
+	g_ponPonGirlsInitailized=false;
 	if(g_PonPonGrilsPoseCounter==PON_PON_GIRLS_POSE_SPEED){
 		g_PonPonGrilsPoseCounter=0;
 	}
@@ -881,34 +887,34 @@ u8 GetBestPassTarget(u8 passerId) {
     // --- FALLBACK ---
     // If no target found with strict direction, try finding ANY closest teammate
     // regardless of direction, but within reasonable distance (e.g. 80px)
-    if (bestTarget == NO_VALUE) {
-        for(i=0; i<14; i++) {
-             if(g_Players[i].TeamId != teamId) continue;
-             if(i == passerId) continue;
-             // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // Allow passing to moving players!
-             if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
-             
-             // Visibility
-             if (g_Players[i].Y < g_FieldCurrentYPosition || g_Players[i].Y > (g_FieldCurrentYPosition + 220)) continue;
-
-             i16 dx = (i16)g_Players[i].X - px;
-             i16 dy = (i16)g_Players[i].Y - py;
-             
-             // Ignore min distance check here?
-             
-             // Max Distance for fallback
-             i16 adx = (dx < 0) ? -dx : dx;
-             i16 ady = (dy < 0) ? -dy : dy;
-             if (adx + ady > 100) continue; // Only close teammates
-             
-             // Simple closeness score
-             i32 score = 1000 - (adx + ady);
-             if (score > bestScore) {
-                 bestScore = score;
-                 bestTarget = i;
-             }
-        }
-    }
+    //if (bestTarget == NO_VALUE) {
+    //    for(i=0; i<14; i++) {
+    //         if(g_Players[i].TeamId != teamId) continue;
+    //         if(i == passerId) continue;
+    //         // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // Allow passing to moving players!
+    //         if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
+    //         
+    //         // Visibility
+    //         if (g_Players[i].Y < g_FieldCurrentYPosition || g_Players[i].Y > (g_FieldCurrentYPosition + 220)) continue;
+//
+    //         i16 dx = (i16)g_Players[i].X - px;
+    //         i16 dy = (i16)g_Players[i].Y - py;
+    //         
+    //         // Ignore min distance check here?
+    //         
+    //         // Max Distance for fallback
+    //         i16 adx = (dx < 0) ? -dx : dx;
+    //         i16 ady = (dy < 0) ? -dy : dy;
+    //         if (adx + ady > 100) continue; // Only close teammates
+    //         
+    //         // Simple closeness score
+    //         i32 score = 1000 - (adx + ady);
+    //         if (score > bestScore) {
+    //             bestScore = score;
+    //             bestTarget = i;
+    //         }
+    //    }
+    //}
     
 	return bestTarget;
 }

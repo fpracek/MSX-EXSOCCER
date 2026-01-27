@@ -20,7 +20,7 @@ Symbol Table
   1 _GetNumberString_str_65536_1276                                 0000000E R
   7 _GetPlayerIdByRole                                              0000002E GR
     _GoalKick                                                       ******** GX
-  7 _GoalkeeperWithBall                                             000019A9 GR
+  7 _GoalkeeperWithBall                                             00001731 GR
   7 _InitPonPonGirls                                                0000039F GR
   7 _IsTeamJoystickTriggerPressed                                   00000EED GR
     _Joystick_Read                                                  ******** GX
@@ -28,7 +28,7 @@ Symbol Table
   7 _Math_Abs32                                                     000012EE GR
     _PeopleMoving                                                   ******** GX
     _PerformPass                                                    ******** GX
-  7 _PerformShot                                                    00001DFF GR
+  7 _PerformShot                                                    00001B87 GR
   7 _PrintTeamName                                                  000001EE GR
   1 _PrintTeamName_k_Names_131072_1154                              00000001 R
     _PutBallOnPlayerFeet                                            ******** GX
@@ -41,23 +41,23 @@ Symbol Table
     _SetPlayerBallPossession                                        ******** GX
   7 _ShowFieldZone                                                  00001019 GR
   7 _ShowHeaderInfo                                                 0000024D GR
-  7 _TickBallFlying                                                 000020DC GR
+  7 _TickBallFlying                                                 00001E64 GR
   7 _TickCheckBallBoundaries                                        0000101D GR
     _TickFieldScrollingAction                                       ******** GX
-  7 _TickGoalkeeperAnimation                                        00001BB2 GR
+  7 _TickGoalkeeperAnimation                                        0000193A GR
   7 _TickP1                                                         0000002B GR
   7 _TickPlayerToOwnTarget                                          0000087B GR
   1 _TickPlayerToOwnTarget_s_GkMoveTick_131072_1231                 0000000D R
   7 _TickPonPonGirlsAnimation                                       00000424 GR
   7 _TickPonPonGirlsAnimation_k_GirlPatterns_65537_1183             0000048A R
-  7 _TickShotCursor                                                 000036A4 GR
-  7 _TickThrowIn                                                    000029ED GR
-  1 _TickThrowIn_s_ForceThrowTimer_65537_1434                       00000016 R
-  1 _TickThrowIn_s_JoyMoved_65537_1434                              00000015 R
-  1 _TickThrowIn_s_ThrowTargetId_65537_1434                         00000014 R
+  7 _TickShotCursor                                                 0000342C GR
+  7 _TickThrowIn                                                    00002775 GR
+  1 _TickThrowIn_s_ForceThrowTimer_65537_1428                       00000016 R
+  1 _TickThrowIn_s_JoyMoved_65537_1428                              00000015 R
+  1 _TickThrowIn_s_ThrowTargetId_65537_1428                         00000014 R
   7 _TimeUp                                                         000011CA GR
-  7 _UpdatePassTarget                                               0000196C GR
-  1 _UpdatePassTarget_passUpdateTimer_65537_1364                    00000013 R
+  7 _UpdatePassTarget                                               000016F4 GR
+  1 _UpdatePassTarget_passUpdateTimer_65537_1358                    00000013 R
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
 Hexadecimal [32-Bits]
 
@@ -406,7 +406,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size       4F   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG2                                      size     37A5   flags    0
+   7 _SEG2                                      size     352D   flags    0
    8 _INITIALIZER                               size        6   flags    0
    9 _CABS                                      size        0   flags    8
 
