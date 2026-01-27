@@ -61,6 +61,15 @@ typedef struct BallInfo
 	u8      PossessionTimer;    // Frames since possession started
 	u8      ComingFromRestart;  // 1 if pass originated from a restart
 } BallInfo;
+
+typedef struct TeamStats
+{
+    u8 Speed;           // 0-5 (3=Standard)
+    u8 Aggression;      // Tackle distance (e.g. 12-20)
+    u8 ShotFreq;        // 0-10 (higher = more frequent)
+    u8 PassFreq;        // 0-10
+    u8 GkSkill;         // GK save range (e.g. 12-18)
+} TeamStats;
 #endif
 
 // =======================
@@ -349,4 +358,5 @@ void PutPonPonGirlSprite(u8 ponPonGirlId);
 void InitPonPonGirls();
 void TickPonPonGirlsAnimation();
 void TickShotCursor();
+const TeamStats* GetTeamStats(u8 teamId);
 void PeopleMoving(bool isBasicMoving);

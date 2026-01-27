@@ -60,6 +60,20 @@ u8                  g_ThrowInPlayerId = NO_VALUE;
 bool 		        g_VSynch = FALSE;
 i8                  g_GkRecoilY = 0;
 
+const TeamStats g_TeamStats[] = {
+    { 3, 12, 5, 5, 14 }, // AUS (Standard)
+    { 4, 12, 8, 7, 14 }, // BRA (Fast, Shoot+, Pass+)
+    { 3, 16, 4, 5, 16 }, // ITA (Aggressive+, GK+)
+    { 3, 12, 6, 8, 14 }, // FRA (Pass++)
+    { 3, 15, 6, 5, 14 }, // GBR (Aggressive+)
+    { 4, 14, 7, 6, 15 }  // GER (Fast, Strong)
+};
+
+const TeamStats* GetTeamStats(u8 teamId) {
+    if (teamId > 5) return &g_TeamStats[0];
+    return &g_TeamStats[teamId];
+}
+
 void UpdateV9990()
 {
 	WaitV9990Synch();
@@ -221,7 +235,7 @@ void V9_InterruptCommand()
 //}
 //-----------------------------------------------------------------------------
 void GameStart(){
-	g_FioBre=true;
+	g_FioBre=false;
 	V9_SetDisplayEnable(FALSE);
     g_SecondsToEndOfMatch=MATCH_DURATION;
 	g_RestartKickTeamId=TEAM_1;
@@ -230,8 +244,8 @@ void GameStart(){
 	g_FieldCurrentYPosition=FIELD_TOP_Y;
 	g_Team1Score=0;
 	g_Team2Score=0;
-	g_Team1PaletteId=TEAM_ITA;
-	g_Team2PaletteId=TEAM_AUS;
+	g_Team1PaletteId=TEAM_BRA;
+	g_Team2PaletteId=TEAM_GER;
 	V9_SetScrollingY(0);
 	V9_SetScrollingBY(1);
 	SetTeam1Palette();

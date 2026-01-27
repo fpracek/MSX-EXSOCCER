@@ -560,6 +560,7 @@ void TickAI(u8 playerId){
 		
 		u8 playerTeamId = g_Players[playerId].TeamId;
 		bool ballPossessionByPlayerTeam = false;
+        const TeamStats* stats = GetTeamStats(playerTeamId);
 
         if (g_MatchStatus == MATCH_BALL_ON_GOALKEEPER) {
             // Force possession logic based on which GK has the ball
@@ -733,7 +734,10 @@ void TickAI(u8 playerId){
 							// Aggressive Mode: In dangerous zone, shoot even if blocked if not TOO close?
 							// For now, rely on clear path but check often.
 							if (clearShot) {
-								u16 shotX = 86 + ((g_FrameCounter + playerId * 13) % 68);
+                                // Check Shot Frequency Stat
+                                if ((g_FrameCounter % 10) > stats->ShotFreq) return;
+
+                                u16 shotX = 86 + ((g_FrameCounter + playerId * 13) % 68);
 								PerformShot(shotX, goalTargetY);
 								return;
 							}
@@ -773,7 +777,7 @@ void TickAI(u8 playerId){
 				else {
 					// FREE ROAM (Not blocked, not threatened)
 					// Use 50% chance to check for passes every tick (tick is every 15 frames)
-					if ((g_FrameCounter & 1) == 0) checkPassing = true;
+					if ((g_FrameCounter % 10) < stats->PassFreq) checkPassing = true;
 				}
 				
 				if (checkPassing) {
@@ -1088,7 +1092,8 @@ void TickAI(u8 playerId){
 				// If we are close enough, attempt to steal.
 				i16 dx = (i16)g_Players[playerId].X - (i16)g_Ball.X;
 				i16 dy = (i16)g_Players[playerId].Y - (i16)g_Ball.Y;
-				if (dx > -12 && dx < 12 && dy > -12 && dy < 12) {
+                i16 range = stats->Aggression;
+				if (dx > -range && dx < range && dy > -range && dy < range) {
 					// Very Close! 
 					// Human controlled players must press trigger (handled in exsoccer.c).
 					// CPU controlled players do it automatically (with a probability check if needed).
@@ -1387,7 +1392,8 @@ void TickBallCollision(){
         // GK: 14px radius (28x28 box) -> INCREASED FOR DIVING
         u8 hitDist = 14;
         if (g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) {
-             if (g_Ball.ShotActive) hitDist = 12; // Reduced from 16 to allow corner goals
+             const TeamStats* stats = GetTeamStats(g_Players[i].TeamId);
+             if (g_Ball.ShotActive) hitDist = stats->GkSkill; 
              else hitDist = 14; 
         }
 

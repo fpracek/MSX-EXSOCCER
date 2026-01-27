@@ -142,9 +142,15 @@ void PrintTeamName(u8 x, u8 teamPaletteId) {
     }
     
     if (!pName) {
-        static const char* k_Names[] = { "AUS", "BRA", "AUS", "FRA", "GBR", "GER" };
-        if (teamPaletteId <= 5) pName = k_Names[teamPaletteId];
-        else pName = "   ";
+        switch (teamPaletteId) {
+            case TEAM_AUS: pName = "AUS"; break;
+            case TEAM_BRA: pName = "BRA"; break;
+            case TEAM_ITA: pName = "ITA"; break;
+            case TEAM_FRA: pName = "FRA"; break;
+            case TEAM_GBR: pName = "GBR"; break;
+            case TEAM_GER: pName = "GER"; break;
+            default:       pName = "   "; break;
+        }
     }
     V9_PrintLayerAStringAtPos(x, 0, pName);
 }
@@ -400,13 +406,28 @@ void TickPlayerToOwnTarget(){
             }
 
 			if(g_MatchStatus==MATCH_IN_ACTION){
-				// Speed up AI: Run 2 out of 3 frames (66% speed) to match Human speed
-				g_Players[i].AiTickCounter++;
-				if(g_Players[i].AiTickCounter >= 3) g_Players[i].AiTickCounter = 0;
-				
-				if(g_Players[i].AiTickCounter == 2){ // Skip 1 frame every 3
-					continue;
-				}
+                const TeamStats* stats = GetTeamStats(g_Players[i].TeamId);
+                u8 speed = stats->Speed;
+                
+                // Speed Logic (Frame Skipping)
+                // Human is 1/3 (20fps)
+                // Speed 0: 1/4 (15fps) -> Run on 0
+                // Speed 1: 1/3 (20fps) -> Run on 0
+                // Speed 2: 1/2 (30fps) -> Run on 0, 2
+                // Speed 3: 2/3 (40fps) -> Run on 0, 1 (Standard AI)
+                // Speed 4: 3/4 (45fps) -> Run on 0, 1, 2
+                // Speed 5: 1/1 (60fps) -> Run always
+                
+                u8 tick = g_FrameCounter % 12; // Common multiple
+                bool move = false;
+                if (speed == 0) { if ((tick % 4) == 0) move = true; }
+                else if (speed == 1) { if ((tick % 3) == 0) move = true; }
+                else if (speed == 2) { if ((tick % 2) == 0) move = true; }
+                else if (speed == 3) { if ((tick % 3) != 2) move = true; } // 0, 1, 3, 4...
+                else if (speed == 4) { if ((tick % 4) != 3) move = true; }
+                else move = true;
+                
+                if (!move) continue;
 			} else {
 				g_Players[i].AiTickCounter=0;
 			}
