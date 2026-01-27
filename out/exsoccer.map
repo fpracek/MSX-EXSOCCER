@@ -29,8 +29,8 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000004  _g_CGTABL                          print
      00000006  _g_VDP_DR                          print
      00000007  _g_VDP_DW                          print
-     00000025  l__INITIALIZED                  
-     00000025  l__INITIALIZER                  
+     00000027  l__INITIALIZED                  
+     00000027  l__INITIALIZER                  
      0000002B  _g_BASRVN                          print
      0000002B  _g_ROMVersion                      print
      0000002D  _g_MSXVER                          print
@@ -39,10 +39,10 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000034  l__DRIVER1                      
      0000006D  l__GSINIT                       
      000001F5  l__HOME                         
-     000001F9  l__DATA                         
+     00000217  l__DATA                         
      00000604  l__SEG10                        
-     00003513  l__SEG2                         
-     00003BA5  l__CODE                         
+     00003788  l__SEG2                         
+     00003B75  l__CODE                         
      00003C00  l__SEG6                         
      00003D22  l__SEG1                         
      00004000  l__SEG3                         
@@ -52,11 +52,11 @@ Area                                    Addr        Size        Decimal Bytes (A
      00004000  l__SEG8                         
      00004000  l__SEG9                         
      00004000  s__CODE                         
-     00007BA5  s__HOME                         
-     00007D9A  s__INITIALIZER                  
-     00007D9A  s__RODATA                       
-     00007DBF  s__GSINIT                       
-     00007E2C  s__GSFINAL                      
+     00007B75  s__HOME                         
+     00007D6A  s__INITIALIZER                  
+     00007D6A  s__RODATA                       
+     00007D91  s__GSINIT                       
+     00007DFE  s__GSFINAL                      
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
@@ -67,10 +67,10 @@ Area                                    Addr        Size        Decimal Bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      0000C000  s__DATA                         
-     0000C1F9  s__INITIALIZED                  
-     0000C21E  s__BSEG                         
-     0000C21E  s__BSS                          
-     0000C21E  s__HEAP                         
+     0000C217  s__INITIALIZED                  
+     0000C23E  s__BSEG                         
+     0000C23E  s__BSS                          
+     0000C23E  s__HEAP                         
      0000F30F  _g_KANJTABLE                       exsoccer_s2_b0
      0000F323  _g_DISKVE                          exsoccer_s2_b0
      0000F325  _g_BREAKV                          exsoccer_s2_b0
@@ -315,7 +315,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00004000    00003BA5 =       15269. bytes (REL,CON)
+_CODE                               00004000    00003B75 =       15221. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -330,178 +330,178 @@ _CODE                               00004000    00003BA5 =       15269. bytes (R
      000040D1  _LoadP1LayerA                      exsoccer
      0000412B  _LoadP1LayerB                      exsoccer
      000041CF  _V9_InterruptVBlank                exsoccer
-     000042DC  _V9_InterruptHBlank                exsoccer
-     000042DD  _V9_InterruptCommand               exsoccer
-     000042DE  _GameStart                         exsoccer
-     00004345  _SetTeamsPresentationSpritesPosi   exsoccer
-     0000449F  _TickActiveFieldZone               exsoccer
-     000044FF  _TickUpdateTime                    exsoccer
-     00004531  _GetOffsideLineY                   exsoccer
-     00004612  _BallInGoal                        exsoccer
-     00004690  _BallThrowIn                       exsoccer
-     000047AB  _GoalKick                          exsoccer
-     000047E8  _CornerKick                        exsoccer
-     00004C25  _InitializeV9990                   exsoccer
-     00004C93  _LoadSprites                       exsoccer
-     00004CD8  _TickGoalCelebration               exsoccer
-     000050B4  _main                              exsoccer
-     000051ED  _MainGameLoop                      exsoccer
-     0000537A  _UpdatePlayerPatternByDirection    exsoccer
-     00005441  _GetNoMovingPlayerPatternId        exsoccer
-     00005499  _GetNewPoseByDirection             exsoccer
-     000054EC  _GetPatternIdByPoseAndDirection    exsoccer
-     00005542  _SetPlayerTarget                   exsoccer
-     000056EF  _SetPlayerBallPossession           exsoccer
-     0000572D  _TickGoalKick                      exsoccer
-     00005C5A  _TickCornerKick                    exsoccer
-     00006737  _V9_SetPort                        v9990
-     0000673B  _V9_GetPort                        v9990
-     0000673F  _V9_SetRegister                    v9990
-     00006747  _V9_SetRegister16                  v9990
-     00006753  _V9_GetRegister                    v9990
-     0000675A  _V9_Detect                         v9990
-     00006770  _V9_SetScreenMode                  v9990
-     000067A1  _g_V9_ModeConfig                   v9990
-     000067BF  _g_V9_ColorConfig                  v9990
-     000067D1  _V9_SetScrollingY                  v9990
-     000067EA  _V9_SetScrollingX                  v9990
-     00006806  _V9_SetScrollingBY                 v9990
-     0000681F  _V9_SetScrollingBX                 v9990
-     0000683B  _V9_ClearVRAM                      v9990
-     0000685F  _V9_SetWriteAddress                v9990
+     000042E4  _V9_InterruptHBlank                exsoccer
+     000042E5  _V9_InterruptCommand               exsoccer
+     000042E6  _GameStart                         exsoccer
+     00004350  _SetTeamsPresentationSpritesPosi   exsoccer
+     000044AA  _TickActiveFieldZone               exsoccer
+     0000450A  _TickUpdateTime                    exsoccer
+     0000453C  _GetOffsideLineY                   exsoccer
+     0000461D  _BallInGoal                        exsoccer
+     0000469B  _BallThrowIn                       exsoccer
+     000047B6  _GoalKick                          exsoccer
+     000047F3  _CornerKick                        exsoccer
+     00004C30  _InitializeV9990                   exsoccer
+     00004C9E  _LoadSprites                       exsoccer
+     00004CE3  _TickGoalCelebration               exsoccer
+     000050BF  _main                              exsoccer
+     000051F8  _MainGameLoop                      exsoccer
+     0000534A  _UpdatePlayerPatternByDirection    exsoccer
+     00005411  _GetNoMovingPlayerPatternId        exsoccer
+     00005469  _GetNewPoseByDirection             exsoccer
+     000054BC  _GetPatternIdByPoseAndDirection    exsoccer
+     00005512  _SetPlayerTarget                   exsoccer
+     000056BF  _SetPlayerBallPossession           exsoccer
+     000056FD  _TickGoalKick                      exsoccer
+     00005C2A  _TickCornerKick                    exsoccer
+     00006707  _V9_SetPort                        v9990
+     0000670B  _V9_GetPort                        v9990
+     0000670F  _V9_SetRegister                    v9990
+     00006717  _V9_SetRegister16                  v9990
+     00006723  _V9_GetRegister                    v9990
+     0000672A  _V9_Detect                         v9990
+     00006740  _V9_SetScreenMode                  v9990
+     00006771  _g_V9_ModeConfig                   v9990
+     0000678F  _g_V9_ColorConfig                  v9990
+     000067A1  _V9_SetScrollingY                  v9990
+     000067BA  _V9_SetScrollingX                  v9990
+     000067D6  _V9_SetScrollingBY                 v9990
+     000067EF  _V9_SetScrollingBX                 v9990
+     0000680B  _V9_ClearVRAM                      v9990
+     0000682F  _V9_SetWriteAddress                v9990
 ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00004000    00003BA5 =       15269. bytes (REL,CON)
+_CODE                               00004000    00003B75 =       15221. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000686C  _V9_SetReadAddress                 v9990
-     0000687A  _V9_Peek_CurrentAddr               v9990
-     0000687E  _V9_Peek16_CurrentAddr             v9990
-     00006886  _V9_Poke_CurrentAddr               v9990
-     0000688A  _V9_Poke16_CurrentAddr             v9990
-     00006892  _V9_FillVRAM_CurrentAddr           v9990
-     0000689F  _V9_FillVRAM16_CurrentAddr         v9990
-     000068B0  _V9_WriteVRAM_CurrentAddr          v9990
-     000068BD  _V9_ReadVRAM_CurrentAddr           v9990
-     000068CA  _V9_SetPaletteEntry                v9990
-     000068E4  __divuchar                         
-     000068E6  __divu8                            
-     000068E9  __divu16                           
-     000068E9  __divuint                          
-     00006918  _VDP_SetModeFlag                   vdp
-     00006941  _VDP_SetModeText1                  vdp
-     00006952  _VDP_SetModeMultiColor             vdp
-     0000696F  _VDP_SetModeGraphic1               vdp
-     00006991  _VDP_SetModeGraphic2               vdp
-     000069B4  _VDP_ClearVRAM                     vdp
-     000069C0  _VDP_WriteVRAM_16K                 vdp
-     000069E9  _VDP_FillVRAM_16K                  vdp
-     00006A08  _VDP_ReadVRAM_16K                  vdp
-     00006A30  _VDP_Peek_16K                      vdp
-     00006A3E  _VDP_Poke_16K                      vdp
-     00006A50  _VDP_Initialize                    vdp
-     00006A61  _VDP_SetMode                       vdp
-     00006AB1  _VDP_GetVersion                    vdp
-     00006B00  _VDP_RegWrite                      vdp
-     00006B0C  _VDP_RegWriteBak                   vdp
-     00006B1F  _VDP_RegWriteBakMask               vdp
-     00006B3E  _VDP_ReadDefaultStatus             vdp
-     00006B41  _VDP_SetLayoutTable                vdp
-     00006B51  _VDP_SetColorTable                 vdp
-     00006B7E  _VDP_SetPatternTable               vdp
-     00006B9B  _VDP_SetSpriteAttributeTable       vdp
-     00006BCC  _VDP_SetSpritePatternTable         vdp
-     00006BDD  _VDP_LoadSpritePattern             vdp
-     00006C08  _VDP_SetSpriteSM1                  vdp
-     00006C46  _VDP_SetSprite                     vdp
-     00006C7C  _VDP_SetSpritePosition             vdp
-     00006CAB  _VDP_SetSpritePositionX            vdp
-     00006CBD  _VDP_SetSpritePositionY            vdp
-     00006CCE  _VDP_SetSpritePattern              vdp
-     00006CE1  _VDP_SetSpriteColorSM1             vdp
-     00006CF5  _VDP_DisableSpritesFrom            vdp
-     00006CFC  _VDP_LoadPattern_GM2               vdp
-     00006D53  _VDP_LoadColor_GM2                 vdp
-     00006DAA  _VDP_WriteLayout_GM2               vdp
-     00006DFF  _VDP_FillLayout_GM2                vdp
-     00006E41  _Input_Detect                      input
+     0000683C  _V9_SetReadAddress                 v9990
+     0000684A  _V9_Peek_CurrentAddr               v9990
+     0000684E  _V9_Peek16_CurrentAddr             v9990
+     00006856  _V9_Poke_CurrentAddr               v9990
+     0000685A  _V9_Poke16_CurrentAddr             v9990
+     00006862  _V9_FillVRAM_CurrentAddr           v9990
+     0000686F  _V9_FillVRAM16_CurrentAddr         v9990
+     00006880  _V9_WriteVRAM_CurrentAddr          v9990
+     0000688D  _V9_ReadVRAM_CurrentAddr           v9990
+     0000689A  _V9_SetPaletteEntry                v9990
+     000068B4  __divuchar                         
+     000068B6  __divu8                            
+     000068B9  __divu16                           
+     000068B9  __divuint                          
+     000068E8  _VDP_SetModeFlag                   vdp
+     00006911  _VDP_SetModeText1                  vdp
+     00006922  _VDP_SetModeMultiColor             vdp
+     0000693F  _VDP_SetModeGraphic1               vdp
+     00006961  _VDP_SetModeGraphic2               vdp
+     00006984  _VDP_ClearVRAM                     vdp
+     00006990  _VDP_WriteVRAM_16K                 vdp
+     000069B9  _VDP_FillVRAM_16K                  vdp
+     000069D8  _VDP_ReadVRAM_16K                  vdp
+     00006A00  _VDP_Peek_16K                      vdp
+     00006A0E  _VDP_Poke_16K                      vdp
+     00006A20  _VDP_Initialize                    vdp
+     00006A31  _VDP_SetMode                       vdp
+     00006A81  _VDP_GetVersion                    vdp
+     00006AD0  _VDP_RegWrite                      vdp
+     00006ADC  _VDP_RegWriteBak                   vdp
+     00006AEF  _VDP_RegWriteBakMask               vdp
+     00006B0E  _VDP_ReadDefaultStatus             vdp
+     00006B11  _VDP_SetLayoutTable                vdp
+     00006B21  _VDP_SetColorTable                 vdp
+     00006B4E  _VDP_SetPatternTable               vdp
+     00006B6B  _VDP_SetSpriteAttributeTable       vdp
+     00006B9C  _VDP_SetSpritePatternTable         vdp
+     00006BAD  _VDP_LoadSpritePattern             vdp
+     00006BD8  _VDP_SetSpriteSM1                  vdp
+     00006C16  _VDP_SetSprite                     vdp
+     00006C4C  _VDP_SetSpritePosition             vdp
+     00006C7B  _VDP_SetSpritePositionX            vdp
+     00006C8D  _VDP_SetSpritePositionY            vdp
+     00006C9E  _VDP_SetSpritePattern              vdp
+     00006CB1  _VDP_SetSpriteColorSM1             vdp
+     00006CC5  _VDP_DisableSpritesFrom            vdp
+     00006CCC  _VDP_LoadPattern_GM2               vdp
+     00006D23  _VDP_LoadColor_GM2                 vdp
+     00006D7A  _VDP_WriteLayout_GM2               vdp
+     00006DCF  _VDP_FillLayout_GM2                vdp
+     00006E11  _Input_Detect                      input
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00004000    00003BA5 =       15269. bytes (REL,CON)
+_CODE                               00004000    00003B75 =       15221. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00006E5E  _Joystick_Read                     input
-     00006E73  _Keyboard_Read                     input
-     00006E7E  _Keyboard_IsKeyPressed             input
-     00006EA9  __mulint                           
-     00006EAB  __mul16                            
-     00006EC0  _DEBUG_INIT                        debug
-     00006EC1  _DEBUG_BREAK                       debug
-     00006EC6  _DEBUG_ASSERT                      debug
-     00006ECC  _DEBUG_LOG                         debug
-     00006EDA  _DEBUG_LOGNUM                      debug
-     00006F00  _DEBUG_PRINT                       debug
-     00006F0F  _Print_Initialize                  print
-     00006F64  _g_HexChar                         print
-     00006F74  _Print_SetMode                     print
-     00006F8A  _Print_SetFont                     print
-     00007064  _Print_SetColor                    print
-     000070E5  _Print_SetColorShade               print
-     0000715E  _Print_ValidateChar                print
-     000071AA  _Print_ValidatePattern             print
-     00007279  _CopyNo8HeightFontData             print
-     000072D4  _Print_SetTextFont                 print
-     000075ED  _DrawChar_Layout                   print
-     00007631  _Print_Clear                       print
-     00007645  _Print_Backspace                   print
-     00007689  _Print_DrawChar                    print
-     000076BF  _Print_DrawCharX                   print
-     000076D1  _Print_DrawText                    print
-     00007710  _Print_DrawBin8                    print
-     00007733  _Print_DrawHex8                    print
-     00007759  _Print_DrawHex16                   print
-     00007764  _Print_DrawInt                     print
-     000077F0  _Print_DrawFormat                  print
-     00007B0B  __modschar                         
-     00007B13  __modsint                          
-     00007B19  ___mulsint2slong                   u_16_16_mul
-     00007B47  ___muluint2ulong                   u_16_16_mul
-     00007B5E  __moduchar                         
-     00007B65  __moduint                          
-     00007B6A  __divschar                         
-     00007B6C  __div8                             
-     00007B70  __div_signexte                     
-     00007B74  __div16                            
-     00007B74  __divsint                          
-     00007B9A  __get_remainder                    
-     00007BA4  ___sdcc_call_hl                    
+     00006E2E  _Joystick_Read                     input
+     00006E43  _Keyboard_Read                     input
+     00006E4E  _Keyboard_IsKeyPressed             input
+     00006E79  __mulint                           
+     00006E7B  __mul16                            
+     00006E90  _DEBUG_INIT                        debug
+     00006E91  _DEBUG_BREAK                       debug
+     00006E96  _DEBUG_ASSERT                      debug
+     00006E9C  _DEBUG_LOG                         debug
+     00006EAA  _DEBUG_LOGNUM                      debug
+     00006ED0  _DEBUG_PRINT                       debug
+     00006EDF  _Print_Initialize                  print
+     00006F34  _g_HexChar                         print
+     00006F44  _Print_SetMode                     print
+     00006F5A  _Print_SetFont                     print
+     00007034  _Print_SetColor                    print
+     000070B5  _Print_SetColorShade               print
+     0000712E  _Print_ValidateChar                print
+     0000717A  _Print_ValidatePattern             print
+     00007249  _CopyNo8HeightFontData             print
+     000072A4  _Print_SetTextFont                 print
+     000075BD  _DrawChar_Layout                   print
+     00007601  _Print_Clear                       print
+     00007615  _Print_Backspace                   print
+     00007659  _Print_DrawChar                    print
+     0000768F  _Print_DrawCharX                   print
+     000076A1  _Print_DrawText                    print
+     000076E0  _Print_DrawBin8                    print
+     00007703  _Print_DrawHex8                    print
+     00007729  _Print_DrawHex16                   print
+     00007734  _Print_DrawInt                     print
+     000077C0  _Print_DrawFormat                  print
+     00007ADB  __modschar                         
+     00007AE3  __modsint                          
+     00007AE9  ___mulsint2slong                   u_16_16_mul
+     00007B17  ___muluint2ulong                   u_16_16_mul
+     00007B2E  __moduchar                         
+     00007B35  __moduint                          
+     00007B3A  __divschar                         
+     00007B3C  __div8                             
+     00007B40  __div_signexte                     
+     00007B44  __div16                            
+     00007B44  __divsint                          
+     00007B6A  __get_remainder                    
+     00007B74  ___sdcc_call_hl                    
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_HOME                               00007BA5    000001F5 =         501. bytes (REL,CON)
+_HOME                               00007B75    000001F5 =         501. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00007BA5  __divslong                         _divslong
-     00007C35  __divulong                         _divulong
-     00007CAF  __mullong                          _mullong
+     00007B75  __divslong                         _divslong
+     00007C05  __divulong                         _divulong
+     00007C7F  __mullong                          _mullong
 ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_INITIALIZER                        00007D9A    00000025 =          37. bytes (REL,CON)
+_INITIALIZER                        00007D6A    00000027 =          39. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -510,7 +510,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_GSINIT                             00007DBF    0000006D =         109. bytes (REL,CON)
+_GSINIT                             00007D91    0000006D =         109. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -519,11 +519,11 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_GSFINAL                            00007E2C    00000000 =           0. bytes (REL,CON)
+_GSFINAL                            00007DFE    00000000 =           0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00007E2C  _g_LastAddr                        crt0
+     00007DFE  _g_LastAddr                        crt0
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 14.
 Hexadecimal  [32-Bits]
@@ -541,7 +541,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_DATA                               0000C000    000001F9 =         505. bytes (REL,CON)
+_DATA                               0000C000    00000217 =         535. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -559,57 +559,59 @@ _DATA                               0000C000    000001F9 =         505. bytes (R
      0000C00F  _g_Team1Score                      exsoccer
      0000C010  _g_Team2Score                      exsoccer
      0000C011  _g_Players                         exsoccer
-     0000C14C  _g_Ball                            exsoccer
-     0000C16A  _g_ActiveFieldZone                 exsoccer
-     0000C16B  _g_RestartKickTeamId               exsoccer
-     0000C16C  _g_SecondsToEndOfMatch             exsoccer
-     0000C18A  _g_VDP_REGSAV                      vdp
-     0000C1A6  _g_VDP_Data                        vdp
-     0000C1A8  _g_VDP_Command                     vdp
-     0000C1B7  _g_VDP_Sprite                      vdp
-     0000C1BB  _g_ScreenLayoutLow                 vdp
-     0000C1BD  _g_ScreenColorLow                  vdp
-     0000C1BF  _g_ScreenPatternLow                vdp
-     0000C1C1  _g_SpriteAttributeLow              vdp
-     0000C1C3  _g_SpritePatternLow                vdp
-     0000C1C5  _g_SpriteColorLow                  vdp
-     0000C1C7  _g_PrintData                       print
-
+     0000C14C  _g_PonPonGirls                     exsoccer
+     0000C16A  _g_Ball                            exsoccer
+     0000C188  _g_ActiveFieldZone                 exsoccer
+     0000C189  _g_RestartKickTeamId               exsoccer
+     0000C18A  _g_SecondsToEndOfMatch             exsoccer
+     0000C1A8  _g_VDP_REGSAV                      vdp
+     0000C1C4  _g_VDP_Data                        vdp
+     0000C1C6  _g_VDP_Command                     vdp
+     0000C1D5  _g_VDP_Sprite                      vdp
+     0000C1D9  _g_ScreenLayoutLow                 vdp
+     0000C1DB  _g_ScreenColorLow                  vdp
+     0000C1DD  _g_ScreenPatternLow                vdp
+     0000C1DF  _g_SpriteAttributeLow              vdp
+     0000C1E1  _g_SpritePatternLow                vdp
+     0000C1E3  _g_SpriteColorLow                  vdp
+     0000C1E5  _g_PrintData                       print
 ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_INITIALIZED                        0000C1F9    00000025 =          37. bytes (REL,CON)
+_INITIALIZED                        0000C217    00000027 =          39. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000C1F9  _g_FieldCurrentYPosition           exsoccer
-     0000C1FB  _g_FieldScrollingActionInProgres   exsoccer
-     0000C1FC  _g_PlayersPositioningPhaseCount    exsoccer
-     0000C1FD  _g_MatchStatus                     exsoccer
-     0000C1FE  _g_FieldScrollSpeed                exsoccer
-     0000C1FF  _g_Timer                           exsoccer
-     0000C200  _g_Team1ActivePlayer               exsoccer
-     0000C201  _g_Team2ActivePlayer               exsoccer
-     0000C202  _g_PassTargetPlayer                exsoccer
-     0000C203  _g_GameWith2Players                exsoccer
-     0000C204  _g_GameLevel                       exsoccer
-     0000C205  _g_ActionCooldown                  exsoccer
-     0000C206  _g_ShootCooldown                   exsoccer
-     0000C207  _g_ShotCursorX                     exsoccer
-     0000C209  _g_ShotCursorDir                   exsoccer
-     0000C20A  _g_FioBre                          exsoccer
-     0000C20B  _g_GoalScorerId                    exsoccer
-     0000C20C  _g_CornerKickSide                  exsoccer
-     0000C20D  _g_GoalKickSide                    exsoccer
-     0000C20E  _g_CornerKickTargetId              exsoccer
-     0000C20F  _g_ThrowInPlayerId                 exsoccer
-     0000C210  _g_VSynch                          exsoccer
-     0000C211  _g_GkRecoilY                       exsoccer
-     0000C212  _g_GkIsGroundKick                  exsoccer_s2_b0
-     0000C215  _g_VDPInitilized                   vdp
-     0000C216  _g_PrintInvalid                    print
+     0000C217  _g_FieldCurrentYPosition           exsoccer
+     0000C219  _g_FieldScrollingActionInProgres   exsoccer
+     0000C21A  _g_PlayersPositioningPhaseCount    exsoccer
+     0000C21B  _g_MatchStatus                     exsoccer
+     0000C21C  _g_FieldScrollSpeed                exsoccer
+     0000C21D  _g_Timer                           exsoccer
+     0000C21E  _g_Team1ActivePlayer               exsoccer
+     0000C21F  _g_Team2ActivePlayer               exsoccer
+     0000C220  _g_PassTargetPlayer                exsoccer
+     0000C221  _g_GameWith2Players                exsoccer
+     0000C222  _g_GameLevel                       exsoccer
+     0000C223  _g_ActionCooldown                  exsoccer
+     0000C224  _g_ShootCooldown                   exsoccer
+     0000C225  _g_ShotCursorX                     exsoccer
+     0000C227  _g_ShotCursorDir                   exsoccer
+     0000C228  _g_FioBre                          exsoccer
+     0000C229  _g_GoalScorerId                    exsoccer
+     0000C22A  _g_CornerKickSide                  exsoccer
+     0000C22B  _g_GoalKickSide                    exsoccer
+     0000C22C  _g_CornerKickTargetId              exsoccer
+     0000C22D  _g_ThrowInPlayerId                 exsoccer
+     0000C22E  _g_VSynch                          exsoccer
+     0000C22F  _g_GkRecoilY                       exsoccer
+     0000C230  _g_GkIsGroundKick                  exsoccer_s2_b0
+     0000C231  _g_ponPonPatternIndex              exsoccer_s2_b0
+     0000C232  _g_PonPonGrilsPoseCounter          exsoccer_s2_b0
+     0000C235  _g_VDPInitilized                   vdp
+     0000C236  _g_PrintInvalid                    print
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
 Hexadecimal  [32-Bits]
@@ -649,7 +651,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG2                               00020100    00003513 =       13587. bytes (REL,CON)
+_SEG2                               00020100    00003788 =       14216. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -662,27 +664,30 @@ _SEG2                               00020100    00003513 =       13587. bytes (R
      0002034D  _ShowHeaderInfo                    exsoccer_s2_b0
      00020429  _V9_PutLayerATileAtPos             exsoccer_s2_b0
      00020464  _V9_PutLayerBTileAtPos             exsoccer_s2_b0
-     0002049F  _PutPlayerSprite                   exsoccer_s2_b0
-     0002076F  _ResetPlayersInfo                  exsoccer_s2_b0
-     000207C9  _ClearTextFromLayerA               exsoccer_s2_b0
-     000207EA  _TickPlayerToOwnTarget             exsoccer_s2_b0
-     00020E1D  _GetNumberString                   exsoccer_s2_b0
-     00020E5C  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
-     00020E83  _GetJoystick1Direction             exsoccer_s2_b0
-     00020F83  _GetJoystick2Direction             exsoccer_s2_b0
-     00020F88  _ShowFieldZone                     exsoccer_s2_b0
-     00020F8C  _TickCheckBallBoundaries           exsoccer_s2_b0
-     00021139  _TimeUp                            exsoccer_s2_b0
-     0002113A  _GetClosestPlayerToBall            exsoccer_s2_b0
-     0002125D  _Math_Abs32                        exsoccer_s2_b0
-     00021273  _GetBestPassTarget                 exsoccer_s2_b0
-     000218DB  _UpdatePassTarget                  exsoccer_s2_b0
-     00021918  _GoalkeeperWithBall                exsoccer_s2_b0
-     00021B21  _TickGoalkeeperAnimation           exsoccer_s2_b0
-     00021D6E  _PerformShot                       exsoccer_s2_b0
-     0002204B  _TickBallFlying                    exsoccer_s2_b0
-     0002295C  _TickThrowIn                       exsoccer_s2_b0
-
+     0002049F  _InitPonPonGirls                   exsoccer_s2_b0
+     00020524  _TickPonPonGirlsAnimation          exsoccer_s2_b0
+     00020584  _PutPonPonGirlSprite               exsoccer_s2_b0
+     00020613  _PutPlayerSprite                   exsoccer_s2_b0
+     000208E3  _ResetPlayersInfo                  exsoccer_s2_b0
+     0002093D  _ClearTextFromLayerA               exsoccer_s2_b0
+     0002095E  _TickPlayerToOwnTarget             exsoccer_s2_b0
+     00020F91  _GetNumberString                   exsoccer_s2_b0
+     00020FD0  _IsTeamJoystickTriggerPressed      exsoccer_s2_b0
+     00020FF7  _GetJoystick1Direction             exsoccer_s2_b0
+     000210F7  _GetJoystick2Direction             exsoccer_s2_b0
+     000210FC  _ShowFieldZone                     exsoccer_s2_b0
+     00021100  _TickCheckBallBoundaries           exsoccer_s2_b0
+     000212AD  _TimeUp                            exsoccer_s2_b0
+     000212AE  _GetClosestPlayerToBall            exsoccer_s2_b0
+     000213D1  _Math_Abs32                        exsoccer_s2_b0
+     000213E7  _GetBestPassTarget                 exsoccer_s2_b0
+     00021A4F  _UpdatePassTarget                  exsoccer_s2_b0
+     00021A8C  _GoalkeeperWithBall                exsoccer_s2_b0
+     00021C95  _TickGoalkeeperAnimation           exsoccer_s2_b0
+     00021EE2  _PerformShot                       exsoccer_s2_b0
+     000221BF  _TickBallFlying                    exsoccer_s2_b0
+     00022AD0  _TickThrowIn                       exsoccer_s2_b0
+     00023787  _TickShotCursor                    exsoccer_s2_b0
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 Hexadecimal  [32-Bits]
 

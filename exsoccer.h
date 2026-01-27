@@ -32,6 +32,12 @@ typedef struct PlayerInfo
 	u16     Status;   
 	u8      AiTickCounter;
 } PlayerInfo;
+typedef struct PonPonGirlInfo
+{
+	u16		Y;		
+	u16     X;
+	u8      PatternId;	
+} PonPonGirlInfo;
 typedef struct BallInfo
 {
 	u16		Y;		
@@ -195,6 +201,17 @@ typedef struct BallInfo
 #define PLAYER_POSE_CELEBRATION_FRONT_1 	48
 #define PLAYER_POSE_CELEBRATION_FRONT_2 	49
 
+#define SPRITE_DOWN_ARROW					121
+
+#define SPRITE_GIRL_1						122
+#define SPRITE_GIRL_2						123
+#define SPRITE_GIRL_3						124
+#define SPRITE_GIRL_4						125
+#define SPRITE_GIRL_5						126
+#define SPRITE_GIRL_6						127
+#define SPRITE_GIRL_7						240
+#define SPRITE_GIRL_8						241
+#define SPRITE_GIRL_9						242
 
 #define BALL_SIZE_1                         57
 #define BALL_SIZE_2                         58
@@ -220,6 +237,8 @@ typedef struct BallInfo
 #define MATCH_IN_ACTION                     12
 #define MATCH_BALL_ON_GOALKEEPER			13
 #define MATCH_BEFORE_OFFSIDE                14
+
+#define PON_PON_GIRLS_POSE_SPEED			3
 
 #define AI_TICK_SPEED						1
 
@@ -322,3 +341,7 @@ u16 GetOffsideLineY(u8 attackingTeamId);
 void EnforcePenaltyBoxRestriction();
 void PerformPass(u8 toPlayerId);
 void PerformShot(u16 targetX, u16 targetY);
+void PutPonPonGirlSprite(u8 ponPonGirlId);
+void InitPonPonGirls();
+void TickPonPonGirlsAnimation();
+void TickShotCursor();

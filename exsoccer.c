@@ -24,39 +24,40 @@ extern const unsigned char 	g_Sprites2[16384]; // Bank 1 = Segment 10
 
 
 // VARIABLES
-u16 		g_FrameCounter;
-int  		g_FieldCurrentYPosition=0;
-u8   		g_FieldScrollingActionInProgress=0;
-u8      	g_Team1PaletteId;
-u8      	g_Team2PaletteId;
-u8      	g_Team1Score;
-u8      	g_Team2Score;
-PlayerInfo  g_Players[15];
-BallInfo    g_Ball;
-u8          g_PlayersPositioningPhaseCount=NO_VALUE;
-u8          g_MatchStatus=MATCH_NOT_STARTED;
-u8 			g_FieldScrollSpeed=FIELD_SCROLL_PRESENTATION_SPEED;
-u8          g_ActiveFieldZone;
-u8          g_RestartKickTeamId;
-u8          g_SecondsToEndOfMatch;
-u8          g_Timer=NO_VALUE;
-u8          g_Team1ActivePlayer=NO_VALUE;
-u8          g_Team2ActivePlayer=NO_VALUE;
-u8          g_PassTargetPlayer=NO_VALUE;
-bool		g_GameWith2Players=false;
-u8          g_GameLevel=1;
-u8          g_ActionCooldown=0; // Debounce for steal/pass
-u8          g_ShootCooldown=0;  // Cooldown specifically for shooting after restart
-u16         g_ShotCursorX = 120;
-i8          g_ShotCursorDir = 4;
-bool        g_FioBre=false;
-u8          g_GoalScorerId = NO_VALUE;
-u8          g_CornerKickSide = CORNER_SIDE_LEFT;
-u8          g_GoalKickSide = CORNER_SIDE_LEFT;
-u8          g_CornerKickTargetId = NO_VALUE;
-u8          g_ThrowInPlayerId = NO_VALUE;
-bool 		g_VSynch = FALSE;
-i8          g_GkRecoilY = 0;
+u16 		        g_FrameCounter;
+int  		        g_FieldCurrentYPosition=0;
+u8   		        g_FieldScrollingActionInProgress=0;
+u8      	        g_Team1PaletteId;
+u8      	        g_Team2PaletteId;
+u8      	        g_Team1Score;
+u8      	        g_Team2Score;
+PlayerInfo          g_Players[15];
+PonPonGirlInfo      g_PonPonGirls[6];
+BallInfo            g_Ball;
+u8                  g_PlayersPositioningPhaseCount=NO_VALUE;
+u8                  g_MatchStatus=MATCH_NOT_STARTED;
+u8 			        g_FieldScrollSpeed=FIELD_SCROLL_PRESENTATION_SPEED;
+u8                  g_ActiveFieldZone;
+u8                  g_RestartKickTeamId;
+u8                  g_SecondsToEndOfMatch;
+u8                  g_Timer=NO_VALUE;
+u8                  g_Team1ActivePlayer=NO_VALUE;
+u8                  g_Team2ActivePlayer=NO_VALUE;
+u8                  g_PassTargetPlayer=NO_VALUE;
+bool		        g_GameWith2Players=false;
+u8                  g_GameLevel=1;
+u8                  g_ActionCooldown=0; // Debounce for steal/pass
+u8                  g_ShootCooldown=0;  // Cooldown specifically for shooting after restart
+u16                 g_ShotCursorX = 120;
+i8                  g_ShotCursorDir = 2;
+bool                g_FioBre=false;
+u8                  g_GoalScorerId = NO_VALUE;
+u8                  g_CornerKickSide = CORNER_SIDE_LEFT;
+u8                  g_GoalKickSide = CORNER_SIDE_LEFT;
+u8                  g_CornerKickTargetId = NO_VALUE;
+u8                  g_ThrowInPlayerId = NO_VALUE;
+bool 		        g_VSynch = FALSE;
+i8                  g_GkRecoilY = 0;
 
 void UpdateV9990()
 {
@@ -161,6 +162,9 @@ void V9_InterruptVBlank()
 			break;
 		}
 		V9_SetScrollingBY(g_FieldCurrentYPosition);
+        for(u8 i=0;i<6;i++){
+            PutPonPonGirlSprite(i);
+        }
 	}
 }
 //-----------------------------------------------------------------------------
@@ -215,6 +219,7 @@ void GameStart(){
 	SetTeamsPresentationSpritesPosition();
 	ShowFieldZone(FIELD_CENTRAL_ZONE);
 	ShowHeaderInfo();
+    InitPonPonGirls();
 	V9_SetDisplayEnable(TRUE);
 }
 void SetTeamsPresentationSpritesPosition(){
@@ -338,7 +343,7 @@ void BallInGoal(u8 teamScored){
 	}
 	else{
 		// Scored DOWN (South)
-		g_Ball.Y = FIELD_BOUND_Y_BOTTOM + 20;
+		g_Ball.Y = FIELD_BOUND_Y_BOTTOM + 12L;
 		g_Team2Score++;
 	}
 	ShowHeaderInfo();
@@ -729,7 +734,7 @@ void MainGameLoop(){
         TickCornerKick(); // <<< Added Hook
         TickGoalKick();
         TickThrowIn();
-
+        TickPonPonGirlsAnimation();
 		TickGoalCelebration();
 		TickPlayerToOwnTarget();
 		TickActiveFieldZone();
@@ -761,6 +766,7 @@ void MainGameLoop(){
 		EnforcePenaltyBoxRestriction();
 
 		UpdateSpritesPositions();
+		TickShotCursor();
 		TickUpdateTime();
 		TickShowKickOff();
 		if(g_FieldScrollingActionInProgress==NO_VALUE){
@@ -790,17 +796,6 @@ void MainGameLoop(){
 		
 		if (g_ShootCooldown > 0) {
 			g_ShootCooldown--;
-		}
-//
-		// Update Shot Cursor (Oscillate)
-		g_ShotCursorX += g_ShotCursorDir;
-		if (g_ShotCursorX < (GOAL_X_MIN - 30)) {
-			g_ShotCursorX = (GOAL_X_MIN - 30);
-			g_ShotCursorDir = -g_ShotCursorDir;
-		}
-		if (g_ShotCursorX > (GOAL_X_MAX + 30)) {
-			g_ShotCursorX = (GOAL_X_MAX + 30);
-			g_ShotCursorDir = -g_ShotCursorDir;
 		}
 	}
 }

@@ -34,8 +34,8 @@ Symbol Table
     _TickPlayerToOwnTarget                                          ******** GX
   7 _TickShowKickOff                                                00003C6B GR
   7 _TickTeamJoystick                                               00000000 GR
-  7 _TickTeamJoystick_k_MoveDX_131075_1184                          00000D8E R
-  7 _TickTeamJoystick_k_MoveDY_131075_1184                          00000D97 R
+  7 _TickTeamJoystick_k_MoveDX_131075_1185                          00000D8E R
+  7 _TickTeamJoystick_k_MoveDY_131075_1185                          00000D97 R
     _V9_PrintLayerAStringAtPos                                      ******** GX
     _V9_SetPaletteEntry                                             ******** GX
     _V9_SetRegister                                                 ******** GX

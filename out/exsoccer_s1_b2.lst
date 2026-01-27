@@ -2333,7 +2333,7 @@
     00000C6F 4E               [ 7] 2333 	ld	c, (hl)
     00000C70 23               [ 6] 2334 	inc	hl
     00000C71 46               [ 7] 2335 	ld	b, (hl)
-    00000C72 11r8Er0D         [10] 2336 	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1184+0
+    00000C72 11r8Er0D         [10] 2336 	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1185+0
     00000C75 DD 6E FE         [19] 2337 	ld	l, -2 (ix)
     00000C78 26 00            [ 7] 2338 	ld	h, #0x00
     00000C7A 19               [11] 2339 	add	hl, de
@@ -2359,7 +2359,7 @@
     00000C91 4E               [ 7] 2359 	ld	c, (hl)
     00000C92 23               [ 6] 2360 	inc	hl
     00000C93 46               [ 7] 2361 	ld	b, (hl)
-    00000C94 11r97r0D         [10] 2362 	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1184+0
+    00000C94 11r97r0D         [10] 2362 	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1185+0
     00000C97 DD 6E FE         [19] 2363 	ld	l, -2 (ix)
     00000C9A 26 00            [ 7] 2364 	ld	h, #0x00
     00000C9C 19               [11] 2365 	add	hl, de
@@ -2675,7 +2675,7 @@
                          0000F344  2675 _g_RAMAD3	=	0xf344
                          0000F348  2676 _g_MASTER	=	0xf348
                          0000F37D  2677 _g_BDOS	=	0xf37d
-    00000D8E                       2678 _TickTeamJoystick_k_MoveDX_131075_1184:
+    00000D8E                       2678 _TickTeamJoystick_k_MoveDX_131075_1185:
     00000D8E 00                    2679 	.db #0x00	;  0
     00000D8F 00                    2680 	.db #0x00	;  0
     00000D90 02                    2681 	.db #0x02	;  2
@@ -2685,7 +2685,7 @@
     00000D94 FE                    2685 	.db #0xfe	; -2
     00000D95 FE                    2686 	.db #0xfe	; -2
     00000D96 FE                    2687 	.db #0xfe	; -2
-    00000D97                       2688 _TickTeamJoystick_k_MoveDY_131075_1184:
+    00000D97                       2688 _TickTeamJoystick_k_MoveDY_131075_1185:
     00000D97 00                    2689 	.db #0x00	;  0
     00000D98 FE                    2690 	.db #0xfe	; -2
     00000D99 FE                    2691 	.db #0xfe	; -2

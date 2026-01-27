@@ -2333,7 +2333,7 @@ _TickTeamJoystick::
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1184+0
+	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1185+0
 	ld	l, -2 (ix)
 	ld	h, #0x00
 	add	hl, de
@@ -2359,7 +2359,7 @@ _TickTeamJoystick::
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1184+0
+	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1185+0
 	ld	l, -2 (ix)
 	ld	h, #0x00
 	add	hl, de
@@ -2675,7 +2675,7 @@ _g_RAMAD2	=	0xf343
 _g_RAMAD3	=	0xf344
 _g_MASTER	=	0xf348
 _g_BDOS	=	0xf37d
-_TickTeamJoystick_k_MoveDX_131075_1184:
+_TickTeamJoystick_k_MoveDX_131075_1185:
 	.db #0x00	;  0
 	.db #0x00	;  0
 	.db #0x02	;  2
@@ -2685,7 +2685,7 @@ _TickTeamJoystick_k_MoveDX_131075_1184:
 	.db #0xfe	; -2
 	.db #0xfe	; -2
 	.db #0xfe	; -2
-_TickTeamJoystick_k_MoveDY_131075_1184:
+_TickTeamJoystick_k_MoveDY_131075_1185:
 	.db #0x00	;  0
 	.db #0xfe	; -2
 	.db #0xfe	; -2

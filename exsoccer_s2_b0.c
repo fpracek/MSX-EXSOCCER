@@ -10,32 +10,36 @@
 #include "input.h"
 
 // *** CONSTANTS ***
-extern u8 			g_FieldScrollingActionInProgress; 	// Bank 1 = Segment 0
-extern int  		g_FieldCurrentYPosition;			// Bank 1 = Segment 0
-extern u8       	g_Team1PaletteId;					// Bank 1 = Segment 0
-extern u8       	g_Team2PaletteId;					// Bank 1 = Segment 0
-extern u8      		g_Team1Score;						// Bank 1 = Segment 0
-extern u8      		g_Team2Score;						// Bank 1 = Segment 0
-extern u8       	g_MatchStatus;						// Bank 1 = Segment 0
-extern u8 			g_FieldScrollSpeed;					// Bank 1 = Segment 0
-extern u8       	g_ActiveFieldZone;					// Bank 1 = Segment 0
-extern u8       	g_SecondsToEndOfMatch;				// Bank 1 = Segment 0
-extern u8       	g_Timer;							// Bank 1 = Segment 0
-extern PlayerInfo  	g_Players[15];						// Bank 1 = Segment 0
-extern BallInfo    	g_Ball;								// Bank 1 = Segment 0
-extern u8          	g_RestartKickTeamId;				// Bank 1 = Segment 0
-extern u8          	g_Team1ActivePlayer;				// Bank 1 = Segment 0
-extern u8          	g_Team2ActivePlayer;				// Bank 1 = Segment 0
-extern u8			g_PassTargetPlayer;					// Bank 1 = Segment 0
-extern bool         g_FioBre;							// Bank 1 = Segment 0
-extern i8 			g_GkRecoilY;					    // Bank 1 = Segment 0
-bool                g_GkIsGroundKick = false;           // New global flag
+extern u8 				g_FieldScrollingActionInProgress; 	// Bank 1 = Segment 0
+extern int  			g_FieldCurrentYPosition;			// Bank 1 = Segment 0
+extern u8       		g_Team1PaletteId;					// Bank 1 = Segment 0
+extern u8       		g_Team2PaletteId;					// Bank 1 = Segment 0
+extern u8      			g_Team1Score;						// Bank 1 = Segment 0
+extern u8      			g_Team2Score;						// Bank 1 = Segment 0
+extern u8       		g_MatchStatus;						// Bank 1 = Segment 0
+extern u8 				g_FieldScrollSpeed;					// Bank 1 = Segment 0
+extern u8       		g_ActiveFieldZone;					// Bank 1 = Segment 0
+extern u8       		g_SecondsToEndOfMatch;				// Bank 1 = Segment 0
+extern u8       		g_Timer;							// Bank 1 = Segment 0
+extern PlayerInfo  		g_Players[15];						// Bank 1 = Segment 0
+extern BallInfo    		g_Ball;								// Bank 1 = Segment 0
+extern u8          		g_RestartKickTeamId;				// Bank 1 = Segment 0
+extern u8          		g_Team1ActivePlayer;				// Bank 1 = Segment 0
+extern u8          		g_Team2ActivePlayer;				// Bank 1 = Segment 0
+extern u8				g_PassTargetPlayer;					// Bank 1 = Segment 0
+extern bool         	g_FioBre;							// Bank 1 = Segment 0
+extern i8 				g_GkRecoilY;					    // Bank 1 = Segment 0
+extern PonPonGirlInfo   g_PonPonGirls[6];					// Bank 1 = Segment 0
+bool                	g_GkIsGroundKick = false;           // Bank 1 = Segment 0
+extern u16              g_ShotCursorX;
+extern i8               g_ShotCursorDir;
 
 // VARIABLES
 extern u16 	g_FrameCounter; // Bank 1 = Segment 0
 extern bool g_VSynch; // Bank 1 = Segment 0
 extern bool g_GameWith2Players;
-
+u8 g_ponPonPatternIndex=0;
+u8 g_PonPonGrilsPoseCounter=0;
 // CONSTANTS
 
 // *** HELPER FUNCTIONS ***
@@ -172,6 +176,58 @@ void V9_PutLayerATileAtPos(u8 x, u8 y, u16 tileId) {
 }
 void V9_PutLayerBTileAtPos(u8 x, u8 y, u16 tileId) {
     V9_Poke16(V9_CellAddrP1B(x,y), tileId);
+}
+void InitPonPonGirls(){
+	g_ponPonPatternIndex=0;
+	u8 pos[6]={30,50,70,175,195,215};
+	for(u8 i=0;i<6;i++){
+		g_PonPonGirls[i].X=pos[i];
+		g_PonPonGirls[i].Y=42;
+		g_PonPonGirls[i].PatternId=SPRITE_GIRL_1;
+		PutPonPonGirlSprite(i);
+	}
+}
+void TickPonPonGirlsAnimation(){
+	if(g_MatchStatus!=MATCH_AFTER_IN_GOAL){
+		return;
+	}
+
+	if(g_PonPonGrilsPoseCounter==PON_PON_GIRLS_POSE_SPEED){
+		g_PonPonGrilsPoseCounter=0;
+	}
+	else{
+		g_PonPonGrilsPoseCounter++;
+		return;
+	}
+	
+	static const u8 k_GirlPatterns[] = {
+		SPRITE_GIRL_1, SPRITE_GIRL_2, SPRITE_GIRL_3,
+		SPRITE_GIRL_4, SPRITE_GIRL_5, SPRITE_GIRL_6,
+		SPRITE_GIRL_7, SPRITE_GIRL_8, SPRITE_GIRL_9
+	};
+
+	g_ponPonPatternIndex++;
+	if(g_ponPonPatternIndex >= 9) g_ponPonPatternIndex = 0;
+
+	u8 pat = k_GirlPatterns[g_ponPonPatternIndex];
+
+	for(u8 i=0; i<6; i++){
+		g_PonPonGirls[i].PatternId = pat;
+		PutPonPonGirlSprite(i);
+	}
+}
+void PutPonPonGirlSprite(u8 ponPonGirlId){
+	struct V9_Sprite attr;
+	attr.D=0;
+	if(g_ActiveFieldZone!=FIELD_NORTH_ZONE){
+		attr.D=1;
+	}
+	attr.SC=0;
+	attr.Y=g_PonPonGirls[ponPonGirlId].Y-g_FieldCurrentYPosition;
+	attr.X=g_PonPonGirls[ponPonGirlId].X;
+	attr.Pattern = g_PonPonGirls[ponPonGirlId].PatternId;
+	attr.P = 1;
+	V9_SetSpriteP1(ponPonGirlId+20, &attr);
 }
 void PutPlayerSprite(u8 playerId){
 	struct V9_Sprite attr;
@@ -1606,5 +1662,52 @@ void TickThrowIn() {
         } else {
             g_Timer = 1; 
         }
+    }
+}
+
+void TickShotCursor() {
+    // 1. Update Position
+    g_ShotCursorX += g_ShotCursorDir;
+    if (g_ShotCursorX < (GOAL_X_MIN - 30)) {
+        g_ShotCursorX = (GOAL_X_MIN - 30);
+        g_ShotCursorDir = -g_ShotCursorDir;
+    }
+    if (g_ShotCursorX > (GOAL_X_MAX + 30)) {
+        g_ShotCursorX = (GOAL_X_MAX + 30);
+        g_ShotCursorDir = -g_ShotCursorDir;
+    }
+
+    // 2. Draw Sprite
+    bool show = false;
+    if (g_MatchStatus == MATCH_IN_ACTION && g_ActiveFieldZone == FIELD_NORTH_ZONE) {
+        if (g_Ball.PossessionPlayerId != NO_VALUE) {
+            if (g_Players[g_Ball.PossessionPlayerId].TeamId == TEAM_1) {
+                show = true;
+            }
+        }
+    }
+
+    struct V9_Sprite attr;
+    if (show) {
+        // Calculate Screen Y
+        int screenY = (FIELD_BOUND_Y_TOP - 30) - g_FieldCurrentYPosition;
+        
+        // Hide if scrolled off
+        if (screenY < -16 || screenY > 212) {
+             attr.Y = 216; 
+        } else {
+             attr.Y = (u8)screenY;
+        }
+        
+        attr.X = (u8)g_ShotCursorX;
+        attr.Pattern = SPRITE_DOWN_ARROW;
+        attr.P = 1; 
+        attr.SC = 0; 
+        
+        V9_SetSpriteP1(16, &attr);
+    } else {
+        // Hide
+        attr.Y = 216;
+        V9_SetSpriteP1(16, &attr);
     }
 }
