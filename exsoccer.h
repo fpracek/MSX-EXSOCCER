@@ -246,6 +246,7 @@ typedef struct TeamStats
 #define MATCH_IN_ACTION                     12
 #define MATCH_BALL_ON_GOALKEEPER			13
 #define MATCH_BEFORE_OFFSIDE                14
+#define MATCH_PRESENTATION					15
 
 #define PON_PON_GIRLS_POSE_SPEED			3
 
@@ -360,3 +361,4 @@ void TickPonPonGirlsAnimation();
 void TickShotCursor();
 const TeamStats* GetTeamStats(u8 teamId);
 void PeopleMoving(bool isBasicMoving);
+void LoadPresentation();

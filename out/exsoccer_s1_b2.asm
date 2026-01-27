@@ -2334,7 +2334,7 @@ _TickTeamJoystick::
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1187+0
+	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1211+0
 	ld	l, -2 (ix)
 	ld	h, #0x00
 	add	hl, de
@@ -2360,7 +2360,7 @@ _TickTeamJoystick::
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1187+0
+	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1211+0
 	ld	l, -2 (ix)
 	ld	h, #0x00
 	add	hl, de
@@ -2676,7 +2676,7 @@ _g_RAMAD2	=	0xf343
 _g_RAMAD3	=	0xf344
 _g_MASTER	=	0xf348
 _g_BDOS	=	0xf37d
-_TickTeamJoystick_k_MoveDX_131075_1187:
+_TickTeamJoystick_k_MoveDX_131075_1211:
 	.db #0x00	;  0
 	.db #0x00	;  0
 	.db #0x02	;  2
@@ -2686,7 +2686,7 @@ _TickTeamJoystick_k_MoveDX_131075_1187:
 	.db #0xfe	; -2
 	.db #0xfe	; -2
 	.db #0xfe	; -2
-_TickTeamJoystick_k_MoveDY_131075_1187:
+_TickTeamJoystick_k_MoveDY_131075_1211:
 	.db #0x00	;  0
 	.db #0xfe	; -2
 	.db #0xfe	; -2
@@ -9757,12 +9757,12 @@ _g_Sprites1_palette_fio:
 	.db #0x01	; 1
 	.db #0x01	; 1
 	.db #0x01	; 1
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1884: void SetTeam1Palette(){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1885: void SetTeam1Palette(){
 ;	---------------------------------
 ; Function SetTeam1Palette
 ; ---------------------------------
 _SetTeam1Palette::
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1885: V9_SetPalette(32, 16, GetTeamPaletteById(g_Team1PaletteId));
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1886: V9_SetPalette(32, 16, GetTeamPaletteById(g_Team1PaletteId));
 	ld	a, (_g_Team1PaletteId+0)
 	call	_GetTeamPaletteById
 	ex	de, hl
@@ -9796,15 +9796,15 @@ _SetTeam1Palette::
 	inc	hl
 	inc	hl
 	inc	b
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1885: V9_SetPalette(32, 16, GetTeamPaletteById(g_Team1PaletteId));
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1886: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1886: V9_SetPalette(32, 16, GetTeamPaletteById(g_Team1PaletteId));
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1887: }
 	jp	00104$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1887: void SetTeam2Palette(){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1888: void SetTeam2Palette(){
 ;	---------------------------------
 ; Function SetTeam2Palette
 ; ---------------------------------
 _SetTeam2Palette::
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1888: V9_SetPalette(48, 16, GetTeamPaletteById(g_Team2PaletteId));
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1889: V9_SetPalette(48, 16, GetTeamPaletteById(g_Team2PaletteId));
 	ld	a, (_g_Team2PaletteId+0)
 	call	_GetTeamPaletteById
 	ex	de, hl
@@ -9838,18 +9838,18 @@ _SetTeam2Palette::
 	inc	hl
 	inc	hl
 	inc	b
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1888: V9_SetPalette(48, 16, GetTeamPaletteById(g_Team2PaletteId));
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1889: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1889: V9_SetPalette(48, 16, GetTeamPaletteById(g_Team2PaletteId));
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1890: }
 	jp	00104$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1890: const u16* GetTeamPaletteById(u8 id){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1891: const u16* GetTeamPaletteById(u8 id){
 ;	---------------------------------
 ; Function GetTeamPaletteById
 ; ---------------------------------
 _GetTeamPaletteById::
 	ld	c, a
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1891: const u16* palette=g_Sprites1_palette_ita;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1892: const u16* palette=g_Sprites1_palette_ita;
 	ld	de, #_g_Sprites1_palette_ita
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1892: switch (id){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1893: switch (id){
 	ld	a, #0x05
 	sub	a, c
 	ret	C
@@ -9866,62 +9866,62 @@ _GetTeamPaletteById::
 	jp	00109$
 	jp	00107$
 	jp	00108$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1893: case TEAM_AUS:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1894: case TEAM_AUS:
 00101$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1894: if(g_FioBre){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1895: if(g_FioBre){
 	ld	a, (_g_FioBre+0)
 	or	a, a
 	jr	Z, 00103$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1895: palette=g_Sprites1_palette_fio;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1896: palette=g_Sprites1_palette_fio;
 	ld	de, #_g_Sprites1_palette_fio
 	ret
 00103$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1898: palette=g_Sprites1_palette_aus;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1899: palette=g_Sprites1_palette_aus;
 	ld	de, #_g_Sprites1_palette_aus
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1900: break; 
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1901: break; 
 	ret
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1901: case TEAM_BRA:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1902: case TEAM_BRA:
 00105$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1902: palette=g_Sprites1_palette_bra;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1903: palette=g_Sprites1_palette_bra;
 	ld	de, #_g_Sprites1_palette_bra
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1903: break;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1904: break;
 	ret
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1904: case TEAM_ITA:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1905: case TEAM_ITA:
 00106$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1905: palette=g_Sprites1_palette_ita;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1906: palette=g_Sprites1_palette_ita;
 	ld	de, #_g_Sprites1_palette_ita
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1906: break;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1907: break;
 	ret
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1907: case TEAM_GBR:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1908: case TEAM_GBR:
 00107$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1908: palette=g_Sprites1_palette_gbr;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1909: palette=g_Sprites1_palette_gbr;
 	ld	de, #_g_Sprites1_palette_gbr
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1909: break;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1910: break;
 	ret
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1910: case TEAM_GER:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1911: case TEAM_GER:
 00108$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1911: palette=g_Sprites1_palette_ger;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1912: palette=g_Sprites1_palette_ger;
 	ld	de, #_g_Sprites1_palette_ger
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1912: break;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1913: break;
 	ret
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1913: case TEAM_FRA:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1914: case TEAM_FRA:
 00109$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1914: palette=g_Sprites1_palette_fra;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1915: palette=g_Sprites1_palette_fra;
 	ld	de, #_g_Sprites1_palette_fra
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1916: }
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1917: return palette;
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1918: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1917: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1918: return palette;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1919: }
 	ret
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1921: void TickFieldScrollingAction(){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1922: void TickFieldScrollingAction(){
 ;	---------------------------------
 ; Function TickFieldScrollingAction
 ; ---------------------------------
 _TickFieldScrollingAction::
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1923: if(g_FieldScrollingActionInProgress!=NO_VALUE){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1924: if(g_FieldScrollingActionInProgress!=NO_VALUE){
 	ld	a, (_g_FieldScrollingActionInProgress+0)
 	inc	a
 	ret	Z
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1925: switch (g_FieldScrollingActionInProgress){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1926: switch (g_FieldScrollingActionInProgress){
 	ld	a, (_g_FieldScrollingActionInProgress+0)
 	or	a, a
 	jr	Z, 00101$
@@ -9932,9 +9932,9 @@ _TickFieldScrollingAction::
 	sub	a, #0x02
 	jp	Z,00114$
 	jp	00117$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1926: case FIELD_NORTH_ZONE:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1927: case FIELD_NORTH_ZONE:
 00101$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1927: g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1928: g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
 	ld	a, (_g_FieldScrollSpeed+0)
 	ld	c, a
 	ld	b, #0x00
@@ -9946,34 +9946,34 @@ _TickFieldScrollingAction::
 	ld	a, (hl)
 	sbc	a, b
 	ld	(hl), a
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1928: if(g_FieldCurrentYPosition<0){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1929: if(g_FieldCurrentYPosition<0){
 	ld	a, (_g_FieldCurrentYPosition+1)
 	bit	7, a
 	jp	Z, 00117$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1929: g_FieldCurrentYPosition=1;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1930: g_FieldCurrentYPosition=1;
 	ld	hl, #0x0001
 	ld	(_g_FieldCurrentYPosition), hl
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1930: g_FieldScrollingActionInProgress=NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1931: g_FieldScrollingActionInProgress=NO_VALUE;
 	ld	hl, #_g_FieldScrollingActionInProgress
 	ld	(hl), #0xff
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1931: g_ActiveFieldZone=FIELD_NORTH_ZONE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1932: g_ActiveFieldZone=FIELD_NORTH_ZONE;
 	ld	iy, #_g_ActiveFieldZone
 	ld	0 (iy), #0x00
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1933: break;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1934: break;
 	jp	00117$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1934: case FIELD_CENTRAL_ZONE:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1935: case FIELD_CENTRAL_ZONE:
 00104$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1935: if(g_FieldCurrentYPosition!=136){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1936: if(g_FieldCurrentYPosition!=136){
 	ld	a, (_g_FieldCurrentYPosition+0)
 	sub	a, #0x88
 	ld	iy, #_g_FieldCurrentYPosition
 	or	a, 1 (iy)
 	jr	Z, 00112$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1927: g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1928: g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
 	ld	a, (_g_FieldScrollSpeed+0)
 	ld	c, a
 	ld	b, #0x00
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1936: if(g_FieldCurrentYPosition>FIELD_CENTRAL_Y){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1937: if(g_FieldCurrentYPosition>FIELD_CENTRAL_Y){
 	ld	a, #0x8c
 	cp	a, 0 (iy)
 	ld	a, #0x00
@@ -9982,7 +9982,7 @@ _TickFieldScrollingAction::
 	xor	a, #0x80
 00186$:
 	jp	P, 00106$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1937: g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1938: g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
 	ld	hl, #_g_FieldCurrentYPosition
 	ld	a, (hl)
 	sub	a, c
@@ -9993,7 +9993,7 @@ _TickFieldScrollingAction::
 	ld	(hl), a
 	jp	00117$
 00106$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1940: g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1941: g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
 	ld	hl, #_g_FieldCurrentYPosition
 	ld	a, (hl)
 	add	a, c
@@ -10004,41 +10004,41 @@ _TickFieldScrollingAction::
 	ld	(hl), a
 	jp	00117$
 00112$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1945: g_FieldScrollingActionInProgress=NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1946: g_FieldScrollingActionInProgress=NO_VALUE;
 	ld	hl, #_g_FieldScrollingActionInProgress
 	ld	(hl), #0xff
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1946: g_ActiveFieldZone=FIELD_CENTRAL_ZONE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1947: g_ActiveFieldZone=FIELD_CENTRAL_ZONE;
 	ld	iy, #_g_ActiveFieldZone
 	ld	0 (iy), #0x01
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1947: if(g_MatchStatus==MATCH_NOT_STARTED){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1948: if(g_MatchStatus==MATCH_NOT_STARTED){
 	ld	a, (_g_MatchStatus+0)
 	or	a, a
 	jr	NZ, 00117$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1948: g_MatchStatus=MATCH_BEFORE_KICK_OFF;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1949: g_MatchStatus=MATCH_BEFORE_KICK_OFF;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x01
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1949: for(u8 i=0;i<15;i++){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1950: for(u8 i=0;i<15;i++){
 	ld	c, #0x00
 00121$:
 	ld	a, c
 	sub	a, #0x0f
 	jr	NC, 00108$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1950: SetPlayerTarget(i);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1951: SetPlayerTarget(i);
 	push	bc
 	ld	a, c
 	call	_SetPlayerTarget
 	pop	bc
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1949: for(u8 i=0;i<15;i++){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1950: for(u8 i=0;i<15;i++){
 	inc	c
 	jp	00121$
 00108$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1952: TickPlayerToOwnTarget();
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1953: TickPlayerToOwnTarget();
 	call	_TickPlayerToOwnTarget
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1956: break;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1957: break;
 	jp	00117$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1957: case FIELD_SOUTH_ZONE:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1958: case FIELD_SOUTH_ZONE:
 00114$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1958: g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1959: g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
 	ld	a, (_g_FieldScrollSpeed+0)
 	ld	c, a
 	ld	b, #0x00
@@ -10049,7 +10049,7 @@ _TickFieldScrollingAction::
 	ld	a, b
 	adc	a, 1 (iy)
 	ld	(_g_FieldCurrentYPosition+1), a
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1959: if(g_FieldCurrentYPosition>=FIELD_BOTTOM_Y){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1960: if(g_FieldCurrentYPosition>=FIELD_BOTTOM_Y){
 	ld	a, (_g_FieldCurrentYPosition+0)
 	sub	a, #0x18
 	ld	a, (_g_FieldCurrentYPosition+1)
@@ -10058,32 +10058,32 @@ _TickFieldScrollingAction::
 	rra
 	sbc	a, #0x81
 	jr	C, 00117$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1960: g_ActiveFieldZone=FIELD_SOUTH_ZONE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1961: g_ActiveFieldZone=FIELD_SOUTH_ZONE;
 	ld	hl, #_g_ActiveFieldZone
 	ld	(hl), #0x02
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1961: g_FieldScrollingActionInProgress=NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1962: g_FieldScrollingActionInProgress=NO_VALUE;
 	ld	iy, #_g_FieldScrollingActionInProgress
 	ld	0 (iy), #0xff
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1964: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1965: }
 00117$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1965: V9_SetScrollingBY(g_FieldCurrentYPosition);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1966: V9_SetScrollingBY(g_FieldCurrentYPosition);
 	ld	hl, (_g_FieldCurrentYPosition)
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1967: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1968: }
 	jp	_V9_SetScrollingBY
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1968: void TickShowKickOff(){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1969: void TickShowKickOff(){
 ;	---------------------------------
 ; Function TickShowKickOff
 ; ---------------------------------
 _TickShowKickOff::
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1969: if(g_MatchStatus==MATCH_KICK_OFF){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1970: if(g_MatchStatus==MATCH_KICK_OFF){
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x07
 	jr	NZ, 00109$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1970: if(g_Timer==1){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1971: if(g_Timer==1){
 	ld	a, (_g_Timer+0)
 	dec	a
 	jr	NZ, 00102$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1971: V9_PrintLayerAStringAtPos(12,18,"KICK OFF");
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1972: V9_PrintLayerAStringAtPos(12,18,"KICK OFF");
 	ld	hl, #___str_1
 	push	hl
 	ld	l, #0x12
@@ -10091,15 +10091,15 @@ _TickShowKickOff::
 ;	spillPairReg hl
 	ld	a, #0x0c
 	call	_V9_PrintLayerAStringAtPos
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1972: g_Timer=2;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1973: g_Timer=2;
 	ld	hl, #_g_Timer
 	ld	(hl), #0x02
 00102$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1974: if(g_Timer==3){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1975: if(g_Timer==3){
 	ld	a, (_g_Timer+0)
 	sub	a, #0x03
 	jr	NZ, 00109$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1975: ClearTextFromLayerA(12,18,9);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1976: ClearTextFromLayerA(12,18,9);
 	ld	a, #0x09
 	push	af
 	inc	sp
@@ -10108,14 +10108,14 @@ _TickShowKickOff::
 ;	spillPairReg hl
 	ld	a, #0x0c
 	call	_ClearTextFromLayerA
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1976: g_Timer=NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1977: g_Timer=NO_VALUE;
 	ld	hl, #_g_Timer
 	ld	(hl), #0xff
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1978: if(g_RestartKickTeamId==TEAM_1){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1979: if(g_RestartKickTeamId==TEAM_1){
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00104$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1979: playerId=GetPlayerIdByRole(TEAM_1,PLAYER_ROLE_RIGHT_HALFFIELDER);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1980: playerId=GetPlayerIdByRole(TEAM_1,PLAYER_ROLE_RIGHT_HALFFIELDER);
 	ld	l, #0x04
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -10124,7 +10124,7 @@ _TickShowKickOff::
 	ld	c, a
 	jp	00105$
 00104$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1982: playerId=GetPlayerIdByRole(TEAM_2,PLAYER_ROLE_LEFT_HALFFIELDER);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1983: playerId=GetPlayerIdByRole(TEAM_2,PLAYER_ROLE_LEFT_HALFFIELDER);
 	ld	l, #0x03
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -10132,22 +10132,22 @@ _TickShowKickOff::
 	call	_GetPlayerIdByRole
 	ld	c, a
 00105$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1984: PutBallOnPlayerFeet(playerId);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1985: PutBallOnPlayerFeet(playerId);
 	ld	a, c
 	call	_PutBallOnPlayerFeet
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1985: g_MatchStatus=MATCH_IN_ACTION;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1986: g_MatchStatus=MATCH_IN_ACTION;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x0c
 00109$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1988: if(g_MatchStatus==MATCH_BEFORE_OFFSIDE){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1989: if(g_MatchStatus==MATCH_BEFORE_OFFSIDE){
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x0e
 	ret	NZ
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1989: if(g_Timer >= 2) { 
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1990: if(g_Timer >= 2) { 
 	ld	a, (_g_Timer+0)
 	sub	a, #0x02
 	ret	C
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1990: ClearTextFromLayerA(10,18,7);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1991: ClearTextFromLayerA(10,18,7);
 	ld	a, #0x07
 	push	af
 	inc	sp
@@ -10156,61 +10156,61 @@ _TickShowKickOff::
 ;	spillPairReg hl
 	ld	a, #0x0a
 	call	_ClearTextFromLayerA
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1991: g_Timer = NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1992: g_Timer = NO_VALUE;
 	ld	hl, #_g_Timer
 	ld	(hl), #0xff
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1993: u8 team = g_RestartKickTeamId; 
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1994: u8 team = g_RestartKickTeamId; 
 	ld	a, (_g_RestartKickTeamId+0)
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1994: u8 newOwner = GetClosestPlayerToBall(team, NO_VALUE);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1995: u8 newOwner = GetClosestPlayerToBall(team, NO_VALUE);
 ;	spillPairReg hl
 ;	spillPairReg hl
 	ld	l, #0xff
 	call	_GetClosestPlayerToBall
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1995: if (newOwner != NO_VALUE) {
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1996: if (newOwner != NO_VALUE) {
 	ld	c, a
 	inc	a
 	jr	Z, 00111$
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1996: PutBallOnPlayerFeet(newOwner);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1997: PutBallOnPlayerFeet(newOwner);
 	ld	a, c
 	call	_PutBallOnPlayerFeet
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1997: g_Ball.KickMoveState = NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:1998: g_Ball.KickMoveState = NO_VALUE;
 	ld	hl, #(_g_Ball + 13)
 	ld	(hl), #0xff
 00111$:
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2000: g_MatchStatus = MATCH_IN_ACTION;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2001: g_MatchStatus = MATCH_IN_ACTION;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x0c
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2003: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2004: }
 	ret
 ___str_1:
 	.ascii "KICK OFF"
 	.db 0x00
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2005: void ResetBallInfo(bool resetPossessionPlayer){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2006: void ResetBallInfo(bool resetPossessionPlayer){
 ;	---------------------------------
 ; Function ResetBallInfo
 ; ---------------------------------
 _ResetBallInfo::
 	ld	c, a
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2006: g_Ball.PreviousY=g_Ball.Y;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2007: g_Ball.PreviousY=g_Ball.Y;
 	ld	de, (#_g_Ball + 0)
 	ld	((_g_Ball + 7)), de
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2007: g_Ball.KickMoveState=NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2008: g_Ball.KickMoveState=NO_VALUE;
 	ld	hl, #(_g_Ball + 13)
 	ld	(hl), #0xff
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2008: g_Ball.Size=1;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2009: g_Ball.Size=1;
 	ld	hl, #(_g_Ball + 4)
 	ld	(hl), #0x01
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2009: g_Ball.Direction=DIRECTION_NONE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2010: g_Ball.Direction=DIRECTION_NONE;
 	ld	hl, #(_g_Ball + 5)
 	ld	(hl), #0x00
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2010: if(resetPossessionPlayer){
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2011: if(resetPossessionPlayer){
 	ld	a, c
 	or	a, a
 	ret	Z
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2011: g_Ball.PossessionPlayerId=NO_VALUE;
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2012: g_Ball.PossessionPlayerId=NO_VALUE;
 	ld	hl, #(_g_Ball + 6)
 	ld	(hl), #0xff
-;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2013: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:2014: }
 	ret
 	.area _SEG1
 	.area _INITIALIZER

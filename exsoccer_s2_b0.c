@@ -33,6 +33,10 @@ extern PonPonGirlInfo   g_PonPonGirls[6];					// Bank 1 = Segment 0
 bool                	g_GkIsGroundKick = false;           // Bank 1 = Segment 0
 extern u16              g_ShotCursorX;
 extern i8               g_ShotCursorDir;
+extern const unsigned char  g_Presentation_part1[16384]; // Bank 1 = Segment 12
+extern const unsigned char  g_Presentation_part2[16384]; // Bank 1 = Segment 13
+extern const unsigned char  g_Presentation_part3[16384]; // Bank 1 = Segment 14
+extern const unsigned char  g_Presentation_part4[5120];  // Bank 1 = Segment 15
 
 // VARIABLES
 extern u16 	g_FrameCounter; // Bank 1 = Segment 0
@@ -1060,7 +1064,37 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
         g_Players[i].Status = PLAYER_STATUS_NONE; // Unlock movement
     }
 }
+void LoadPresentation(){
+    V9_SetScreenMode(V9_MODE_B1);
+    V9_SetDisplayEnable(FALSE);
+    V9_SetColorMode(V9_COLOR_BD8);
 
+	SET_BANK_SEGMENT(2, 12); 
+	V9_WriteVRAM(V9_BMP_PGT, g_Presentation_part1, sizeof(g_Presentation_part1)); 
+    SET_BANK_SEGMENT(2, 13); 
+	V9_WriteVRAM(V9_BMP_PGT + 16384L, g_Presentation_part2, sizeof(g_Presentation_part2)); 
+    SET_BANK_SEGMENT(2, 14); 
+	V9_WriteVRAM(V9_BMP_PGT + 16384L+16384L, g_Presentation_part3, sizeof(g_Presentation_part3)); 
+    SET_BANK_SEGMENT(2, 15); 
+	V9_WriteVRAM(V9_BMP_PGT + 16384L+16384L+16384L, g_Presentation_part4, sizeof(g_Presentation_part4)); 
+
+	SET_BANK_SEGMENT(2, 1);
+    g_MatchStatus=MATCH_PRESENTATION;
+    g_Timer=0;
+    V9_SetDisplayEnable(TRUE);
+	
+    V9_SetInterrupt(V9_INT_VBLANK | V9_INT_HBLANK);
+
+	V9_SetInterruptLine(71);
+    while (g_Timer!=200)
+    {
+        
+    }
+    g_MatchStatus==MATCH_NOT_STARTED;
+    V9_SetInterrupt(V9_INT_NONE);
+    V9_SetDisplayEnable(FALSE);
+    
+}
 void TickGoalkeeperAnimation() {
     if (g_MatchStatus != MATCH_BALL_ON_GOALKEEPER) return;
     if (s_GkAnimPlayerId == NO_VALUE) return;

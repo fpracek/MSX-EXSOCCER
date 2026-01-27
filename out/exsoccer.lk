@@ -13,6 +13,10 @@
 -b_SEG9=0x00098000
 -b_SEG10=0x000A8000
 -b_SEG11=0x000B8000
+-b_SEG12=0x000C8000
+-b_SEG13=0x000D8000
+-b_SEG14=0x000E8000
+-b_SEG15=0x000F8000
 -k E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\tools/sdcc/lib/z80
 -k E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\tools/sdcc/bin\..\lib\z80
 -l E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/msxgl.lib
@@ -30,5 +34,9 @@ E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s8_b2
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s9_b2.rel
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s10_b2.rel
 E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s11_b2.rel
+E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s12_b2.rel
+E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s13_b2.rel
+E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s14_b2.rel
+E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer_s15_b2.rel
 
 -e

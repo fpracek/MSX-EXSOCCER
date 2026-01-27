@@ -17,6 +17,7 @@
 	.globl _V9_GetRegister
 	.globl _V9_Detect
 	.globl _V9_SetScreenMode
+	.globl _V9_SetColorMode
 	.globl _V9_SetScrollingY
 	.globl _V9_SetScrollingX
 	.globl _V9_SetScrollingBY
@@ -33,6 +34,8 @@
 	.globl _V9_WriteVRAM_CurrentAddr
 	.globl _V9_ReadVRAM_CurrentAddr
 	.globl _V9_SetPaletteEntry
+	.globl _V9_SetCursorAttribute
+	.globl _V9_SetCursorDisplay
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -269,6 +272,51 @@ _g_V9_ColorConfig:
 	.db #0xe0	; 224
 	.db #0x03	; 3
 	.db #0x00	; 0
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:250: void V9_SetColorMode(u8 mode)
+;	---------------------------------
+; Function V9_SetColorMode
+; ---------------------------------
+_V9_SetColorMode::
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:252: const u8* ptr = (const u8*)&g_V9_ColorConfig[mode];
+	ld	bc, #_g_V9_ColorConfig+0
+	ld	h, #0x00
+;	spillPairReg hl
+;	spillPairReg hl
+	add	hl, hl
+	add	hl, bc
+	ex	de, hl
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:253: V9_SetFlag(6, V9_R06_BPP_MASK, *ptr++);
+	ld	a, (de)
+	ld	c, a
+	inc	de
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
+	ld	a, #0x06
+	call	_V9_GetRegister
+	and	a, #0xfc
+	or	a, c
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	a, #0x06
+	call	_V9_SetRegister
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:254: V9_SetFlag(13, (u8)(V9_R13_PLTM_MASK + V9_R13_YAE), *ptr);
+	ld	a, (de)
+	ld	c, a
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
+	ld	a, #0x0d
+	call	_V9_GetRegister
+	and	a, #0x1f
+	or	a, c
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	a, #0x0d
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:254: V9_SetFlag(13, (u8)(V9_R13_PLTM_MASK + V9_R13_YAE), *ptr);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:255: }
+	jp	_V9_SetRegister
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:261: void V9_SetScrollingY(u16 y)
 ;	---------------------------------
 ; Function V9_SetScrollingY
@@ -586,6 +634,161 @@ _V9_SetPaletteEntry::
 	out	(0x61), a
 	ret
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:642: }
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:658: void V9_SetCursorAttribute(u8 id, u16 x, u16 y, u8 color)
+;	---------------------------------
+; Function V9_SetCursorAttribute
+; ---------------------------------
+_V9_SetCursorAttribute::
+	push	ix
+	ld	ix,#0
+	add	ix,sp
+	push	af
+	ld	c, a
+	inc	sp
+	inc	sp
+	push	de
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:660: u32 addr = 0x7FE00;
+	ld	de, #0xfe00
+	ld	hl, #0x0007
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:661: if (id)
+	ld	a, c
+	or	a, a
+	jr	Z, 00102$
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:662: addr += 8;
+	ld	de, #0xfe08
+00102$:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:663: V9_Poke(addr, y & 0xFF);
+	ld	b, 4 (ix)
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.h:388: inline void V9_Poke(u32 addr, u8 val) { V9_SetWriteAddress(addr); V9_Poke_CurrentAddr(val); }
+	push	hl
+	push	de
+	call	_V9_SetWriteAddress
+	pop	de
+	ld	a, b
+	call	_V9_Poke_CurrentAddr
+	pop	hl
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:664: addr += 2;
+	ld	a, e
+	add	a, #0x02
+	ld	e, a
+	ld	a, d
+	adc	a, #0x00
+	ld	d, a
+	jr	NC, 00114$
+	inc	hl
+00114$:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:665: V9_Poke(addr, y >> 8);
+	ld	b, 5 (ix)
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.h:388: inline void V9_Poke(u32 addr, u8 val) { V9_SetWriteAddress(addr); V9_Poke_CurrentAddr(val); }
+	push	hl
+	push	de
+	call	_V9_SetWriteAddress
+	pop	de
+	ld	a, b
+	call	_V9_Poke_CurrentAddr
+	pop	hl
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:666: addr += 2;
+	ld	a, e
+	add	a, #0x02
+	ld	e, a
+	ld	a, d
+	adc	a, #0x00
+	ld	d, a
+	jr	NC, 00115$
+	inc	hl
+00115$:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:667: V9_Poke(addr, x & 0xFF);
+	ld	b, -2 (ix)
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.h:388: inline void V9_Poke(u32 addr, u8 val) { V9_SetWriteAddress(addr); V9_Poke_CurrentAddr(val); }
+	push	hl
+	push	de
+	call	_V9_SetWriteAddress
+	pop	de
+	ld	a, b
+	call	_V9_Poke_CurrentAddr
+	pop	hl
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:668: addr += 2;
+	ld	a, e
+	add	a, #0x02
+	ld	e, a
+	ld	a, d
+	adc	a, #0x00
+	ld	d, a
+	jr	NC, 00116$
+	inc	hl
+00116$:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:669: V9_Poke(addr, ((x >> 8) & 0x3) + ((color & 0x3) << 6));
+	ld	a, -1 (ix)
+	and	a, #0x03
+	ld	c, a
+	ld	a, 6 (ix)
+	and	a, #0x03
+	rrca
+	rrca
+	and	a, #0xc0
+	add	a, c
+	ld	b, a
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.h:388: inline void V9_Poke(u32 addr, u8 val) { V9_SetWriteAddress(addr); V9_Poke_CurrentAddr(val); }
+	call	_V9_SetWriteAddress
+	ld	a, b
+	call	_V9_Poke_CurrentAddr
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:669: V9_Poke(addr, ((x >> 8) & 0x3) + ((color & 0x3) << 6));
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:670: }
+	ld	sp, ix
+	pop	ix
+	pop	hl
+	pop	af
+	inc	sp
+	jp	(hl)
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:678: void V9_SetCursorDisplay(u8 id, bool enable)
+;	---------------------------------
+; Function V9_SetCursorDisplay
+; ---------------------------------
+_V9_SetCursorDisplay::
+	push	ix
+	ld	ix,#0
+	add	ix,sp
+	dec	sp
+	ld	c, a
+	ld	-1 (ix), l
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:680: u32 addr = 0x7FE06;
+	ld	de, #0xfe06
+	ld	hl, #0x0007
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:681: if (id)
+	ld	a, c
+	or	a, a
+	jr	Z, 00102$
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:682: addr += 8;
+	ld	de, #0xfe0e
+00102$:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:683: u8 val = V9_Peek(addr);
+	push	hl
+	push	de
+	call	_V9_SetReadAddress
+	pop	de
+	call	_V9_Peek_CurrentAddr
+	pop	hl
+	ld	b, a
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:684: if (enable)
+	ld	a, -1 (ix)
+	or	a, a
+	jr	Z, 00104$
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:685: val &= ~V9_CURSOR_DISABLE;
+	res	4, b
+	jp	00105$
+00104$:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:687: val |= V9_CURSOR_DISABLE;
+	set	4, b
+00105$:
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.h:388: inline void V9_Poke(u32 addr, u8 val) { V9_SetWriteAddress(addr); V9_Poke_CurrentAddr(val); }
+	call	_V9_SetWriteAddress
+	ld	a, b
+	call	_V9_Poke_CurrentAddr
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:688: V9_Poke(addr, val);
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/v9990.c:689: }
+	inc	sp
+	pop	ix
+	ret
 	.area _CODE
 	.area _INITIALIZER
 	.area _CABS (ABS)

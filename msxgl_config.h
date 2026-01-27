@@ -125,7 +125,7 @@
 #define V9_USE_MODE_P1				TRUE	// Tile mode 0 256x212
 #define V9_USE_MODE_P2				FALSE	// Tile mode 1 512x212
 #define V9_USE_MODE_B0				FALSE	// Bitmap mode 1 192x240 (Undocumented v9990 mode)
-#define V9_USE_MODE_B1				FALSE	// Bitmap mode 1 256x212
+#define V9_USE_MODE_B1				TRUE	// Bitmap mode 1 256x212
 #define V9_USE_MODE_B2				FALSE	// Bitmap mode 2 384x240
 #define V9_USE_MODE_B3				FALSE	// Bitmap mode 3 512x212
 #define V9_USE_MODE_B4				FALSE	// Bitmap mode 4 768x240

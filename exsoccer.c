@@ -21,8 +21,7 @@ extern const unsigned char 	g_GameFieldLayerBTiles_part5[16384]; // Bank 1 = Seg
 extern const unsigned char 	g_GameFieldLayerATiles[16384]; // Bank 1 = Segment 8
 extern const unsigned char 	g_Sprites1[16384]; // Bank 1 = Segment 9
 extern const unsigned char 	g_Sprites2[16384]; // Bank 1 = Segment 10
-
-
+extern const unsigned char  g_Presentation_palette[];
 
 // VARIABLES
 u16 		        g_FrameCounter;
@@ -158,6 +157,10 @@ void PeopleMoving(bool isBasicMoving){
 // V9990 V-blank interrupt
 void V9_InterruptVBlank()
 {
+    if(g_MatchStatus==MATCH_PRESENTATION){
+        g_Timer++;
+        return;
+    }
 	g_VSynch = TRUE;
 	if (g_FieldScrollingActionInProgress != NO_VALUE) {
 
@@ -566,13 +569,20 @@ void CornerKick(u8 teamId){
 void InitializeV9990()
 {
 	SET_BANK_SEGMENT(2, 1); // Bank 1 = Segment 3
+    V9_SetInterrupt(V9_INT_NONE);
+    LoadPresentation();
+  
+
+
+
 	V9_SetScreenMode(V9_MODE_P1);
 	V9_SetDisplayEnable(FALSE);
-	V9_SetInterrupt(V9_INT_NONE);
+	
 	V9_SetBackgroundColor(1);
 	V9_SetSpriteEnable(TRUE);
 
-	V9_SetDisplayEnable(TRUE);
+
+
 	LoadSprites();
 	InitPalette();
 	LoadP1LayerA();
@@ -744,13 +754,15 @@ void main()
 	
 	
 	V9_SetPort(V9_P15, 0x10);
-	
+    
+
 	GameStart();
 	MainGameLoop();
 	
 
 	//Bios_Exit(0);
 }
+
 void MainGameLoop(){
 	u8 TickAiPlayerId=0;
 	u8 AiTickSpeed=0;

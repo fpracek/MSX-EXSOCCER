@@ -1881,6 +1881,7 @@ void InitPalette()
 
 
 
+
 void SetTeam1Palette(){
 	V9_SetPalette(32, 16, GetTeamPaletteById(g_Team1PaletteId));
 }
