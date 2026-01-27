@@ -257,6 +257,10 @@ typedef struct BallInfo
 
 #define BALL_DISTANCE_FROM_PLAYER			7
 
+#define PUBLIC_TILE_1						0
+#define PUBLIC_TILE_2						2049
+
+
 #define NO_VALUE                            255
 // ===========================
 // *** FUNCTION PROTOTYPES ***
@@ -345,3 +349,4 @@ void PutPonPonGirlSprite(u8 ponPonGirlId);
 void InitPonPonGirls();
 void TickPonPonGirlsAnimation();
 void TickShotCursor();
+void PeopleMoving(bool isBasicMoving);

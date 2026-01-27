@@ -17,6 +17,7 @@ extern const unsigned char 	g_GameFieldLayerBTiles_part1[16384]; // Bank 1 = Seg
 extern const unsigned char 	g_GameFieldLayerBTiles_part2[16384]; // Bank 1 = Segment 5
 extern const unsigned char 	g_GameFieldLayerBTiles_part3[16384]; // Bank 1 = Segment 6
 extern const unsigned char 	g_GameFieldLayerBTiles_part4[14336]; // Bank 1 = Segment 7
+extern const unsigned char 	g_GameFieldLayerBTiles_part5[16384]; // Bank 1 = Segment 11
 extern const unsigned char 	g_GameFieldLayerATiles[16384]; // Bank 1 = Segment 8
 extern const unsigned char 	g_Sprites1[16384]; // Bank 1 = Segment 9
 extern const unsigned char 	g_Sprites2[16384]; // Bank 1 = Segment 10
@@ -110,6 +111,8 @@ void LoadP1LayerB(){
 	V9_WriteVRAM(V9_P1_PGT_B + 16384L*2, g_GameFieldLayerBTiles_part3, sizeof(g_GameFieldLayerBTiles_part3)); // Load tiles (part 3)
 	SET_BANK_SEGMENT(2, 6); 
 	V9_WriteVRAM(V9_P1_PGT_B + 16384L*3, g_GameFieldLayerBTiles_part4, sizeof(g_GameFieldLayerBTiles_part4)); // Load tiles (part 4)
+	SET_BANK_SEGMENT(2, 11); 
+	V9_WriteVRAM(V9_P1_PGT_B + 16384L*4, g_GameFieldLayerBTiles_part5, sizeof(g_GameFieldLayerBTiles_part5)); // Load tiles (part 4)
 	SET_BANK_SEGMENT(2, 1); 
 	// V9_FillVRAM16(V9_P1_PNT_B, 0x0000, 64*64); // REDUNDANT: Overwritten below
 	u16 tileId=0;
@@ -117,6 +120,23 @@ void LoadP1LayerB(){
     for (u8 y=0;y<64;y++){
 		for (u8 x=0;x<32;x++){
 			V9_PutLayerBTileAtPos(x,y,tileId++);
+		}
+	}
+}
+void PeopleMoving(bool isBasicMoving){
+    u16 tileId=PUBLIC_TILE_1;
+    u8  yPosition=0;
+    if(!g_ActiveFieldZone==FIELD_NORTH_ZONE){
+        yPosition=62;
+    }
+
+
+    if(!isBasicMoving){
+        tileId=PUBLIC_TILE_2;
+    }
+    for (u8 y=yPosition;y<yPosition+2;y++){
+		for (u8 x=0;x<32;x++){
+			V9_PutLayerBTileAtPos(x,y,tileId);
 		}
 	}
 }

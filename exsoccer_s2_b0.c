@@ -40,6 +40,8 @@ extern bool g_VSynch; // Bank 1 = Segment 0
 extern bool g_GameWith2Players;
 u8 g_ponPonPatternIndex=0;
 u8 g_PonPonGrilsPoseCounter=0;
+bool g_peopleState=false;
+
 // CONSTANTS
 
 // *** HELPER FUNCTIONS ***
@@ -215,16 +217,19 @@ void TickPonPonGirlsAnimation(){
 		g_PonPonGirls[i].PatternId = pat;
 		PutPonPonGirlSprite(i);
 	}
+	g_peopleState=!g_peopleState;
+	PeopleMoving(g_peopleState);
 }
 void PutPonPonGirlSprite(u8 ponPonGirlId){
 	struct V9_Sprite attr;
 	attr.D=0;
-	if(g_ActiveFieldZone!=FIELD_NORTH_ZONE){
-		attr.D=1;
-	}
+	
 	attr.SC=0;
 	attr.Y=g_PonPonGirls[ponPonGirlId].Y-g_FieldCurrentYPosition;
 	attr.X=g_PonPonGirls[ponPonGirlId].X;
+	if(g_ActiveFieldZone!=FIELD_NORTH_ZONE||attr.Y>100){
+		attr.D=1;
+	}
 	attr.Pattern = g_PonPonGirls[ponPonGirlId].PatternId;
 	attr.P = 1;
 	V9_SetSpriteP1(ponPonGirlId+20, &attr);
