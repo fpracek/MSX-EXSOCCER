@@ -22,6 +22,8 @@ extern const unsigned char 	g_GameFieldLayerATiles[16384]; // Bank 1 = Segment 8
 extern const unsigned char 	g_Sprites1[16384]; // Bank 1 = Segment 9
 extern const unsigned char 	g_Sprites2[16384]; // Bank 1 = Segment 10
 extern const unsigned char  g_Presentation_palette[];
+extern const unsigned char  g_Teams_part1[16384];
+extern const unsigned char  g_Teams_part2[4096];
 
 // VARIABLES
 u16 		        g_FrameCounter;
@@ -103,7 +105,10 @@ void LoadP1LayerA(){
 	V9_FillVRAM(V9_P1_PGT_A, 0x00, 128*212); // Clean layer A pattern
 	SET_BANK_SEGMENT(2, 7); 
 	V9_WriteVRAM(V9_P1_PGT_A, g_GameFieldLayerATiles, sizeof(g_GameFieldLayerATiles)); // Load fonts
-
+    SET_BANK_SEGMENT(2, 16); 
+	V9_WriteVRAM(V9_P1_PGT_A + 16384, g_Teams_part1, sizeof(g_Teams_part1));
+    SET_BANK_SEGMENT(2, 17); 
+	V9_WriteVRAM(V9_P1_PGT_A + 16384L*2, g_Teams_part2, sizeof(g_Teams_part2));
 	// Pattern name table
 	V9_FillVRAM16(V9_P1_PNT_A, 0x0000, 64*64); // Init layer A
 	SET_BANK_SEGMENT(2, 1);
@@ -584,9 +589,13 @@ void InitializeV9990()
 
 
 	LoadSprites();
-	InitPalette();
+	
 	LoadP1LayerA();
 	LoadP1LayerB();
+    ShowMenu();
+    for(;;);
+    InitPalette();
+   
 	V9_SetInterrupt(V9_INT_VBLANK | V9_INT_HBLANK);
 
 	V9_SetInterruptLine(71);

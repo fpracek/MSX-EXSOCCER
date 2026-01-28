@@ -362,3 +362,4 @@ void TickShotCursor();
 const TeamStats* GetTeamStats(u8 teamId);
 void PeopleMoving(bool isBasicMoving);
 void LoadPresentation();
+void ShowMenu();

@@ -37,6 +37,7 @@ extern const unsigned char  g_Presentation_part1[16384]; // Bank 1 = Segment 12
 extern const unsigned char  g_Presentation_part2[16384]; // Bank 1 = Segment 13
 extern const unsigned char  g_Presentation_part3[16384]; // Bank 1 = Segment 14
 extern const unsigned char  g_Presentation_part4[5120];  // Bank 1 = Segment 15
+extern const unsigned char  g_Teams_palette[];
 
 // VARIABLES
 extern u16 	g_FrameCounter; // Bank 1 = Segment 0
@@ -1064,11 +1065,31 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
         g_Players[i].Status = PLAYER_STATUS_NONE; // Unlock movement
     }
 }
+void ShowMenu(){
+	SET_BANK_SEGMENT(2, 17); 
+	V9_SetPalette(0, 16, g_Teams_palette);
+	SET_BANK_SEGMENT(2, 1); 
+	V9_SelectPaletteP1(0,1);
+	for (u8 x=0;x<64;x++){
+		V9_PutLayerATileAtPos(x,0,0);
+	}
+	//u16 tileId=512;
+    for (u8 y=5;y<25;y++){
+		u16 tileId=512+32*(y-5);
+		for (u8 x=1;x<31;x++){
+			V9_PutLayerATileAtPos(x,y,tileId);
+			tileId++;
+		}
+	}
+	V9_SetDisplayEnable(TRUE);
+}
 void LoadPresentation(){
     V9_SetScreenMode(V9_MODE_B1);
     V9_SetDisplayEnable(FALSE);
     V9_SetColorMode(V9_COLOR_BD8);
-
+	const u8 colorBlack[3] = { 0, 0, 0 };
+	V9_SetPaletteEntry(0, colorBlack);    
+	V9_SetBackgroundColor(0);
 	SET_BANK_SEGMENT(2, 12); 
 	V9_WriteVRAM(V9_BMP_PGT, g_Presentation_part1, sizeof(g_Presentation_part1)); 
     SET_BANK_SEGMENT(2, 13); 
