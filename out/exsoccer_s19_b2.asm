@@ -2,14 +2,14 @@
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 4.2.0 #13081 (MINGW64)
 ;--------------------------------------------------------
-	.module exsoccer_s17_b2
+	.module exsoccer_s19_b2
 	.optsdcc -mz80
 	
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
-	.globl _g_Teams_palette
-	.globl _g_Teams_part2
+	.globl _g_Teams_Gray_palette
+	.globl _g_Teams_Gray_part2
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -40,14 +40,14 @@
 ;--------------------------------------------------------
 ; code
 ;--------------------------------------------------------
-	.area _SEG17
-	.area _SEG17
-_g_Teams_part2:
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.area _SEG19
+	.area _SEG19
+_g_Teams_Gray_part2:
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x3b	; 59
 	.db #0x77	; 119	'w'
 	.db #0x75	; 117	'u'
@@ -71,15 +71,15 @@ _g_Teams_part2:
 	.db #0xd7	; 215
 	.db #0x77	; 119	'w'
 	.db #0x7d	; 125
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe4	; 228
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd4	; 212
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -111,12 +111,12 @@ _g_Teams_part2:
 	.db #0x77	; 119	'w'
 	.db #0x77	; 119	'w'
 	.db #0x7d	; 125
-	.db #0x9f	; 159
+	.db #0x9e	; 158
 	.db #0x84	; 132
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0xaa	; 170
 	.db #0xaa	; 170
 	.db #0xaa	; 170
@@ -127,16 +127,16 @@ _g_Teams_part2:
 	.db #0x72	; 114	'r'
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xf2	; 242
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xe2	; 226
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0x2f	; 47
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xfb	; 251
+	.db #0x2e	; 46
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xeb	; 235
 	.db #0xb5	; 181
 	.db #0xbd	; 189
 	.db #0x66	; 102	'f'
@@ -153,8 +153,8 @@ _g_Teams_part2:
 	.db #0xda	; 218
 	.db #0xcc	; 204
 	.db #0xaa	; 170
-	.db #0xbf	; 191
-	.db #0xff	; 255
+	.db #0xbe	; 190
+	.db #0xee	; 238
 	.db #0xdb	; 219
 	.db #0xaa	; 170
 	.db #0xab	; 171
@@ -162,7 +162,7 @@ _g_Teams_part2:
 	.db #0xcc	; 204
 	.db #0x52	; 82	'R'
 	.db #0x22	; 34
-	.db #0xf1	; 241
+	.db #0xe1	; 225
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -171,11 +171,11 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x41	; 65	'A'
 	.db #0x1d	; 29
 	.db #0x77	; 119	'w'
@@ -198,16 +198,16 @@ _g_Teams_part2:
 	.db #0xbd	; 189
 	.db #0x77	; 119	'w'
 	.db #0x77	; 119	'w'
-	.db #0xde	; 222
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0xb5	; 181
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -239,12 +239,12 @@ _g_Teams_part2:
 	.db #0x77	; 119	'w'
 	.db #0x77	; 119	'w'
 	.db #0xd9	; 217
-	.db #0xff	; 255
+	.db #0xee	; 238
 	.db #0x88	; 136
-	.db #0xff	; 255
-	.db #0x8f	; 143
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0x8e	; 142
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0xaa	; 170
 	.db #0xaa	; 170
 	.db #0xaa	; 170
@@ -255,15 +255,15 @@ _g_Teams_part2:
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0x2f	; 47
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0x2e	; 46
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0xff	; 255
-	.db #0xfa	; 250
+	.db #0xee	; 238
+	.db #0xea	; 234
 	.db #0xb3	; 179
 	.db #0xb5	; 181
 	.db #0x73	; 115	's'
@@ -282,9 +282,9 @@ _g_Teams_part2:
 	.db #0xcc	; 204
 	.db #0xaa	; 170
 	.db #0xbb	; 187
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xfb	; 251
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xeb	; 235
 	.db #0xba	; 186
 	.db #0xaa	; 170
 	.db #0xac	; 172
@@ -299,12 +299,12 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe4	; 228
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0x11	; 17
 	.db #0x1d	; 29
 	.db #0x55	; 85	'U'
@@ -326,16 +326,16 @@ _g_Teams_part2:
 	.db #0xd7	; 215
 	.db #0x77	; 119	'w'
 	.db #0x7d	; 125
-	.db #0xee	; 238
-	.db #0xe1	; 225
+	.db #0xdd	; 221
+	.db #0xd1	; 209
 	.db #0x13	; 19
 	.db #0x75	; 117	'u'
-	.db #0xe4	; 228
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xd4	; 212
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -367,12 +367,12 @@ _g_Teams_part2:
 	.db #0x77	; 119	'w'
 	.db #0x7d	; 125
 	.db #0x89	; 137
-	.db #0xf8	; 248
-	.db #0x8f	; 143
-	.db #0xff	; 255
+	.db #0xe8	; 232
+	.db #0x8e	; 142
+	.db #0xee	; 238
 	.db #0x19	; 25
 	.db #0x99	; 153
-	.db #0xff	; 255
+	.db #0xee	; 238
 	.db #0xda	; 218
 	.db #0xaa	; 170
 	.db #0xaa	; 170
@@ -384,13 +384,13 @@ _g_Teams_part2:
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0x88	; 136
-	.db #0xf2	; 242
+	.db #0xe2	; 226
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0x2f	; 47
+	.db #0x2e	; 46
 	.db #0xaa	; 170
 	.db #0xab	; 171
 	.db #0xb7	; 183
@@ -411,8 +411,8 @@ _g_Teams_part2:
 	.db #0xab	; 171
 	.db #0xbb	; 187
 	.db #0xad	; 173
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0xda	; 218
 	.db #0xaa	; 170
 	.db #0xaa	; 170
@@ -427,12 +427,12 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x41	; 65	'A'
 	.db #0x11	; 17
 	.db #0xb7	; 183
@@ -441,7 +441,7 @@ _g_Teams_part2:
 	.db #0x55	; 85	'U'
 	.db #0x55	; 85	'U'
 	.db #0x55	; 85	'U'
-	.db #0xee	; 238
+	.db #0xdd	; 221
 	.db #0xd6	; 214
 	.db #0x66	; 102	'f'
 	.db #0x7d	; 125
@@ -453,17 +453,17 @@ _g_Teams_part2:
 	.db #0xd7	; 215
 	.db #0x55	; 85	'U'
 	.db #0x77	; 119	'w'
-	.db #0xbe	; 190
-	.db #0xee	; 238
-	.db #0xe4	; 228
+	.db #0xbd	; 189
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0x45	; 69	'E'
-	.db #0x5e	; 94
+	.db #0x5d	; 93
 	.db #0x4d	; 77	'M'
 	.db #0x7d	; 125
-	.db #0xe4	; 228
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xd4	; 212
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -497,10 +497,10 @@ _g_Teams_part2:
 	.db #0x99	; 153
 	.db #0x98	; 152
 	.db #0x89	; 137
-	.db #0xf8	; 248
+	.db #0xe8	; 232
 	.db #0x89	; 137
-	.db #0x9f	; 159
-	.db #0x9f	; 159
+	.db #0x9e	; 158
+	.db #0x9e	; 158
 	.db #0xd3	; 211
 	.db #0xba	; 186
 	.db #0xaa	; 170
@@ -512,10 +512,10 @@ _g_Teams_part2:
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0xf8	; 248
+	.db #0xe8	; 232
 	.db #0x88	; 136
 	.db #0x14	; 20
-	.db #0xf2	; 242
+	.db #0xe2	; 226
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x25	; 37
@@ -539,9 +539,9 @@ _g_Teams_part2:
 	.db #0xa3	; 163
 	.db #0x1b	; 27
 	.db #0xa3	; 163
-	.db #0x8f	; 143
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0x8e	; 142
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0xda	; 218
 	.db #0xaa	; 170
 	.db #0xaa	; 170
@@ -555,13 +555,13 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe1	; 225
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd1	; 209
 	.db #0x11	; 17
 	.db #0x13	; 19
 	.db #0x75	; 117	'u'
@@ -569,7 +569,7 @@ _g_Teams_part2:
 	.db #0x55	; 85	'U'
 	.db #0x57	; 87	'W'
 	.db #0x7b	; 123
-	.db #0xe4	; 228
+	.db #0xd4	; 212
 	.db #0xd6	; 214
 	.db #0x66	; 102	'f'
 	.db #0x67	; 103	'g'
@@ -580,18 +580,18 @@ _g_Teams_part2:
 	.db #0xdd	; 221
 	.db #0x75	; 117	'u'
 	.db #0x55	; 85	'U'
-	.db #0xde	; 222
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x76	; 118	'v'
-	.db #0xee	; 238
+	.db #0xdd	; 221
 	.db #0xb5	; 181
 	.db #0x66	; 102	'f'
 	.db #0x55	; 85	'U'
-	.db #0xbe	; 190
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xbd	; 189
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -627,9 +627,9 @@ _g_Teams_part2:
 	.db #0x89	; 137
 	.db #0x94	; 148
 	.db #0x99	; 153
-	.db #0xf9	; 249
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xe9	; 233
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0x88	; 136
 	.db #0xbb	; 187
 	.db #0xaa	; 170
@@ -637,13 +637,13 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x14	; 20
 	.db #0x22	; 34
-	.db #0xf2	; 242
-	.db #0xf9	; 249
+	.db #0xe2	; 226
+	.db #0xe9	; 233
 	.db #0x99	; 153
 	.db #0x84	; 132
 	.db #0x41	; 65	'A'
-	.db #0x8f	; 143
-	.db #0xff	; 255
+	.db #0x8e	; 142
+	.db #0xee	; 238
 	.db #0x22	; 34
 	.db #0x26	; 38
 	.db #0x7c	; 124
@@ -669,9 +669,9 @@ _g_Teams_part2:
 	.db #0xa3	; 163
 	.db #0xba	; 186
 	.db #0xdd	; 221
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xfd	; 253
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xed	; 237
 	.db #0xaa	; 170
 	.db #0xaa	; 170
 	.db #0xc1	; 193
@@ -683,21 +683,21 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x4d	; 77	'M'
 	.db #0x75	; 117	'u'
 	.db #0x55	; 85	'U'
 	.db #0x77	; 119	'w'
-	.db #0xde	; 222
-	.db #0xe4	; 228
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0xb5	; 181
 	.db #0x66	; 102	'f'
 	.db #0x67	; 103	'g'
@@ -707,19 +707,19 @@ _g_Teams_part2:
 	.db #0xdd	; 221
 	.db #0xd7	; 215
 	.db #0x75	; 117	'u'
-	.db #0x5e	; 94
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xed	; 237
+	.db #0x5d	; 93
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x67	; 103	'g'
-	.db #0xe1	; 225
+	.db #0xd1	; 209
 	.db #0x75	; 117	'u'
 	.db #0x55	; 85	'U'
 	.db #0x66	; 102	'f'
 	.db #0x65	; 101	'e'
 	.db #0xdd	; 221
-	.db #0xee	; 238
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -757,23 +757,23 @@ _g_Teams_part2:
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x99	; 153
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xf9	; 249
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xe9	; 233
 	.db #0x88	; 136
 	.db #0x31	; 49	'1'
 	.db #0x11	; 17
 	.db #0x14	; 20
-	.db #0xf8	; 248
+	.db #0xe8	; 232
 	.db #0x89	; 137
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x88	; 136
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xfc	; 252
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xec	; 236
 	.db #0xcc	; 204
 	.db #0xcc	; 204
 	.db #0xcc	; 204
@@ -798,9 +798,9 @@ _g_Teams_part2:
 	.db #0xaa	; 170
 	.db #0xaa	; 170
 	.db #0xaa	; 170
-	.db #0xff	; 255
-	.db #0x2f	; 47
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0x2e	; 46
+	.db #0xee	; 238
 	.db #0xda	; 218
 	.db #0xc1	; 193
 	.db #0x11	; 17
@@ -811,21 +811,21 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x41	; 65	'A'
 	.db #0x11	; 17
 	.db #0x14	; 20
 	.db #0x1d	; 29
 	.db #0x75	; 117	'u'
 	.db #0xdd	; 221
-	.db #0x5e	; 94
-	.db #0xe4	; 228
+	.db #0x5d	; 93
+	.db #0xd4	; 212
 	.db #0x37	; 55	'7'
 	.db #0x66	; 102	'f'
 	.db #0x65	; 101	'e'
@@ -835,12 +835,12 @@ _g_Teams_part2:
 	.db #0xdd	; 221
 	.db #0x75	; 117	'u'
 	.db #0x57	; 87	'W'
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0xd6	; 214
-	.db #0x5e	; 94
+	.db #0x5d	; 93
 	.db #0x1d	; 29
 	.db #0x55	; 85	'U'
 	.db #0x55	; 85	'U'
@@ -886,9 +886,9 @@ _g_Teams_part2:
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x99	; 153
-	.db #0x9f	; 159
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0x9e	; 158
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0x81	; 129
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -897,10 +897,10 @@ _g_Teams_part2:
 	.db #0x99	; 153
 	.db #0x98	; 152
 	.db #0x99	; 153
-	.db #0x8f	; 143
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xfd	; 253
+	.db #0x8e	; 142
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xed	; 237
 	.db #0xba	; 186
 	.db #0xcc	; 204
 	.db #0xc7	; 199
@@ -928,8 +928,8 @@ _g_Teams_part2:
 	.db #0xaa	; 170
 	.db #0xaa	; 170
 	.db #0xdd	; 221
-	.db #0xdf	; 223
-	.db #0xff	; 255
+	.db #0xde	; 222
+	.db #0xee	; 238
 	.db #0xa1	; 161
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -939,21 +939,21 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe1	; 225
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd1	; 209
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x1b	; 27
 	.db #0xd5	; 213
-	.db #0xee	; 238
-	.db #0xe1	; 225
+	.db #0xdd	; 221
+	.db #0xd1	; 209
 	.db #0x37	; 55	'7'
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
@@ -962,13 +962,13 @@ _g_Teams_part2:
 	.db #0xdd	; 221
 	.db #0xd7	; 215
 	.db #0x55	; 85	'U'
-	.db #0xde	; 222
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xed	; 237
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x66	; 102	'f'
-	.db #0xee	; 238
+	.db #0xdd	; 221
 	.db #0xb5	; 181
 	.db #0x55	; 85	'U'
 	.db #0x55	; 85	'U'
@@ -991,7 +991,7 @@ _g_Teams_part2:
 	.db #0x88	; 136
 	.db #0x88	; 136
 	.db #0x84	; 132
-	.db #0x7f	; 127
+	.db #0x7e	; 126
 	.db #0x98	; 152
 	.db #0x17	; 23
 	.db #0x52	; 82	'R'
@@ -1015,8 +1015,8 @@ _g_Teams_part2:
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x99	; 153
-	.db #0x9f	; 159
-	.db #0xff	; 255
+	.db #0x9e	; 158
+	.db #0xee	; 238
 	.db #0x81	; 129
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -1025,9 +1025,9 @@ _g_Teams_part2:
 	.db #0x98	; 152
 	.db #0x88	; 136
 	.db #0x84	; 132
-	.db #0xf2	; 242
-	.db #0x2f	; 47
-	.db #0xff	; 255
+	.db #0xe2	; 226
+	.db #0x2e	; 46
+	.db #0xee	; 238
 	.db #0xdb	; 219
 	.db #0xbb	; 187
 	.db #0xba	; 186
@@ -1057,8 +1057,8 @@ _g_Teams_part2:
 	.db #0xaa	; 170
 	.db #0xaa	; 170
 	.db #0xaa	; 170
-	.db #0xaf	; 175
-	.db #0xf1	; 241
+	.db #0xae	; 174
+	.db #0xe1	; 225
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -1067,21 +1067,21 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x13	; 19
 	.db #0xd5	; 213
 	.db #0xdd	; 221
-	.db #0xee	; 238
-	.db #0xe1	; 225
+	.db #0xdd	; 221
+	.db #0xd1	; 209
 	.db #0x37	; 55	'7'
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
@@ -1090,13 +1090,13 @@ _g_Teams_part2:
 	.db #0xdd	; 221
 	.db #0x75	; 117	'u'
 	.db #0x7b	; 123
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe5	; 229
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd5	; 213
 	.db #0x6d	; 109	'm'
-	.db #0xe3	; 227
+	.db #0xd3	; 211
 	.db #0x75	; 117	'u'
 	.db #0x55	; 85	'U'
 	.db #0x55	; 85	'U'
@@ -1144,7 +1144,7 @@ _g_Teams_part2:
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x89	; 137
-	.db #0xff	; 255
+	.db #0xee	; 238
 	.db #0x81	; 129
 	.db #0x11	; 17
 	.db #0x11	; 17
@@ -1152,10 +1152,10 @@ _g_Teams_part2:
 	.db #0x48	; 72	'H'
 	.db #0x88	; 136
 	.db #0x88	; 136
-	.db #0x8f	; 143
+	.db #0x8e	; 142
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0xfd	; 253
+	.db #0xed	; 237
 	.db #0xab	; 171
 	.db #0x3b	; 59
 	.db #0xa7	; 167
@@ -1171,7 +1171,7 @@ _g_Teams_part2:
 	.db #0x57	; 87	'W'
 	.db #0xcc	; 204
 	.db #0xcd	; 205
-	.db #0xf8	; 248
+	.db #0xe8	; 232
 	.db #0x4b	; 75	'K'
 	.db #0xaa	; 170
 	.db #0xac	; 172
@@ -1195,21 +1195,21 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x3b	; 59
 	.db #0x55	; 85	'U'
 	.db #0x57	; 87	'W'
-	.db #0x5e	; 94
-	.db #0xee	; 238
-	.db #0xe4	; 228
+	.db #0x5d	; 93
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0x1b	; 27
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
@@ -1217,13 +1217,13 @@ _g_Teams_part2:
 	.db #0x77	; 119	'w'
 	.db #0x77	; 119	'w'
 	.db #0x7d	; 125
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x56	; 86	'V'
-	.db #0xde	; 222
+	.db #0xdd	; 221
 	.db #0x17	; 23
 	.db #0x55	; 85	'U'
 	.db #0x56	; 86	'V'
@@ -1247,7 +1247,7 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x48	; 72	'H'
 	.db #0x76	; 118	'v'
-	.db #0xf9	; 249
+	.db #0xe9	; 233
 	.db #0x94	; 148
 	.db #0x1b	; 27
 	.db #0x66	; 102	'f'
@@ -1257,7 +1257,7 @@ _g_Teams_part2:
 	.db #0x77	; 119	'w'
 	.db #0x75	; 117	'u'
 	.db #0x57	; 87	'W'
-	.db #0xf9	; 249
+	.db #0xe9	; 233
 	.db #0x99	; 153
 	.db #0x98	; 152
 	.db #0xac	; 172
@@ -1283,7 +1283,7 @@ _g_Teams_part2:
 	.db #0x82	; 130
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0xfa	; 250
+	.db #0xea	; 234
 	.db #0xaa	; 170
 	.db #0xab	; 171
 	.db #0x75	; 117	'u'
@@ -1298,8 +1298,8 @@ _g_Teams_part2:
 	.db #0x55	; 85	'U'
 	.db #0x7a	; 122	'z'
 	.db #0xcc	; 204
-	.db #0xbf	; 191
-	.db #0xff	; 255
+	.db #0xbe	; 190
+	.db #0xee	; 238
 	.db #0x8d	; 141
 	.db #0xac	; 172
 	.db #0xcc	; 204
@@ -1323,19 +1323,19 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0xd7	; 215
 	.db #0x66	; 102	'f'
 	.db #0x65	; 101	'e'
 	.db #0x55	; 85	'U'
-	.db #0x7e	; 126
+	.db #0x7d	; 125
 	.db #0x41	; 65	'A'
 	.db #0x44	; 68	'D'
 	.db #0x43	; 67	'C'
@@ -1344,14 +1344,14 @@ _g_Teams_part2:
 	.db #0x65	; 101	'e'
 	.db #0x77	; 119	'w'
 	.db #0x7d	; 125
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xed	; 237
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x65	; 101	'e'
-	.db #0xe4	; 228
+	.db #0xd4	; 212
 	.db #0xd5	; 213
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
@@ -1387,7 +1387,7 @@ _g_Teams_part2:
 	.db #0xd9	; 217
 	.db #0x99	; 153
 	.db #0x99	; 153
-	.db #0xf2	; 242
+	.db #0xe2	; 226
 	.db #0x7c	; 124
 	.db #0xcc	; 204
 	.db #0xcc	; 204
@@ -1426,10 +1426,10 @@ _g_Teams_part2:
 	.db #0x7a	; 122	'z'
 	.db #0xcc	; 204
 	.db #0xcb	; 203
-	.db #0x7f	; 127
-	.db #0xf2	; 242
-	.db #0xfc	; 252
-	.db #0xf9	; 249
+	.db #0x7e	; 126
+	.db #0xe2	; 226
+	.db #0xec	; 236
+	.db #0xe9	; 233
 	.db #0xbc	; 188
 	.db #0xca	; 202
 	.db #0x13	; 19
@@ -1451,19 +1451,19 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0xd5	; 213
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x65	; 101	'e'
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x11	; 17
 	.db #0x14	; 20
 	.db #0x44	; 68	'D'
@@ -1471,14 +1471,14 @@ _g_Teams_part2:
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
 	.db #0x57	; 87	'W'
-	.db #0xde	; 222
+	.db #0xdd	; 221
 	.db #0x44	; 68	'D'
 	.db #0x41	; 65	'A'
-	.db #0x4e	; 78	'N'
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe6	; 230
-	.db #0x5e	; 94
+	.db #0x4d	; 77	'M'
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd6	; 214
+	.db #0x5d	; 93
 	.db #0x4d	; 77	'M'
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
@@ -1499,10 +1499,10 @@ _g_Teams_part2:
 	.db #0x88	; 136
 	.db #0x84	; 132
 	.db #0x48	; 72	'H'
-	.db #0xff	; 255
-	.db #0xf9	; 249
+	.db #0xee	; 238
+	.db #0xe9	; 233
 	.db #0x98	; 152
-	.db #0xf5	; 245
+	.db #0xe5	; 229
 	.db #0x98	; 152
 	.db #0x44	; 68	'D'
 	.db #0x44	; 68	'D'
@@ -1514,7 +1514,7 @@ _g_Teams_part2:
 	.db #0x79	; 121	'y'
 	.db #0x99	; 153
 	.db #0x99	; 153
-	.db #0x9f	; 159
+	.db #0x9e	; 158
 	.db #0x22	; 34
 	.db #0x26	; 38
 	.db #0xcc	; 204
@@ -1535,7 +1535,7 @@ _g_Teams_part2:
 	.db #0x88	; 136
 	.db #0x88	; 136
 	.db #0x88	; 136
-	.db #0x8f	; 143
+	.db #0x8e	; 142
 	.db #0x27	; 39
 	.db #0x7c	; 124
 	.db #0xcc	; 204
@@ -1554,11 +1554,11 @@ _g_Teams_part2:
 	.db #0xcc	; 204
 	.db #0xcc	; 204
 	.db #0xa9	; 169
-	.db #0xf7	; 247
+	.db #0xe7	; 231
 	.db #0xc5	; 197
 	.db #0x75	; 117	'u'
-	.db #0xf9	; 249
-	.db #0xff	; 255
+	.db #0xe9	; 233
+	.db #0xee	; 238
 	.db #0xd1	; 209
 	.db #0x3a	; 58
 	.db #0xcc	; 204
@@ -1579,34 +1579,34 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe4	; 228
+	.db #0x1d	; 29
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0xd7	; 215
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x67	; 103	'g'
-	.db #0xee	; 238
-	.db #0xe3	; 227
+	.db #0xdd	; 221
+	.db #0xd3	; 211
 	.db #0x7d	; 125
-	.db #0x3e	; 62
-	.db #0xee	; 238
-	.db #0xeb	; 235
+	.db #0x3d	; 61
+	.db #0xdd	; 221
+	.db #0xdb	; 219
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
-	.db #0x7e	; 126
-	.db #0xee	; 238
-	.db #0x4e	; 78	'N'
+	.db #0x7d	; 125
+	.db #0xdd	; 221
+	.db #0x4d	; 77	'M'
 	.db #0x4b	; 75	'K'
 	.db #0xd3	; 211
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x56	; 86	'V'
-	.db #0xee	; 238
+	.db #0xdd	; 221
 	.db #0xd5	; 213
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
@@ -1626,9 +1626,9 @@ _g_Teams_part2:
 	.db #0x88	; 136
 	.db #0x84	; 132
 	.db #0x48	; 72	'H'
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xf9	; 249
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xe9	; 233
 	.db #0x95	; 149
 	.db #0x58	; 88	'X'
 	.db #0x81	; 129
@@ -1642,7 +1642,7 @@ _g_Teams_part2:
 	.db #0x98	; 152
 	.db #0x44	; 68	'D'
 	.db #0x48	; 72	'H'
-	.db #0xf2	; 242
+	.db #0xe2	; 226
 	.db #0x22	; 34
 	.db #0x22	; 34
 	.db #0x26	; 38
@@ -1663,7 +1663,7 @@ _g_Teams_part2:
 	.db #0x88	; 136
 	.db #0x88	; 136
 	.db #0x84	; 132
-	.db #0xf7	; 247
+	.db #0xe7	; 231
 	.db #0xcc	; 204
 	.db #0xcc	; 204
 	.db #0xcc	; 204
@@ -1681,12 +1681,12 @@ _g_Teams_part2:
 	.db #0xaa	; 170
 	.db #0xb1	; 177
 	.db #0xba	; 186
-	.db #0x8f	; 143
-	.db #0xf2	; 242
+	.db #0x8e	; 142
+	.db #0xe2	; 226
 	.db #0x27	; 39
 	.db #0xa7	; 167
-	.db #0x6f	; 111	'o'
-	.db #0xf8	; 248
+	.db #0x6e	; 110	'n'
+	.db #0xe8	; 232
 	.db #0x41	; 65	'A'
 	.db #0xaa	; 170
 	.db #0xcc	; 204
@@ -1707,34 +1707,34 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
-	.db #0xe1	; 225
+	.db #0x1d	; 29
+	.db #0xd1	; 209
 	.db #0x14	; 20
-	.db #0xee	; 238
-	.db #0xe4	; 228
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0xd5	; 213
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
-	.db #0x5e	; 94
-	.db #0xe4	; 228
+	.db #0x5d	; 93
+	.db #0xd4	; 212
 	.db #0xb7	; 183
 	.db #0x77	; 119	'w'
-	.db #0x4e	; 78	'N'
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x4d	; 77	'M'
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0xd6	; 214
 	.db #0x5d	; 93
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x4d	; 77	'M'
 	.db #0x57	; 87	'W'
 	.db #0xb4	; 180
-	.db #0xe7	; 231
+	.db #0xd7	; 215
 	.db #0x67	; 103	'g'
-	.db #0xe3	; 227
+	.db #0xd3	; 211
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
@@ -1753,9 +1753,9 @@ _g_Teams_part2:
 	.db #0x88	; 136
 	.db #0x84	; 132
 	.db #0x48	; 72	'H'
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0x99	; 153
 	.db #0x8c	; 140
 	.db #0xd9	; 217
@@ -1770,10 +1770,10 @@ _g_Teams_part2:
 	.db #0x44	; 68	'D'
 	.db #0x84	; 132
 	.db #0x11	; 17
-	.db #0x8f	; 143
+	.db #0x8e	; 142
 	.db #0x22	; 34
 	.db #0x22	; 34
-	.db #0x2f	; 47
+	.db #0x2e	; 46
 	.db #0x49	; 73	'I'
 	.db #0x99	; 153
 	.db #0x89	; 137
@@ -1810,9 +1810,9 @@ _g_Teams_part2:
 	.db #0xbb	; 187
 	.db #0x31	; 49	'1'
 	.db #0x3d	; 61
-	.db #0xf9	; 249
-	.db #0xfc	; 252
-	.db #0x6f	; 111	'o'
+	.db #0xe9	; 233
+	.db #0xec	; 236
+	.db #0x6e	; 110	'n'
 	.db #0x77	; 119	'w'
 	.db #0x73	; 115	's'
 	.db #0x1a	; 26
@@ -1838,30 +1838,30 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-	.db #0x1e	; 30
+	.db #0x1d	; 29
 	.db #0xb5	; 181
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
-	.db #0x5e	; 94
+	.db #0x5d	; 93
 	.db #0x3d	; 61
 	.db #0x77	; 119	'w'
 	.db #0x75	; 117	'u'
 	.db #0xd4	; 212
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xed	; 237
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe4	; 228
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0xd5	; 213
 	.db #0x55	; 85	'U'
 	.db #0x5d	; 93
 	.db #0x15	; 21
-	.db #0x5e	; 94
+	.db #0x5d	; 93
 	.db #0x4d	; 77	'M'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
@@ -1880,13 +1880,13 @@ _g_Teams_part2:
 	.db #0x14	; 20
 	.db #0x84	; 132
 	.db #0x48	; 72	'H'
-	.db #0xff	; 255
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x92	; 146
-	.db #0xf4	; 244
+	.db #0xe4	; 228
 	.db #0x14	; 20
 	.db #0x48	; 72	'H'
 	.db #0x99	; 153
@@ -1899,7 +1899,7 @@ _g_Teams_part2:
 	.db #0x81	; 129
 	.db #0x44	; 68	'D'
 	.db #0x14	; 20
-	.db #0x9f	; 159
+	.db #0x9e	; 158
 	.db #0x22	; 34
 	.db #0x88	; 136
 	.db #0x99	; 153
@@ -1940,8 +1940,8 @@ _g_Teams_part2:
 	.db #0x33	; 51	'3'
 	.db #0x18	; 24
 	.db #0xd5	; 213
-	.db #0x8f	; 143
-	.db #0xff	; 255
+	.db #0x8e	; 142
+	.db #0xee	; 238
 	.db #0xb1	; 177
 	.db #0xbc	; 188
 	.db #0xcc	; 204
@@ -1973,23 +1973,23 @@ _g_Teams_part2:
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
-	.db #0xe1	; 225
+	.db #0xd1	; 209
 	.db #0xd7	; 215
 	.db #0x55	; 85	'U'
 	.db #0x56	; 86	'V'
 	.db #0x6d	; 109	'm'
-	.db #0x4e	; 78	'N'
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x4d	; 77	'M'
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0x37	; 55	'7'
 	.db #0x55	; 85	'U'
 	.db #0x56	; 86	'V'
 	.db #0x55	; 85	'U'
 	.db #0x7b	; 123
-	.db #0x4e	; 78	'N'
+	.db #0x4d	; 77	'M'
 	.db #0xb5	; 181
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
@@ -2007,13 +2007,13 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x14	; 20
-	.db #0xff	; 255
-	.db #0xff	; 255
+	.db #0xee	; 238
+	.db #0xee	; 238
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x99	; 153
-	.db #0x2f	; 47
+	.db #0x2e	; 46
 	.db #0x81	; 129
 	.db #0x14	; 20
 	.db #0x84	; 132
@@ -2069,7 +2069,7 @@ _g_Teams_part2:
 	.db #0x33	; 51	'3'
 	.db #0xb8	; 184
 	.db #0x18	; 24
-	.db #0xf4	; 244
+	.db #0xe4	; 228
 	.db #0x1b	; 27
 	.db #0xac	; 172
 	.db #0xcc	; 204
@@ -2107,10 +2107,10 @@ _g_Teams_part2:
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
 	.db #0xd4	; 212
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xee	; 238
-	.db #0xe4	; 228
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xdd	; 221
+	.db #0xd4	; 212
 	.db #0xb7	; 183
 	.db #0x55	; 85	'U'
 	.db #0x55	; 85	'U'
@@ -2135,7 +2135,7 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x14	; 20
 	.db #0x99	; 153
-	.db #0xff	; 255
+	.db #0xee	; 238
 	.db #0x99	; 153
 	.db #0x99	; 153
 	.db #0x99	; 153
@@ -2235,9 +2235,9 @@ _g_Teams_part2:
 	.db #0x56	; 86	'V'
 	.db #0x66	; 102	'f'
 	.db #0x67	; 103	'g'
-	.db #0x4e	; 78	'N'
-	.db #0xee	; 238
-	.db #0xee	; 238
+	.db #0x4d	; 77	'M'
+	.db #0xdd	; 221
+	.db #0xdd	; 221
 	.db #0xb7	; 183
 	.db #0x65	; 101	'e'
 	.db #0x55	; 85	'U'
@@ -2364,7 +2364,7 @@ _g_Teams_part2:
 	.db #0x66	; 102	'f'
 	.db #0x66	; 102	'f'
 	.db #0x53	; 83	'S'
-	.db #0xee	; 238
+	.db #0xdd	; 221
 	.db #0xb5	; 181
 	.db #0x66	; 102	'f'
 	.db #0x55	; 85	'U'
@@ -4139,54 +4139,54 @@ _g_Teams_part2:
 	.db #0x11	; 17
 	.db #0x11	; 17
 	.db #0x11	; 17
-_g_Teams_palette:
+_g_Teams_Gray_palette:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x01	; 1
-	.db #0x1b	; 27
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x1a	; 26
-	.db #0x18	; 24
-	.db #0x05	; 5
-	.db #0x01	; 1
-	.db #0x00	; 0
-	.db #0x01	; 1
+	.db #0x1a	; 26
+	.db #0x1a	; 26
 	.db #0x02	; 2
-	.db #0x03	; 3
-	.db #0x1b	; 27
-	.db #0x0f	; 15
-	.db #0x04	; 4
-	.db #0x1e	; 30
-	.db #0x15	; 21
-	.db #0x08	; 8
-	.db #0x17	; 23
-	.db #0x0a	; 10
 	.db #0x02	; 2
-	.db #0x03	; 3
-	.db #0x04	; 4
-	.db #0x08	; 8
-	.db #0x01	; 1
-	.db #0x05	; 5
-	.db #0x10	; 16
+	.db #0x02	; 2
+	.db #0x02	; 2
+	.db #0x02	; 2
+	.db #0x02	; 2
 	.db #0x11	; 17
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x0a	; 10
-	.db #0x03	; 3
-	.db #0x01	; 1
-	.db #0x1a	; 26
-	.db #0x02	; 2
-	.db #0x00	; 0
-	.db #0x10	; 16
+	.db #0x11	; 17
+	.db #0x11	; 17
+	.db #0x16	; 22
+	.db #0x16	; 22
+	.db #0x16	; 22
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x05	; 5
+	.db #0x05	; 5
+	.db #0x05	; 5
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
 	.db #0x07	; 7
-	.db #0x02	; 2
-	.db #0x00	; 0
-	.db #0x0b	; 11
-	.db #0x02	; 2
+	.db #0x07	; 7
+	.db #0x07	; 7
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
 	.db #0x0f	; 15
 	.db #0x0f	; 15
-	.db #0x11	; 17
+	.db #0x0f	; 15
+	.db #0x01	; 1
+	.db #0x01	; 1
+	.db #0x01	; 1
 	.area _INITIALIZER
 	.area _CABS (ABS)

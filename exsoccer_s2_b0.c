@@ -37,8 +37,18 @@ extern const unsigned char  g_Presentation_part1[16384]; // Bank 1 = Segment 12
 extern const unsigned char  g_Presentation_part2[16384]; // Bank 1 = Segment 13
 extern const unsigned char  g_Presentation_part3[16384]; // Bank 1 = Segment 14
 extern const unsigned char  g_Presentation_part4[5120];  // Bank 1 = Segment 15
+extern const unsigned char g_Teams_Gray_part1[16384];
+extern const unsigned char g_Teams_Gray_part2[4096];
 extern const unsigned char  g_Teams_palette[];
-
+extern const unsigned char g_Teams_Gray_palette[];
+static const struct { u16 x; u16 y; } g_TeamPos[6] = {
+    { 33, 109 }, { 114, 109 }, { 197, 109 },   // Row 1
+    { 33, 192 }, { 114, 192 }, { 197, 192 } // Row 2
+};
+static const struct { u16 x; u16 y; } g_TeamGrayPos[6] = {
+    { 1, 5 }, { 11, 5 }, { 21, 5 },   // Row 1
+    { 1, 15}, { 11, 15 }, { 21, 15 } // Row 2
+};
 // VARIABLES
 extern u16 	g_FrameCounter; // Bank 1 = Segment 0
 extern bool g_VSynch; // Bank 1 = Segment 0
@@ -1065,23 +1075,127 @@ void GoalkeeperWithBall(u8 teamId, bool isSteal) {
         g_Players[i].Status = PLAYER_STATUS_NONE; // Unlock movement
     }
 }
+
+
+u8 SelectTeam(u8 cursorPatternId, u8 excludeIndex) {
+
+    u8 currentIdx = 0;
+    if (currentIdx == excludeIndex) currentIdx++;
+
+    u8 dir = DIRECTION_NONE;
+    u8 oldDir = DIRECTION_NONE;
+    bool trigger = false;
+    bool oldTrigger = true; // Force release first
+
+    while (true) {
+        UpdateV9990();
+
+        dir = GetJoystick1Direction();
+        trigger = IsTeamJoystickTriggerPressed(TEAM_1);
+
+        if (dir != DIRECTION_NONE && dir != oldDir) {
+            u8 nextIdx = currentIdx;
+
+            if (dir == DIRECTION_RIGHT) {
+                if ((currentIdx % 3) < 2) nextIdx++;
+            } else if (dir == DIRECTION_LEFT) {
+                if ((currentIdx % 3) > 0) nextIdx--;
+            } else if (dir == DIRECTION_UP) {
+                if (currentIdx >= 3) nextIdx -= 3;
+            } else if (dir == DIRECTION_DOWN) {
+                if (currentIdx < 3) nextIdx += 3;
+            }
+
+            if (nextIdx == excludeIndex) {
+                // Skip logic
+                if (dir == DIRECTION_RIGHT) {
+                    if ((nextIdx % 3) < 2) nextIdx++; else nextIdx = currentIdx;
+                } else if (dir == DIRECTION_LEFT) {
+                    if ((nextIdx % 3) > 0) nextIdx--; else nextIdx = currentIdx;
+                } else {
+                    nextIdx = currentIdx; // Vertical skip blocked
+                }
+            }
+            currentIdx = nextIdx;
+        }
+        oldDir = dir;
+
+        if (trigger && !oldTrigger) {
+
+            return currentIdx;
+        }
+        oldTrigger = trigger;
+
+        struct V9_Sprite attr;
+        attr.Y = g_TeamPos[currentIdx].y;
+        attr.X = g_TeamPos[currentIdx].x;
+        attr.Pattern = cursorPatternId;
+        attr.P = 0; 
+        attr.SC = 0;
+		attr.D = 0;
+        V9_SetSpriteP1(0, &attr);
+    }
+}
 void ShowMenu(){
+	V9_FillVRAM(V9_P1_PGT_B, 0x00, 128*212); // Clean layer A pattern
+    SET_BANK_SEGMENT(2, 18); 
+	V9_WriteVRAM(V9_P1_PGT_B + 8192L, g_Teams_Gray_part1, sizeof(g_Teams_Gray_part1));
+    SET_BANK_SEGMENT(2, 19); 
+	V9_WriteVRAM(V9_P1_PGT_B + 8192L + 16384L, g_Teams_Gray_part2, sizeof(g_Teams_Gray_part2));
+	// Pattern name table
+	V9_FillVRAM16(V9_P1_PNT_B, 0x0000, 64*64); // Init layer A
+	V9_SetPalette(16, 16, g_Teams_Gray_palette);
+
+
+
 	SET_BANK_SEGMENT(2, 17); 
 	V9_SetPalette(0, 16, g_Teams_palette);
 	SET_BANK_SEGMENT(2, 1); 
 	V9_SelectPaletteP1(0,1);
-	for (u8 x=0;x<64;x++){
-		V9_PutLayerATileAtPos(x,0,0);
+	for (u8 y=0;y<64;y++){
+		for (u8 x=0;x<64;x++){
+			V9_PutLayerATileAtPos(x,y,32);
+		}
 	}
-	//u16 tileId=512;
     for (u8 y=5;y<25;y++){
-		u16 tileId=512+32*(y-5);
+		u16 tileId=256+32*(y-5);
 		for (u8 x=1;x<31;x++){
 			V9_PutLayerATileAtPos(x,y,tileId);
+			V9_PutLayerBTileAtPos(x,y,tileId);
 			tileId++;
 		}
 	}
+	LoadSprites();
+	V9_SetInterrupt(V9_INT_VBLANK | V9_INT_HBLANK);
+	
+	
+	
 	V9_SetDisplayEnable(TRUE);
+	
+
+
+
+    V9_PrintLayerAStringAtPos(8,0,"PLAYER 1 SELECT");
+    g_Team1PaletteId = SelectTeam(SPRITE_PLAYER, NO_VALUE);
+	DEBUG_LOGNUM("ID: ",g_Team1PaletteId);
+	
+	for(u8 y=g_TeamGrayPos[g_Team1PaletteId].y;y<g_TeamGrayPos[g_Team1PaletteId].y+9;y++){
+		for(u8 x=g_TeamGrayPos[g_Team1PaletteId].x;x<g_TeamGrayPos[g_Team1PaletteId].x+10;x++){
+			V9_PutLayerATileAtPos(x,y,0);
+		}
+	}
+	
+    V9_PrintLayerAStringAtPos(8,0,"  CPU 2 SELECT  ");
+    g_Team2PaletteId = SelectTeam(SPRITE_CPU, g_Team1PaletteId);
+
+	V9_SetDisplayEnable(FALSE);
+	LoadP1LayerB();
+    InitPalette();
+    ShowField();
+	V9_SetDisplayEnable(TRUE);
+
+	V9_SetInterruptLine(71);
+    V9_SetInterrupt(V9_INT_VBLANK | V9_INT_HBLANK);
 }
 void LoadPresentation(){
     V9_SetScreenMode(V9_MODE_B1);
@@ -1111,7 +1225,7 @@ void LoadPresentation(){
     {
         
     }
-    g_MatchStatus==MATCH_NOT_STARTED;
+    g_MatchStatus=MATCH_NOT_STARTED;
     V9_SetInterrupt(V9_INT_NONE);
     V9_SetDisplayEnable(FALSE);
     

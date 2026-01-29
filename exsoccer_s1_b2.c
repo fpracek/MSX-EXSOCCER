@@ -1880,7 +1880,12 @@ void InitPalette()
 }
 
 
-
+void TickTeamSelection(){
+	u8 direction= GetJoystick1Direction(); 
+	if(direction!=DIRECTION_NONE){
+		
+	}
+}
 
 void SetTeam1Palette(){
 	V9_SetPalette(32, 16, GetTeamPaletteById(g_Team1PaletteId));

@@ -106,16 +106,14 @@ void LoadP1LayerA(){
 	SET_BANK_SEGMENT(2, 7); 
 	V9_WriteVRAM(V9_P1_PGT_A, g_GameFieldLayerATiles, sizeof(g_GameFieldLayerATiles)); // Load fonts
     SET_BANK_SEGMENT(2, 16); 
-	V9_WriteVRAM(V9_P1_PGT_A + 16384, g_Teams_part1, sizeof(g_Teams_part1));
+	V9_WriteVRAM(V9_P1_PGT_A + 8192L, g_Teams_part1, sizeof(g_Teams_part1));
     SET_BANK_SEGMENT(2, 17); 
-	V9_WriteVRAM(V9_P1_PGT_A + 16384L*2, g_Teams_part2, sizeof(g_Teams_part2));
+	V9_WriteVRAM(V9_P1_PGT_A + 8192L + 16384L, g_Teams_part2, sizeof(g_Teams_part2));
 	// Pattern name table
 	V9_FillVRAM16(V9_P1_PNT_A, 0x0000, 64*64); // Init layer A
 	SET_BANK_SEGMENT(2, 1);
 	// draw layer A
-	for (u8 x=0;x<64;x++){
-		V9_PutLayerATileAtPos(x,0,32);
-	}
+
 }
 //-----------------------------------------------------------------------------
 // Load Layer B
@@ -133,12 +131,24 @@ void LoadP1LayerB(){
 	V9_WriteVRAM(V9_P1_PGT_B + 16384L*4, g_GameFieldLayerBTiles_part5, sizeof(g_GameFieldLayerBTiles_part5)); // Load tiles (part 4)
 	SET_BANK_SEGMENT(2, 1); 
 	// V9_FillVRAM16(V9_P1_PNT_B, 0x0000, 64*64); // REDUNDANT: Overwritten below
-	u16 tileId=0;
-	// Fill 32x64 area (2048 tiles)
+
+}
+void ShowField(){
+    u16 tileId=0;
+
     for (u8 y=0;y<64;y++){
 		for (u8 x=0;x<32;x++){
 			V9_PutLayerBTileAtPos(x,y,tileId++);
 		}
+	}
+    
+    for (u8 y=0;y<64;y++){
+		for (u8 x=0;x<32;x++){
+			V9_PutLayerATileAtPos(x,y,0);
+		}
+	}
+    for (u8 x=0;x<64;x++){
+		V9_PutLayerATileAtPos(x,0,32);
 	}
 }
 void PeopleMoving(bool isBasicMoving){
@@ -579,27 +589,22 @@ void InitializeV9990()
   
 
 
-
+    InitPalette();
 	V9_SetScreenMode(V9_MODE_P1);
-	V9_SetDisplayEnable(FALSE);
+	
 	
 	V9_SetBackgroundColor(1);
-	V9_SetSpriteEnable(TRUE);
+    V9_SetDisplayEnable(FALSE);
+	//V9_SetSpriteEnable(TRUE);
 
 
 
-	LoadSprites();
+	
 	
 	LoadP1LayerA();
-	LoadP1LayerB();
+	
     ShowMenu();
-    for(;;);
-    InitPalette();
-   
-	V9_SetInterrupt(V9_INT_VBLANK | V9_INT_HBLANK);
 
-	V9_SetInterruptLine(71);
-	V9_SetDisplayEnable(TRUE);
 
 }
 //-----------------------------------------------------------------------------

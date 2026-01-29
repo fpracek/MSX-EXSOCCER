@@ -76,6 +76,13 @@ typedef struct TeamStats
 // *** GLOBAL DEFINES ***
 // =======================
 
+#define MENU_POS_1							0
+#define MENU_POS_2							1
+#define MENU_POS_3							2
+#define MENU_POS_4							3
+#define MENU_POS_5							4
+#define MENU_POS_6							5
+
 #define FIELD_BOUND_X_LEFT                  10
 #define FIELD_BOUND_X_RIGHT                 246
 #define FIELD_BOUND_Y_TOP                   50
@@ -211,6 +218,9 @@ typedef struct TeamStats
 #define PLAYER_POSE_CELEBRATION_FRONT_2 	49
 
 #define SPRITE_DOWN_ARROW					121
+
+#define SPRITE_PLAYER						245
+#define SPRITE_CPU                          245
 
 #define SPRITE_GIRL_1						122
 #define SPRITE_GIRL_2						123
@@ -363,3 +373,5 @@ const TeamStats* GetTeamStats(u8 teamId);
 void PeopleMoving(bool isBasicMoving);
 void LoadPresentation();
 void ShowMenu();
+void ShowField();
+void TickTeamSelection();
