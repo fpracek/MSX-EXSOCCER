@@ -8,6 +8,7 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
+	.globl _g_Buttons_palette
 	.globl _g_Teams_Gray_palette
 	.globl _g_Teams_Gray_part2
 ;--------------------------------------------------------
@@ -4188,5 +4189,54 @@ _g_Teams_Gray_palette:
 	.db #0x01	; 1
 	.db #0x01	; 1
 	.db #0x01	; 1
+_g_Buttons_palette:
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x02	; 2
+	.db #0x04	; 4
+	.db #0x02	; 2
+	.db #0x02	; 2
+	.db #0x0f	; 15
+	.db #0x04	; 4
+	.db #0x07	; 7
+	.db #0x19	; 25
+	.db #0x08	; 8
+	.db #0x01	; 1
+	.db #0x05	; 5
+	.db #0x0e	; 14
+	.db #0x02	; 2
+	.db #0x08	; 8
+	.db #0x11	; 17
+	.db #0x03	; 3
+	.db #0x08	; 8
+	.db #0x15	; 21
+	.db #0x01	; 1
+	.db #0x13	; 19
+	.db #0x04	; 4
+	.db #0x09	; 9
+	.db #0x09	; 9
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x0b	; 11
+	.db #0x03	; 3
+	.db #0x17	; 23
+	.db #0x03	; 3
+	.db #0x01	; 1
+	.db #0x1b	; 27
+	.db #0x18	; 24
+	.db #0x05	; 5
+	.db #0x10	; 16
+	.db #0x10	; 16
+	.db #0x10	; 16
+	.db #0x1e	; 30
+	.db #0x1e	; 30
+	.db #0x1e	; 30
+	.db #0x17	; 23
+	.db #0x17	; 23
+	.db #0x17	; 23
 	.area _INITIALIZER
 	.area _CABS (ABS)

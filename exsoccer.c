@@ -262,8 +262,8 @@ void GameStart(){
 	g_FieldCurrentYPosition=FIELD_TOP_Y;
 	g_Team1Score=0;
 	g_Team2Score=0;
-	g_Team1PaletteId=TEAM_BRA;
-	g_Team2PaletteId=TEAM_GER;
+	//g_Team1PaletteId=TEAM_BRA;
+	//g_Team2PaletteId=TEAM_GER;
 	V9_SetScrollingY(0);
 	V9_SetScrollingBY(1);
 	SetTeam1Palette();

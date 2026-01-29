@@ -1367,12 +1367,6 @@ _GameStart::
 ;./exsoccer.c:264: g_Team2Score=0;
 	xor	a, a
 	ld	(#_g_Team2Score), a
-;./exsoccer.c:265: g_Team1PaletteId=TEAM_BRA;
-	ld	a, #0x01
-	ld	(#_g_Team1PaletteId), a
-;./exsoccer.c:266: g_Team2PaletteId=TEAM_GER;
-	ld	a, #0x05
-	ld	(#_g_Team2PaletteId), a
 ;./exsoccer.c:267: V9_SetScrollingY(0);
 	ld	l, h
 	call	_V9_SetScrollingY

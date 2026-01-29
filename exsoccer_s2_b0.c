@@ -37,10 +37,13 @@ extern const unsigned char  g_Presentation_part1[16384]; // Bank 1 = Segment 12
 extern const unsigned char  g_Presentation_part2[16384]; // Bank 1 = Segment 13
 extern const unsigned char  g_Presentation_part3[16384]; // Bank 1 = Segment 14
 extern const unsigned char  g_Presentation_part4[5120];  // Bank 1 = Segment 15
-extern const unsigned char g_Teams_Gray_part1[16384];
-extern const unsigned char g_Teams_Gray_part2[4096];
+extern const unsigned char  g_Teams_Gray_part1[16384];
+extern const unsigned char  g_Teams_Gray_part2[4096];
 extern const unsigned char  g_Teams_palette[];
-extern const unsigned char g_Teams_Gray_palette[];
+extern const unsigned char  g_Teams_Gray_palette[];
+extern const unsigned char  g_Buttons_part1[16384]; // Bank 1 = Segment 13
+extern const unsigned char  g_Buttons_part2[16384]; // Bank 1 = Segment 14
+extern const unsigned char g_Buttons_palette[];
 static const struct { u16 x; u16 y; } g_TeamPos[6] = {
     { 33, 109 }, { 114, 109 }, { 197, 109 },   // Row 1
     { 33, 192 }, { 114, 192 }, { 197, 192 } // Row 2
@@ -1177,7 +1180,7 @@ void ShowMenu(){
 
     V9_PrintLayerAStringAtPos(8,0,"PLAYER 1 SELECT");
     g_Team1PaletteId = SelectTeam(SPRITE_PLAYER, NO_VALUE);
-	DEBUG_LOGNUM("ID: ",g_Team1PaletteId);
+
 	
 	for(u8 y=g_TeamGrayPos[g_Team1PaletteId].y;y<g_TeamGrayPos[g_Team1PaletteId].y+9;y++){
 		for(u8 x=g_TeamGrayPos[g_Team1PaletteId].x;x<g_TeamGrayPos[g_Team1PaletteId].x+10;x++){
@@ -1189,6 +1192,31 @@ void ShowMenu(){
     g_Team2PaletteId = SelectTeam(SPRITE_CPU, g_Team1PaletteId);
 
 	V9_SetDisplayEnable(FALSE);
+
+	V9_FillVRAM(V9_P1_PGT_A, 0x00, 128*212); // Clean layer B pattern
+	SET_BANK_SEGMENT(2, 20); 
+	V9_WriteVRAM(V9_P1_PGT_A, g_Buttons_part1, sizeof(g_Buttons_part1)); // Load tiles (part 1)
+	SET_BANK_SEGMENT(2, 21); 
+	V9_WriteVRAM(V9_P1_PGT_A + 16384, g_Buttons_part2, sizeof(g_Buttons_part2)); // Load tiles (part 2)
+	
+	SET_BANK_SEGMENT(2, 1); 
+
+	SET_BANK_SEGMENT(2, 19); 
+	V9_SetPalette(0, 16, g_Buttons_palette);
+
+	u16 tileId=0;
+
+    for (u8 y=0;y<64;y++){
+		for (u8 x=0;x<32;x++){
+			V9_PutLayerATileAtPos(x,y,tileId++);
+		}
+	}
+	V9_SetDisplayEnable(TRUE);
+	while(!IsTeamJoystickTriggerPressed(TEAM_1)){
+
+	}
+	V9_SetDisplayEnable(FALSE);
+	LoadP1LayerA();
 	LoadP1LayerB();
     InitPalette();
     ShowField();

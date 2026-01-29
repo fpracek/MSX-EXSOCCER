@@ -139,11 +139,11 @@ typedef struct TeamStats
 #define REFEREE                             14
 
 #define TEAM_AUS                            0
-#define TEAM_BRA                            1
+#define TEAM_GER                            1
 #define TEAM_ITA                            2
-#define TEAM_FRA                            3
-#define TEAM_GBR                            4
-#define TEAM_GER                            5
+#define TEAM_BRA                            3
+#define TEAM_FRA                            4
+#define TEAM_GBR                            5
 
 #define PLAYER_POSE_FRONT                   16
 #define PLAYER_POSE_BACK                    17
