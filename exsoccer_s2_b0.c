@@ -30,7 +30,7 @@ extern u8				g_PassTargetPlayer;					// Bank 1 = Segment 0
 extern bool         	g_FioBre;							// Bank 1 = Segment 0
 extern i8 				g_GkRecoilY;					    // Bank 1 = Segment 0
 extern PonPonGirlInfo   g_PonPonGirls[6];					// Bank 1 = Segment 0
-bool                	g_GkIsGroundKick = false;           // Bank 1 = Segment 0
+extern bool           	g_GkIsGroundKick;            // Bank 1 = Segment 0
 extern u16              g_ShotCursorX;
 extern i8               g_ShotCursorDir;
 extern const unsigned char  g_Presentation_part1[16384]; // Bank 1 = Segment 12

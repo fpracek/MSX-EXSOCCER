@@ -46,7 +46,6 @@
 	.globl _g_peopleState
 	.globl _g_PonPonGrilsPoseCounter
 	.globl _g_ponPonPatternIndex
-	.globl _g_GkIsGroundKick
 	.globl _g_SLTSL
 	.globl _g_GRPACY
 	.globl _g_GRPACX
@@ -384,8 +383,6 @@ _TickThrowIn_s_ForceThrowTimer_65537_1778:
 ; ram data
 ;--------------------------------------------------------
 	.area _INITIALIZED
-_g_GkIsGroundKick::
-	.ds 1
 _g_ponPonPatternIndex::
 	.ds 1
 _g_PonPonGrilsPoseCounter::
@@ -10450,8 +10447,6 @@ _TickShotCursor::
 	ret
 	.area _SEG2
 	.area _INITIALIZER
-__xinit__g_GkIsGroundKick:
-	.db #0x00	; 0
 __xinit__g_ponPonPatternIndex:
 	.db #0x00	; 0
 __xinit__g_PonPonGrilsPoseCounter:
