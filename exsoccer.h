@@ -105,7 +105,7 @@ typedef struct TeamStats
 
 #define DEFENDER_MAX_Y_UP                   180 // Difensori Team 1 non salgono oltre qui (met? campo alta)
 #define DEFENDER_MIN_Y_DOWN                 300 // Difensori Team 2 non scendono oltre qui (met? campo bassa)
-#define MATCH_DURATION                      120
+#define MATCH_DURATION                      2 //120
 
 #define PLAYER_STATUS_NONE                  0
 #define PLAYER_STATUS_HAS_BALL              1
@@ -257,6 +257,7 @@ typedef struct TeamStats
 #define MATCH_BALL_ON_GOALKEEPER			13
 #define MATCH_BEFORE_OFFSIDE                14
 #define MATCH_PRESENTATION					15
+#define MATCH_VICTORY_LAP					16
 
 #define PON_PON_GIRLS_POSE_SPEED			3
 

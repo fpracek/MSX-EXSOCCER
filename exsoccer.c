@@ -257,7 +257,7 @@ void GameStart(){
 	g_FieldScrollSpeed=FIELD_SCROLL_PRESENTATION_SPEED;
 	g_FieldScrollingActionInProgress=NO_VALUE;
 	g_FieldCurrentYPosition=FIELD_TOP_Y;
-	g_Team1Score=0;
+	g_Team1Score=1;
 	g_Team2Score=0;
 	//g_Team1PaletteId=TEAM_BRA;
 	//g_Team2PaletteId=TEAM_GER;

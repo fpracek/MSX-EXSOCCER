@@ -1307,7 +1307,7 @@ _GameStart::
 	call	_V9_SetRegister
 ;./exsoccer.c:255: g_SecondsToEndOfMatch=MATCH_DURATION;
 	ld	hl, #_g_SecondsToEndOfMatch
-	ld	(hl), #0x78
+	ld	(hl), #0x05
 ;./exsoccer.c:256: g_RestartKickTeamId=TEAM_1;
 	ld	hl, #_g_RestartKickTeamId
 	ld	(hl), #0x01
@@ -1320,8 +1320,8 @@ _GameStart::
 ;./exsoccer.c:259: g_FieldCurrentYPosition=FIELD_TOP_Y;
 	ld	hl, #0x0001
 	ld	(_g_FieldCurrentYPosition), hl
-;./exsoccer.c:260: g_Team1Score=0;
-	xor	a, a
+;./exsoccer.c:260: g_Team1Score=1;
+	ld	a, #0x01
 	ld	(#_g_Team1Score), a
 ;./exsoccer.c:261: g_Team2Score=0;
 	xor	a, a

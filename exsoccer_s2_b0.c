@@ -811,18 +811,16 @@ void TickCheckBallBoundaries(){
 	}
 }
 
-
-void TeamVictory(u8 teamId){
-
-}
 void TimeUp(){
     V9_SetBackgroundColor(1); // Ensure background is blue
+    SET_BANK_SEGMENT(2, 22); // Switch to Segment 22 for Victory Logic
     if (g_Team1Score == g_Team2Score) {
         PenaltyShots();
     } else {
         u8 winner = (g_Team1Score > g_Team2Score) ? TEAM_1 : TEAM_2;
         TeamVictory(winner);
     }
+    SET_BANK_SEGMENT(2, 1); // Restore Segment 1
 }
 
 u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId){
@@ -1149,6 +1147,14 @@ u8 SelectTeam(u8 cursorPatternId, u8 excludeIndex) {
     }
 }
 void ShowMenu(){
+	for(u8 i=0;i<20;i++){
+		struct V9_Sprite attr;
+		attr.D = 1;
+        V9_SetSpriteP1(i, &attr);
+	}
+	V9_SetScrollingBY(0);
+	//V9_SetSpriteEnable(FALSE);
+	V9_SetDisplayEnable(FALSE);
 	V9_FillVRAM(V9_P1_PGT_B, 0x00, 128*212); // Clean layer A pattern
     SET_BANK_SEGMENT(2, 18); 
 	V9_WriteVRAM(V9_P1_PGT_B + 8192L, g_Teams_Gray_part1, sizeof(g_Teams_Gray_part1));
@@ -1199,6 +1205,9 @@ void ShowMenu(){
 	
     V9_PrintLayerAStringAtPos(8,0,"  CPU 2 SELECT  ");
     g_Team2PaletteId = SelectTeam(SPRITE_CPU, g_Team1PaletteId);
+	struct V9_Sprite attr;
+	attr.D = 0;
+	V9_SetSpriteP1(20, &attr);
 
 	V9_SetDisplayEnable(FALSE);
 
@@ -1230,7 +1239,7 @@ void ShowMenu(){
     InitPalette();
     ShowField();
 	V9_SetDisplayEnable(TRUE);
-
+	
 	V9_SetInterruptLine(71);
     V9_SetInterrupt(V9_INT_VBLANK | V9_INT_HBLANK);
 }
@@ -1948,9 +1957,5 @@ void TickShotCursor() {
         attr.Y = 216;
         V9_SetSpriteP1(16, &attr);
     }
-}
-
-void PenaltyShots() {
-    for(;;);
 }
 
