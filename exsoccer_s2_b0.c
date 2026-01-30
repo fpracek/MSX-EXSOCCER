@@ -204,6 +204,7 @@ void V9_PutLayerATileAtPos(u8 x, u8 y, u16 tileId) {
 void V9_PutLayerBTileAtPos(u8 x, u8 y, u16 tileId) {
     V9_Poke16(V9_CellAddrP1B(x,y), tileId);
 }
+
 void InitPonPonGirls(){
 	g_ponPonPatternIndex=0;
 	u8 pos[6]={30,50,70,175,195,215};
@@ -811,9 +812,17 @@ void TickCheckBallBoundaries(){
 }
 
 
+void TeamVictory(u8 teamId){
 
+}
 void TimeUp(){
-
+    V9_SetBackgroundColor(1); // Ensure background is blue
+    if (g_Team1Score == g_Team2Score) {
+        PenaltyShots();
+    } else {
+        u8 winner = (g_Team1Score > g_Team2Score) ? TEAM_1 : TEAM_2;
+        TeamVictory(winner);
+    }
 }
 
 u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId){
@@ -1940,3 +1949,8 @@ void TickShotCursor() {
         V9_SetSpriteP1(16, &attr);
     }
 }
+
+void PenaltyShots() {
+    for(;;);
+}
+

@@ -48,7 +48,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      000026AB  l__SEG1                         
      0000372C  l__CODE                         
      00003C00  l__SEG6                         
-     00003D79  l__SEG2                         
+     00003DAD  l__SEG2                         
      00004000  l__SEG11                        
      00004000  l__SEG12                        
      00004000  l__SEG13                        
@@ -693,7 +693,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG2                               00020100    00003D79 =       15737. bytes (REL,CON)
+_SEG2                               00020100    00003DAD =       15789. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -719,20 +719,23 @@ _SEG2                               00020100    00003D79 =       15737. bytes (R
      000213DE  _GetJoystick2Direction             exsoccer_s2_b0
      000213E3  _ShowFieldZone                     exsoccer_s2_b0
      000213E7  _TickCheckBallBoundaries           exsoccer_s2_b0
-     00021594  _TimeUp                            exsoccer_s2_b0
-     00021595  _GetClosestPlayerToBall            exsoccer_s2_b0
-     000216B8  _Math_Abs32                        exsoccer_s2_b0
-     000216CE  _GetBestPassTarget                 exsoccer_s2_b0
-     00021ABE  _UpdatePassTarget                  exsoccer_s2_b0
-     00021AFB  _GoalkeeperWithBall                exsoccer_s2_b0
-     00021D04  _SelectTeam                        exsoccer_s2_b0
-     00021E95  _ShowMenu                          exsoccer_s2_b0
-     00022192  _LoadPresentation                  exsoccer_s2_b0
-     00022286  _TickGoalkeeperAnimation           exsoccer_s2_b0
-     000224D3  _PerformShot                       exsoccer_s2_b0
-     000227B0  _TickBallFlying                    exsoccer_s2_b0
-     000230C1  _TickThrowIn                       exsoccer_s2_b0
-     00023D78  _TickShotCursor                    exsoccer_s2_b0
+     00021594  _TeamVictory                       exsoccer_s2_b0
+     00021595  _TimeUp                            exsoccer_s2_b0
+     000215C6  _GetClosestPlayerToBall            exsoccer_s2_b0
+     000216E9  _Math_Abs32                        exsoccer_s2_b0
+     000216FF  _GetBestPassTarget                 exsoccer_s2_b0
+     00021AEF  _UpdatePassTarget                  exsoccer_s2_b0
+     00021B2C  _GoalkeeperWithBall                exsoccer_s2_b0
+     00021D35  _SelectTeam                        exsoccer_s2_b0
+     00021EC6  _ShowMenu                          exsoccer_s2_b0
+     000221C3  _LoadPresentation                  exsoccer_s2_b0
+     000222B7  _TickGoalkeeperAnimation           exsoccer_s2_b0
+     00022504  _PerformShot                       exsoccer_s2_b0
+     000227E1  _TickBallFlying                    exsoccer_s2_b0
+     000230F2  _TickThrowIn                       exsoccer_s2_b0
+     00023DA9  _TickShotCursor                    exsoccer_s2_b0
+     00023EAA  _PenaltyShots                      exsoccer_s2_b0
+
 ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
 Hexadecimal  [32-Bits]
 

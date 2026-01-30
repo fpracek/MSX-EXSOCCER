@@ -1575,7 +1575,7 @@ _SetTeamsPresentationSpritesPosition::
 	ld	de, #0x0007
 	call	__modsint
 	pop	bc
-	ld	hl, #_SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1365
+	ld	hl, #_SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1366
 	add	hl, de
 	ld	a, (hl)
 	pop	de
@@ -1603,7 +1603,7 @@ _SetTeamsPresentationSpritesPosition::
 	ld	sp, ix
 	pop	ix
 	ret
-_SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1365:
+_SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1366:
 	.db #0x00	; 0
 	.db #0x01	; 1
 	.db #0x04	; 4
@@ -3131,22 +3131,22 @@ _TickGoalCelebration::
 	ld	(bc), a
 00112$:
 ;./exsoccer.c:667: i8 dy = k_CelebDY[dir];
-	ld	a, #<(_TickGoalCelebration_k_CelebDY_131073_1501)
+	ld	a, #<(_TickGoalCelebration_k_CelebDY_131073_1502)
 	add	a, -2 (ix)
 	ld	l, a
 ;	spillPairReg hl
 ;	spillPairReg hl
-	ld	a, #>(_TickGoalCelebration_k_CelebDY_131073_1501)
+	ld	a, #>(_TickGoalCelebration_k_CelebDY_131073_1502)
 	adc	a, #0x00
 	ld	h, a
 	ld	c, (hl)
 ;./exsoccer.c:668: i8 dx = k_CelebDX[dir];
-	ld	a, #<(_TickGoalCelebration_k_CelebDX_131073_1501)
+	ld	a, #<(_TickGoalCelebration_k_CelebDX_131073_1502)
 	add	a, -2 (ix)
 	ld	l, a
 ;	spillPairReg hl
 ;	spillPairReg hl
-	ld	a, #>(_TickGoalCelebration_k_CelebDX_131073_1501)
+	ld	a, #>(_TickGoalCelebration_k_CelebDX_131073_1502)
 	adc	a, #0x00
 	ld	h, a
 	ld	b, (hl)
@@ -3553,7 +3553,7 @@ _TickGoalCelebration::
 	ld	sp, ix
 	pop	ix
 	ret
-_TickGoalCelebration_k_CelebDX_131073_1501:
+_TickGoalCelebration_k_CelebDX_131073_1502:
 	.db #0x00	;  0
 	.db #0x00	;  0
 	.db #0x01	;  1
@@ -3563,7 +3563,7 @@ _TickGoalCelebration_k_CelebDX_131073_1501:
 	.db #0xff	; -1
 	.db #0xff	; -1
 	.db #0xff	; -1
-_TickGoalCelebration_k_CelebDY_131073_1501:
+_TickGoalCelebration_k_CelebDY_131073_1502:
 	.db #0x00	;  0
 	.db #0xff	; -1
 	.db #0xff	; -1
@@ -4367,12 +4367,12 @@ _GetPatternIdByPoseAndDirection::
 	ld	h, a
 ;	spillPairReg hl
 ;	spillPairReg hl
-	ld	de, #_GetPatternIdByPoseAndDirection_k_MovePats_65537_1668
+	ld	de, #_GetPatternIdByPoseAndDirection_k_MovePats_65537_1669
 	add	hl, de
 	ld	a, (hl)
 ;./exsoccer.c:1006: }
 	ret
-_GetPatternIdByPoseAndDirection_k_MovePats_65537_1668:
+_GetPatternIdByPoseAndDirection_k_MovePats_65537_1669:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x02	; 2
@@ -4488,7 +4488,7 @@ _SetPlayerTarget::
 00193$:
 	ld	-7 (ix), a
 ;./exsoccer.c:1045: u16 tx = k_KO_X[role];
-	ld	bc, #_SetPlayerTarget_k_KO_X_196608_1673+0
+	ld	bc, #_SetPlayerTarget_k_KO_X_196608_1674+0
 	ld	l, -8 (ix)
 	ld	h, #0x00
 	add	hl, bc
@@ -4505,7 +4505,7 @@ _SetPlayerTarget::
 	ld	a, -7 (ix)
 	or	a, a
 	jr	Z, 00123$
-	ld	bc, #_SetPlayerTarget_k_KO_Y_T1_196608_1673+0
+	ld	bc, #_SetPlayerTarget_k_KO_Y_T1_196608_1674+0
 	ld	l, -3 (ix)
 	ld	h, -2 (ix)
 	add	hl, bc
@@ -4517,10 +4517,10 @@ _SetPlayerTarget::
 	jp	00124$
 00123$:
 	ld	a, -3 (ix)
-	add	a, #<(_SetPlayerTarget_k_KO_Y_T2_196608_1673)
+	add	a, #<(_SetPlayerTarget_k_KO_Y_T2_196608_1674)
 	ld	c, a
 	ld	a, -2 (ix)
-	adc	a, #>(_SetPlayerTarget_k_KO_Y_T2_196608_1673)
+	adc	a, #>(_SetPlayerTarget_k_KO_Y_T2_196608_1674)
 	ld	b, a
 	ld	a, (bc)
 	ld	-15 (ix), a
@@ -4606,7 +4606,7 @@ _SetPlayerTarget::
 	ld	sp, ix
 	pop	ix
 	ret
-_SetPlayerTarget_k_KO_X_196608_1673:
+_SetPlayerTarget_k_KO_X_196608_1674:
 	.db #0x78	; 120	'x'
 	.db #0x28	; 40
 	.db #0xc6	; 198
@@ -4614,7 +4614,7 @@ _SetPlayerTarget_k_KO_X_196608_1673:
 	.db #0x62	; 98	'b'
 	.db #0x28	; 40
 	.db #0xc6	; 198
-_SetPlayerTarget_k_KO_Y_T1_196608_1673:
+_SetPlayerTarget_k_KO_Y_T1_196608_1674:
 	.dw #0x01a8
 	.dw #0x0176
 	.dw #0x0176
@@ -4622,7 +4622,7 @@ _SetPlayerTarget_k_KO_Y_T1_196608_1673:
 	.dw #0x0144
 	.dw #0x011c
 	.dw #0x011c
-_SetPlayerTarget_k_KO_Y_T2_196608_1673:
+_SetPlayerTarget_k_KO_Y_T2_196608_1674:
 	.dw #0x0032
 	.dw #0x0082
 	.dw #0x0082

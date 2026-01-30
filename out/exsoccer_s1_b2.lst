@@ -336,13 +336,13 @@
                          0000FCB7   336 _g_GRPACX	=	0xfcb7
                          0000FCB9   337 _g_GRPACY	=	0xfcb9
                          0000FFFF   338 _g_SLTSL	=	0xffff
-    00000000                        339 _TickCornerKick_s_ForceKickTimer_65537_1153:
+    00000000                        339 _TickCornerKick_s_ForceKickTimer_65537_1154:
     00000000                        340 	.ds 2
-    00000002                        341 _TickCornerKick_joyMoved_196614_1187:
+    00000002                        341 _TickCornerKick_joyMoved_196614_1188:
     00000002                        342 	.ds 1
-    00000003                        343 _TickCornerKick_t1Latched_196615_1192:
+    00000003                        343 _TickCornerKick_t1Latched_196615_1193:
     00000003                        344 	.ds 1
-    00000004                        345 _TickCornerKick_joyMoved_196613_1195:
+    00000004                        345 _TickCornerKick_joyMoved_196613_1196:
     00000004                        346 	.ds 1
                                     347 ;--------------------------------------------------------
                                     348 ; ram data
@@ -361,15 +361,15 @@
                                     361 	.area _GSINIT
                                     362 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:47: static u16 s_ForceKickTimer = 0;
     00000000 21 00 00         [10]  363 	ld	hl, #0x0000
-    00000003 22r00r00         [16]  364 	ld	(_TickCornerKick_s_ForceKickTimer_65537_1153), hl
+    00000003 22r00r00         [16]  364 	ld	(_TickCornerKick_s_ForceKickTimer_65537_1154), hl
                                     365 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:197: static bool joyMoved = false;
-    00000006 FD 21r02r00      [14]  366 	ld	iy, #_TickCornerKick_joyMoved_196614_1187
+    00000006 FD 21r02r00      [14]  366 	ld	iy, #_TickCornerKick_joyMoved_196614_1188
     0000000A FD 36 00 00      [19]  367 	ld	0 (iy), #0x00
                                     368 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:223: static bool t1Latched = false;
-    0000000E FD 21r03r00      [14]  369 	ld	iy, #_TickCornerKick_t1Latched_196615_1192
+    0000000E FD 21r03r00      [14]  369 	ld	iy, #_TickCornerKick_t1Latched_196615_1193
     00000012 FD 36 00 00      [19]  370 	ld	0 (iy), #0x00
                                     371 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:243: static bool joyMoved = false;
-    00000016 FD 21r04r00      [14]  372 	ld	iy, #_TickCornerKick_joyMoved_196613_1195
+    00000016 FD 21r04r00      [14]  372 	ld	iy, #_TickCornerKick_joyMoved_196613_1196
     0000001A FD 36 00 00      [19]  373 	ld	0 (iy), #0x00
                                     374 ;--------------------------------------------------------
                                     375 ; Home
@@ -400,7 +400,7 @@
     00000018 B7               [ 4]  400 	or	a, a
     00000019 20 06            [12]  401 	jr	NZ, 00104$
     0000001B 21 00 00         [10]  402 	ld	hl, #0x0000
-    0000001E 22r00r00         [16]  403 	ld	(_TickCornerKick_s_ForceKickTimer_65537_1153), hl
+    0000001E 22r00r00         [16]  403 	ld	(_TickCornerKick_s_ForceKickTimer_65537_1154), hl
     00000021                        404 00104$:
                                     405 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:54: if (g_Ball.PossessionPlayerId != NO_VALUE) {
     00000021 3Ar06r00         [13]  406 	ld	a, (#(_g_Ball + 6) + 0)
@@ -1328,9 +1328,9 @@
                                    1328 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:170: if (isHuman) s_ForceKickTimer++;
     000006D1 B7               [ 4] 1329 	or	a, a
     000006D2 28 07            [12] 1330 	jr	Z, 00173$
-    000006D4 2Ar00r00         [16] 1331 	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1153)
+    000006D4 2Ar00r00         [16] 1331 	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1154)
     000006D7 23               [ 6] 1332 	inc	hl
-    000006D8 22r00r00         [16] 1333 	ld	(_TickCornerKick_s_ForceKickTimer_65537_1153), hl
+    000006D8 22r00r00         [16] 1333 	ld	(_TickCornerKick_s_ForceKickTimer_65537_1154), hl
     000006DB                       1334 00173$:
                                    1335 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:172: if (isHuman) {
     000006DB 78               [ 4] 1336 	ld	a, b
@@ -1476,7 +1476,7 @@
     000007E4 4F               [ 4] 1476 	ld	c, a
     000007E5 D6 07            [ 7] 1477 	sub	a, #0x07
     000007E7 20 1A            [12] 1478 	jr	NZ, 00204$
-    000007E9 3Ar02r00         [13] 1479 	ld	a, (_TickCornerKick_joyMoved_196614_1187+0)
+    000007E9 3Ar02r00         [13] 1479 	ld	a, (_TickCornerKick_joyMoved_196614_1188+0)
     000007EC B7               [ 4] 1480 	or	a, a
     000007ED 20 14            [12] 1481 	jr	NZ, 00204$
     000007EF DD 7E F9         [19] 1482 	ld	a, -7 (ix)
@@ -1485,7 +1485,7 @@
                                    1485 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:200: g_CornerKickTargetId = candLeft; joyMoved = true;
     000007F5 DD 7E F9         [19] 1486 	ld	a, -7 (ix)
     000007F8 32r00r00         [13] 1487 	ld	(_g_CornerKickTargetId+0), a
-    000007FB 21r02r00         [10] 1488 	ld	hl, #_TickCornerKick_joyMoved_196614_1187
+    000007FB 21r02r00         [10] 1488 	ld	hl, #_TickCornerKick_joyMoved_196614_1188
     000007FE 36 01            [10] 1489 	ld	(hl), #0x01
     00000800 C3r2Br08         [10] 1490 	jp	00205$
     00000803                       1491 00204$:
@@ -1493,7 +1493,7 @@
     00000803 79               [ 4] 1493 	ld	a, c
     00000804 D6 03            [ 7] 1494 	sub	a, #0x03
     00000806 20 1A            [12] 1495 	jr	NZ, 00199$
-    00000808 3Ar02r00         [13] 1496 	ld	a, (_TickCornerKick_joyMoved_196614_1187+0)
+    00000808 3Ar02r00         [13] 1496 	ld	a, (_TickCornerKick_joyMoved_196614_1188+0)
     0000080B B7               [ 4] 1497 	or	a, a
     0000080C 20 14            [12] 1498 	jr	NZ, 00199$
     0000080E DD 7E FA         [19] 1499 	ld	a, -6 (ix)
@@ -1502,7 +1502,7 @@
                                    1502 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:202: g_CornerKickTargetId = candRight; joyMoved = true;
     00000814 DD 7E FA         [19] 1503 	ld	a, -6 (ix)
     00000817 32r00r00         [13] 1504 	ld	(_g_CornerKickTargetId+0), a
-    0000081A 21r02r00         [10] 1505 	ld	hl, #_TickCornerKick_joyMoved_196614_1187
+    0000081A 21r02r00         [10] 1505 	ld	hl, #_TickCornerKick_joyMoved_196614_1188
     0000081D 36 01            [10] 1506 	ld	(hl), #0x01
     0000081F C3r2Br08         [10] 1507 	jp	00205$
     00000822                       1508 00199$:
@@ -1511,7 +1511,7 @@
     00000823 B7               [ 4] 1511 	or	a, a
     00000824 20 05            [12] 1512 	jr	NZ, 00205$
                                    1513 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:204: joyMoved = false;
-    00000826 21r02r00         [10] 1514 	ld	hl, #_TickCornerKick_joyMoved_196614_1187
+    00000826 21r02r00         [10] 1514 	ld	hl, #_TickCornerKick_joyMoved_196614_1188
     00000829 36 00            [10] 1515 	ld	(hl), #0x00
     0000082B                       1516 00205$:
                                    1517 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:211: if (kickerId != NO_VALUE) {
@@ -1638,14 +1638,14 @@
     00000932 3Ar00r00         [13] 1638 	ld	a, (_g_Timer+0)
     00000935 D6 B4            [ 7] 1639 	sub	a, #0xb4
     00000937 20 05            [12] 1640 	jr	NZ, 00211$
-    00000939 21r03r00         [10] 1641 	ld	hl, #_TickCornerKick_t1Latched_196615_1192
+    00000939 21r03r00         [10] 1641 	ld	hl, #_TickCornerKick_t1Latched_196615_1193
     0000093C 36 01            [10] 1642 	ld	(hl), #0x01
     0000093E                       1643 00211$:
                                    1644 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:225: if (!t1Trigger) t1Latched = false;
     0000093E 79               [ 4] 1645 	ld	a, c
     0000093F B7               [ 4] 1646 	or	a, a
     00000940 20 05            [12] 1647 	jr	NZ, 00213$
-    00000942 21r03r00         [10] 1648 	ld	hl, #_TickCornerKick_t1Latched_196615_1192
+    00000942 21r03r00         [10] 1648 	ld	hl, #_TickCornerKick_t1Latched_196615_1193
     00000945 36 00            [10] 1649 	ld	(hl), #0x00
     00000947                       1650 00213$:
                                    1651 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:228: if (g_CornerKickTargetId != NO_VALUE) {
@@ -1664,11 +1664,11 @@
     0000095A 79               [ 4] 1664 	ld	a, c
     0000095B B7               [ 4] 1665 	or	a, a
     0000095C 28 06            [12] 1666 	jr	Z, 00219$
-    0000095E 3Ar03r00         [13] 1667 	ld	a, (_TickCornerKick_t1Latched_196615_1192+0)
+    0000095E 3Ar03r00         [13] 1667 	ld	a, (_TickCornerKick_t1Latched_196615_1193+0)
     00000961 B7               [ 4] 1668 	or	a, a
     00000962 28 0C            [12] 1669 	jr	Z, 00220$
     00000964                       1670 00219$:
-    00000964 2Ar00r00         [16] 1671 	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1153)
+    00000964 2Ar00r00         [16] 1671 	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1154)
     00000967 3E F0            [ 7] 1672 	ld	a, #0xf0
     00000969 BD               [ 4] 1673 	cp	a, l
     0000096A 3E 00            [ 7] 1674 	ld	a, #0x00
@@ -1718,7 +1718,7 @@
     000009AF D6 03            [ 7] 1718 	sub	a, #0x03
     000009B1 20 75            [12] 1719 	jr	NZ, 00235$
     000009B3                       1720 00238$:
-    000009B3 3Ar04r00         [13] 1721 	ld	a, (_TickCornerKick_joyMoved_196613_1195+0)
+    000009B3 3Ar04r00         [13] 1721 	ld	a, (_TickCornerKick_joyMoved_196613_1196+0)
     000009B6 B7               [ 4] 1722 	or	a, a
     000009B7 20 6F            [12] 1723 	jr	NZ, 00235$
                                    1724 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:248: u8 curr = g_CornerKickTargetId;
@@ -1792,7 +1792,7 @@
     00000A1E 38 AC            [12] 1792 	jr	C, 00229$
     00000A20                       1793 00231$:
                                    1794 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:258: joyMoved = true;
-    00000A20 21r04r00         [10] 1795 	ld	hl, #_TickCornerKick_joyMoved_196613_1195
+    00000A20 21r04r00         [10] 1795 	ld	hl, #_TickCornerKick_joyMoved_196613_1196
     00000A23 36 01            [10] 1796 	ld	(hl), #0x01
     00000A25 C3r31r0A         [10] 1797 	jp	00236$
     00000A28                       1798 00235$:
@@ -1800,7 +1800,7 @@
     00000A28 78               [ 4] 1800 	ld	a, b
     00000A29 B7               [ 4] 1801 	or	a, a
     00000A2A 20 05            [12] 1802 	jr	NZ, 00236$
-    00000A2C 21r04r00         [10] 1803 	ld	hl, #_TickCornerKick_joyMoved_196613_1195
+    00000A2C 21r04r00         [10] 1803 	ld	hl, #_TickCornerKick_joyMoved_196613_1196
     00000A2F 36 00            [10] 1804 	ld	(hl), #0x00
     00000A31                       1805 00236$:
                                    1806 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:261: if (g_CornerKickTargetId != NO_VALUE) {
@@ -1819,7 +1819,7 @@
     00000A44 DD 7E FC         [19] 1819 	ld	a, -4 (ix)
     00000A47 B7               [ 4] 1820 	or	a, a
     00000A48 20 0C            [12] 1821 	jr	NZ, 00244$
-    00000A4A 2Ar00r00         [16] 1822 	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1153)
+    00000A4A 2Ar00r00         [16] 1822 	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1154)
     00000A4D 3E F0            [ 7] 1823 	ld	a, #0xf0
     00000A4F BD               [ 4] 1824 	cp	a, l
     00000A50 3E 00            [ 7] 1825 	ld	a, #0x00
@@ -4050,7 +4050,7 @@
     0000174C 4E               [ 7] 4050 	ld	c, (hl)
     0000174D 23               [ 6] 4051 	inc	hl
     0000174E 46               [ 7] 4052 	ld	b, (hl)
-    0000174F 11r6Br18         [10] 4053 	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1265+0
+    0000174F 11r6Br18         [10] 4053 	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1266+0
     00001752 DD 6E FE         [19] 4054 	ld	l, -2 (ix)
     00001755 26 00            [ 7] 4055 	ld	h, #0x00
     00001757 19               [11] 4056 	add	hl, de
@@ -4076,7 +4076,7 @@
     0000176E 4E               [ 7] 4076 	ld	c, (hl)
     0000176F 23               [ 6] 4077 	inc	hl
     00001770 46               [ 7] 4078 	ld	b, (hl)
-    00001771 11r74r18         [10] 4079 	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1265+0
+    00001771 11r74r18         [10] 4079 	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1266+0
     00001774 DD 6E FE         [19] 4080 	ld	l, -2 (ix)
     00001777 26 00            [ 7] 4081 	ld	h, #0x00
     00001779 19               [11] 4082 	add	hl, de
@@ -4228,7 +4228,7 @@
     00001866 DD F9            [10] 4228 	ld	sp, ix
     00001868 DD E1            [14] 4229 	pop	ix
     0000186A C9               [10] 4230 	ret
-    0000186B                       4231 _TickTeamJoystick_k_MoveDX_131075_1265:
+    0000186B                       4231 _TickTeamJoystick_k_MoveDX_131075_1266:
     0000186B 00                    4232 	.db #0x00	;  0
     0000186C 00                    4233 	.db #0x00	;  0
     0000186D 02                    4234 	.db #0x02	;  2
@@ -4238,7 +4238,7 @@
     00001871 FE                    4238 	.db #0xfe	; -2
     00001872 FE                    4239 	.db #0xfe	; -2
     00001873 FE                    4240 	.db #0xfe	; -2
-    00001874                       4241 _TickTeamJoystick_k_MoveDY_131075_1265:
+    00001874                       4241 _TickTeamJoystick_k_MoveDY_131075_1266:
     00001874 00                    4242 	.db #0x00	;  0
     00001875 FE                    4243 	.db #0xfe	; -2
     00001876 FE                    4244 	.db #0xfe	; -2

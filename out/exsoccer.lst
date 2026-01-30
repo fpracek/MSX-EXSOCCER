@@ -1575,7 +1575,7 @@
     000004C7 11 07 00         [10] 1575 	ld	de, #0x0007
     000004CA CDr00r00         [17] 1576 	call	__modsint
     000004CD C1               [10] 1577 	pop	bc
-    000004CE 21rF9r04         [10] 1578 	ld	hl, #_SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1365
+    000004CE 21rF9r04         [10] 1578 	ld	hl, #_SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1366
     000004D1 19               [11] 1579 	add	hl, de
     000004D2 7E               [ 7] 1580 	ld	a, (hl)
     000004D3 D1               [10] 1581 	pop	de
@@ -1603,7 +1603,7 @@
     000004F4 DD F9            [10] 1603 	ld	sp, ix
     000004F6 DD E1            [14] 1604 	pop	ix
     000004F8 C9               [10] 1605 	ret
-    000004F9                       1606 _SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1365:
+    000004F9                       1606 _SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1366:
     000004F9 00                    1607 	.db #0x00	; 0
     000004FA 01                    1608 	.db #0x01	; 1
     000004FB 04                    1609 	.db #0x04	; 4
@@ -3135,22 +3135,22 @@
     00000E16 02               [ 7] 3131 	ld	(bc), a
     00000E17                       3132 00112$:
                                    3133 ;./exsoccer.c:667: i8 dy = k_CelebDY[dir];
-    00000E17 3ErD2            [ 7] 3134 	ld	a, #<(_TickGoalCelebration_k_CelebDY_131073_1501)
+    00000E17 3ErD2            [ 7] 3134 	ld	a, #<(_TickGoalCelebration_k_CelebDY_131073_1502)
     00000E19 DD 86 FE         [19] 3135 	add	a, -2 (ix)
     00000E1C 6F               [ 4] 3136 	ld	l, a
                                    3137 ;	spillPairReg hl
                                    3138 ;	spillPairReg hl
-    00000E1D 3Es10            [ 7] 3139 	ld	a, #>(_TickGoalCelebration_k_CelebDY_131073_1501)
+    00000E1D 3Es10            [ 7] 3139 	ld	a, #>(_TickGoalCelebration_k_CelebDY_131073_1502)
     00000E1F CE 00            [ 7] 3140 	adc	a, #0x00
     00000E21 67               [ 4] 3141 	ld	h, a
     00000E22 4E               [ 7] 3142 	ld	c, (hl)
                                    3143 ;./exsoccer.c:668: i8 dx = k_CelebDX[dir];
-    00000E23 3ErC9            [ 7] 3144 	ld	a, #<(_TickGoalCelebration_k_CelebDX_131073_1501)
+    00000E23 3ErC9            [ 7] 3144 	ld	a, #<(_TickGoalCelebration_k_CelebDX_131073_1502)
     00000E25 DD 86 FE         [19] 3145 	add	a, -2 (ix)
     00000E28 6F               [ 4] 3146 	ld	l, a
                                    3147 ;	spillPairReg hl
                                    3148 ;	spillPairReg hl
-    00000E29 3Es10            [ 7] 3149 	ld	a, #>(_TickGoalCelebration_k_CelebDX_131073_1501)
+    00000E29 3Es10            [ 7] 3149 	ld	a, #>(_TickGoalCelebration_k_CelebDX_131073_1502)
     00000E2B CE 00            [ 7] 3150 	adc	a, #0x00
     00000E2D 67               [ 4] 3151 	ld	h, a
     00000E2E 46               [ 7] 3152 	ld	b, (hl)
@@ -3557,7 +3557,7 @@
     000010C4 DD F9            [10] 3553 	ld	sp, ix
     000010C6 DD E1            [14] 3554 	pop	ix
     000010C8 C9               [10] 3555 	ret
-    000010C9                       3556 _TickGoalCelebration_k_CelebDX_131073_1501:
+    000010C9                       3556 _TickGoalCelebration_k_CelebDX_131073_1502:
     000010C9 00                    3557 	.db #0x00	;  0
     000010CA 00                    3558 	.db #0x00	;  0
     000010CB 01                    3559 	.db #0x01	;  1
@@ -3567,7 +3567,7 @@
     000010CF FF                    3563 	.db #0xff	; -1
     000010D0 FF                    3564 	.db #0xff	; -1
     000010D1 FF                    3565 	.db #0xff	; -1
-    000010D2                       3566 _TickGoalCelebration_k_CelebDY_131073_1501:
+    000010D2                       3566 _TickGoalCelebration_k_CelebDY_131073_1502:
     000010D2 00                    3567 	.db #0x00	;  0
     000010D3 FF                    3568 	.db #0xff	; -1
     000010D4 FF                    3569 	.db #0xff	; -1
@@ -4385,12 +4385,12 @@
     00001539 67               [ 4] 4367 	ld	h, a
                                    4368 ;	spillPairReg hl
                                    4369 ;	spillPairReg hl
-    0000153A 11r40r15         [10] 4370 	ld	de, #_GetPatternIdByPoseAndDirection_k_MovePats_65537_1668
+    0000153A 11r40r15         [10] 4370 	ld	de, #_GetPatternIdByPoseAndDirection_k_MovePats_65537_1669
     0000153D 19               [11] 4371 	add	hl, de
     0000153E 7E               [ 7] 4372 	ld	a, (hl)
                                    4373 ;./exsoccer.c:1006: }
     0000153F C9               [10] 4374 	ret
-    00001540                       4375 _GetPatternIdByPoseAndDirection_k_MovePats_65537_1668:
+    00001540                       4375 _GetPatternIdByPoseAndDirection_k_MovePats_65537_1669:
     00001540 00                    4376 	.db #0x00	; 0
     00001541 00                    4377 	.db #0x00	; 0
     00001542 02                    4378 	.db #0x02	; 2
@@ -4506,7 +4506,7 @@
     000015ED                       4488 00193$:
     000015ED DD 77 F9         [19] 4489 	ld	-7 (ix), a
                                    4490 ;./exsoccer.c:1045: u16 tx = k_KO_X[role];
-    000015F0 01rDCr16         [10] 4491 	ld	bc, #_SetPlayerTarget_k_KO_X_196608_1673+0
+    000015F0 01rDCr16         [10] 4491 	ld	bc, #_SetPlayerTarget_k_KO_X_196608_1674+0
     000015F3 DD 6E F8         [19] 4492 	ld	l, -8 (ix)
     000015F6 26 00            [ 7] 4493 	ld	h, #0x00
     000015F8 09               [11] 4494 	add	hl, bc
@@ -4523,7 +4523,7 @@
     00001616 DD 7E F9         [19] 4505 	ld	a, -7 (ix)
     00001619 B7               [ 4] 4506 	or	a, a
     0000161A 28 16            [12] 4507 	jr	Z, 00123$
-    0000161C 01rE3r16         [10] 4508 	ld	bc, #_SetPlayerTarget_k_KO_Y_T1_196608_1673+0
+    0000161C 01rE3r16         [10] 4508 	ld	bc, #_SetPlayerTarget_k_KO_Y_T1_196608_1674+0
     0000161F DD 6E FD         [19] 4509 	ld	l, -3 (ix)
     00001622 DD 66 FE         [19] 4510 	ld	h, -2 (ix)
     00001625 09               [11] 4511 	add	hl, bc
@@ -4535,10 +4535,10 @@
     0000162F C3r47r16         [10] 4517 	jp	00124$
     00001632                       4518 00123$:
     00001632 DD 7E FD         [19] 4519 	ld	a, -3 (ix)
-    00001635 C6rF1            [ 7] 4520 	add	a, #<(_SetPlayerTarget_k_KO_Y_T2_196608_1673)
+    00001635 C6rF1            [ 7] 4520 	add	a, #<(_SetPlayerTarget_k_KO_Y_T2_196608_1674)
     00001637 4F               [ 4] 4521 	ld	c, a
     00001638 DD 7E FE         [19] 4522 	ld	a, -2 (ix)
-    0000163B CEs16            [ 7] 4523 	adc	a, #>(_SetPlayerTarget_k_KO_Y_T2_196608_1673)
+    0000163B CEs16            [ 7] 4523 	adc	a, #>(_SetPlayerTarget_k_KO_Y_T2_196608_1674)
     0000163D 47               [ 4] 4524 	ld	b, a
     0000163E 0A               [ 7] 4525 	ld	a, (bc)
     0000163F DD 77 F1         [19] 4526 	ld	-15 (ix), a
@@ -4624,7 +4624,7 @@
     000016D7 DD F9            [10] 4606 	ld	sp, ix
     000016D9 DD E1            [14] 4607 	pop	ix
     000016DB C9               [10] 4608 	ret
-    000016DC                       4609 _SetPlayerTarget_k_KO_X_196608_1673:
+    000016DC                       4609 _SetPlayerTarget_k_KO_X_196608_1674:
     000016DC 78                    4610 	.db #0x78	; 120	'x'
     000016DD 28                    4611 	.db #0x28	; 40
     000016DE C6                    4612 	.db #0xc6	; 198
@@ -4632,7 +4632,7 @@
     000016E0 62                    4614 	.db #0x62	; 98	'b'
     000016E1 28                    4615 	.db #0x28	; 40
     000016E2 C6                    4616 	.db #0xc6	; 198
-    000016E3                       4617 _SetPlayerTarget_k_KO_Y_T1_196608_1673:
+    000016E3                       4617 _SetPlayerTarget_k_KO_Y_T1_196608_1674:
     000016E3 A8 01                 4618 	.dw #0x01a8
     000016E5 76 01                 4619 	.dw #0x0176
     000016E7 76 01                 4620 	.dw #0x0176
@@ -4640,7 +4640,7 @@
     000016EB 44 01                 4622 	.dw #0x0144
     000016ED 1C 01                 4623 	.dw #0x011c
     000016EF 1C 01                 4624 	.dw #0x011c
-    000016F1                       4625 _SetPlayerTarget_k_KO_Y_T2_196608_1673:
+    000016F1                       4625 _SetPlayerTarget_k_KO_Y_T2_196608_1674:
     000016F1 32 00                 4626 	.dw #0x0032
     000016F3 82 00                 4627 	.dw #0x0082
     000016F5 82 00                 4628 	.dw #0x0082

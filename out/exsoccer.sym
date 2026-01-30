@@ -21,7 +21,7 @@ Symbol Table
   0 _GetNoMovingPlayerPatternId                                     00001451 GR
   0 _GetOffsideLineY                                                00000592 GR
   0 _GetPatternIdByPoseAndDirection                                 000014FC GR
-  0 _GetPatternIdByPoseAndDirection_k_MovePats_65537_1668           00001540 R
+  0 _GetPatternIdByPoseAndDirection_k_MovePats_65537_1669           00001540 R
     _GetPlayerIdByRole                                              ******** GX
   0 _GetTeamStats                                                   000016FF GR
   0 _GoalKick                                                       0000080C GR
@@ -47,9 +47,9 @@ Symbol Table
     _ResetPlayersInfo                                               ******** GX
   0 _SetPlayerBallPossession                                        00001BD1 GR
   0 _SetPlayerTarget                                                00001552 GR
-  0 _SetPlayerTarget_k_KO_X_196608_1673                             000016DC R
-  0 _SetPlayerTarget_k_KO_Y_T1_196608_1673                          000016E3 R
-  0 _SetPlayerTarget_k_KO_Y_T2_196608_1673                          000016F1 R
+  0 _SetPlayerTarget_k_KO_X_196608_1674                             000016DC R
+  0 _SetPlayerTarget_k_KO_Y_T1_196608_1674                          000016E3 R
+  0 _SetPlayerTarget_k_KO_Y_T2_196608_1674                          000016F1 R
     _SetTeam1Palette                                                ******** GX
     _SetTeam2Palette                                                ******** GX
   0 _SetTeamsPresentationSpritesPosition                            000003A6 GR
@@ -70,8 +70,8 @@ Symbol Table
     _TickCheckBallBoundaries                                        ******** GX
     _TickCornerKick                                                 ******** GX
   0 _TickGoalCelebration                                            00000CFF GR
-  0 _TickGoalCelebration_k_CelebDX_131073_1501                      000010C9 R
-  0 _TickGoalCelebration_k_CelebDY_131073_1501                      000010D2 R
+  0 _TickGoalCelebration_k_CelebDX_131073_1502                      000010C9 R
+  0 _TickGoalCelebration_k_CelebDY_131073_1502                      000010D2 R
   0 _TickGoalKick                                                   00001C0F GR
     _TickGoalkeeperAnimation                                        ******** GX
     _TickPlayerToOwnTarget                                          ******** GX

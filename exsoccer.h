@@ -375,3 +375,5 @@ void ShowMenu();
 void ShowField();
 void TickTeamSelection();
 bool IsOffside(u8 playerId);
+void TeamVictory(u8 teamId);
+void PenaltyShots();

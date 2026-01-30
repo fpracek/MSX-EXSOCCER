@@ -336,13 +336,13 @@ _g_LOGOPR	=	0xfb02
 _g_GRPACX	=	0xfcb7
 _g_GRPACY	=	0xfcb9
 _g_SLTSL	=	0xffff
-_TickCornerKick_s_ForceKickTimer_65537_1153:
+_TickCornerKick_s_ForceKickTimer_65537_1154:
 	.ds 2
-_TickCornerKick_joyMoved_196614_1187:
+_TickCornerKick_joyMoved_196614_1188:
 	.ds 1
-_TickCornerKick_t1Latched_196615_1192:
+_TickCornerKick_t1Latched_196615_1193:
 	.ds 1
-_TickCornerKick_joyMoved_196613_1195:
+_TickCornerKick_joyMoved_196613_1196:
 	.ds 1
 ;--------------------------------------------------------
 ; ram data
@@ -361,15 +361,15 @@ _TickCornerKick_joyMoved_196613_1195:
 	.area _GSINIT
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:47: static u16 s_ForceKickTimer = 0;
 	ld	hl, #0x0000
-	ld	(_TickCornerKick_s_ForceKickTimer_65537_1153), hl
+	ld	(_TickCornerKick_s_ForceKickTimer_65537_1154), hl
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:197: static bool joyMoved = false;
-	ld	iy, #_TickCornerKick_joyMoved_196614_1187
+	ld	iy, #_TickCornerKick_joyMoved_196614_1188
 	ld	0 (iy), #0x00
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:223: static bool t1Latched = false;
-	ld	iy, #_TickCornerKick_t1Latched_196615_1192
+	ld	iy, #_TickCornerKick_t1Latched_196615_1193
 	ld	0 (iy), #0x00
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:243: static bool joyMoved = false;
-	ld	iy, #_TickCornerKick_joyMoved_196613_1195
+	ld	iy, #_TickCornerKick_joyMoved_196613_1196
 	ld	0 (iy), #0x00
 ;--------------------------------------------------------
 ; Home
@@ -400,7 +400,7 @@ _TickCornerKick::
 	or	a, a
 	jr	NZ, 00104$
 	ld	hl, #0x0000
-	ld	(_TickCornerKick_s_ForceKickTimer_65537_1153), hl
+	ld	(_TickCornerKick_s_ForceKickTimer_65537_1154), hl
 00104$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:54: if (g_Ball.PossessionPlayerId != NO_VALUE) {
 	ld	a, (#(_g_Ball + 6) + 0)
@@ -1328,9 +1328,9 @@ _TickCornerKick::
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:170: if (isHuman) s_ForceKickTimer++;
 	or	a, a
 	jr	Z, 00173$
-	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1153)
+	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1154)
 	inc	hl
-	ld	(_TickCornerKick_s_ForceKickTimer_65537_1153), hl
+	ld	(_TickCornerKick_s_ForceKickTimer_65537_1154), hl
 00173$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:172: if (isHuman) {
 	ld	a, b
@@ -1476,7 +1476,7 @@ _TickCornerKick::
 	ld	c, a
 	sub	a, #0x07
 	jr	NZ, 00204$
-	ld	a, (_TickCornerKick_joyMoved_196614_1187+0)
+	ld	a, (_TickCornerKick_joyMoved_196614_1188+0)
 	or	a, a
 	jr	NZ, 00204$
 	ld	a, -7 (ix)
@@ -1485,7 +1485,7 @@ _TickCornerKick::
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:200: g_CornerKickTargetId = candLeft; joyMoved = true;
 	ld	a, -7 (ix)
 	ld	(_g_CornerKickTargetId+0), a
-	ld	hl, #_TickCornerKick_joyMoved_196614_1187
+	ld	hl, #_TickCornerKick_joyMoved_196614_1188
 	ld	(hl), #0x01
 	jp	00205$
 00204$:
@@ -1493,7 +1493,7 @@ _TickCornerKick::
 	ld	a, c
 	sub	a, #0x03
 	jr	NZ, 00199$
-	ld	a, (_TickCornerKick_joyMoved_196614_1187+0)
+	ld	a, (_TickCornerKick_joyMoved_196614_1188+0)
 	or	a, a
 	jr	NZ, 00199$
 	ld	a, -6 (ix)
@@ -1502,7 +1502,7 @@ _TickCornerKick::
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:202: g_CornerKickTargetId = candRight; joyMoved = true;
 	ld	a, -6 (ix)
 	ld	(_g_CornerKickTargetId+0), a
-	ld	hl, #_TickCornerKick_joyMoved_196614_1187
+	ld	hl, #_TickCornerKick_joyMoved_196614_1188
 	ld	(hl), #0x01
 	jp	00205$
 00199$:
@@ -1511,7 +1511,7 @@ _TickCornerKick::
 	or	a, a
 	jr	NZ, 00205$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:204: joyMoved = false;
-	ld	hl, #_TickCornerKick_joyMoved_196614_1187
+	ld	hl, #_TickCornerKick_joyMoved_196614_1188
 	ld	(hl), #0x00
 00205$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:211: if (kickerId != NO_VALUE) {
@@ -1638,14 +1638,14 @@ _TickCornerKick::
 	ld	a, (_g_Timer+0)
 	sub	a, #0xb4
 	jr	NZ, 00211$
-	ld	hl, #_TickCornerKick_t1Latched_196615_1192
+	ld	hl, #_TickCornerKick_t1Latched_196615_1193
 	ld	(hl), #0x01
 00211$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:225: if (!t1Trigger) t1Latched = false;
 	ld	a, c
 	or	a, a
 	jr	NZ, 00213$
-	ld	hl, #_TickCornerKick_t1Latched_196615_1192
+	ld	hl, #_TickCornerKick_t1Latched_196615_1193
 	ld	(hl), #0x00
 00213$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:228: if (g_CornerKickTargetId != NO_VALUE) {
@@ -1664,11 +1664,11 @@ _TickCornerKick::
 	ld	a, c
 	or	a, a
 	jr	Z, 00219$
-	ld	a, (_TickCornerKick_t1Latched_196615_1192+0)
+	ld	a, (_TickCornerKick_t1Latched_196615_1193+0)
 	or	a, a
 	jr	Z, 00220$
 00219$:
-	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1153)
+	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1154)
 	ld	a, #0xf0
 	cp	a, l
 	ld	a, #0x00
@@ -1718,7 +1718,7 @@ _TickCornerKick::
 	sub	a, #0x03
 	jr	NZ, 00235$
 00238$:
-	ld	a, (_TickCornerKick_joyMoved_196613_1195+0)
+	ld	a, (_TickCornerKick_joyMoved_196613_1196+0)
 	or	a, a
 	jr	NZ, 00235$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:248: u8 curr = g_CornerKickTargetId;
@@ -1792,7 +1792,7 @@ _TickCornerKick::
 	jr	C, 00229$
 00231$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:258: joyMoved = true;
-	ld	hl, #_TickCornerKick_joyMoved_196613_1195
+	ld	hl, #_TickCornerKick_joyMoved_196613_1196
 	ld	(hl), #0x01
 	jp	00236$
 00235$:
@@ -1800,7 +1800,7 @@ _TickCornerKick::
 	ld	a, b
 	or	a, a
 	jr	NZ, 00236$
-	ld	hl, #_TickCornerKick_joyMoved_196613_1195
+	ld	hl, #_TickCornerKick_joyMoved_196613_1196
 	ld	(hl), #0x00
 00236$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s1_b2.c:261: if (g_CornerKickTargetId != NO_VALUE) {
@@ -1819,7 +1819,7 @@ _TickCornerKick::
 	ld	a, -4 (ix)
 	or	a, a
 	jr	NZ, 00244$
-	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1153)
+	ld	hl, (_TickCornerKick_s_ForceKickTimer_65537_1154)
 	ld	a, #0xf0
 	cp	a, l
 	ld	a, #0x00
@@ -4050,7 +4050,7 @@ _TickTeamJoystick::
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1265+0
+	ld	de, #_TickTeamJoystick_k_MoveDX_131075_1266+0
 	ld	l, -2 (ix)
 	ld	h, #0x00
 	add	hl, de
@@ -4076,7 +4076,7 @@ _TickTeamJoystick::
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1265+0
+	ld	de, #_TickTeamJoystick_k_MoveDY_131075_1266+0
 	ld	l, -2 (ix)
 	ld	h, #0x00
 	add	hl, de
@@ -4228,7 +4228,7 @@ _TickTeamJoystick::
 	ld	sp, ix
 	pop	ix
 	ret
-_TickTeamJoystick_k_MoveDX_131075_1265:
+_TickTeamJoystick_k_MoveDX_131075_1266:
 	.db #0x00	;  0
 	.db #0x00	;  0
 	.db #0x02	;  2
@@ -4238,7 +4238,7 @@ _TickTeamJoystick_k_MoveDX_131075_1265:
 	.db #0xfe	; -2
 	.db #0xfe	; -2
 	.db #0xfe	; -2
-_TickTeamJoystick_k_MoveDY_131075_1265:
+_TickTeamJoystick_k_MoveDY_131075_1266:
 	.db #0x00	;  0
 	.db #0xfe	; -2
 	.db #0xfe	; -2

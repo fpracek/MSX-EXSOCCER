@@ -31,16 +31,16 @@ Symbol Table
   7 _SetTeam2Palette                                                0000248F GR
   7 _TickBallCollision                                              00001D84 GR
   7 _TickCornerKick                                                 00000000 GR
-  1 _TickCornerKick_joyMoved_196613_1195                            00000004 R
-  1 _TickCornerKick_joyMoved_196614_1187                            00000002 R
-  1 _TickCornerKick_s_ForceKickTimer_65537_1153                     00000000 R
-  1 _TickCornerKick_t1Latched_196615_1192                           00000003 R
+  1 _TickCornerKick_joyMoved_196613_1196                            00000004 R
+  1 _TickCornerKick_joyMoved_196614_1188                            00000002 R
+  1 _TickCornerKick_s_ForceKickTimer_65537_1154                     00000000 R
+  1 _TickCornerKick_t1Latched_196615_1193                           00000003 R
   7 _TickFieldScrollingAction                                       00002501 GR
     _TickPlayerToOwnTarget                                          ******** GX
   7 _TickShowKickOff                                                000025F4 GR
   7 _TickTeamJoystick                                               00000ADD GR
-  7 _TickTeamJoystick_k_MoveDX_131075_1265                          0000186B R
-  7 _TickTeamJoystick_k_MoveDY_131075_1265                          00001874 R
+  7 _TickTeamJoystick_k_MoveDX_131075_1266                          0000186B R
+  7 _TickTeamJoystick_k_MoveDY_131075_1266                          00001874 R
   7 _TickTeamSelection                                              0000245F GR
     _V9_PrintLayerAStringAtPos                                      ******** GX
     _V9_SetPaletteEntry                                             ******** GX
