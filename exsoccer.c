@@ -30,7 +30,7 @@ char                g_History1[20] = "PLY:      ";
 char                g_History2[20] = "CPU:      ";
 u16 		        g_FrameCounter;
 int  		        g_FieldCurrentYPosition=0;
-u8   		        g_FieldScrollingActionInProgress=0;
+u8   		        g_FieldScrollingActionInProgress;
 u8      	        g_Team1PaletteId;
 u8      	        g_Team2PaletteId;
 u8      	        g_Team1Score;
@@ -168,16 +168,19 @@ void PeopleMoving(bool isBasicMoving){
 	}
 }
 //-----------------------------------------------------------------------------
-// V9990 V-blank interrupt
-void V9_InterruptVBlank()
-{
+void V9_InterruptHBlank(){
+
+}
+void V9_InterruptVBlank(){
     if(g_MatchStatus==MATCH_PRESENTATION){
         g_Timer++;
         return;
     }
-	g_VSynch = TRUE;
-	if (g_FieldScrollingActionInProgress != NO_VALUE) {
 
+	
+	g_VSynch = TRUE;
+
+	if (g_FieldScrollingActionInProgress != NO_VALUE) {
 		switch (g_FieldScrollingActionInProgress) {
 		case FIELD_NORTH_ZONE:
 			g_FieldCurrentYPosition = g_FieldCurrentYPosition - g_FieldScrollSpeed;
@@ -188,7 +191,7 @@ void V9_InterruptVBlank()
 			}
 			break;
 		case FIELD_CENTRAL_ZONE:
-			if (g_FieldCurrentYPosition != 136) {
+ 			if (g_FieldCurrentYPosition != 136) {
 				if (g_FieldCurrentYPosition > FIELD_CENTRAL_Y) {
 					g_FieldCurrentYPosition = g_FieldCurrentYPosition - g_FieldScrollSpeed;
 					if(g_FieldCurrentYPosition < 136) g_FieldCurrentYPosition = 136;
@@ -218,41 +221,17 @@ void V9_InterruptVBlank()
         }
 	}
 }
-//-----------------------------------------------------------------------------
-// V9990 H-blank interrupt
-void V9_InterruptHBlank()
-{
 
-}
 //-----------------------------------------------------------------------------
 // V9990 Command end interrupt
 void V9_InterruptCommand()
 {
 	
 }
-//void InterruptHook()
-//{
-//__asm
-//	// Flush VDP interruption signal
-//	in		a, (P_VDP_STAT)
-//
-//	// Call VDP interruption handler
-//	in		a, (V9_P06)
-//	out		(V9_P06), a
-//	// V-Blank interruption
-//	rra
-//	call	c, _V9_InterruptVBlank
-//	// H-Blank interruption
-//	rra
-//	call	c, _V9_InterruptHBlank
-//	// Command end interruption
-//	rra
-//	call	c, _V9_InterruptCommand
-//__endasm;
-//}
+
 //-----------------------------------------------------------------------------
 void GameStart(){
-    //DEBUG_LOGNUM("\n-->",g_ThrowInPlayerId);
+    
     g_PassTargetPlayer=NO_VALUE;
     g_Team1ActivePlayer=NO_VALUE;
 	g_FioBre=false;
@@ -264,8 +243,6 @@ void GameStart(){
 	g_FieldCurrentYPosition=FIELD_TOP_Y;
 	g_Team1Score=1;
 	g_Team2Score=0;
-	//g_Team1PaletteId=TEAM_BRA;
-	//g_Team2PaletteId=TEAM_GER;
 	V9_SetScrollingY(0);
 	V9_SetScrollingBY(1);
 	SetTeam1Palette();
@@ -609,10 +586,55 @@ void InitializeV9990()
 
 
 }
+void TickShotCursor() {
+    // 1. Update Position
+    g_ShotCursorX += g_ShotCursorDir;
+    if (g_ShotCursorX < (GOAL_X_MIN - 30)) {
+        g_ShotCursorX = (GOAL_X_MIN - 30);
+        g_ShotCursorDir = -g_ShotCursorDir;
+    }
+    if (g_ShotCursorX > (GOAL_X_MAX + 30)) {
+        g_ShotCursorX = (GOAL_X_MAX + 30);
+        g_ShotCursorDir = -g_ShotCursorDir;
+    }
+
+    // 2. Draw Sprite
+    bool show = false;
+    if (g_MatchStatus == MATCH_IN_ACTION && g_ActiveFieldZone == FIELD_NORTH_ZONE) {
+        if (g_Ball.PossessionPlayerId != NO_VALUE) {
+            if (g_Players[g_Ball.PossessionPlayerId].TeamId == TEAM_1) {
+                show = true;
+            }
+        }
+    }
+
+    struct V9_Sprite attr;
+    if (show) {
+        // Calculate Screen Y
+        int screenY = (FIELD_BOUND_Y_TOP - 30) - g_FieldCurrentYPosition;
+        
+        // Hide if scrolled off
+        if (screenY < -16 || screenY > 212) {
+             attr.Y = 216; 
+        } else {
+             attr.Y = (u8)screenY;
+        }
+        
+        attr.X = (u8)g_ShotCursorX;
+        attr.Pattern = SPRITE_DOWN_ARROW;
+        attr.P = 1; 
+        attr.SC = 0; 
+        
+        V9_SetSpriteP1(16, &attr);
+    } else {
+        // Hide
+        attr.Y = 216;
+        V9_SetSpriteP1(16, &attr);
+    }
+}
 //-----------------------------------------------------------------------------
 // Load sprites
 void LoadSprites(){
-	//V9_FillVRAM(V9_P1_SGT, 0x00, 128*212); // Clean layer A pattern
 	SET_BANK_SEGMENT(2, 8); 
 	V9_SetSpritePatternAddr(V9_P1_SGT_08000);
 	V9_WriteVRAM(0x08000, g_Sprites1, sizeof(g_Sprites1));	
@@ -772,7 +794,7 @@ void main()
 	V9_SetPort(V9_P15, 0x10);
     
 
-	GameStart();
+	//GameStart();
 	MainGameLoop();
 	
 

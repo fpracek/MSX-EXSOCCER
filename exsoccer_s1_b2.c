@@ -1223,53 +1223,7 @@ const u16* GetTeamPaletteById(u8 id){
 }
 
 
-void TickFieldScrollingAction(){
 
-	if(g_FieldScrollingActionInProgress!=NO_VALUE){
-		
-		switch (g_FieldScrollingActionInProgress){
-			case FIELD_NORTH_ZONE:
-				g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
-				if(g_FieldCurrentYPosition<0){
-					g_FieldCurrentYPosition=1;
-					g_FieldScrollingActionInProgress=NO_VALUE;
-					g_ActiveFieldZone=FIELD_NORTH_ZONE;
-				}
-				break;
-			case FIELD_CENTRAL_ZONE:
-				if(g_FieldCurrentYPosition!=136){
-					if(g_FieldCurrentYPosition>FIELD_CENTRAL_Y){
-						g_FieldCurrentYPosition=g_FieldCurrentYPosition-g_FieldScrollSpeed;
-					}
-					else{
-						g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
-					}
-
-				}
-				else{
-					g_FieldScrollingActionInProgress=NO_VALUE;
-					g_ActiveFieldZone=FIELD_CENTRAL_ZONE;
-					if(g_MatchStatus==MATCH_NOT_STARTED){
-						g_MatchStatus=MATCH_BEFORE_KICK_OFF;
-						for(u8 i=0;i<15;i++){
-							SetPlayerTarget(i);
-						}
-						TickPlayerToOwnTarget();
-						
-					}
-				}
-				break;
-			case FIELD_SOUTH_ZONE:
-				g_FieldCurrentYPosition=g_FieldCurrentYPosition+g_FieldScrollSpeed;
-				if(g_FieldCurrentYPosition>=FIELD_BOTTOM_Y){
-					g_ActiveFieldZone=FIELD_SOUTH_ZONE;
-					g_FieldScrollingActionInProgress=NO_VALUE;
-				}
-				break;
-		}
-		V9_SetScrollingBY(g_FieldCurrentYPosition);
-	}
-}
 
 void TickShowKickOff(){
 	if(g_MatchStatus==MATCH_KICK_OFF){

@@ -81,9 +81,7 @@ void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str)
 
 
 
-void TickP1(){
-	TickFieldScrollingAction();
-}
+
 
 // *** SPRITE FUNCTIONS ***
 
@@ -372,7 +370,6 @@ void PutPlayerSprite(u8 playerId){
 	
 	attr.X = g_Players[playerId].X;
 	attr.P = 1;
-	
 	V9_SetSpriteP1(playerId, &attr);
 
 }
@@ -1236,10 +1233,11 @@ void ShowMenu(){
 	
     V9_PrintLayerAStringAtPos(8,0,"  CPU 2 SELECT  ");
     g_Team2PaletteId = SelectTeam(SPRITE_CPU, g_Team1PaletteId);
-	struct V9_Sprite attr;
-	attr.D = 1; // Hide cursor
-	V9_SetSpriteP1(0, &attr);
 
+	struct V9_Sprite attr;
+	attr.D = 1; 
+	V9_SetSpriteP1(20, &attr);
+	
 	V9_SetDisplayEnable(FALSE);
 	V9_SetInterrupt(V9_INT_NONE); // Disable interrupts for loading
 
@@ -1255,7 +1253,7 @@ void ShowMenu(){
 
 		SET_BANK_SEGMENT(2, 19); 
 		V9_SetPalette(0, 16, g_Buttons_palette);
-
+		V9_SelectPaletteP1(0,1);
 		u16 tileId=0;
 
 		for (u8 y=0;y<64;y++){
@@ -1274,8 +1272,10 @@ void ShowMenu(){
 	g_MatchStatus=MATCH_NOT_STARTED;
 	LoadP1LayerA();
 	LoadP1LayerB();
+
     InitPalette();
     ShowField();
+	
 	V9_SetDisplayEnable(TRUE);
 	
     V9_SetInterrupt(V9_INT_VBLANK);
@@ -1307,6 +1307,7 @@ void LoadPresentation(){
     {
         
     }
+
     g_MatchStatus=MATCH_NOT_STARTED;
     V9_SetInterrupt(V9_INT_NONE);
     V9_SetDisplayEnable(FALSE);
@@ -1948,49 +1949,4 @@ void TickThrowIn() {
     }
 }
 
-void TickShotCursor() {
-    // 1. Update Position
-    g_ShotCursorX += g_ShotCursorDir;
-    if (g_ShotCursorX < (GOAL_X_MIN - 30)) {
-        g_ShotCursorX = (GOAL_X_MIN - 30);
-        g_ShotCursorDir = -g_ShotCursorDir;
-    }
-    if (g_ShotCursorX > (GOAL_X_MAX + 30)) {
-        g_ShotCursorX = (GOAL_X_MAX + 30);
-        g_ShotCursorDir = -g_ShotCursorDir;
-    }
 
-    // 2. Draw Sprite
-    bool show = false;
-    if (g_MatchStatus == MATCH_IN_ACTION && g_ActiveFieldZone == FIELD_NORTH_ZONE) {
-        if (g_Ball.PossessionPlayerId != NO_VALUE) {
-            if (g_Players[g_Ball.PossessionPlayerId].TeamId == TEAM_1) {
-                show = true;
-            }
-        }
-    }
-
-    struct V9_Sprite attr;
-    if (show) {
-        // Calculate Screen Y
-        int screenY = (FIELD_BOUND_Y_TOP - 30) - g_FieldCurrentYPosition;
-        
-        // Hide if scrolled off
-        if (screenY < -16 || screenY > 212) {
-             attr.Y = 216; 
-        } else {
-             attr.Y = (u8)screenY;
-        }
-        
-        attr.X = (u8)g_ShotCursorX;
-        attr.Pattern = SPRITE_DOWN_ARROW;
-        attr.P = 1; 
-        attr.SC = 0; 
-        
-        V9_SetSpriteP1(16, &attr);
-    } else {
-        // Hide
-        attr.Y = 216;
-        V9_SetSpriteP1(16, &attr);
-    }
-}
