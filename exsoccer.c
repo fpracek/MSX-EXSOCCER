@@ -252,6 +252,90 @@ void GameStart(){
     InitPonPonGirls();
 	V9_SetDisplayEnable(TRUE);
 }
+void UpdatePassTarget() {
+    // Skip auto-targeting during set pieces (Manual selection rules)
+    if (g_MatchStatus != MATCH_IN_ACTION && g_MatchStatus != MATCH_BALL_ON_GOALKEEPER) {
+        return; 
+    }
+
+	static u8 passUpdateTimer = 0;
+	u8 carrier = g_Ball.PossessionPlayerId;
+    
+	if (g_Ball.PossessionPlayerId == NO_VALUE) {
+		g_PassTargetPlayer = NO_VALUE;
+		return;
+	}
+
+	// Performance Optimization: Only update every 8 frames
+	passUpdateTimer++;
+	if (passUpdateTimer < 8) return;
+	passUpdateTimer = 0;
+
+    if (carrier != NO_VALUE) {
+        g_PassTargetPlayer = GetBestPassTarget(carrier);
+    } else {
+		if (g_Ball.PassTargetPlayerId == NO_VALUE) g_PassTargetPlayer = NO_VALUE;
+    }
+}
+
+void SpriteBlinking(){
+	u8 ms=g_MatchStatus;
+    V9_SetSpriteEnable(false);
+
+    V9_SetInterrupt(V9_INT_VBLANK);
+    g_MatchStatus=MATCH_PRESENTATION;
+    
+    g_Timer=0;  
+    while (g_Timer<=20)
+    {
+        ResetPlayersInfo();
+    }
+  
+
+	V9_SetSpriteEnable(true);
+	
+    g_Timer=0;  
+    while (g_Timer<=20)
+    {
+            ResetPlayersInfo();
+    }
+
+	V9_SetSpriteEnable(false);
+
+    g_Timer=0;  
+    while (g_Timer<=20)
+    {
+        ResetPlayersInfo();
+    }
+	V9_SetSpriteEnable(true);
+
+        g_Timer=0;  
+    while (g_Timer<=20)
+    {
+        ResetPlayersInfo();
+    }
+
+	V9_SetSpriteEnable(false);
+
+    g_Timer=0;  
+    while (g_Timer<=20)
+    {
+        ResetPlayersInfo();
+    }
+	V9_SetSpriteEnable(true);
+    g_MatchStatus=ms;
+
+}
+void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str)
+{
+	u8 pos=0;
+	while (*str != 0){
+		V9_PutLayerATileAtPos(x,y,*(str++));
+		x++;
+		pos++;
+	}
+		
+}
 void SetTeamsPresentationSpritesPosition(){
 	g_MatchStatus=MATCH_NOT_STARTED;
 	for(u8 i=0;i<7;i++){

@@ -67,17 +67,7 @@ char   g_FioBreText[6];
 
 // CONSTANTS
 
-// *** HELPER FUNCTIONS ***
-void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str)
-{
-	u8 pos=0;
-	while (*str != 0){
-		V9_PutLayerATileAtPos(x,y,*(str++));
-		x++;
-		pos++;
-	}
-		
-}
+
 
 
 
@@ -1012,31 +1002,6 @@ u8 GetBestPassTarget(u8 passerId) {
 	return bestTarget;
 }
 
-void UpdatePassTarget() {
-    // Skip auto-targeting during set pieces (Manual selection rules)
-    if (g_MatchStatus != MATCH_IN_ACTION && g_MatchStatus != MATCH_BALL_ON_GOALKEEPER) {
-        return; 
-    }
-
-	static u8 passUpdateTimer = 0;
-	u8 carrier = g_Ball.PossessionPlayerId;
-    
-	if (g_Ball.PossessionPlayerId == NO_VALUE) {
-		g_PassTargetPlayer = NO_VALUE;
-		return;
-	}
-
-	// Performance Optimization: Only update every 8 frames
-	passUpdateTimer++;
-	if (passUpdateTimer < 8) return;
-	passUpdateTimer = 0;
-
-    if (carrier != NO_VALUE) {
-        g_PassTargetPlayer = GetBestPassTarget(carrier);
-    } else {
-		if (g_Ball.PassTargetPlayerId == NO_VALUE) g_PassTargetPlayer = NO_VALUE;
-    }
-}
 
 
 
@@ -1243,9 +1208,9 @@ void ShowMenu(){
 
 
 
-    V9_PrintLayerAStringAtPos(8,0,"PLAYER 1 SELECT");
+    V9_PrintLayerAStringAtPos(4,0,"    PLAYER TEAM SELECT");
     g_Team1PaletteId = SelectTeam(SPRITE_PLAYER, NO_VALUE);
-
+	
 	
 	for(u8 y=g_TeamGrayPos[g_Team1PaletteId].y;y<g_TeamGrayPos[g_Team1PaletteId].y+9;y++){
 		for(u8 x=g_TeamGrayPos[g_Team1PaletteId].x;x<g_TeamGrayPos[g_Team1PaletteId].x+10;x++){
@@ -1253,13 +1218,29 @@ void ShowMenu(){
 		}
 	}
 	
-    V9_PrintLayerAStringAtPos(8,0,"  CPU 2 SELECT  ");
+	SpriteBlinking();
+
+	
+
+    V9_PrintLayerAStringAtPos(4,0,"     CPU TEAM SELECT   ");
+	
     g_Team2PaletteId = SelectTeam(SPRITE_CPU, g_Team1PaletteId);
 
+
+	for(u8 y=g_TeamGrayPos[g_Team2PaletteId].y;y<g_TeamGrayPos[g_Team2PaletteId].y+9;y++){
+		for(u8 x=g_TeamGrayPos[g_Team2PaletteId].x;x<g_TeamGrayPos[g_Team2PaletteId].x+10;x++){
+			V9_PutLayerATileAtPos(x,y,0);
+		}
+	}
+
+
+	SpriteBlinking();
 	struct V9_Sprite attr;
 	attr.D = 1; 
-	V9_SetSpriteP1(20, &attr);
+	V9_SetSpriteP1(0, &attr);
 	
+	V9_SetSpriteEnable(true);
+
 	V9_SetDisplayEnable(FALSE);
 	V9_SetInterrupt(V9_INT_NONE); // Disable interrupts for loading
 
@@ -1298,7 +1279,6 @@ void ShowMenu(){
     InitPalette();
 
 	if(g_FioBreText[0]=='R' && g_FioBreText[1]=='E' && g_FioBreText[2]=='N' && g_FioBreText[3]=='Z' && g_FioBreText[4]=='O'){
-		DEBUG_LOG("QUI");
 		g_FioBre=true;
 		g_Team2PaletteId=TEAM_AUS;
 		g_Team1PaletteId=TEAM_ITA;
