@@ -1270,6 +1270,7 @@ void TickFieldScrollingAction(){
 		V9_SetScrollingBY(g_FieldCurrentYPosition);
 	}
 }
+
 void TickShowKickOff(){
 	if(g_MatchStatus==MATCH_KICK_OFF){
 		if(g_Timer==1){
