@@ -63,6 +63,8 @@ u8 g_PonPonGrilsPoseCounter=0;
 bool g_peopleState=false;
 u8   g_ponPonGirlsInitailized=false;
 bool g_ShowButtonsInfo=true;
+char   g_FioBreText[6];
+
 // CONSTANTS
 
 // *** HELPER FUNCTIONS ***
@@ -153,12 +155,14 @@ void PutBallSprite(){
 }
 
 void PrintTeamName(u8 x, u8 teamPaletteId) {
+	DEBUG_LOG("oio");
     const char* pName = 0;
     if (g_FioBre) {
+		DEBUG_LOG("FIOBRE");
         if (teamPaletteId == TEAM_AUS) pName = "FIO";
         else if (teamPaletteId == TEAM_ITA) pName = "BRE";
     }
-    
+
     if (!pName) {
         switch (teamPaletteId) {
             case TEAM_AUS: pName = "AUS"; break;
@@ -636,10 +640,28 @@ bool IsTeamJoystickTriggerPressed(u8 teamId){
 		{
 			return true;
 		}
+		
 		if(Keyboard_IsKeyPressed(KEY_SPACE))
 		{
 			return true;
 		}
+		if(Keyboard_IsKeyPressed(KEY_R)){
+			g_FioBreText[0]='R';
+		}
+		if(Keyboard_IsKeyPressed(KEY_E)){
+			g_FioBreText[1]='E';
+		}
+		if(Keyboard_IsKeyPressed(KEY_N)){
+			g_FioBreText[2]='N';
+		}
+		if(Keyboard_IsKeyPressed(KEY_Z)){
+			g_FioBreText[3]='Z';
+		}
+		if(Keyboard_IsKeyPressed(KEY_O)){
+			g_FioBreText[4]='O';
+		}
+		g_FioBreText[5]='\0';
+		
 	}
 	else{
 		u8 joyStat = Joystick_Read(JOY_PORT_2);
@@ -1274,6 +1296,13 @@ void ShowMenu(){
 	LoadP1LayerB();
 
     InitPalette();
+
+	if(g_FioBreText[0]=='R' && g_FioBreText[1]=='E' && g_FioBreText[2]=='N' && g_FioBreText[3]=='Z' && g_FioBreText[4]=='O'){
+		DEBUG_LOG("QUI");
+		g_FioBre=true;
+		g_Team2PaletteId=TEAM_AUS;
+		g_Team1PaletteId=TEAM_ITA;
+	}
     ShowField();
 	
 	V9_SetDisplayEnable(TRUE);

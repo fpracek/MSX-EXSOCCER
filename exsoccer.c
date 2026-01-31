@@ -54,7 +54,7 @@ u8                  g_ActionCooldown=0; // Debounce for steal/pass
 u8                  g_ShootCooldown=0;  // Cooldown specifically for shooting after restart
 u16                 g_ShotCursorX = 120;
 i8                  g_ShotCursorDir = 2;
-bool                g_FioBre=false;
+bool                g_FioBre;
 u8                  g_GoalScorerId = NO_VALUE;
 u8                  g_CornerKickSide = CORNER_SIDE_LEFT;
 u8                  g_GoalKickSide = CORNER_SIDE_LEFT;
@@ -234,14 +234,13 @@ void GameStart(){
     
     g_PassTargetPlayer=NO_VALUE;
     g_Team1ActivePlayer=NO_VALUE;
-	g_FioBre=false;
 	V9_SetDisplayEnable(FALSE);
     g_SecondsToEndOfMatch=MATCH_DURATION;
 	g_RestartKickTeamId=TEAM_1;
 	g_FieldScrollSpeed=FIELD_SCROLL_PRESENTATION_SPEED;
 	g_FieldScrollingActionInProgress=NO_VALUE;
 	g_FieldCurrentYPosition=FIELD_TOP_Y;
-	g_Team1Score=1;
+	g_Team1Score=0;
 	g_Team2Score=0;
 	V9_SetScrollingY(0);
 	V9_SetScrollingBY(1);

@@ -71,7 +71,6 @@
 	.globl _g_GoalKickSide
 	.globl _g_CornerKickSide
 	.globl _g_GoalScorerId
-	.globl _g_FioBre
 	.globl _g_ShotCursorDir
 	.globl _g_ShotCursorX
 	.globl _g_ShootCooldown
@@ -88,6 +87,7 @@
 	.globl _g_FieldCurrentYPosition
 	.globl _g_History2
 	.globl _g_History1
+	.globl _g_FioBre
 	.globl _g_SecondsToEndOfMatch
 	.globl _g_RestartKickTeamId
 	.globl _g_ActiveFieldZone
@@ -445,6 +445,8 @@ _g_RestartKickTeamId::
 	.ds 1
 _g_SecondsToEndOfMatch::
 	.ds 1
+_g_FioBre::
+	.ds 1
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -480,8 +482,6 @@ _g_ShootCooldown::
 _g_ShotCursorX::
 	.ds 2
 _g_ShotCursorDir::
-	.ds 1
-_g_FioBre::
 	.ds 1
 _g_GoalScorerId::
 	.ds 1
@@ -1305,9 +1305,6 @@ _GameStart::
 ;./exsoccer.c:236: g_Team1ActivePlayer=NO_VALUE;
 	ld	hl, #_g_Team1ActivePlayer
 	ld	(hl), #0xff
-;./exsoccer.c:237: g_FioBre=false;
-	ld	hl, #_g_FioBre
-	ld	(hl), #0x00
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
 	ld	a, #0x08
 	call	_V9_GetRegister
@@ -1317,45 +1314,45 @@ _GameStart::
 	res	7, l
 	ld	a, #0x08
 	call	_V9_SetRegister
-;./exsoccer.c:239: g_SecondsToEndOfMatch=MATCH_DURATION;
+;./exsoccer.c:238: g_SecondsToEndOfMatch=MATCH_DURATION;
 	ld	hl, #_g_SecondsToEndOfMatch
 	ld	(hl), #0x02
-;./exsoccer.c:240: g_RestartKickTeamId=TEAM_1;
+;./exsoccer.c:239: g_RestartKickTeamId=TEAM_1;
 	ld	hl, #_g_RestartKickTeamId
 	ld	(hl), #0x01
-;./exsoccer.c:241: g_FieldScrollSpeed=FIELD_SCROLL_PRESENTATION_SPEED;
+;./exsoccer.c:240: g_FieldScrollSpeed=FIELD_SCROLL_PRESENTATION_SPEED;
 	ld	hl, #_g_FieldScrollSpeed
 	ld	(hl), #0x01
-;./exsoccer.c:242: g_FieldScrollingActionInProgress=NO_VALUE;
+;./exsoccer.c:241: g_FieldScrollingActionInProgress=NO_VALUE;
 	ld	hl, #_g_FieldScrollingActionInProgress
 	ld	(hl), #0xff
-;./exsoccer.c:243: g_FieldCurrentYPosition=FIELD_TOP_Y;
+;./exsoccer.c:242: g_FieldCurrentYPosition=FIELD_TOP_Y;
 	ld	hl, #0x0001
 	ld	(_g_FieldCurrentYPosition), hl
-;./exsoccer.c:244: g_Team1Score=1;
+;./exsoccer.c:243: g_Team1Score=1;
 	ld	a, #0x01
 	ld	(#_g_Team1Score), a
-;./exsoccer.c:245: g_Team2Score=0;
+;./exsoccer.c:244: g_Team2Score=0;
 	xor	a, a
 	ld	(#_g_Team2Score), a
-;./exsoccer.c:246: V9_SetScrollingY(0);
+;./exsoccer.c:245: V9_SetScrollingY(0);
 	ld	l, h
 	call	_V9_SetScrollingY
-;./exsoccer.c:247: V9_SetScrollingBY(1);
+;./exsoccer.c:246: V9_SetScrollingBY(1);
 	ld	hl, #0x0001
 	call	_V9_SetScrollingBY
-;./exsoccer.c:248: SetTeam1Palette();
+;./exsoccer.c:247: SetTeam1Palette();
 	call	_SetTeam1Palette
-;./exsoccer.c:249: SetTeam2Palette();
+;./exsoccer.c:248: SetTeam2Palette();
 	call	_SetTeam2Palette
-;./exsoccer.c:250: SetTeamsPresentationSpritesPosition();
+;./exsoccer.c:249: SetTeamsPresentationSpritesPosition();
 	call	_SetTeamsPresentationSpritesPosition
-;./exsoccer.c:251: ShowFieldZone(FIELD_CENTRAL_ZONE);
+;./exsoccer.c:250: ShowFieldZone(FIELD_CENTRAL_ZONE);
 	ld	a, #0x01
 	call	_ShowFieldZone
-;./exsoccer.c:252: ShowHeaderInfo();
+;./exsoccer.c:251: ShowHeaderInfo();
 	call	_ShowHeaderInfo
-;./exsoccer.c:253: InitPonPonGirls();
+;./exsoccer.c:252: InitPonPonGirls();
 	call	_InitPonPonGirls
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:258: inline void V9_SetFlag(u8 reg, u8 mask, u8 flag) { V9_SetRegister(reg, V9_GetRegister(reg) & (~mask) | flag); }
 	ld	a, #0x08
@@ -1366,10 +1363,10 @@ _GameStart::
 ;	spillPairReg hl
 	set	7, l
 	ld	a, #0x08
-;./exsoccer.c:254: V9_SetDisplayEnable(TRUE);
-;./exsoccer.c:255: }
+;./exsoccer.c:253: V9_SetDisplayEnable(TRUE);
+;./exsoccer.c:254: }
 	jp	_V9_SetRegister
-;./exsoccer.c:256: void SetTeamsPresentationSpritesPosition(){
+;./exsoccer.c:255: void SetTeamsPresentationSpritesPosition(){
 ;	---------------------------------
 ; Function SetTeamsPresentationSpritesPosition
 ; ---------------------------------
@@ -1379,16 +1376,16 @@ _SetTeamsPresentationSpritesPosition::
 	add	ix,sp
 	push	af
 	push	af
-;./exsoccer.c:257: g_MatchStatus=MATCH_NOT_STARTED;
+;./exsoccer.c:256: g_MatchStatus=MATCH_NOT_STARTED;
 	ld	hl, #_g_MatchStatus
-;./exsoccer.c:258: for(u8 i=0;i<7;i++){
+;./exsoccer.c:257: for(u8 i=0;i<7;i++){
 	ld	(hl), #0x00
 	ld	c, (hl)
 00105$:
 	ld	a, c
 	sub	a, #0x07
 	jr	NC, 00101$
-;./exsoccer.c:259: g_Players[i].Y=230;
+;./exsoccer.c:258: g_Players[i].Y=230;
 	ld	b, #0x00
 	ld	l, c
 	ld	h, b
@@ -1407,7 +1404,7 @@ _SetTeamsPresentationSpritesPosition::
 	ld	(hl), #0xe6
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:260: g_Players[i].X=72+i*20;
+;./exsoccer.c:259: g_Players[i].X=72+i*20;
 	ld	a, -4 (ix)
 	add	a, #0x02
 	ld	-2 (ix), a
@@ -1431,29 +1428,29 @@ _SetTeamsPresentationSpritesPosition::
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-;./exsoccer.c:261: g_Players[i].PatternId=PLAYER_POSE_FRONT;
+;./exsoccer.c:260: g_Players[i].PatternId=PLAYER_POSE_FRONT;
 	pop	hl
 	push	hl
 	ld	de, #0x0008
 	add	hl, de
 	ld	(hl), #0x10
-;./exsoccer.c:262: g_Players[i].TeamId=TEAM_2;
+;./exsoccer.c:261: g_Players[i].TeamId=TEAM_2;
 	pop	hl
 	push	hl
 	ld	de, #0x0009
 	add	hl, de
 	ld	(hl), #0x02
-;./exsoccer.c:258: for(u8 i=0;i<7;i++){
+;./exsoccer.c:257: for(u8 i=0;i<7;i++){
 	inc	c
 	jp	00105$
 00101$:
-;./exsoccer.c:265: for(u8 i=7;i<14;i++){
+;./exsoccer.c:264: for(u8 i=7;i<14;i++){
 	ld	c, #0x07
 00108$:
 	ld	a, c
 	sub	a, #0x0e
 	jr	NC, 00102$
-;./exsoccer.c:266: g_Players[i].Y=250;
+;./exsoccer.c:265: g_Players[i].Y=250;
 	ld	b, #0x00
 	ld	l, c
 	ld	h, b
@@ -1470,7 +1467,7 @@ _SetTeamsPresentationSpritesPosition::
 	ld	(hl), #0xfa
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:267: g_Players[i].X=72+(i-7)*20;
+;./exsoccer.c:266: g_Players[i].X=72+(i-7)*20;
 	ld	hl, #0x0002
 	add	hl, de
 	ex	(sp), hl
@@ -1508,54 +1505,54 @@ _SetTeamsPresentationSpritesPosition::
 	inc	hl
 	ld	a, -1 (ix)
 	ld	(hl), a
-;./exsoccer.c:268: g_Players[i].PatternId=PLAYER_POSE_BACK;
+;./exsoccer.c:267: g_Players[i].PatternId=PLAYER_POSE_BACK;
 	ld	hl, #0x0008
 	add	hl, de
 	ld	(hl), #0x11
-;./exsoccer.c:269: g_Players[i].TeamId=TEAM_1;
+;./exsoccer.c:268: g_Players[i].TeamId=TEAM_1;
 	ld	hl, #0x0009
 	add	hl, de
 	ld	(hl), #0x01
-;./exsoccer.c:265: for(u8 i=7;i<14;i++){
+;./exsoccer.c:264: for(u8 i=7;i<14;i++){
 	inc	c
 	jp	00108$
 00102$:
-;./exsoccer.c:271: g_Players[REFEREE].Y=FIELD_POS_Y_CENTER;
+;./exsoccer.c:270: g_Players[REFEREE].Y=FIELD_POS_Y_CENTER;
 	ld	hl, #0x00f3
 	ld	((_g_Players + 294)), hl
-;./exsoccer.c:272: g_Players[REFEREE].X=30;
+;./exsoccer.c:271: g_Players[REFEREE].X=30;
 	ld	l, #0x1e
 	ld	((_g_Players + 296)), hl
-;./exsoccer.c:273: g_Players[REFEREE].PatternId=PLAYER_POSE_RIGHT;
+;./exsoccer.c:272: g_Players[REFEREE].PatternId=PLAYER_POSE_RIGHT;
 	ld	hl, #(_g_Players + 302)
 	ld	(hl), #0x9d
-;./exsoccer.c:274: g_Players[REFEREE].TeamId=REFEREE;
+;./exsoccer.c:273: g_Players[REFEREE].TeamId=REFEREE;
 	ld	hl, #(_g_Players + 303)
 	ld	(hl), #0x0e
-;./exsoccer.c:275: g_Players[REFEREE].LastPose=0;
+;./exsoccer.c:274: g_Players[REFEREE].LastPose=0;
 	ld	hl, #(_g_Players + 306)
 	ld	(hl), #0x00
-;./exsoccer.c:276: g_Players[REFEREE].Direction=DIRECTION_RIGHT;
+;./exsoccer.c:275: g_Players[REFEREE].Direction=DIRECTION_RIGHT;
 	ld	hl, #(_g_Players + 304)
 	ld	(hl), #0x03
-;./exsoccer.c:277: g_Players[REFEREE].Role=NO_VALUE;
+;./exsoccer.c:276: g_Players[REFEREE].Role=NO_VALUE;
 	ld	hl, #(_g_Players + 307)
 	ld	(hl), #0xff
-;./exsoccer.c:278: g_Players[REFEREE].Status=PLAYER_STATUS_NONE;
+;./exsoccer.c:277: g_Players[REFEREE].Status=PLAYER_STATUS_NONE;
 	ld	hl, #0x0000
 	ld	((_g_Players + 312)), hl
-;./exsoccer.c:279: ResetPlayersInfo();
+;./exsoccer.c:278: ResetPlayersInfo();
 	call	_ResetPlayersInfo
-;./exsoccer.c:280: SetPlayerTarget(REFEREE); 
+;./exsoccer.c:279: SetPlayerTarget(REFEREE); 
 	ld	a, #0x0e
 	call	_SetPlayerTarget
-;./exsoccer.c:288: for(u8 i=0;i<14;i++){
+;./exsoccer.c:287: for(u8 i=0;i<14;i++){
 	ld	c, #0x00
 00111$:
 	ld	a, c
 	sub	a, #0x0e
 	jr	NC, 00103$
-;./exsoccer.c:289: g_Players[i].AiTickCounter=0;
+;./exsoccer.c:288: g_Players[i].AiTickCounter=0;
 	ld	b, #0x00
 	ld	l, c
 	ld	h, b
@@ -1572,7 +1569,7 @@ _SetTeamsPresentationSpritesPosition::
 	ld	hl, #0x0014
 	add	hl, de
 	ld	(hl), #0x00
-;./exsoccer.c:290: g_Players[i].Role = k_PlayerRoles[i % 7];
+;./exsoccer.c:289: g_Players[i].Role = k_PlayerRoles[i % 7];
 	ld	hl, #0x000d
 	add	hl, de
 	ld	-2 (ix), l
@@ -1595,23 +1592,23 @@ _SetTeamsPresentationSpritesPosition::
 	push	hl
 	push	de
 	ld	(hl), a
-;./exsoccer.c:288: for(u8 i=0;i<14;i++){
+;./exsoccer.c:287: for(u8 i=0;i<14;i++){
 	inc	c
 	jp	00111$
 00103$:
-;./exsoccer.c:292: g_Ball.X=FIELD_POS_X_CENTER;
+;./exsoccer.c:291: g_Ball.X=FIELD_POS_X_CENTER;
 	ld	hl, #0x0078
 	ld	((_g_Ball + 2)), hl
-;./exsoccer.c:293: g_Ball.Y=FIELD_POS_Y_CENTER;
+;./exsoccer.c:292: g_Ball.Y=FIELD_POS_Y_CENTER;
 	ld	l, #0xf3
 	ld	(_g_Ball), hl
-;./exsoccer.c:294: g_Ball.PreviousY=g_Ball.Y;
+;./exsoccer.c:293: g_Ball.PreviousY=g_Ball.Y;
 	ld	bc, (#_g_Ball + 0)
 	ld	((_g_Ball + 7)), bc
-;./exsoccer.c:295: ResetBallInfo(true);
+;./exsoccer.c:294: ResetBallInfo(true);
 	ld	a, #0x01
 	call	_ResetBallInfo
-;./exsoccer.c:297: }
+;./exsoccer.c:296: }
 	ld	sp, ix
 	pop	ix
 	ret
@@ -1623,20 +1620,20 @@ _SetTeamsPresentationSpritesPosition_k_PlayerRoles_65537_1366:
 	.db #0x02	; 2
 	.db #0x05	; 5
 	.db #0x06	; 6
-;./exsoccer.c:300: void TickActiveFieldZone(){
+;./exsoccer.c:299: void TickActiveFieldZone(){
 ;	---------------------------------
 ; Function TickActiveFieldZone
 ; ---------------------------------
 _TickActiveFieldZone::
-;./exsoccer.c:303: if (g_MatchStatus != MATCH_IN_ACTION) return;
+;./exsoccer.c:302: if (g_MatchStatus != MATCH_IN_ACTION) return;
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x0c
 	ret	NZ
-;./exsoccer.c:305: if (g_ActiveFieldZone == FIELD_CENTRAL_ZONE) {
+;./exsoccer.c:304: if (g_ActiveFieldZone == FIELD_CENTRAL_ZONE) {
 	ld	a, (_g_ActiveFieldZone+0)
 	dec	a
 	jr	NZ, 00116$
-;./exsoccer.c:306: if (g_Ball.Y < 170) ShowFieldZone(FIELD_NORTH_ZONE);
+;./exsoccer.c:305: if (g_Ball.Y < 170) ShowFieldZone(FIELD_NORTH_ZONE);
 	ld	hl, (#_g_Ball + 0)
 	ld	a, l
 	sub	a, #0xaa
@@ -1647,7 +1644,7 @@ _TickActiveFieldZone::
 	call	_ShowFieldZone
 	jp	00117$
 00106$:
-;./exsoccer.c:307: else if (g_Ball.Y > 320) ShowFieldZone(FIELD_SOUTH_ZONE);
+;./exsoccer.c:306: else if (g_Ball.Y > 320) ShowFieldZone(FIELD_SOUTH_ZONE);
 	ld	a, #0x40
 	cp	a, l
 	ld	a, #0x01
@@ -1657,11 +1654,11 @@ _TickActiveFieldZone::
 	call	_ShowFieldZone
 	jp	00117$
 00116$:
-;./exsoccer.c:309: else if (g_ActiveFieldZone == FIELD_NORTH_ZONE) {
+;./exsoccer.c:308: else if (g_ActiveFieldZone == FIELD_NORTH_ZONE) {
 	ld	a, (_g_ActiveFieldZone+0)
 	or	a, a
 	jr	NZ, 00113$
-;./exsoccer.c:310: if (g_Ball.Y > 190) ShowFieldZone(FIELD_CENTRAL_ZONE);
+;./exsoccer.c:309: if (g_Ball.Y > 190) ShowFieldZone(FIELD_CENTRAL_ZONE);
 	ld	hl, (#_g_Ball + 0)
 	ld	a, #0xbe
 	cp	a, l
@@ -1672,7 +1669,7 @@ _TickActiveFieldZone::
 	call	_ShowFieldZone
 	jp	00117$
 00113$:
-;./exsoccer.c:313: if (g_Ball.Y < 300) ShowFieldZone(FIELD_CENTRAL_ZONE);
+;./exsoccer.c:312: if (g_Ball.Y < 300) ShowFieldZone(FIELD_CENTRAL_ZONE);
 	ld	hl, (#_g_Ball + 0)
 	ld	de, #0x012c
 	cp	a, a
@@ -1681,54 +1678,54 @@ _TickActiveFieldZone::
 	ld	a, #0x01
 	call	_ShowFieldZone
 00117$:
-;./exsoccer.c:315: g_Ball.PreviousY=g_Ball.Y;
+;./exsoccer.c:314: g_Ball.PreviousY=g_Ball.Y;
 	ld	bc, (#_g_Ball + 0)
 	ld	((_g_Ball + 7)), bc
-;./exsoccer.c:316: }
+;./exsoccer.c:315: }
 	ret
-;./exsoccer.c:317: void TickUpdateTime(){
+;./exsoccer.c:316: void TickUpdateTime(){
 ;	---------------------------------
 ; Function TickUpdateTime
 ; ---------------------------------
 _TickUpdateTime::
-;./exsoccer.c:318: if(g_MatchStatus==MATCH_IN_ACTION){
+;./exsoccer.c:317: if(g_MatchStatus==MATCH_IN_ACTION){
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x0c
 	jr	NZ, 00106$
-;./exsoccer.c:320: if(g_FrameCounter==58){
+;./exsoccer.c:319: if(g_FrameCounter==58){
 	ld	hl, (_g_FrameCounter)
 	ld	a, l
 	sub	a, #0x3a
 	or	a, h
 	jr	NZ, 00106$
-;./exsoccer.c:321: g_SecondsToEndOfMatch--;
+;./exsoccer.c:320: g_SecondsToEndOfMatch--;
 	ld	hl, #_g_SecondsToEndOfMatch
 	dec	(hl)
-;./exsoccer.c:322: ShowHeaderInfo();
+;./exsoccer.c:321: ShowHeaderInfo();
 	call	_ShowHeaderInfo
-;./exsoccer.c:323: if(g_SecondsToEndOfMatch==0){
+;./exsoccer.c:322: if(g_SecondsToEndOfMatch==0){
 	ld	a, (_g_SecondsToEndOfMatch+0)
 	or	a, a
 	jr	NZ, 00106$
-;./exsoccer.c:324: TimeUp();
+;./exsoccer.c:323: TimeUp();
 	call	_TimeUp
 00106$:
-;./exsoccer.c:328: if(g_Timer!=NO_VALUE){
+;./exsoccer.c:327: if(g_Timer!=NO_VALUE){
 	ld	a, (_g_Timer+0)
 	inc	a
 	ret	Z
-;./exsoccer.c:329: if(g_FrameCounter==58){
+;./exsoccer.c:328: if(g_FrameCounter==58){
 	ld	hl, (_g_FrameCounter)
 	ld	a, l
 	sub	a, #0x3a
 	or	a, h
 	ret	NZ
-;./exsoccer.c:330: g_Timer++;
+;./exsoccer.c:329: g_Timer++;
 	ld	hl, #_g_Timer
 	inc	(hl)
-;./exsoccer.c:334: }
+;./exsoccer.c:333: }
 	ret
-;./exsoccer.c:335: u16 GetOffsideLineY(u8 attackingTeamId) {
+;./exsoccer.c:334: u16 GetOffsideLineY(u8 attackingTeamId) {
 ;	---------------------------------
 ; Function GetOffsideLineY
 ; ---------------------------------
@@ -1740,7 +1737,7 @@ _GetOffsideLineY::
 	add	hl, sp
 	ld	sp, hl
 	ld	c, a
-;./exsoccer.c:336: u8 defendingTeamId = (attackingTeamId == TEAM_1) ? TEAM_2 : TEAM_1;
+;./exsoccer.c:335: u8 defendingTeamId = (attackingTeamId == TEAM_1) ? TEAM_2 : TEAM_1;
 	dec	c
 	ld	a, #0x01
 	jr	Z, 00199$
@@ -1754,8 +1751,8 @@ _GetOffsideLineY::
 	ld	bc, #0x0001
 00125$:
 	ld	-5 (ix), c
-;./exsoccer.c:337: bool findMin = (attackingTeamId == TEAM_1);
-;./exsoccer.c:340: u16 val1 = findMin ? 0xFFFF : 0;
+;./exsoccer.c:336: bool findMin = (attackingTeamId == TEAM_1);
+;./exsoccer.c:339: u16 val1 = findMin ? 0xFFFF : 0;
 	ld	e, a
 	or	a, a
 	jr	Z, 00126$
@@ -1764,16 +1761,16 @@ _GetOffsideLineY::
 00126$:
 	ld	bc, #0x0000
 00127$:
-;./exsoccer.c:341: u16 val2 = val1;
+;./exsoccer.c:340: u16 val2 = val1;
 	ld	-4 (ix), c
 	ld	-3 (ix), b
-;./exsoccer.c:343: for(u8 i=0; i<14; i++){
+;./exsoccer.c:342: for(u8 i=0; i<14; i++){
 	ld	d, #0x00
 00121$:
 	ld	a, d
 	sub	a, #0x0e
 	jp	NC, 00117$
-;./exsoccer.c:344: if(g_Players[i].TeamId != defendingTeamId) continue;
+;./exsoccer.c:343: if(g_Players[i].TeamId != defendingTeamId) continue;
 	push	de
 	ld	e, d
 	ld	d, #0x00
@@ -1806,7 +1803,7 @@ _GetOffsideLineY::
 	ld	a,-5 (ix)
 	sub	a,(hl)
 	jr	NZ, 00116$
-;./exsoccer.c:345: u16 y = g_Players[i].Y;
+;./exsoccer.c:344: u16 y = g_Players[i].Y;
 	ld	l, -2 (ix)
 	ld	h, -1 (ix)
 	ld	a, (hl)
@@ -1816,11 +1813,11 @@ _GetOffsideLineY::
 	ld	l, a
 ;	spillPairReg hl
 ;	spillPairReg hl
-;./exsoccer.c:347: if (findMin) {
+;./exsoccer.c:346: if (findMin) {
 	ld	a, e
 	or	a, a
 	jr	Z, 00114$
-;./exsoccer.c:348: if (y < val1) { val2 = val1; val1 = y; }
+;./exsoccer.c:347: if (y < val1) { val2 = val1; val1 = y; }
 	ld	a, l
 	sub	a, -4 (ix)
 	ld	a, h
@@ -1832,7 +1829,7 @@ _GetOffsideLineY::
 	ld	-3 (ix), h
 	jp	00116$
 00106$:
-;./exsoccer.c:349: else if (y < val2) { val2 = y; }
+;./exsoccer.c:348: else if (y < val2) { val2 = y; }
 	ld	a, l
 	sub	a, c
 	ld	a, h
@@ -1842,7 +1839,7 @@ _GetOffsideLineY::
 	ld	b, h
 	jp	00116$
 00114$:
-;./exsoccer.c:351: if (y > val1) { val2 = val1; val1 = y; }
+;./exsoccer.c:350: if (y > val1) { val2 = val1; val1 = y; }
 	ld	a, -4 (ix)
 	sub	a, l
 	ld	a, -3 (ix)
@@ -1854,7 +1851,7 @@ _GetOffsideLineY::
 	ld	-3 (ix), h
 	jp	00116$
 00111$:
-;./exsoccer.c:352: else if (y > val2) { val2 = y; }
+;./exsoccer.c:351: else if (y > val2) { val2 = y; }
 	ld	a, c
 	sub	a, l
 	ld	a, b
@@ -1863,11 +1860,11 @@ _GetOffsideLineY::
 	ld	c, l
 	ld	b, h
 00116$:
-;./exsoccer.c:343: for(u8 i=0; i<14; i++){
+;./exsoccer.c:342: for(u8 i=0; i<14; i++){
 	inc	d
 	jp	00121$
 00117$:
-;./exsoccer.c:356: if (findMin) return (val2 == 0xFFFF) ? FIELD_BOUND_Y_TOP : val2;
+;./exsoccer.c:355: if (findMin) return (val2 == 0xFFFF) ? FIELD_BOUND_Y_TOP : val2;
 	ld	a, e
 	or	a, a
 	jr	Z, 00119$
@@ -1883,7 +1880,7 @@ _GetOffsideLineY::
 	ld	d, b
 	jp	00122$
 00119$:
-;./exsoccer.c:357: return (val2 == 0) ? FIELD_BOUND_Y_BOTTOM : val2;
+;./exsoccer.c:356: return (val2 == 0) ? FIELD_BOUND_Y_BOTTOM : val2;
 	ld	a, b
 	or	a, c
 	jr	NZ, 00130$
@@ -1892,17 +1889,17 @@ _GetOffsideLineY::
 	ld	e, c
 	ld	d, b
 00122$:
-;./exsoccer.c:358: }
+;./exsoccer.c:357: }
 	ld	sp, ix
 	pop	ix
 	ret
-;./exsoccer.c:359: void BallInGoal(u8 teamScored){
+;./exsoccer.c:358: void BallInGoal(u8 teamScored){
 ;	---------------------------------
 ; Function BallInGoal
 ; ---------------------------------
 _BallInGoal::
 	ld	c, a
-;./exsoccer.c:361: V9_PrintLayerAStringAtPos(12,18,"IN  GOAL");
+;./exsoccer.c:360: V9_PrintLayerAStringAtPos(12,18,"IN  GOAL");
 	push	bc
 	ld	hl, #___str_0
 	push	hl
@@ -1912,14 +1909,14 @@ _BallInGoal::
 	ld	a, #0x0c
 	call	_V9_PrintLayerAStringAtPos
 	pop	bc
-;./exsoccer.c:363: g_GoalScorerId = g_Ball.PossessionPlayerId;
+;./exsoccer.c:362: g_GoalScorerId = g_Ball.PossessionPlayerId;
 	ld	hl, #(_g_Ball + 6)
 	ld	a, (hl)
-;./exsoccer.c:366: if (g_GoalScorerId == NO_VALUE) {
+;./exsoccer.c:365: if (g_GoalScorerId == NO_VALUE) {
 	ld	(_g_GoalScorerId+0), a
 	inc	a
 	jr	NZ, 00102$
-;./exsoccer.c:367: g_GoalScorerId = GetClosestPlayerToBall(teamScored, NO_VALUE);
+;./exsoccer.c:366: g_GoalScorerId = GetClosestPlayerToBall(teamScored, NO_VALUE);
 	push	bc
 	ld	l, #0xff
 ;	spillPairReg hl
@@ -1929,7 +1926,7 @@ _BallInGoal::
 	pop	bc
 	ld	(_g_GoalScorerId+0), a
 00102$:
-;./exsoccer.c:370: if(teamScored==TEAM_1){
+;./exsoccer.c:369: if(teamScored==TEAM_1){
 	dec	c
 	ld	a, #0x01
 	jr	Z, 00128$
@@ -1938,29 +1935,29 @@ _BallInGoal::
 	ld	c, a
 	or	a, a
 	jr	Z, 00104$
-;./exsoccer.c:372: g_Ball.Y = FIELD_BOUND_Y_TOP - 12;
+;./exsoccer.c:371: g_Ball.Y = FIELD_BOUND_Y_TOP - 12;
 	ld	hl, #0x0026
 	ld	(_g_Ball), hl
-;./exsoccer.c:373: g_Team1Score++;
+;./exsoccer.c:372: g_Team1Score++;
 	ld	hl, #_g_Team1Score
 	inc	(hl)
 	jp	00105$
 00104$:
-;./exsoccer.c:377: g_Ball.Y = FIELD_BOUND_Y_BOTTOM + 12L;
+;./exsoccer.c:376: g_Ball.Y = FIELD_BOUND_Y_BOTTOM + 12L;
 	ld	hl, #0x01ba
 	ld	(_g_Ball), hl
-;./exsoccer.c:378: g_Team2Score++;
+;./exsoccer.c:377: g_Team2Score++;
 	ld	hl, #_g_Team2Score
 	inc	(hl)
 00105$:
-;./exsoccer.c:380: ShowHeaderInfo();
+;./exsoccer.c:379: ShowHeaderInfo();
 	push	bc
 	call	_ShowHeaderInfo
 	pop	bc
-;./exsoccer.c:382: g_MatchStatus=MATCH_AFTER_IN_GOAL;
+;./exsoccer.c:381: g_MatchStatus=MATCH_AFTER_IN_GOAL;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x06
-;./exsoccer.c:383: g_RestartKickTeamId = (teamScored == TEAM_1) ? TEAM_2 : TEAM_1;
+;./exsoccer.c:382: g_RestartKickTeamId = (teamScored == TEAM_1) ? TEAM_2 : TEAM_1;
 	ld	a, c
 	or	a, a
 	jr	Z, 00108$
@@ -1972,24 +1969,24 @@ _BallInGoal::
 	ld	c, #0x00
 00109$:
 	ld	(_g_RestartKickTeamId+0), a
-;./exsoccer.c:384: g_Timer = 0; // Start timer for celebration/reset
+;./exsoccer.c:383: g_Timer = 0; // Start timer for celebration/reset
 	ld	hl, #_g_Timer
 	ld	(hl), #0x00
-;./exsoccer.c:385: g_Ball.ShotActive = 0;
+;./exsoccer.c:384: g_Ball.ShotActive = 0;
 	ld	hl, #(_g_Ball + 27)
 	ld	(hl), #0x00
-;./exsoccer.c:386: g_Ball.PassTargetPlayerId = NO_VALUE;
+;./exsoccer.c:385: g_Ball.PassTargetPlayerId = NO_VALUE;
 	ld	hl, #(_g_Ball + 16)
 	ld	(hl), #0xff
-;./exsoccer.c:387: g_Ball.PossessionPlayerId = NO_VALUE;
+;./exsoccer.c:386: g_Ball.PossessionPlayerId = NO_VALUE;
 	ld	hl, #(_g_Ball + 6)
 	ld	(hl), #0xff
-;./exsoccer.c:388: }
+;./exsoccer.c:387: }
 	ret
 ___str_0:
 	.ascii "IN  GOAL"
 	.db 0x00
-;./exsoccer.c:389: void BallThrowIn(u8 teamId){
+;./exsoccer.c:388: void BallThrowIn(u8 teamId){
 ;	---------------------------------
 ; Function BallThrowIn
 ; ---------------------------------
@@ -2001,7 +1998,7 @@ _BallThrowIn::
 	add	hl, sp
 	ld	sp, hl
 	ld	-2 (ix), a
-;./exsoccer.c:392: V9_PrintLayerAStringAtPos(10,18,"THROW IN");
+;./exsoccer.c:391: V9_PrintLayerAStringAtPos(10,18,"THROW IN");
 	ld	hl, #___str_1
 	push	hl
 	ld	l, #0x12
@@ -2009,28 +2006,28 @@ _BallThrowIn::
 ;	spillPairReg hl
 	ld	a, #0x0a
 	call	_V9_PrintLayerAStringAtPos
-;./exsoccer.c:393: g_MatchStatus=MATCH_BEFORE_THROW_IN;
+;./exsoccer.c:392: g_MatchStatus=MATCH_BEFORE_THROW_IN;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x03
-;./exsoccer.c:394: g_RestartKickTeamId = teamId;
+;./exsoccer.c:393: g_RestartKickTeamId = teamId;
 	ld	a, -2 (ix)
 	ld	(_g_RestartKickTeamId+0), a
-;./exsoccer.c:395: g_Timer = 0;
+;./exsoccer.c:394: g_Timer = 0;
 	ld	hl, #_g_Timer
 	ld	(hl), #0x00
-;./exsoccer.c:398: g_Ball.ShotActive = 0;
+;./exsoccer.c:397: g_Ball.ShotActive = 0;
 	ld	hl, #(_g_Ball + 27)
 	ld	(hl), #0x00
-;./exsoccer.c:399: g_Ball.PassTargetPlayerId = NO_VALUE;
+;./exsoccer.c:398: g_Ball.PassTargetPlayerId = NO_VALUE;
 	ld	hl, #(_g_Ball + 16)
 	ld	(hl), #0xff
-;./exsoccer.c:400: g_Ball.PossessionPlayerId = NO_VALUE;
+;./exsoccer.c:399: g_Ball.PossessionPlayerId = NO_VALUE;
 	ld	hl, #(_g_Ball + 6)
 	ld	(hl), #0xff
-;./exsoccer.c:403: for(i=0; i<14; i++) {
+;./exsoccer.c:402: for(i=0; i<14; i++) {
 	ld	-1 (ix), #0x00
 00110$:
-;./exsoccer.c:404: g_Players[i].TargetX = g_Players[i].X;
+;./exsoccer.c:403: g_Players[i].TargetX = g_Players[i].X;
 	ld	c, -1 (ix)
 	ld	b, #0x00
 	ld	l, c
@@ -2072,7 +2069,7 @@ _BallThrowIn::
 	inc	hl
 	ld	a, -3 (ix)
 	ld	(hl), a
-;./exsoccer.c:405: g_Players[i].TargetY = g_Players[i].Y;
+;./exsoccer.c:404: g_Players[i].TargetY = g_Players[i].Y;
 	ld	a, -8 (ix)
 	add	a, #0x0e
 	ld	e, a
@@ -2089,7 +2086,7 @@ _BallThrowIn::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:407: if (g_Players[i].TargetX < FIELD_BOUND_X_LEFT) g_Players[i].TargetX = FIELD_BOUND_X_LEFT;
+;./exsoccer.c:406: if (g_Players[i].TargetX < FIELD_BOUND_X_LEFT) g_Players[i].TargetX = FIELD_BOUND_X_LEFT;
 	ld	a, -4 (ix)
 	ld	b, -3 (ix)
 	sub	a, #0x0a
@@ -2104,7 +2101,7 @@ _BallThrowIn::
 	inc	hl
 	ld	(hl), #0x00
 00102$:
-;./exsoccer.c:408: if (g_Players[i].TargetX > FIELD_BOUND_X_RIGHT) g_Players[i].TargetX = FIELD_BOUND_X_RIGHT;
+;./exsoccer.c:407: if (g_Players[i].TargetX > FIELD_BOUND_X_RIGHT) g_Players[i].TargetX = FIELD_BOUND_X_RIGHT;
 	ld	l, -6 (ix)
 	ld	h, -5 (ix)
 	ld	c, (hl)
@@ -2123,7 +2120,7 @@ _BallThrowIn::
 	inc	hl
 	ld	(hl), #0x00
 00104$:
-;./exsoccer.c:409: if (g_Players[i].TargetY < FIELD_BOUND_Y_TOP) g_Players[i].TargetY = FIELD_BOUND_Y_TOP;
+;./exsoccer.c:408: if (g_Players[i].TargetY < FIELD_BOUND_Y_TOP) g_Players[i].TargetY = FIELD_BOUND_Y_TOP;
 	ld	l, e
 	ld	h, d
 	ld	c, (hl)
@@ -2140,7 +2137,7 @@ _BallThrowIn::
 	inc	hl
 	ld	(hl), #0x00
 00106$:
-;./exsoccer.c:410: if (g_Players[i].TargetY > FIELD_BOUND_Y_BOTTOM) g_Players[i].TargetY = FIELD_BOUND_Y_BOTTOM;
+;./exsoccer.c:409: if (g_Players[i].TargetY > FIELD_BOUND_Y_BOTTOM) g_Players[i].TargetY = FIELD_BOUND_Y_BOTTOM;
 	ld	l, e
 	ld	h, d
 	ld	c, (hl)
@@ -2157,7 +2154,7 @@ _BallThrowIn::
 	ld	a, #0x01
 	ld	(de), a
 00108$:
-;./exsoccer.c:412: g_Players[i].Status = PLAYER_STATUS_NONE;
+;./exsoccer.c:411: g_Players[i].Status = PLAYER_STATUS_NONE;
 	pop	hl
 	push	hl
 	ld	de, #0x0012
@@ -2166,25 +2163,25 @@ _BallThrowIn::
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
-;./exsoccer.c:403: for(i=0; i<14; i++) {
+;./exsoccer.c:402: for(i=0; i<14; i++) {
 	inc	-1 (ix)
 	ld	a, -1 (ix)
 	sub	a, #0x0e
 	jp	C, 00110$
-;./exsoccer.c:414: }
+;./exsoccer.c:413: }
 	ld	sp, ix
 	pop	ix
 	ret
 ___str_1:
 	.ascii "THROW IN"
 	.db 0x00
-;./exsoccer.c:415: void GoalKick(u8 teamId){
+;./exsoccer.c:414: void GoalKick(u8 teamId){
 ;	---------------------------------
 ; Function GoalKick
 ; ---------------------------------
 _GoalKick::
 	ld	c, a
-;./exsoccer.c:417: V9_PrintLayerAStringAtPos(10,18,"GOAL KICK");
+;./exsoccer.c:416: V9_PrintLayerAStringAtPos(10,18,"GOAL KICK");
 	push	bc
 	ld	hl, #___str_2
 	push	hl
@@ -2194,16 +2191,16 @@ _GoalKick::
 	ld	a, #0x0a
 	call	_V9_PrintLayerAStringAtPos
 	pop	bc
-;./exsoccer.c:418: g_MatchStatus=MATCH_BEFORE_GOAL_KICK;
+;./exsoccer.c:417: g_MatchStatus=MATCH_BEFORE_GOAL_KICK;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x05
-;./exsoccer.c:419: g_RestartKickTeamId = teamId;
+;./exsoccer.c:418: g_RestartKickTeamId = teamId;
 	ld	hl, #_g_RestartKickTeamId
 	ld	(hl), c
-;./exsoccer.c:420: g_Timer = 0;
+;./exsoccer.c:419: g_Timer = 0;
 	ld	hl, #_g_Timer
 	ld	(hl), #0x00
-;./exsoccer.c:423: if (g_Ball.X < FIELD_POS_X_CENTER) g_GoalKickSide = CORNER_SIDE_LEFT;
+;./exsoccer.c:422: if (g_Ball.X < FIELD_POS_X_CENTER) g_GoalKickSide = CORNER_SIDE_LEFT;
 	ld	hl, (#(_g_Ball + 2) + 0)
 	ld	de, #0x0078
 	cp	a, a
@@ -2213,15 +2210,15 @@ _GoalKick::
 	ld	(hl), #0x00
 	ret
 00102$:
-;./exsoccer.c:424: else g_GoalKickSide = CORNER_SIDE_RIGHT;
+;./exsoccer.c:423: else g_GoalKickSide = CORNER_SIDE_RIGHT;
 	ld	hl, #_g_GoalKickSide
 	ld	(hl), #0x01
-;./exsoccer.c:425: }
+;./exsoccer.c:424: }
 	ret
 ___str_2:
 	.ascii "GOAL KICK"
 	.db 0x00
-;./exsoccer.c:426: void CornerKick(u8 teamId){
+;./exsoccer.c:425: void CornerKick(u8 teamId){
 ;	---------------------------------
 ; Function CornerKick
 ; ---------------------------------
@@ -2233,7 +2230,7 @@ _CornerKick::
 	add	hl, sp
 	ld	sp, hl
 	ld	-2 (ix), a
-;./exsoccer.c:428: V9_PrintLayerAStringAtPos(10,12,"CORNER KICK");
+;./exsoccer.c:427: V9_PrintLayerAStringAtPos(10,12,"CORNER KICK");
 	ld	hl, #___str_3
 	push	hl
 	ld	l, #0x0c
@@ -2241,19 +2238,19 @@ _CornerKick::
 ;	spillPairReg hl
 	ld	a, #0x0a
 	call	_V9_PrintLayerAStringAtPos
-;./exsoccer.c:429: g_MatchStatus=MATCH_BEFORE_CORNER_KICK;
+;./exsoccer.c:428: g_MatchStatus=MATCH_BEFORE_CORNER_KICK;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x02
-;./exsoccer.c:430: g_RestartKickTeamId = teamId;
+;./exsoccer.c:429: g_RestartKickTeamId = teamId;
 	ld	a, -2 (ix)
 	ld	(_g_RestartKickTeamId+0), a
-;./exsoccer.c:431: g_CornerKickTargetId = NO_VALUE;
+;./exsoccer.c:430: g_CornerKickTargetId = NO_VALUE;
 	ld	hl, #_g_CornerKickTargetId
 	ld	(hl), #0xff
-;./exsoccer.c:432: g_Timer = 0;
+;./exsoccer.c:431: g_Timer = 0;
 	ld	hl, #_g_Timer
 	ld	(hl), #0x00
-;./exsoccer.c:435: if (g_Ball.X < FIELD_POS_X_CENTER) g_CornerKickSide = CORNER_SIDE_LEFT;
+;./exsoccer.c:434: if (g_Ball.X < FIELD_POS_X_CENTER) g_CornerKickSide = CORNER_SIDE_LEFT;
 	ld	bc, #_g_Ball+0
 	ld	hl, (#(_g_Ball + 2) + 0)
 	ld	de, #0x0078
@@ -2264,14 +2261,14 @@ _CornerKick::
 	ld	(hl), #0x00
 	jp	00103$
 00102$:
-;./exsoccer.c:436: else g_CornerKickSide = CORNER_SIDE_RIGHT;
+;./exsoccer.c:435: else g_CornerKickSide = CORNER_SIDE_RIGHT;
 	ld	hl, #_g_CornerKickSide
 	ld	(hl), #0x01
-;./exsoccer.c:441: u16 kickX = (g_CornerKickSide == CORNER_SIDE_LEFT) ? FIELD_BOUND_X_LEFT : FIELD_BOUND_X_RIGHT;
+;./exsoccer.c:440: u16 kickX = (g_CornerKickSide == CORNER_SIDE_LEFT) ? FIELD_BOUND_X_LEFT : FIELD_BOUND_X_RIGHT;
 	jp	00155$
-;./exsoccer.c:436: else g_CornerKickSide = CORNER_SIDE_RIGHT;
+;./exsoccer.c:435: else g_CornerKickSide = CORNER_SIDE_RIGHT;
 00103$:
-;./exsoccer.c:441: u16 kickX = (g_CornerKickSide == CORNER_SIDE_LEFT) ? FIELD_BOUND_X_LEFT : FIELD_BOUND_X_RIGHT;
+;./exsoccer.c:440: u16 kickX = (g_CornerKickSide == CORNER_SIDE_LEFT) ? FIELD_BOUND_X_LEFT : FIELD_BOUND_X_RIGHT;
 	ld	de, #0x000a
 	jp	00156$
 00155$:
@@ -2279,7 +2276,7 @@ _CornerKick::
 00156$:
 	ld	-23 (ix), e
 	ld	-22 (ix), d
-;./exsoccer.c:442: u16 kickY = (teamId == TEAM_1) ? FIELD_BOUND_Y_TOP : FIELD_BOUND_Y_BOTTOM;
+;./exsoccer.c:441: u16 kickY = (teamId == TEAM_1) ? FIELD_BOUND_Y_TOP : FIELD_BOUND_Y_BOTTOM;
 	ld	a, -2 (ix)
 	dec	a
 	ld	a, #0x01
@@ -2296,7 +2293,7 @@ _CornerKick::
 00158$:
 	ld	-21 (ix), e
 	ld	-20 (ix), d
-;./exsoccer.c:445: if (teamId == TEAM_1) ShowFieldZone(FIELD_NORTH_ZONE);
+;./exsoccer.c:444: if (teamId == TEAM_1) ShowFieldZone(FIELD_NORTH_ZONE);
 	ld	a, -3 (ix)
 	or	a, a
 	jr	Z, 00105$
@@ -2306,13 +2303,13 @@ _CornerKick::
 	pop	bc
 	jp	00106$
 00105$:
-;./exsoccer.c:446: else ShowFieldZone(FIELD_SOUTH_ZONE);
+;./exsoccer.c:445: else ShowFieldZone(FIELD_SOUTH_ZONE);
 	push	bc
 	ld	a, #0x02
 	call	_ShowFieldZone
 	pop	bc
 00106$:
-;./exsoccer.c:450: if (g_CornerKickSide == CORNER_SIDE_LEFT) kickerId = GetPlayerIdByRole(teamId, PLAYER_ROLE_LEFT_STRIKER);
+;./exsoccer.c:449: if (g_CornerKickSide == CORNER_SIDE_LEFT) kickerId = GetPlayerIdByRole(teamId, PLAYER_ROLE_LEFT_STRIKER);
 	ld	a, (_g_CornerKickSide+0)
 	or	a, a
 	jr	NZ, 00108$
@@ -2326,7 +2323,7 @@ _CornerKick::
 	ld	-19 (ix), a
 	jp	00109$
 00108$:
-;./exsoccer.c:451: else kickerId = GetPlayerIdByRole(teamId, PLAYER_ROLE_RIGHT_STRIKER);
+;./exsoccer.c:450: else kickerId = GetPlayerIdByRole(teamId, PLAYER_ROLE_RIGHT_STRIKER);
 	push	bc
 	ld	l, #0x06
 ;	spillPairReg hl
@@ -2336,15 +2333,15 @@ _CornerKick::
 	pop	bc
 	ld	-19 (ix), a
 00109$:
-;./exsoccer.c:454: g_Ball.PossessionPlayerId = NO_VALUE; 
+;./exsoccer.c:453: g_Ball.PossessionPlayerId = NO_VALUE; 
 	ld	hl, #(_g_Ball + 6)
 	ld	(hl), #0xff
-;./exsoccer.c:455: SetPlayerBallPossession(NO_VALUE);
+;./exsoccer.c:454: SetPlayerBallPossession(NO_VALUE);
 	push	bc
 	ld	a, #0xff
 	call	_SetPlayerBallPossession
 	pop	bc
-;./exsoccer.c:456: if(teamId == TEAM_1) g_Team1ActivePlayer = kickerId; // Ensure kicker is selected active
+;./exsoccer.c:455: if(teamId == TEAM_1) g_Team1ActivePlayer = kickerId; // Ensure kicker is selected active
 	ld	a, -3 (ix)
 	or	a, a
 	jr	Z, 00111$
@@ -2352,30 +2349,30 @@ _CornerKick::
 	ld	(_g_Team1ActivePlayer+0), a
 	jp	00112$
 00111$:
-;./exsoccer.c:457: else g_Team2ActivePlayer = kickerId;
+;./exsoccer.c:456: else g_Team2ActivePlayer = kickerId;
 	ld	a, -19 (ix)
 	ld	(_g_Team2ActivePlayer+0), a
 00112$:
-;./exsoccer.c:465: i8 offX = 0; i8 offY = 0;
+;./exsoccer.c:464: i8 offX = 0; i8 offY = 0;
 	ld	l, #0x00
 ;	spillPairReg hl
 ;	spillPairReg hl
 	ld	-1 (ix), #0x00
-;./exsoccer.c:466: if (teamId == TEAM_2 && g_CornerKickSide == CORNER_SIDE_RIGHT) {
+;./exsoccer.c:465: if (teamId == TEAM_2 && g_CornerKickSide == CORNER_SIDE_RIGHT) {
 	ld	a, -2 (ix)
 	sub	a, #0x02
 	jr	NZ, 00114$
 	ld	a, (_g_CornerKickSide+0)
 	dec	a
 	jr	NZ, 00114$
-;./exsoccer.c:467: offX = -30;
+;./exsoccer.c:466: offX = -30;
 	ld	l, #0xe2
 ;	spillPairReg hl
 ;	spillPairReg hl
-;./exsoccer.c:468: offY = -5;
+;./exsoccer.c:467: offY = -5;
 	ld	-1 (ix), #0xfb
 00114$:
-;./exsoccer.c:471: g_Ball.X = kickX + offX;
+;./exsoccer.c:470: g_Ball.X = kickX + offX;
 	ld	a, l
 	rlca
 	sbc	a, a
@@ -2387,7 +2384,7 @@ _CornerKick::
 	add	hl, de
 	ex	de, hl
 	ld	((_g_Ball + 2)), de
-;./exsoccer.c:472: g_Ball.Y = kickY + offY;
+;./exsoccer.c:471: g_Ball.Y = kickY + offY;
 	ld	a, -1 (ix)
 	ld	l, a
 ;	spillPairReg hl
@@ -2406,11 +2403,11 @@ _CornerKick::
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-;./exsoccer.c:473: g_Ball.PreviousY = g_Ball.Y;
+;./exsoccer.c:472: g_Ball.PreviousY = g_Ball.Y;
 	ld	((_g_Ball + 7)), de
-;./exsoccer.c:477: bool attackingUp = (teamId == TEAM_1);
+;./exsoccer.c:476: bool attackingUp = (teamId == TEAM_1);
 	ld	a, -3 (ix)
-;./exsoccer.c:481: u16 yBoxInside     = (attackingUp) ? (FIELD_BOUND_Y_TOP + 40) : (FIELD_BOUND_Y_BOTTOM - 40);
+;./exsoccer.c:480: u16 yBoxInside     = (attackingUp) ? (FIELD_BOUND_Y_TOP + 40) : (FIELD_BOUND_Y_BOTTOM - 40);
 	ld	-18 (ix), a
 	or	a, a
 	jr	Z, 00161$
@@ -2421,7 +2418,7 @@ _CornerKick::
 00162$:
 	ld	-17 (ix), c
 	ld	-16 (ix), b
-;./exsoccer.c:482: u16 yBoxOutside    = (attackingUp) ? (FIELD_BOUND_Y_TOP + 90) : (FIELD_BOUND_Y_BOTTOM - 90);
+;./exsoccer.c:481: u16 yBoxOutside    = (attackingUp) ? (FIELD_BOUND_Y_TOP + 90) : (FIELD_BOUND_Y_BOTTOM - 90);
 	ld	a, -18 (ix)
 	or	a, a
 	jr	Z, 00163$
@@ -2432,7 +2429,7 @@ _CornerKick::
 00164$:
 	ld	-15 (ix), c
 	ld	-14 (ix), b
-;./exsoccer.c:483: u16 yMidfieldAdv   = (attackingUp) ? (FIELD_BOUND_Y_TOP + 160) : (FIELD_BOUND_Y_BOTTOM - 160);
+;./exsoccer.c:482: u16 yMidfieldAdv   = (attackingUp) ? (FIELD_BOUND_Y_TOP + 160) : (FIELD_BOUND_Y_BOTTOM - 160);
 	ld	a, -18 (ix)
 	or	a, a
 	jr	Z, 00165$
@@ -2443,7 +2440,7 @@ _CornerKick::
 00166$:
 	ld	-13 (ix), c
 	ld	-12 (ix), b
-;./exsoccer.c:485: u16 ySafety        = (attackingUp) ? (FIELD_BOUND_Y_BOTTOM - 100) : (FIELD_BOUND_Y_TOP + 100);
+;./exsoccer.c:484: u16 ySafety        = (attackingUp) ? (FIELD_BOUND_Y_BOTTOM - 100) : (FIELD_BOUND_Y_TOP + 100);
 	ld	a, -18 (ix)
 	or	a, a
 	jr	Z, 00167$
@@ -2454,13 +2451,13 @@ _CornerKick::
 00168$:
 	ld	-11 (ix), c
 	ld	-10 (ix), b
-;./exsoccer.c:487: for(u8 i=0; i<14; i++) {
+;./exsoccer.c:486: for(u8 i=0; i<14; i++) {
 	ld	-1 (ix), #0x00
 00152$:
 	ld	a, -1 (ix)
 	sub	a, #0x0e
 	jp	NC, 00153$
-;./exsoccer.c:488: g_Players[i].Status = PLAYER_STATUS_NONE;
+;./exsoccer.c:487: g_Players[i].Status = PLAYER_STATUS_NONE;
 	ld	c, -1 (ix)
 	ld	b, #0x00
 	ld	l, c
@@ -2491,7 +2488,7 @@ _CornerKick::
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
-;./exsoccer.c:489: g_Players[i].TargetX = g_Players[i].X;
+;./exsoccer.c:488: g_Players[i].TargetX = g_Players[i].X;
 	ld	a, -4 (ix)
 	add	a, #0x10
 	ld	-9 (ix), a
@@ -2518,7 +2515,7 @@ _CornerKick::
 	inc	hl
 	ld	a, -5 (ix)
 	ld	(hl), a
-;./exsoccer.c:490: g_Players[i].TargetY = g_Players[i].Y;
+;./exsoccer.c:489: g_Players[i].TargetY = g_Players[i].Y;
 	ld	a, -4 (ix)
 	add	a, #0x0e
 	ld	-7 (ix), a
@@ -2535,7 +2532,7 @@ _CornerKick::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:492: u8 role = g_Players[i].Role;
+;./exsoccer.c:491: u8 role = g_Players[i].Role;
 	ld	a, -4 (ix)
 	ld	-25 (ix), a
 	ld	a, -3 (ix)
@@ -2546,7 +2543,7 @@ _CornerKick::
 	add	hl, de
 	ld	a, (hl)
 	ld	-5 (ix), a
-;./exsoccer.c:493: bool isAttacker = (g_Players[i].TeamId == teamId);
+;./exsoccer.c:492: bool isAttacker = (g_Players[i].TeamId == teamId);
 	ld	l, -4 (ix)
 	ld	h, -3 (ix)
 	ld	de, #0x0009
@@ -2558,11 +2555,11 @@ _CornerKick::
 	xor	a, a
 00329$:
 	ld	c, a
-;./exsoccer.c:496: if (i == kickerId) {
+;./exsoccer.c:495: if (i == kickerId) {
 	ld	a, -19 (ix)
 	sub	a, -1 (ix)
 	jr	NZ, 00117$
-;./exsoccer.c:497: g_Players[i].TargetX = kickX;
+;./exsoccer.c:496: g_Players[i].TargetX = kickX;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	a, -23 (ix)
@@ -2570,7 +2567,7 @@ _CornerKick::
 	inc	hl
 	ld	a, -22 (ix)
 	ld	(hl), a
-;./exsoccer.c:498: g_Players[i].TargetY = kickY;
+;./exsoccer.c:497: g_Players[i].TargetY = kickY;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -21 (ix)
@@ -2578,24 +2575,24 @@ _CornerKick::
 	inc	hl
 	ld	a, -20 (ix)
 	ld	(hl), a
-;./exsoccer.c:499: continue;
+;./exsoccer.c:498: continue;
 	jp	00149$
 00117$:
-;./exsoccer.c:502: if (isAttacker) {
+;./exsoccer.c:501: if (isAttacker) {
 	ld	a, c
 	or	a, a
 	jp	Z, 00147$
-;./exsoccer.c:504: if (role == PLAYER_ROLE_GOALKEEPER) {
+;./exsoccer.c:503: if (role == PLAYER_ROLE_GOALKEEPER) {
 	ld	a, -5 (ix)
 	or	a, a
 	jr	NZ, 00133$
-;./exsoccer.c:506: g_Players[i].TargetX = FIELD_POS_X_CENTER;
+;./exsoccer.c:505: g_Players[i].TargetX = FIELD_POS_X_CENTER;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	(hl), #0x78
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:507: g_Players[i].TargetY = (attackingUp) ? FIELD_BOUND_Y_BOTTOM - 20 : FIELD_BOUND_Y_TOP + 20;
+;./exsoccer.c:506: g_Players[i].TargetY = (attackingUp) ? FIELD_BOUND_Y_BOTTOM - 20 : FIELD_BOUND_Y_TOP + 20;
 	ld	l, -7 (ix)
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -2615,7 +2612,7 @@ _CornerKick::
 	ld	(hl), d
 	jp	00149$
 00133$:
-;./exsoccer.c:509: else if (role == PLAYER_ROLE_LEFT_DEFENDER || role == PLAYER_ROLE_RIGHT_DEFENDER) {
+;./exsoccer.c:508: else if (role == PLAYER_ROLE_LEFT_DEFENDER || role == PLAYER_ROLE_RIGHT_DEFENDER) {
 	ld	a, -5 (ix)
 	dec	a
 	ld	a, #0x01
@@ -2629,17 +2626,17 @@ _CornerKick::
 	sub	a, #0x02
 	jr	NZ, 00129$
 00128$:
-;./exsoccer.c:510: if (role == PLAYER_ROLE_LEFT_DEFENDER) {
+;./exsoccer.c:509: if (role == PLAYER_ROLE_LEFT_DEFENDER) {
 	ld	a, c
 	or	a, a
 	jr	Z, 00119$
-;./exsoccer.c:512: g_Players[i].TargetX = FIELD_POS_X_CENTER - 30;
+;./exsoccer.c:511: g_Players[i].TargetX = FIELD_POS_X_CENTER - 30;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	(hl), #0x5a
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:513: g_Players[i].TargetY = yMidfieldAdv;
+;./exsoccer.c:512: g_Players[i].TargetY = yMidfieldAdv;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -13 (ix)
@@ -2649,13 +2646,13 @@ _CornerKick::
 	ld	(hl), a
 	jp	00149$
 00119$:
-;./exsoccer.c:516: g_Players[i].TargetX = FIELD_POS_X_CENTER;
+;./exsoccer.c:515: g_Players[i].TargetX = FIELD_POS_X_CENTER;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	(hl), #0x78
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:517: g_Players[i].TargetY = ySafety;
+;./exsoccer.c:516: g_Players[i].TargetY = ySafety;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -11 (ix)
@@ -2665,7 +2662,7 @@ _CornerKick::
 	ld	(hl), a
 	jp	00149$
 00129$:
-;./exsoccer.c:520: else if (role == PLAYER_ROLE_LEFT_HALFFIELDER || role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
+;./exsoccer.c:519: else if (role == PLAYER_ROLE_LEFT_HALFFIELDER || role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
 	ld	a, -5 (ix)
 	sub	a, #0x03
 	ld	a, #0x01
@@ -2679,17 +2676,17 @@ _CornerKick::
 	sub	a, #0x04
 	jr	NZ, 00125$
 00124$:
-;./exsoccer.c:521: if (role == PLAYER_ROLE_LEFT_HALFFIELDER) {
+;./exsoccer.c:520: if (role == PLAYER_ROLE_LEFT_HALFFIELDER) {
 	ld	a, c
 	or	a, a
 	jr	Z, 00122$
-;./exsoccer.c:523: g_Players[i].TargetX = FIELD_POS_X_CENTER - 50; 
+;./exsoccer.c:522: g_Players[i].TargetX = FIELD_POS_X_CENTER - 50; 
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	(hl), #0x46
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:524: g_Players[i].TargetY = yBoxOutside;
+;./exsoccer.c:523: g_Players[i].TargetY = yBoxOutside;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -15 (ix)
@@ -2699,13 +2696,13 @@ _CornerKick::
 	ld	(hl), a
 	jp	00149$
 00122$:
-;./exsoccer.c:527: g_Players[i].TargetX = FIELD_POS_X_CENTER + 30;
+;./exsoccer.c:526: g_Players[i].TargetX = FIELD_POS_X_CENTER + 30;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	(hl), #0x96
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:528: g_Players[i].TargetY = yMidfieldAdv;
+;./exsoccer.c:527: g_Players[i].TargetY = yMidfieldAdv;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -13 (ix)
@@ -2715,13 +2712,13 @@ _CornerKick::
 	ld	(hl), a
 	jp	00149$
 00125$:
-;./exsoccer.c:534: g_Players[i].TargetX = FIELD_POS_X_CENTER + 50;
+;./exsoccer.c:533: g_Players[i].TargetX = FIELD_POS_X_CENTER + 50;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	(hl), #0xaa
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:535: g_Players[i].TargetY = yBoxOutside;
+;./exsoccer.c:534: g_Players[i].TargetY = yBoxOutside;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -15 (ix)
@@ -2731,17 +2728,17 @@ _CornerKick::
 	ld	(hl), a
 	jp	00149$
 00147$:
-;./exsoccer.c:540: if (role == PLAYER_ROLE_GOALKEEPER) {
+;./exsoccer.c:539: if (role == PLAYER_ROLE_GOALKEEPER) {
 	ld	a, -5 (ix)
 	or	a, a
 	jr	NZ, 00144$
-;./exsoccer.c:542: g_Players[i].TargetX = FIELD_POS_X_CENTER;
+;./exsoccer.c:541: g_Players[i].TargetX = FIELD_POS_X_CENTER;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	(hl), #0x78
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:543: g_Players[i].TargetY = (attackingUp) ? FIELD_POS_Y_TEAM2_GOALKEEPER : FIELD_POS_Y_TEAM1_GOALKEEPER;
+;./exsoccer.c:542: g_Players[i].TargetY = (attackingUp) ? FIELD_POS_Y_TEAM2_GOALKEEPER : FIELD_POS_Y_TEAM1_GOALKEEPER;
 	ld	l, -7 (ix)
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -2761,7 +2758,7 @@ _CornerKick::
 	ld	(hl), d
 	jp	00149$
 00144$:
-;./exsoccer.c:545: else if (role == PLAYER_ROLE_LEFT_DEFENDER || role == PLAYER_ROLE_RIGHT_DEFENDER) {
+;./exsoccer.c:544: else if (role == PLAYER_ROLE_LEFT_DEFENDER || role == PLAYER_ROLE_RIGHT_DEFENDER) {
 	ld	a, -5 (ix)
 	dec	a
 	ld	a, #0x01
@@ -2775,7 +2772,7 @@ _CornerKick::
 	sub	a, #0x02
 	jr	NZ, 00140$
 00139$:
-;./exsoccer.c:547: g_Players[i].TargetX = (role == PLAYER_ROLE_LEFT_DEFENDER) ? FIELD_POS_X_CENTER - 20 : FIELD_POS_X_CENTER + 20;
+;./exsoccer.c:546: g_Players[i].TargetX = (role == PLAYER_ROLE_LEFT_DEFENDER) ? FIELD_POS_X_CENTER - 20 : FIELD_POS_X_CENTER + 20;
 	ld	a, c
 	or	a, a
 	ld	c, #0x64
@@ -2788,7 +2785,7 @@ _CornerKick::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:548: g_Players[i].TargetY = yBoxInside;
+;./exsoccer.c:547: g_Players[i].TargetY = yBoxInside;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -17 (ix)
@@ -2798,7 +2795,7 @@ _CornerKick::
 	ld	(hl), a
 	jp	00149$
 00140$:
-;./exsoccer.c:550: else if (role == PLAYER_ROLE_LEFT_HALFFIELDER || role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
+;./exsoccer.c:549: else if (role == PLAYER_ROLE_LEFT_HALFFIELDER || role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
 	ld	a, -5 (ix)
 	sub	a, #0x03
 	ld	a, #0x01
@@ -2812,7 +2809,7 @@ _CornerKick::
 	sub	a, #0x04
 	jr	NZ, 00136$
 00135$:
-;./exsoccer.c:552: g_Players[i].TargetX = (role == PLAYER_ROLE_LEFT_HALFFIELDER) ? FIELD_POS_X_CENTER - 40 : FIELD_POS_X_CENTER + 40;
+;./exsoccer.c:551: g_Players[i].TargetX = (role == PLAYER_ROLE_LEFT_HALFFIELDER) ? FIELD_POS_X_CENTER - 40 : FIELD_POS_X_CENTER + 40;
 	ld	a, c
 	or	a, a
 	ld	c, #0x50
@@ -2825,7 +2822,7 @@ _CornerKick::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:553: g_Players[i].TargetY = yBoxOutside;
+;./exsoccer.c:552: g_Players[i].TargetY = yBoxOutside;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	a, -15 (ix)
@@ -2835,7 +2832,7 @@ _CornerKick::
 	ld	(hl), a
 	jp	00149$
 00136$:
-;./exsoccer.c:557: g_Players[i].TargetX = (role == PLAYER_ROLE_LEFT_STRIKER) ? FIELD_POS_X_LEFT + 20 : FIELD_POS_X_RIGHT - 20;
+;./exsoccer.c:556: g_Players[i].TargetX = (role == PLAYER_ROLE_LEFT_STRIKER) ? FIELD_POS_X_LEFT + 20 : FIELD_POS_X_RIGHT - 20;
 	ld	a, -9 (ix)
 	ld	-4 (ix), a
 	ld	a, -8 (ix)
@@ -2852,25 +2849,25 @@ _CornerKick::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:558: g_Players[i].TargetY = yMidfield;
+;./exsoccer.c:557: g_Players[i].TargetY = yMidfield;
 	ld	l, -7 (ix)
 	ld	h, -6 (ix)
 	ld	(hl), #0xf3
 	inc	hl
 	ld	(hl), #0x00
 00149$:
-;./exsoccer.c:487: for(u8 i=0; i<14; i++) {
+;./exsoccer.c:486: for(u8 i=0; i<14; i++) {
 	inc	-1 (ix)
 	jp	00152$
 00153$:
-;./exsoccer.c:562: }
+;./exsoccer.c:561: }
 	ld	sp, ix
 	pop	ix
 	ret
 ___str_3:
 	.ascii "CORNER KICK"
 	.db 0x00
-;./exsoccer.c:563: void InitializeV9990()
+;./exsoccer.c:562: void InitializeV9990()
 ;	---------------------------------
 ; Function InitializeV9990
 ; ---------------------------------
@@ -2886,11 +2883,11 @@ _InitializeV9990::
 ;	spillPairReg hl
 	ld	a, #0x09
 	call	_V9_SetRegister
-;./exsoccer.c:567: LoadPresentation();
+;./exsoccer.c:566: LoadPresentation();
 	call	_LoadPresentation
-;./exsoccer.c:571: InitPalette();
+;./exsoccer.c:570: InitPalette();
 	call	_InitPalette
-;./exsoccer.c:572: V9_SetScreenMode(V9_MODE_P1);
+;./exsoccer.c:571: V9_SetScreenMode(V9_MODE_P1);
 	xor	a, a
 	call	_V9_SetScreenMode
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:480: inline void V9_SetBackgroundColor(u8 color) { V9_SetRegister(15, color); }
@@ -2908,12 +2905,12 @@ _InitializeV9990::
 	res	7, l
 	ld	a, #0x08
 	call	_V9_SetRegister
-;./exsoccer.c:583: LoadP1LayerA();
+;./exsoccer.c:582: LoadP1LayerA();
 	call	_LoadP1LayerA
-;./exsoccer.c:585: ShowMenu();
-;./exsoccer.c:588: }
+;./exsoccer.c:584: ShowMenu();
+;./exsoccer.c:587: }
 	jp	_ShowMenu
-;./exsoccer.c:589: void TickShotCursor() {
+;./exsoccer.c:588: void TickShotCursor() {
 ;	---------------------------------
 ; Function TickShotCursor
 ; ---------------------------------
@@ -2923,7 +2920,7 @@ _TickShotCursor::
 	add	ix,sp
 	push	af
 	push	af
-;./exsoccer.c:591: g_ShotCursorX += g_ShotCursorDir;
+;./exsoccer.c:590: g_ShotCursorX += g_ShotCursorDir;
 	ld	a, (_g_ShotCursorDir+0)
 	ld	c, a
 	rlca
@@ -2932,53 +2929,53 @@ _TickShotCursor::
 	ld	hl, (_g_ShotCursorX)
 	add	hl, bc
 	ld	(_g_ShotCursorX), hl
-;./exsoccer.c:592: if (g_ShotCursorX < (GOAL_X_MIN - 30)) {
+;./exsoccer.c:591: if (g_ShotCursorX < (GOAL_X_MIN - 30)) {
 	ld	de, #0x0042
 	ld	hl, (_g_ShotCursorX)
 	cp	a, a
 	sbc	hl, de
 	jr	NC, 00102$
-;./exsoccer.c:593: g_ShotCursorX = (GOAL_X_MIN - 30);
+;./exsoccer.c:592: g_ShotCursorX = (GOAL_X_MIN - 30);
 	ld	hl, #0x0042
 	ld	(_g_ShotCursorX), hl
-;./exsoccer.c:594: g_ShotCursorDir = -g_ShotCursorDir;
+;./exsoccer.c:593: g_ShotCursorDir = -g_ShotCursorDir;
 	ld	hl, #_g_ShotCursorDir
 	xor	a, a
 	sub	a, (hl)
 	ld	(hl), a
 00102$:
-;./exsoccer.c:596: if (g_ShotCursorX > (GOAL_X_MAX + 30)) {
+;./exsoccer.c:595: if (g_ShotCursorX > (GOAL_X_MAX + 30)) {
 	ld	a, #0xae
 	ld	iy, #_g_ShotCursorX
 	cp	a, 0 (iy)
 	ld	a, #0x00
 	sbc	a, 1 (iy)
 	jr	NC, 00104$
-;./exsoccer.c:597: g_ShotCursorX = (GOAL_X_MAX + 30);
+;./exsoccer.c:596: g_ShotCursorX = (GOAL_X_MAX + 30);
 	ld	hl, #0x00ae
 	ld	(_g_ShotCursorX), hl
-;./exsoccer.c:598: g_ShotCursorDir = -g_ShotCursorDir;
+;./exsoccer.c:597: g_ShotCursorDir = -g_ShotCursorDir;
 	ld	hl, #_g_ShotCursorDir
 	xor	a, a
 	sub	a, (hl)
 	ld	(hl), a
 00104$:
-;./exsoccer.c:602: bool show = false;
+;./exsoccer.c:601: bool show = false;
 	ld	c, #0x00
-;./exsoccer.c:603: if (g_MatchStatus == MATCH_IN_ACTION && g_ActiveFieldZone == FIELD_NORTH_ZONE) {
+;./exsoccer.c:602: if (g_MatchStatus == MATCH_IN_ACTION && g_ActiveFieldZone == FIELD_NORTH_ZONE) {
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x0c
 	jr	NZ, 00110$
 	ld	a, (_g_ActiveFieldZone+0)
 	or	a, a
 	jr	NZ, 00110$
-;./exsoccer.c:604: if (g_Ball.PossessionPlayerId != NO_VALUE) {
+;./exsoccer.c:603: if (g_Ball.PossessionPlayerId != NO_VALUE) {
 	ld	hl, #_g_Ball+6
 	ld	e, (hl)
 	ld	a, e
 	inc	a
 	jr	Z, 00110$
-;./exsoccer.c:605: if (g_Players[g_Ball.PossessionPlayerId].TeamId == TEAM_1) {
+;./exsoccer.c:604: if (g_Players[g_Ball.PossessionPlayerId].TeamId == TEAM_1) {
 	ld	d, #0x00
 	ld	l, e
 	ld	h, d
@@ -2995,14 +2992,14 @@ _TickShotCursor::
 	ld	a, (hl)
 	dec	a
 	jr	NZ, 00110$
-;./exsoccer.c:606: show = true;
+;./exsoccer.c:605: show = true;
 	ld	c, #0x01
 00110$:
-;./exsoccer.c:612: if (show) {
+;./exsoccer.c:611: if (show) {
 	ld	a, c
 	or	a, a
 	jr	Z, 00117$
-;./exsoccer.c:614: int screenY = (FIELD_BOUND_Y_TOP - 30) - g_FieldCurrentYPosition;
+;./exsoccer.c:613: int screenY = (FIELD_BOUND_Y_TOP - 30) - g_FieldCurrentYPosition;
 	ld	hl, #_g_FieldCurrentYPosition
 	ld	a, #0x14
 	sub	a, (hl)
@@ -3011,7 +3008,7 @@ _TickShotCursor::
 	sbc	a, a
 	sub	a, (hl)
 	ld	b, a
-;./exsoccer.c:617: if (screenY < -16 || screenY > 212) {
+;./exsoccer.c:616: if (screenY < -16 || screenY > 212) {
 	ld	a, c
 	sub	a, #0xf0
 	ld	a, b
@@ -3029,14 +3026,14 @@ _TickShotCursor::
 00170$:
 	jp	P, 00113$
 00112$:
-;./exsoccer.c:618: attr.Y = 216; 
+;./exsoccer.c:617: attr.Y = 216; 
 	ld	-4 (ix), #0xd8
 	jp	00114$
 00113$:
-;./exsoccer.c:620: attr.Y = (u8)screenY;
+;./exsoccer.c:619: attr.Y = (u8)screenY;
 	ld	-4 (ix), c
 00114$:
-;./exsoccer.c:623: attr.X = (u8)g_ShotCursorX;
+;./exsoccer.c:622: attr.X = (u8)g_ShotCursorX;
 	ld	a, (_g_ShotCursorX+0)
 	ld	c, a
 	ld	b, #0x00
@@ -3051,17 +3048,17 @@ _TickShotCursor::
 	and	a, #0xfc
 	or	a, e
 	ld	(hl), a
-;./exsoccer.c:624: attr.Pattern = SPRITE_DOWN_ARROW;
+;./exsoccer.c:623: attr.Pattern = SPRITE_DOWN_ARROW;
 	ld	-3 (ix), #0x79
-;./exsoccer.c:625: attr.P = 1; 
+;./exsoccer.c:624: attr.P = 1; 
 	ld	hl,#0x3
 	add	hl,sp
 	set	5, (hl)
-;./exsoccer.c:626: attr.SC = 0; 
+;./exsoccer.c:625: attr.SC = 0; 
 	ld	a, (hl)
 	and	a, #0x3f
 	ld	(hl), a
-;./exsoccer.c:628: V9_SetSpriteP1(16, &attr);
+;./exsoccer.c:627: V9_SetSpriteP1(16, &attr);
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:781: inline void V9_SetSpriteP1(u8 id, const V9_Sprite* attr) { V9_WriteVRAM(V9_P1_SPAT + (id * 4), (const u8*)attr, 4); }
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
 	ld	de, #0xfe40
@@ -3071,12 +3068,12 @@ _TickShotCursor::
 	ld	hl, #0
 	add	hl, sp
 	call	_V9_WriteVRAM_CurrentAddr
-;./exsoccer.c:628: V9_SetSpriteP1(16, &attr);
+;./exsoccer.c:627: V9_SetSpriteP1(16, &attr);
 	jp	00123$
 00117$:
-;./exsoccer.c:631: attr.Y = 216;
+;./exsoccer.c:630: attr.Y = 216;
 	ld	-4 (ix), #0xd8
-;./exsoccer.c:632: V9_SetSpriteP1(16, &attr);
+;./exsoccer.c:631: V9_SetSpriteP1(16, &attr);
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:781: inline void V9_SetSpriteP1(u8 id, const V9_Sprite* attr) { V9_WriteVRAM(V9_P1_SPAT + (id * 4), (const u8*)attr, 4); }
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
 	ld	de, #0xfe40
@@ -3086,13 +3083,13 @@ _TickShotCursor::
 	ld	hl, #0
 	add	hl, sp
 	call	_V9_WriteVRAM_CurrentAddr
-;./exsoccer.c:632: V9_SetSpriteP1(16, &attr);
+;./exsoccer.c:631: V9_SetSpriteP1(16, &attr);
 00123$:
-;./exsoccer.c:634: }
+;./exsoccer.c:633: }
 	ld	sp, ix
 	pop	ix
 	ret
-;./exsoccer.c:637: void LoadSprites(){
+;./exsoccer.c:636: void LoadSprites(){
 ;	---------------------------------
 ; Function LoadSprites
 ; ---------------------------------
@@ -3108,7 +3105,7 @@ _LoadSprites::
 ;	spillPairReg hl
 	ld	a, #0x19
 	call	_V9_SetRegister
-;./exsoccer.c:640: V9_WriteVRAM(0x08000, g_Sprites1, sizeof(g_Sprites1));	
+;./exsoccer.c:639: V9_WriteVRAM(0x08000, g_Sprites1, sizeof(g_Sprites1));	
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
 	ld	de, #0x8000
 	ld	hl, #0x0000
@@ -3121,7 +3118,7 @@ _LoadSprites::
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:642: V9_WriteVRAM(0x08000+sizeof(g_Sprites1), g_Sprites2, sizeof(g_Sprites2));	
+;./exsoccer.c:641: V9_WriteVRAM(0x08000+sizeof(g_Sprites1), g_Sprites2, sizeof(g_Sprites2));	
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:371: inline void V9_WriteVRAM(u32 addr, const u8* src, u16 count) { V9_SetWriteAddress(addr); V9_WriteVRAM_CurrentAddr(src, count); }
 	ld	de, #0xc000
 	ld	l, h
@@ -3134,10 +3131,10 @@ _LoadSprites::
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:643: SET_BANK_SEGMENT(2, 1); 
-;./exsoccer.c:644: }
+;./exsoccer.c:642: SET_BANK_SEGMENT(2, 1); 
+;./exsoccer.c:643: }
 	ret
-;./exsoccer.c:646: void TickGoalCelebration(){
+;./exsoccer.c:645: void TickGoalCelebration(){
 ;	---------------------------------
 ; Function TickGoalCelebration
 ; ---------------------------------
@@ -3148,14 +3145,14 @@ _TickGoalCelebration::
 	ld	hl, #-13
 	add	hl, sp
 	ld	sp, hl
-;./exsoccer.c:647: if(g_MatchStatus!=MATCH_AFTER_IN_GOAL) return;
+;./exsoccer.c:646: if(g_MatchStatus!=MATCH_AFTER_IN_GOAL) return;
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x06
 	jp	NZ,00158$
-;./exsoccer.c:649: g_Timer++;
+;./exsoccer.c:648: g_Timer++;
 	ld	hl, #_g_Timer
 	inc	(hl)
-;./exsoccer.c:651: if((g_Timer % 10) < 5){
+;./exsoccer.c:650: if((g_Timer % 10) < 5){
 	ld	a, (_g_Timer+0)
 	ld	l, a
 ;	spillPairReg hl
@@ -3179,7 +3176,7 @@ _TickGoalCelebration::
 ;	spillPairReg hl
 	ld	a, #0x0f
 	call	_V9_SetRegister
-;./exsoccer.c:652: V9_SetBackgroundColor(8); // Cyan/Flash
+;./exsoccer.c:651: V9_SetBackgroundColor(8); // Cyan/Flash
 	jp	00105$
 00104$:
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:480: inline void V9_SetBackgroundColor(u8 color) { V9_SetRegister(15, color); }
@@ -3188,13 +3185,13 @@ _TickGoalCelebration::
 ;	spillPairReg hl
 	ld	a, #0x0f
 	call	_V9_SetRegister
-;./exsoccer.c:654: V9_SetBackgroundColor(1); // Default Blue
+;./exsoccer.c:653: V9_SetBackgroundColor(1); // Default Blue
 00105$:
-;./exsoccer.c:660: if (g_Timer < 120) {
+;./exsoccer.c:659: if (g_Timer < 120) {
 	ld	a, (_g_Timer+0)
 	sub	a, #0x78
 	jp	NC, 00136$
-;./exsoccer.c:661: u8 scoringTeamId = (g_RestartKickTeamId == TEAM_1) ? TEAM_2 : TEAM_1;
+;./exsoccer.c:660: u8 scoringTeamId = (g_RestartKickTeamId == TEAM_1) ? TEAM_2 : TEAM_1;
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00160$
@@ -3204,14 +3201,14 @@ _TickGoalCelebration::
 	ld	bc, #0x0001
 00161$:
 	ld	-11 (ix), c
-;./exsoccer.c:664: u16 limitY_Top = FIELD_BOUND_Y_TOP;
+;./exsoccer.c:663: u16 limitY_Top = FIELD_BOUND_Y_TOP;
 	ld	-10 (ix), #0x32
 	xor	a, a
 	ld	-9 (ix), a
-;./exsoccer.c:665: u16 limitY_Bottom = FIELD_BOUND_Y_BOTTOM;
+;./exsoccer.c:664: u16 limitY_Bottom = FIELD_BOUND_Y_BOTTOM;
 	ld	-8 (ix), #0xae
 	ld	-7 (ix), #0x01
-;./exsoccer.c:667: if (g_Ball.Y < FIELD_CENTRAL_Y) { // Top Goal
+;./exsoccer.c:666: if (g_Ball.Y < FIELD_CENTRAL_Y) { // Top Goal
 	ld	hl, #_g_Ball
 	ld	a, (hl)
 	ld	-2 (ix), a
@@ -3223,26 +3220,26 @@ _TickGoalCelebration::
 	ld	a, -1 (ix)
 	sbc	a, #0x00
 	jr	NC, 00107$
-;./exsoccer.c:668: limitY_Bottom = FIELD_BOUND_Y_TOP + 160; 
+;./exsoccer.c:667: limitY_Bottom = FIELD_BOUND_Y_TOP + 160; 
 	ld	-8 (ix), #0xd2
 	ld	-7 (ix), #0
 	jp	00200$
 00107$:
-;./exsoccer.c:670: limitY_Top = FIELD_BOUND_Y_BOTTOM - 160;
+;./exsoccer.c:669: limitY_Top = FIELD_BOUND_Y_BOTTOM - 160;
 	ld	-10 (ix), #0x0e
 	ld	-9 (ix), #0x01
-;./exsoccer.c:678: for(u8 i=0; i<15; i++){
+;./exsoccer.c:677: for(u8 i=0; i<15; i++){
 00200$:
 	ld	-1 (ix), #0x00
 00154$:
 	ld	a, -1 (ix)
 	sub	a, #0x0f
 	jp	NC, 00136$
-;./exsoccer.c:679: if(i == REFEREE) continue;
+;./exsoccer.c:678: if(i == REFEREE) continue;
 	ld	a, -1 (ix)
 	sub	a, #0x0e
 	jp	Z,00133$
-;./exsoccer.c:680: u8 dir = g_Players[i].Direction;
+;./exsoccer.c:679: u8 dir = g_Players[i].Direction;
 	ld	c, -1 (ix)
 	ld	b, #0x00
 	ld	l, c
@@ -3264,24 +3261,24 @@ _TickGoalCelebration::
 	ld	b, a
 	ld	a, (bc)
 	ld	-2 (ix), a
-;./exsoccer.c:683: if (g_Players[i].TeamId == scoringTeamId) {
+;./exsoccer.c:682: if (g_Players[i].TeamId == scoringTeamId) {
 	pop	de
 	push	de
 	ld	hl, #9
 	add	hl, de
 	ld	e, (hl)
-;./exsoccer.c:707: if (isBack) g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_BACK_1 : PLAYER_POSE_CELEBRATION_BACK_2;
+;./exsoccer.c:706: if (isBack) g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_BACK_1 : PLAYER_POSE_CELEBRATION_BACK_2;
 	ld	a, -13 (ix)
 	add	a, #0x08
 	ld	-6 (ix), a
 	ld	a, -12 (ix)
 	adc	a, #0x00
 	ld	-5 (ix), a
-;./exsoccer.c:683: if (g_Players[i].TeamId == scoringTeamId) {
+;./exsoccer.c:682: if (g_Players[i].TeamId == scoringTeamId) {
 	ld	a, -11 (ix)
 	sub	a, e
 	jp	NZ,00131$
-;./exsoccer.c:687: if ((g_Timer % 19) == 0) {
+;./exsoccer.c:686: if ((g_Timer % 19) == 0) {
 	ld	a, (_g_Timer+0)
 	ld	l, a
 ;	spillPairReg hl
@@ -3296,7 +3293,7 @@ _TickGoalCelebration::
 	ld	a, d
 	or	a, e
 	jr	NZ, 00112$
-;./exsoccer.c:689: u8 rnd = (g_Timer * 3) + (i * 37); 
+;./exsoccer.c:688: u8 rnd = (g_Timer * 3) + (i * 37); 
 	ld	a, (_g_Timer+0)
 	ld	e, a
 	add	a, a
@@ -3314,14 +3311,14 @@ _TickGoalCelebration::
 	add	a, e
 	pop	de
 	add	a, e
-;./exsoccer.c:690: dir = (rnd % 8) + 1; 
+;./exsoccer.c:689: dir = (rnd % 8) + 1; 
 	and	a, #0x07
 	inc	a
-;./exsoccer.c:691: g_Players[i].Direction = dir;
+;./exsoccer.c:690: g_Players[i].Direction = dir;
 	ld	-2 (ix), a
 	ld	(bc), a
 00112$:
-;./exsoccer.c:694: i8 dy = k_CelebDY[dir];
+;./exsoccer.c:693: i8 dy = k_CelebDY[dir];
 	ld	a, #<(_TickGoalCelebration_k_CelebDY_131073_1526)
 	add	a, -2 (ix)
 	ld	l, a
@@ -3331,7 +3328,7 @@ _TickGoalCelebration::
 	adc	a, #0x00
 	ld	h, a
 	ld	c, (hl)
-;./exsoccer.c:695: i8 dx = k_CelebDX[dir];
+;./exsoccer.c:694: i8 dx = k_CelebDX[dir];
 	ld	a, #<(_TickGoalCelebration_k_CelebDX_131073_1526)
 	add	a, -2 (ix)
 	ld	l, a
@@ -3341,7 +3338,7 @@ _TickGoalCelebration::
 	adc	a, #0x00
 	ld	h, a
 	ld	b, (hl)
-;./exsoccer.c:697: if (dy < 0 && g_Players[i].Y > limitY_Top) g_Players[i].Y--;
+;./exsoccer.c:696: if (dy < 0 && g_Players[i].Y > limitY_Top) g_Players[i].Y--;
 	ld	a, c
 	rlca
 	and	a,#0x01
@@ -3366,7 +3363,7 @@ _TickGoalCelebration::
 	ld	(hl), d
 	jp	00118$
 00117$:
-;./exsoccer.c:698: else if (dy > 0 && g_Players[i].Y < limitY_Bottom) g_Players[i].Y++;
+;./exsoccer.c:697: else if (dy > 0 && g_Players[i].Y < limitY_Bottom) g_Players[i].Y++;
 	xor	a, a
 	sub	a, c
 	jp	PO, 00387$
@@ -3390,7 +3387,7 @@ _TickGoalCelebration::
 	inc	hl
 	ld	(hl), d
 00118$:
-;./exsoccer.c:700: if (dx < 0 && g_Players[i].X > FIELD_BOUND_X_LEFT) g_Players[i].X--;
+;./exsoccer.c:699: if (dx < 0 && g_Players[i].X > FIELD_BOUND_X_LEFT) g_Players[i].X--;
 	bit	7, b
 	jr	Z, 00124$
 	pop	hl
@@ -3414,7 +3411,7 @@ _TickGoalCelebration::
 	ld	(hl), d
 	jp	00125$
 00124$:
-;./exsoccer.c:701: else if (dx > 0 && g_Players[i].X < FIELD_BOUND_X_RIGHT) g_Players[i].X++;
+;./exsoccer.c:700: else if (dx > 0 && g_Players[i].X < FIELD_BOUND_X_RIGHT) g_Players[i].X++;
 	xor	a, a
 	sub	a, b
 	jp	PO, 00388$
@@ -3441,7 +3438,7 @@ _TickGoalCelebration::
 	inc	hl
 	ld	(hl), b
 00125$:
-;./exsoccer.c:704: bool animFrame1 = ((g_Timer / 8) % 2) == 0;
+;./exsoccer.c:703: bool animFrame1 = ((g_Timer / 8) % 2) == 0;
 	ld	a, (_g_Timer+0)
 	ld	e, a
 	ld	d, #0x00
@@ -3480,7 +3477,7 @@ _TickGoalCelebration::
 	xor	a, a
 00390$:
 	ld	-2 (ix), a
-;./exsoccer.c:707: if (isBack) g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_BACK_1 : PLAYER_POSE_CELEBRATION_BACK_2;
+;./exsoccer.c:706: if (isBack) g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_BACK_1 : PLAYER_POSE_CELEBRATION_BACK_2;
 	ld	a, -4 (ix)
 	or	a, a
 	jr	Z, 00128$
@@ -3502,7 +3499,7 @@ _TickGoalCelebration::
 	ld	(hl), a
 	jp	00133$
 00128$:
-;./exsoccer.c:708: else g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_FRONT_1 : PLAYER_POSE_CELEBRATION_FRONT_2;
+;./exsoccer.c:707: else g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_FRONT_1 : PLAYER_POSE_CELEBRATION_FRONT_2;
 	ld	a, -2 (ix)
 	or	a, a
 	jr	Z, 00165$
@@ -3519,7 +3516,7 @@ _TickGoalCelebration::
 	ld	(hl), a
 	jp	00133$
 00131$:
-;./exsoccer.c:712: bool isUp = (dir == DIRECTION_UP || dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT);
+;./exsoccer.c:711: bool isUp = (dir == DIRECTION_UP || dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT);
 	ld	a, -2 (ix)
 	dec	a
 	jr	Z, 00168$
@@ -3534,7 +3531,7 @@ _TickGoalCelebration::
 00168$:
 	ld	a, #0x01
 00169$:
-;./exsoccer.c:713: g_Players[i].PatternId = isUp ? PLAYER_POSE_BACK : PLAYER_POSE_FRONT;
+;./exsoccer.c:712: g_Players[i].PatternId = isUp ? PLAYER_POSE_BACK : PLAYER_POSE_FRONT;
 	or	a, a
 	jr	Z, 00173$
 	ld	-3 (ix), #0x11
@@ -3551,11 +3548,11 @@ _TickGoalCelebration::
 	ld	a, -2 (ix)
 	ld	(hl), a
 00133$:
-;./exsoccer.c:678: for(u8 i=0; i<15; i++){
+;./exsoccer.c:677: for(u8 i=0; i<15; i++){
 	inc	-1 (ix)
 	jp	00154$
 00136$:
-;./exsoccer.c:718: if(g_Timer > 150){
+;./exsoccer.c:717: if(g_Timer > 150){
 	ld	a, #0x96
 	ld	hl, #_g_Timer
 	sub	a, (hl)
@@ -3566,7 +3563,7 @@ _TickGoalCelebration::
 ;	spillPairReg hl
 	ld	a, #0x0f
 	call	_V9_SetRegister
-;./exsoccer.c:720: ClearTextFromLayerA(12, 18, 8); // "IN  GOAL"
+;./exsoccer.c:719: ClearTextFromLayerA(12, 18, 8); // "IN  GOAL"
 	ld	a, #0x08
 	push	af
 	inc	sp
@@ -3575,19 +3572,19 @@ _TickGoalCelebration::
 ;	spillPairReg hl
 	ld	a, #0x0c
 	call	_ClearTextFromLayerA
-;./exsoccer.c:722: g_MatchStatus = MATCH_BEFORE_KICK_OFF;
+;./exsoccer.c:721: g_MatchStatus = MATCH_BEFORE_KICK_OFF;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x01
-;./exsoccer.c:723: g_Ball.PossessionPlayerId = NO_VALUE;
+;./exsoccer.c:722: g_Ball.PossessionPlayerId = NO_VALUE;
 	ld	hl, #(_g_Ball + 6)
 	ld	(hl), #0xff
-;./exsoccer.c:724: g_Ball.KickMoveState = 0;
+;./exsoccer.c:723: g_Ball.KickMoveState = 0;
 	ld	hl, #(_g_Ball + 13)
 	ld	(hl), #0x00
-;./exsoccer.c:725: g_Ball.ShotActive = 0;
+;./exsoccer.c:724: g_Ball.ShotActive = 0;
 	ld	hl, #(_g_Ball + 27)
 	ld	(hl), #0x00
-;./exsoccer.c:726: if(g_Team1ActivePlayer!=NO_VALUE) g_Players[g_Team1ActivePlayer].Status=PLAYER_STATUS_NONE;
+;./exsoccer.c:725: if(g_Team1ActivePlayer!=NO_VALUE) g_Players[g_Team1ActivePlayer].Status=PLAYER_STATUS_NONE;
 	ld	a, (_g_Team1ActivePlayer+0)
 	inc	a
 	jr	Z, 00138$
@@ -3610,7 +3607,7 @@ _TickGoalCelebration::
 	inc	hl
 	ld	(hl), a
 00138$:
-;./exsoccer.c:727: if(g_Team2ActivePlayer!=NO_VALUE) g_Players[g_Team2ActivePlayer].Status=PLAYER_STATUS_NONE;
+;./exsoccer.c:726: if(g_Team2ActivePlayer!=NO_VALUE) g_Players[g_Team2ActivePlayer].Status=PLAYER_STATUS_NONE;
 	ld	a, (_g_Team2ActivePlayer+0)
 	inc	a
 	jr	Z, 00140$
@@ -3633,31 +3630,31 @@ _TickGoalCelebration::
 	inc	hl
 	ld	(hl), a
 00140$:
-;./exsoccer.c:728: g_Team1ActivePlayer=NO_VALUE;
+;./exsoccer.c:727: g_Team1ActivePlayer=NO_VALUE;
 	ld	hl, #_g_Team1ActivePlayer
 	ld	(hl), #0xff
-;./exsoccer.c:729: g_Team2ActivePlayer=NO_VALUE;
+;./exsoccer.c:728: g_Team2ActivePlayer=NO_VALUE;
 	ld	hl, #_g_Team2ActivePlayer
 	ld	(hl), #0xff
-;./exsoccer.c:731: g_Ball.X = FIELD_POS_X_CENTER;
+;./exsoccer.c:730: g_Ball.X = FIELD_POS_X_CENTER;
 	ld	hl, #0x0078
 	ld	((_g_Ball + 2)), hl
-;./exsoccer.c:732: g_Ball.Y = FIELD_POS_Y_CENTER;
+;./exsoccer.c:731: g_Ball.Y = FIELD_POS_Y_CENTER;
 	ld	l, #0xf3
 	ld	(_g_Ball), hl
-;./exsoccer.c:733: g_Ball.PreviousY = g_Ball.Y;
+;./exsoccer.c:732: g_Ball.PreviousY = g_Ball.Y;
 	ld	bc, (#_g_Ball + 0)
 	ld	((_g_Ball + 7)), bc
-;./exsoccer.c:734: PutBallSprite();
+;./exsoccer.c:733: PutBallSprite();
 	call	_PutBallSprite
-;./exsoccer.c:736: for(u8 i=0; i<15; i++){
+;./exsoccer.c:735: for(u8 i=0; i<15; i++){
 	ld	de, #_g_Players
 	ld	-1 (ix), #0x00
 00156$:
 	ld	a, -1 (ix)
 	sub	a, #0x0f
 	jp	NC, 00147$
-;./exsoccer.c:737: if(i==REFEREE || g_Players[i].TeamId==TEAM_1 || g_Players[i].TeamId==TEAM_2){
+;./exsoccer.c:736: if(i==REFEREE || g_Players[i].TeamId==TEAM_1 || g_Players[i].TeamId==TEAM_2){
 	ld	a, -1 (ix)
 	sub	a, #0x0e
 	ld	a, #0x01
@@ -3691,11 +3688,11 @@ _TickGoalCelebration::
 	sub	a, #0x02
 	jr	NZ, 00157$
 00143$:
-;./exsoccer.c:739: if (i==REFEREE) {
+;./exsoccer.c:738: if (i==REFEREE) {
 	ld	a, c
 	or	a, a
 	jr	Z, 00142$
-;./exsoccer.c:740: g_Players[i].Direction=DIRECTION_RIGHT;
+;./exsoccer.c:739: g_Players[i].Direction=DIRECTION_RIGHT;
 	ld	c, -1 (ix)
 	ld	b, #0x00
 	ld	l, c
@@ -3719,28 +3716,28 @@ _TickGoalCelebration::
 	ld	bc, #0x000a
 	add	hl, bc
 	ld	(hl), #0x03
-;./exsoccer.c:741: g_Players[i].LastPose=0;
+;./exsoccer.c:740: g_Players[i].LastPose=0;
 	ld	l, -3 (ix)
 	ld	h, -2 (ix)
 	ld	bc, #0x000c
 	add	hl, bc
 	ld	(hl), #0x00
 00142$:
-;./exsoccer.c:743: SetPlayerTarget(i); 
+;./exsoccer.c:742: SetPlayerTarget(i); 
 	push	de
 	ld	a, -1 (ix)
 	call	_SetPlayerTarget
 	pop	de
 00157$:
-;./exsoccer.c:736: for(u8 i=0; i<15; i++){
+;./exsoccer.c:735: for(u8 i=0; i<15; i++){
 	inc	-1 (ix)
 	jp	00156$
 00147$:
-;./exsoccer.c:748: ShowFieldZone(FIELD_CENTRAL_ZONE);
+;./exsoccer.c:747: ShowFieldZone(FIELD_CENTRAL_ZONE);
 	ld	a, #0x01
 	call	_ShowFieldZone
 00158$:
-;./exsoccer.c:750: }
+;./exsoccer.c:749: }
 	ld	sp, ix
 	pop	ix
 	ret
@@ -3764,7 +3761,7 @@ _TickGoalCelebration_k_CelebDY_131073_1526:
 	.db #0x01	;  1
 	.db #0x00	;  0
 	.db #0xff	; -1
-;./exsoccer.c:753: void main()
+;./exsoccer.c:752: void main()
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
@@ -3773,22 +3770,22 @@ _main::
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-;./exsoccer.c:755: DEBUG_INIT();
+;./exsoccer.c:754: DEBUG_INIT();
 	call	_DEBUG_INIT
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:112: g_Bank0Segment[b] = s;
 	ld	hl, #0x0001
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:757: InitVariables();
+;./exsoccer.c:756: InitVariables();
 	call	_InitVariables
-;./exsoccer.c:758: V9_SetPort(V9_P15, 0);
+;./exsoccer.c:757: V9_SetPort(V9_P15, 0);
 	ld	l, #0x00
 ;	spillPairReg hl
 ;	spillPairReg hl
 	ld	a, #0x6f
 	call	_V9_SetPort
-;./exsoccer.c:760: VDP_SetMode(VDP_MODE_SCREEN0);
+;./exsoccer.c:759: VDP_SetMode(VDP_MODE_SCREEN0);
 	xor	a, a
 	call	_VDP_SetMode
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/vdp.h:712: inline void VDP_EnableVBlank(bool enable) { VDP_RegWriteBakMask(1, (u8)~R01_IE0, enable ? R01_IE0 : 0); }
@@ -3800,14 +3797,14 @@ _main::
 ;	spillPairReg hl
 	ld	a, #0x01
 	call	_VDP_RegWriteBakMask
-;./exsoccer.c:762: VDP_ClearVRAM();
+;./exsoccer.c:761: VDP_ClearVRAM();
 	call	_VDP_ClearVRAM
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:112: g_Bank0Segment[b] = s;
 	ld	hl, #0x000a
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:769: Print_SetTextFont(g_Font_MGL_Sample6, 1);
+;./exsoccer.c:768: Print_SetTextFont(g_Font_MGL_Sample6, 1);
 	ld	a, #0x01
 	push	af
 	inc	sp
@@ -3818,7 +3815,7 @@ _main::
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:771: Print_SetColor(15, 1);
+;./exsoccer.c:770: Print_SetColor(15, 1);
 	ld	l, #0x01
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -3831,7 +3828,7 @@ _main::
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
 	ld	hl, #(_g_PrintData + 6)
 	ld	(hl), #0x00
-;./exsoccer.c:773: Print_DrawText("Soccer League - 2026 Fausto Pracek");
+;./exsoccer.c:772: Print_DrawText("Soccer League - 2026 Fausto Pracek");
 	push	bc
 	ld	hl, #___str_5
 	call	_Print_DrawText
@@ -3842,24 +3839,24 @@ _main::
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
 	ld	hl, #(_g_PrintData + 6)
 	ld	(hl), #0x01
-;./exsoccer.c:775: Print_DrawText("fpracek@gmail.com");
+;./exsoccer.c:774: Print_DrawText("fpracek@gmail.com");
 	push	bc
 	ld	hl, #___str_6
 	call	_Print_DrawText
 	pop	bc
-;./exsoccer.c:777: const c8* str = "V9990 not found!";
+;./exsoccer.c:776: const c8* str = "V9990 not found!";
 	ld	de, #___str_4
-;./exsoccer.c:778: bool v9990IsFound=V9_Detect();
+;./exsoccer.c:777: bool v9990IsFound=V9_Detect();
 	push	bc
 	push	de
 	call	_V9_Detect
 	pop	de
 	pop	bc
 	ld	-1 (ix), a
-;./exsoccer.c:780: if (v9990IsFound){
+;./exsoccer.c:779: if (v9990IsFound){
 	or	a, a
 	jr	Z, 00102$
-;./exsoccer.c:781: str = "V9990 found!";
+;./exsoccer.c:780: str = "V9990 found!";
 	ld	de, #___str_7
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:223: g_PrintData.CursorX = x;
 	xor	a, a
@@ -3867,7 +3864,7 @@ _main::
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
 	ld	hl, #(_g_PrintData + 6)
 	ld	(hl), #0x07
-;./exsoccer.c:783: Print_DrawText("The game is running on V9990 monitor.");
+;./exsoccer.c:782: Print_DrawText("The game is running on V9990 monitor.");
 	push	bc
 	push	de
 	ld	hl, #___str_8
@@ -3881,27 +3878,27 @@ _main::
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/print.h:224: g_PrintData.CursorY = y;
 	ld	hl, #(_g_PrintData + 6)
 	ld	(hl), #0x03
-;./exsoccer.c:786: Print_DrawText(str);
+;./exsoccer.c:785: Print_DrawText(str);
 	ex	de, hl
 	call	_Print_DrawText
-;./exsoccer.c:787: if(!v9990IsFound){
+;./exsoccer.c:786: if(!v9990IsFound){
 	ld	a, -1 (ix)
 	or	a, a
 	jr	NZ, 00105$
 00148$:
 	jp	00148$
 00105$:
-;./exsoccer.c:791: InitializeV9990();
+;./exsoccer.c:790: InitializeV9990();
 	call	_InitializeV9990
-;./exsoccer.c:794: V9_SetPort(V9_P15, 0x10);
+;./exsoccer.c:793: V9_SetPort(V9_P15, 0x10);
 	ld	l, #0x10
 ;	spillPairReg hl
 ;	spillPairReg hl
 	ld	a, #0x6f
 	call	_V9_SetPort
-;./exsoccer.c:798: MainGameLoop();
+;./exsoccer.c:797: MainGameLoop();
 	call	_MainGameLoop
-;./exsoccer.c:802: }
+;./exsoccer.c:801: }
 	inc	sp
 	pop	ix
 	ret
@@ -3920,7 +3917,7 @@ ___str_7:
 ___str_8:
 	.ascii "The game is running on V9990 monitor."
 	.db 0x00
-;./exsoccer.c:804: void MainGameLoop(){
+;./exsoccer.c:803: void MainGameLoop(){
 ;	---------------------------------
 ; Function MainGameLoop
 ; ---------------------------------
@@ -3929,14 +3926,14 @@ _MainGameLoop::
 	ld	ix,#0
 	add	ix,sp
 	push	af
-;./exsoccer.c:805: u8 TickAiPlayerId=0;
+;./exsoccer.c:804: u8 TickAiPlayerId=0;
 	ld	-2 (ix), #0x00
-;./exsoccer.c:806: u8 AiTickSpeed=0;
+;./exsoccer.c:805: u8 AiTickSpeed=0;
 	ld	-1 (ix), #0x00
 00188$:
-;./exsoccer.c:808: UpdateV9990();
+;./exsoccer.c:807: UpdateV9990();
 	call	_UpdateV9990
-;./exsoccer.c:810: if(g_MatchStatus==MATCH_NOT_STARTED && g_FieldScrollingActionInProgress==NO_VALUE && g_ActiveFieldZone==FIELD_CENTRAL_ZONE){
+;./exsoccer.c:809: if(g_MatchStatus==MATCH_NOT_STARTED && g_FieldScrollingActionInProgress==NO_VALUE && g_ActiveFieldZone==FIELD_CENTRAL_ZONE){
 	ld	a, (_g_MatchStatus+0)
 	or	a, a
 	jr	NZ, 00103$
@@ -3946,67 +3943,67 @@ _MainGameLoop::
 	ld	a, (_g_ActiveFieldZone+0)
 	dec	a
 	jr	NZ, 00103$
-;./exsoccer.c:811: g_MatchStatus=MATCH_BEFORE_KICK_OFF;
+;./exsoccer.c:810: g_MatchStatus=MATCH_BEFORE_KICK_OFF;
 	ld	hl, #_g_MatchStatus
 	ld	(hl), #0x01
-;./exsoccer.c:812: for(u8 i=0;i<15;i++){
+;./exsoccer.c:811: for(u8 i=0;i<15;i++){
 	ld	c, #0x00
 00186$:
 	ld	a, c
 	sub	a, #0x0f
 	jr	NC, 00101$
-;./exsoccer.c:813: SetPlayerTarget(i);
+;./exsoccer.c:812: SetPlayerTarget(i);
 	push	bc
 	ld	a, c
 	call	_SetPlayerTarget
 	pop	bc
-;./exsoccer.c:812: for(u8 i=0;i<15;i++){
+;./exsoccer.c:811: for(u8 i=0;i<15;i++){
 	inc	c
 	jp	00186$
 00101$:
-;./exsoccer.c:815: TickPlayerToOwnTarget();
+;./exsoccer.c:814: TickPlayerToOwnTarget();
 	call	_TickPlayerToOwnTarget
 00103$:
-;./exsoccer.c:818: TickCornerKick(); // <<< Added Hook
+;./exsoccer.c:817: TickCornerKick(); // <<< Added Hook
 	call	_TickCornerKick
-;./exsoccer.c:819: TickGoalKick();
+;./exsoccer.c:818: TickGoalKick();
 	call	_TickGoalKick
-;./exsoccer.c:820: TickThrowIn();
+;./exsoccer.c:819: TickThrowIn();
 	call	_TickThrowIn
-;./exsoccer.c:821: TickPonPonGirlsAnimation();
+;./exsoccer.c:820: TickPonPonGirlsAnimation();
 	call	_TickPonPonGirlsAnimation
-;./exsoccer.c:822: TickGoalCelebration();
+;./exsoccer.c:821: TickGoalCelebration();
 	call	_TickGoalCelebration
-;./exsoccer.c:823: TickPlayerToOwnTarget();
+;./exsoccer.c:822: TickPlayerToOwnTarget();
 	call	_TickPlayerToOwnTarget
-;./exsoccer.c:824: TickActiveFieldZone();
+;./exsoccer.c:823: TickActiveFieldZone();
 	call	_TickActiveFieldZone
-;./exsoccer.c:825: if(g_FieldScrollingActionInProgress==NO_VALUE){
+;./exsoccer.c:824: if(g_FieldScrollingActionInProgress==NO_VALUE){
 	ld	a, (_g_FieldScrollingActionInProgress+0)
 	inc	a
 	jr	NZ, 00119$
-;./exsoccer.c:827: if(g_MatchStatus == MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER) {
+;./exsoccer.c:826: if(g_MatchStatus == MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER) {
 	ld	a,(_g_MatchStatus+0)
 	cp	a,#0x0c
 	jr	Z, 00115$
 	sub	a, #0x0d
 	jr	NZ, 00119$
 00115$:
-;./exsoccer.c:829: if(AiTickSpeed >= 2){ // Speed up AI cycle (was 5)
+;./exsoccer.c:828: if(AiTickSpeed >= 2){ // Speed up AI cycle (was 5)
 	ld	a, -1 (ix)
 	sub	a, #0x02
 	jr	C, 00119$
-;./exsoccer.c:830: AiTickSpeed=0;
+;./exsoccer.c:829: AiTickSpeed=0;
 	ld	-1 (ix), #0x00
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:112: g_Bank0Segment[b] = s;
 	ld	hl, #0x0016
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:832: TickAI(REFEREE);
+;./exsoccer.c:831: TickAI(REFEREE);
 	ld	a, #0x0e
 	call	_TickAI
-;./exsoccer.c:833: TickAI(TickAiPlayerId);
+;./exsoccer.c:832: TickAI(TickAiPlayerId);
 	ld	a, -2 (ix)
 	call	_TickAI
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:112: g_Bank0Segment[b] = s;
@@ -4014,16 +4011,16 @@ _MainGameLoop::
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:835: TickAiPlayerId++;
+;./exsoccer.c:834: TickAiPlayerId++;
 	inc	-2 (ix)
-;./exsoccer.c:836: if(TickAiPlayerId==14){ // Only iterate 0-13 (Players)
+;./exsoccer.c:835: if(TickAiPlayerId==14){ // Only iterate 0-13 (Players)
 	ld	a, -2 (ix)
 	sub	a, #0x0e
 	jr	NZ, 00107$
-;./exsoccer.c:837: TickAiPlayerId=0;
+;./exsoccer.c:836: TickAiPlayerId=0;
 	ld	-2 (ix), #0x00
 00107$:
-;./exsoccer.c:841: if (g_Ball.PossessionPlayerId != NO_VALUE && g_Ball.PossessionPlayerId < 14) {
+;./exsoccer.c:840: if (g_Ball.PossessionPlayerId != NO_VALUE && g_Ball.PossessionPlayerId < 14) {
 	ld	bc, #_g_Ball+6
 	ld	a, (bc)
 	ld	e, a
@@ -4032,7 +4029,7 @@ _MainGameLoop::
 	ld	a, e
 	sub	a, #0x0e
 	jr	NC, 00119$
-;./exsoccer.c:843: if (g_Ball.PossessionPlayerId != TickAiPlayerId) {
+;./exsoccer.c:842: if (g_Ball.PossessionPlayerId != TickAiPlayerId) {
 	ld	a, -2 (ix)
 	sub	a, e
 	jr	Z, 00119$
@@ -4041,7 +4038,7 @@ _MainGameLoop::
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:845: TickAI(g_Ball.PossessionPlayerId);
+;./exsoccer.c:844: TickAI(g_Ball.PossessionPlayerId);
 	ld	a, (bc)
 	call	_TickAI
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/rom_mapper.h:112: g_Bank0Segment[b] = s;
@@ -4049,45 +4046,45 @@ _MainGameLoop::
 	ld	((_g_Bank0Segment + 4)), hl
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/system.h:109: inline void Poke16(u16 addr, u16 val) { *(u16*)addr = val; }
 	ld	(0x7000), hl
-;./exsoccer.c:846: SET_BANK_SEGMENT(2,1);
+;./exsoccer.c:845: SET_BANK_SEGMENT(2,1);
 00119$:
-;./exsoccer.c:854: EnforcePenaltyBoxRestriction();
+;./exsoccer.c:853: EnforcePenaltyBoxRestriction();
 	call	_EnforcePenaltyBoxRestriction
-;./exsoccer.c:856: UpdateSpritesPositions();
+;./exsoccer.c:855: UpdateSpritesPositions();
 	call	_UpdateSpritesPositions
-;./exsoccer.c:857: TickShotCursor();
+;./exsoccer.c:856: TickShotCursor();
 	call	_TickShotCursor
-;./exsoccer.c:858: TickUpdateTime();
+;./exsoccer.c:857: TickUpdateTime();
 	call	_TickUpdateTime
-;./exsoccer.c:859: TickShowKickOff();
+;./exsoccer.c:858: TickShowKickOff();
 	call	_TickShowKickOff
-;./exsoccer.c:860: if(g_FieldScrollingActionInProgress==NO_VALUE){
+;./exsoccer.c:859: if(g_FieldScrollingActionInProgress==NO_VALUE){
 	ld	a, (_g_FieldScrollingActionInProgress+0)
 	inc	a
 	jr	NZ, 00121$
-;./exsoccer.c:861: TickBallCollision();
+;./exsoccer.c:860: TickBallCollision();
 	call	_TickBallCollision
-;./exsoccer.c:862: TickBallFlying();
+;./exsoccer.c:861: TickBallFlying();
 	call	_TickBallFlying
-;./exsoccer.c:863: UpdatePassTarget();
+;./exsoccer.c:862: UpdatePassTarget();
 	call	_UpdatePassTarget
-;./exsoccer.c:864: TickGoalkeeperAnimation();
+;./exsoccer.c:863: TickGoalkeeperAnimation();
 	call	_TickGoalkeeperAnimation
 00121$:
-;./exsoccer.c:867: TickCheckBallBoundaries();
+;./exsoccer.c:866: TickCheckBallBoundaries();
 	call	_TickCheckBallBoundaries
-;./exsoccer.c:868: TickTeamJoystick(TEAM_1,GetJoystick1Direction());
+;./exsoccer.c:867: TickTeamJoystick(TEAM_1,GetJoystick1Direction());
 	call	_GetJoystick1Direction
 	ld	l, a
 ;	spillPairReg hl
 ;	spillPairReg hl
 	ld	a, #0x01
 	call	_TickTeamJoystick
-;./exsoccer.c:869: if(g_GameWith2Players){
+;./exsoccer.c:868: if(g_GameWith2Players){
 	ld	a, (_g_GameWith2Players+0)
 	or	a, a
 	jr	Z, 00123$
-;./exsoccer.c:870: TickTeamJoystick(TEAM_2,GetJoystick2Direction());
+;./exsoccer.c:869: TickTeamJoystick(TEAM_2,GetJoystick2Direction());
 	call	_GetJoystick2Direction
 	ld	l, a
 ;	spillPairReg hl
@@ -4095,18 +4092,18 @@ _MainGameLoop::
 	ld	a, #0x02
 	call	_TickTeamJoystick
 00123$:
-;./exsoccer.c:873: AiTickSpeed++;
+;./exsoccer.c:872: AiTickSpeed++;
 	inc	-1 (ix)
-;./exsoccer.c:875: if (g_ActionCooldown > 0) {
+;./exsoccer.c:874: if (g_ActionCooldown > 0) {
 	ld	a, (_g_ActionCooldown+0)
 	or	a, a
 	jr	Z, 00132$
-;./exsoccer.c:876: g_ActionCooldown--;
+;./exsoccer.c:875: g_ActionCooldown--;
 	ld	hl, #_g_ActionCooldown
 	dec	(hl)
 	jp	00133$
 00132$:
-;./exsoccer.c:879: if (g_Team1ActivePlayer != NO_VALUE && g_Players[g_Team1ActivePlayer].Status == PLAYER_STATUS_POSITIONED) 
+;./exsoccer.c:878: if (g_Team1ActivePlayer != NO_VALUE && g_Players[g_Team1ActivePlayer].Status == PLAYER_STATUS_POSITIONED) 
 	ld	a, (_g_Team1ActivePlayer+0)
 	inc	a
 	jr	Z, 00125$
@@ -4130,14 +4127,14 @@ _MainGameLoop::
 	dec	hl
 	ld	a, c
 	sub	a, #0x04
-;./exsoccer.c:880: g_Players[g_Team1ActivePlayer].Status = PLAYER_STATUS_NONE;
+;./exsoccer.c:879: g_Players[g_Team1ActivePlayer].Status = PLAYER_STATUS_NONE;
 	or	a,b
 	jr	NZ, 00125$
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
 00125$:
-;./exsoccer.c:881: if (g_GameWith2Players && g_Team2ActivePlayer != NO_VALUE && g_Players[g_Team2ActivePlayer].Status == PLAYER_STATUS_POSITIONED)
+;./exsoccer.c:880: if (g_GameWith2Players && g_Team2ActivePlayer != NO_VALUE && g_Players[g_Team2ActivePlayer].Status == PLAYER_STATUS_POSITIONED)
 	ld	a, (_g_GameWith2Players+0)
 	or	a, a
 	jr	Z, 00133$
@@ -4164,23 +4161,23 @@ _MainGameLoop::
 	dec	hl
 	ld	a, c
 	sub	a, #0x04
-;./exsoccer.c:882: g_Players[g_Team2ActivePlayer].Status = PLAYER_STATUS_NONE;
+;./exsoccer.c:881: g_Players[g_Team2ActivePlayer].Status = PLAYER_STATUS_NONE;
 	or	a,b
 	jr	NZ, 00133$
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
 00133$:
-;./exsoccer.c:885: if (g_ShootCooldown > 0) {
+;./exsoccer.c:884: if (g_ShootCooldown > 0) {
 	ld	a, (_g_ShootCooldown+0)
 	or	a, a
 	jp	Z, 00188$
-;./exsoccer.c:886: g_ShootCooldown--;
+;./exsoccer.c:885: g_ShootCooldown--;
 	ld	hl, #_g_ShootCooldown
 	dec	(hl)
-;./exsoccer.c:889: }
+;./exsoccer.c:888: }
 	jp	00188$
-;./exsoccer.c:893: void UpdatePlayerPatternByDirection(u8 playerId){
+;./exsoccer.c:892: void UpdatePlayerPatternByDirection(u8 playerId){
 ;	---------------------------------
 ; Function UpdatePlayerPatternByDirection
 ; ---------------------------------
@@ -4192,7 +4189,7 @@ _UpdatePlayerPatternByDirection::
 	add	hl, sp
 	ld	sp, hl
 	ld	-1 (ix), a
-;./exsoccer.c:894: if(g_Players[playerId].Status==PLAYER_STATUS_POSITIONED){
+;./exsoccer.c:893: if(g_Players[playerId].Status==PLAYER_STATUS_POSITIONED){
 	ld	bc, #_g_Players+0
 	ld	e, -1 (ix)
 	ld	d, #0x00
@@ -4217,10 +4214,10 @@ _UpdatePlayerPatternByDirection::
 	sub	a, #0x04
 	or	a, b
 	jp	Z,00122$
-;./exsoccer.c:895: return;
+;./exsoccer.c:894: return;
 	jp	00102$
 00102$:
-;./exsoccer.c:899: if(g_Players[playerId].Direction!=g_Players[playerId].PreviousDirection){
+;./exsoccer.c:898: if(g_Players[playerId].Direction!=g_Players[playerId].PreviousDirection){
 	ld	hl, #0x000a
 	add	hl, de
 	ex	(sp), hl
@@ -4232,13 +4229,13 @@ _UpdatePlayerPatternByDirection::
 	ld	-3 (ix), l
 	ld	-2 (ix), h
 	ld	b, (hl)
-;./exsoccer.c:900: if(g_Players[playerId].Direction==DIRECTION_NONE){
+;./exsoccer.c:899: if(g_Players[playerId].Direction==DIRECTION_NONE){
 	ld	a,c
 	cp	a,b
 	jr	Z, 00112$
 	or	a, a
 	jr	NZ, 00104$
-;./exsoccer.c:901: g_Players[playerId].PatternId=GetNoMovingPlayerPatternId(g_Players[playerId].PreviousDirection);
+;./exsoccer.c:900: g_Players[playerId].PatternId=GetNoMovingPlayerPatternId(g_Players[playerId].PreviousDirection);
 	ld	hl, #0x0008
 	add	hl, de
 	push	hl
@@ -4248,7 +4245,7 @@ _UpdatePlayerPatternByDirection::
 	pop	de
 	pop	hl
 	ld	(hl), a
-;./exsoccer.c:902: g_Players[playerId].PreviousDirection=g_Players[playerId].Direction;
+;./exsoccer.c:901: g_Players[playerId].PreviousDirection=g_Players[playerId].Direction;
 	pop	hl
 	push	hl
 	ld	a, (hl)
@@ -4259,54 +4256,54 @@ _UpdatePlayerPatternByDirection::
 	ld	(hl), a
 	jp	00113$
 00104$:
-;./exsoccer.c:905: g_Players[playerId].PreviousDirection=g_Players[playerId].Direction;
+;./exsoccer.c:904: g_Players[playerId].PreviousDirection=g_Players[playerId].Direction;
 	ld	l, -3 (ix)
 	ld	h, -2 (ix)
 	ld	(hl), c
-;./exsoccer.c:906: g_Players[playerId].LastPose=0;
+;./exsoccer.c:905: g_Players[playerId].LastPose=0;
 	ld	hl, #0x000c
 	add	hl, de
 	ld	(hl), #0x00
 	jp	00113$
 00112$:
-;./exsoccer.c:912: if(g_Players[playerId].Direction!=DIRECTION_NONE){
+;./exsoccer.c:911: if(g_Players[playerId].Direction!=DIRECTION_NONE){
 	ld	a, c
 	or	a, a
 	jr	Z, 00113$
-;./exsoccer.c:913: if(g_Players[playerId].LastPose==1){
+;./exsoccer.c:912: if(g_Players[playerId].LastPose==1){
 	ld	hl, #0x000c
 	add	hl, de
 	ld	a, (hl)
-;./exsoccer.c:914: g_Players[playerId].LastPose=0;
+;./exsoccer.c:913: g_Players[playerId].LastPose=0;
 	dec	a
 	jr	NZ, 00107$
 	ld	(hl),a
 	jp	00113$
 00107$:
-;./exsoccer.c:917: g_Players[playerId].LastPose=1;
+;./exsoccer.c:916: g_Players[playerId].LastPose=1;
 	ld	(hl), #0x01
 00113$:
-;./exsoccer.c:923: if(g_Players[playerId].TeamId==REFEREE && g_MatchStatus==MATCH_BEFORE_KICK_OFF ){
+;./exsoccer.c:922: if(g_Players[playerId].TeamId==REFEREE && g_MatchStatus==MATCH_BEFORE_KICK_OFF ){
 	ld	c, e
 	ld	b, d
 	ld	hl, #9
 	add	hl, bc
 	ld	a, (hl)
-;./exsoccer.c:899: if(g_Players[playerId].Direction!=g_Players[playerId].PreviousDirection){
+;./exsoccer.c:898: if(g_Players[playerId].Direction!=g_Players[playerId].PreviousDirection){
 	pop	hl
 	push	hl
 	ld	c, (hl)
-;./exsoccer.c:923: if(g_Players[playerId].TeamId==REFEREE && g_MatchStatus==MATCH_BEFORE_KICK_OFF ){
+;./exsoccer.c:922: if(g_Players[playerId].TeamId==REFEREE && g_MatchStatus==MATCH_BEFORE_KICK_OFF ){
 	sub	a, #0x0e
 	jr	NZ, 00119$
 	ld	a, (_g_MatchStatus+0)
 	dec	a
 	jr	NZ, 00119$
-;./exsoccer.c:926: if(g_Players[playerId].Direction!=DIRECTION_NONE){
+;./exsoccer.c:925: if(g_Players[playerId].Direction!=DIRECTION_NONE){
 	ld	a, c
 	or	a, a
 	jr	Z, 00122$
-;./exsoccer.c:927: g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
+;./exsoccer.c:926: g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
 	ld	hl, #0x0008
 	add	hl, de
 	push	hl
@@ -4316,11 +4313,11 @@ _UpdatePlayerPatternByDirection::
 	ld	(de), a
 	jp	00122$
 00119$:
-;./exsoccer.c:931: if(g_Players[playerId].Direction!=DIRECTION_NONE){
+;./exsoccer.c:930: if(g_Players[playerId].Direction!=DIRECTION_NONE){
 	ld	a, c
 	or	a, a
 	jr	Z, 00122$
-;./exsoccer.c:932: g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
+;./exsoccer.c:931: g_Players[playerId].PatternId=GetPatternIdByPoseAndDirection(playerId);
 	ld	hl, #0x0008
 	add	hl, de
 	push	hl
@@ -4329,19 +4326,19 @@ _UpdatePlayerPatternByDirection::
 	pop	hl
 	ld	(hl), a
 00122$:
-;./exsoccer.c:935: }
+;./exsoccer.c:934: }
 	ld	sp, ix
 	pop	ix
 	ret
-;./exsoccer.c:938: u8 GetNoMovingPlayerPatternId(u8 direction){
+;./exsoccer.c:937: u8 GetNoMovingPlayerPatternId(u8 direction){
 ;	---------------------------------
 ; Function GetNoMovingPlayerPatternId
 ; ---------------------------------
 _GetNoMovingPlayerPatternId::
 	ld	e, a
-;./exsoccer.c:939: u8 patternId=PLAYER_POSE_FRONT_PLAYING; // Default fallback
+;./exsoccer.c:938: u8 patternId=PLAYER_POSE_FRONT_PLAYING; // Default fallback
 	ld	c, #0x13
-;./exsoccer.c:940: switch (direction){
+;./exsoccer.c:939: switch (direction){
 	ld	a, #0x08
 	sub	a, e
 	jr	C, 00110$
@@ -4361,73 +4358,73 @@ _GetNoMovingPlayerPatternId::
 	jp	00107$
 	jp	00103$
 	jp	00105$
-;./exsoccer.c:941: case DIRECTION_DOWN:
+;./exsoccer.c:940: case DIRECTION_DOWN:
 00101$:
-;./exsoccer.c:942: patternId=PLAYER_POSE_FRONT_PLAYING;
+;./exsoccer.c:941: patternId=PLAYER_POSE_FRONT_PLAYING;
 	ld	c, #0x13
-;./exsoccer.c:943: break;
+;./exsoccer.c:942: break;
 	jp	00110$
-;./exsoccer.c:944: case DIRECTION_UP:
+;./exsoccer.c:943: case DIRECTION_UP:
 00102$:
-;./exsoccer.c:945: patternId=PLAYER_POSE_BACK_PLAYING;
+;./exsoccer.c:944: patternId=PLAYER_POSE_BACK_PLAYING;
 	ld	c, #0x16
-;./exsoccer.c:946: break;
+;./exsoccer.c:945: break;
 	jp	00110$
-;./exsoccer.c:947: case DIRECTION_LEFT:
+;./exsoccer.c:946: case DIRECTION_LEFT:
 00103$:
-;./exsoccer.c:948: patternId=PLAYER_POSE_LEFT;
+;./exsoccer.c:947: patternId=PLAYER_POSE_LEFT;
 	ld	c, #0x12
-;./exsoccer.c:949: break;
+;./exsoccer.c:948: break;
 	jp	00110$
-;./exsoccer.c:950: case DIRECTION_RIGHT:
+;./exsoccer.c:949: case DIRECTION_RIGHT:
 00104$:
-;./exsoccer.c:951: patternId=PLAYER_POSE_RIGHT;
+;./exsoccer.c:950: patternId=PLAYER_POSE_RIGHT;
 	ld	c, #0x9d
-;./exsoccer.c:952: break;
+;./exsoccer.c:951: break;
 	jp	00110$
-;./exsoccer.c:953: case DIRECTION_UP_LEFT:
+;./exsoccer.c:952: case DIRECTION_UP_LEFT:
 00105$:
-;./exsoccer.c:954: patternId=PLAYER_POSE_MOVE_UP_LEFT_2;
+;./exsoccer.c:953: patternId=PLAYER_POSE_MOVE_UP_LEFT_2;
 	ld	c, #0x82
-;./exsoccer.c:955: break;
+;./exsoccer.c:954: break;
 	jp	00110$
-;./exsoccer.c:956: case DIRECTION_UP_RIGHT:
+;./exsoccer.c:955: case DIRECTION_UP_RIGHT:
 00106$:
-;./exsoccer.c:957: patternId=PLAYER_POSE_MOVE_UP_RIGHT_1;
+;./exsoccer.c:956: patternId=PLAYER_POSE_MOVE_UP_RIGHT_1;
 	ld	c, #0x0d
-;./exsoccer.c:958: break;
+;./exsoccer.c:957: break;
 	jp	00110$
-;./exsoccer.c:959: case DIRECTION_DOWN_LEFT:
+;./exsoccer.c:958: case DIRECTION_DOWN_LEFT:
 00107$:
-;./exsoccer.c:960: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_1;
+;./exsoccer.c:959: patternId=PLAYER_POSE_MOVE_DOWN_LEFT_1;
 	ld	c, #0x09
-;./exsoccer.c:961: break;
+;./exsoccer.c:960: break;
 	jp	00110$
-;./exsoccer.c:962: case DIRECTION_DOWN_RIGHT:
+;./exsoccer.c:961: case DIRECTION_DOWN_RIGHT:
 00108$:
-;./exsoccer.c:963: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_2;
+;./exsoccer.c:962: patternId=PLAYER_POSE_MOVE_DOWN_RIGHT_2;
 	ld	c, #0x86
-;./exsoccer.c:964: break;
+;./exsoccer.c:963: break;
 	jp	00110$
-;./exsoccer.c:965: case DIRECTION_NONE:
+;./exsoccer.c:964: case DIRECTION_NONE:
 00109$:
-;./exsoccer.c:968: patternId=PLAYER_POSE_FRONT_PLAYING;
+;./exsoccer.c:967: patternId=PLAYER_POSE_FRONT_PLAYING;
 	ld	c, #0x13
-;./exsoccer.c:970: }
+;./exsoccer.c:969: }
 00110$:
-;./exsoccer.c:971: return patternId;
+;./exsoccer.c:970: return patternId;
 	ld	a, c
-;./exsoccer.c:972: }
+;./exsoccer.c:971: }
 	ret
-;./exsoccer.c:974: u8 GetNewPoseByDirection(u8 direction){
+;./exsoccer.c:973: u8 GetNewPoseByDirection(u8 direction){
 ;	---------------------------------
 ; Function GetNewPoseByDirection
 ; ---------------------------------
 _GetNewPoseByDirection::
 	ld	e, a
-;./exsoccer.c:975: u8 pose=NO_VALUE;
+;./exsoccer.c:974: u8 pose=NO_VALUE;
 	ld	c, #0xff
-;./exsoccer.c:976: switch (direction)
+;./exsoccer.c:975: switch (direction)
 	ld	a, #0x08
 	sub	a, e
 	jr	C, 00109$
@@ -4447,65 +4444,65 @@ _GetNewPoseByDirection::
 	jp	00108$
 	jp	00103$
 	jp	00107$
-;./exsoccer.c:978: case DIRECTION_DOWN:
+;./exsoccer.c:977: case DIRECTION_DOWN:
 00101$:
-;./exsoccer.c:979: pose=PLAYER_POSE_MOVE_DOWN_1;
+;./exsoccer.c:978: pose=PLAYER_POSE_MOVE_DOWN_1;
 	ld	c, #0x00
-;./exsoccer.c:980: break;
+;./exsoccer.c:979: break;
 	jp	00109$
-;./exsoccer.c:981: case DIRECTION_UP:
+;./exsoccer.c:980: case DIRECTION_UP:
 00102$:
-;./exsoccer.c:982: pose=PLAYER_POSE_MOVE_UP_1;
+;./exsoccer.c:981: pose=PLAYER_POSE_MOVE_UP_1;
 	ld	c, #0x02
-;./exsoccer.c:983: break;
+;./exsoccer.c:982: break;
 	jp	00109$
-;./exsoccer.c:984: case DIRECTION_LEFT:
+;./exsoccer.c:983: case DIRECTION_LEFT:
 00103$:
-;./exsoccer.c:985: pose=PLAYER_POSE_MOVE_LEFT_1;
+;./exsoccer.c:984: pose=PLAYER_POSE_MOVE_LEFT_1;
 	ld	c, #0x05
-;./exsoccer.c:986: break;	
+;./exsoccer.c:985: break;	
 	jp	00109$
-;./exsoccer.c:987: case DIRECTION_RIGHT:
+;./exsoccer.c:986: case DIRECTION_RIGHT:
 00104$:
-;./exsoccer.c:988: pose=PLAYER_POSE_MOVE_RIGHT_1;
+;./exsoccer.c:987: pose=PLAYER_POSE_MOVE_RIGHT_1;
 	ld	c, #0x89
-;./exsoccer.c:989: break;	
+;./exsoccer.c:988: break;	
 	jp	00109$
-;./exsoccer.c:990: case DIRECTION_UP_RIGHT:
+;./exsoccer.c:989: case DIRECTION_UP_RIGHT:
 00105$:
-;./exsoccer.c:991: pose=PLAYER_POSE_MOVE_UP_RIGHT_1;
+;./exsoccer.c:990: pose=PLAYER_POSE_MOVE_UP_RIGHT_1;
 	ld	c, #0x0d
-;./exsoccer.c:992: break;	
+;./exsoccer.c:991: break;	
 	jp	00109$
-;./exsoccer.c:993: case DIRECTION_DOWN_RIGHT:
+;./exsoccer.c:992: case DIRECTION_DOWN_RIGHT:
 00106$:
-;./exsoccer.c:994: pose=PLAYER_POSE_MOVE_DOWN_RIGHT_1;
+;./exsoccer.c:993: pose=PLAYER_POSE_MOVE_DOWN_RIGHT_1;
 	ld	c, #0x85
-;./exsoccer.c:995: break;	
+;./exsoccer.c:994: break;	
 	jp	00109$
-;./exsoccer.c:996: case DIRECTION_UP_LEFT:
+;./exsoccer.c:995: case DIRECTION_UP_LEFT:
 00107$:
-;./exsoccer.c:997: pose=PLAYER_POSE_MOVE_UP_LEFT_1;
+;./exsoccer.c:996: pose=PLAYER_POSE_MOVE_UP_LEFT_1;
 	ld	c, #0x83
-;./exsoccer.c:998: break;	
+;./exsoccer.c:997: break;	
 	jp	00109$
-;./exsoccer.c:999: case DIRECTION_DOWN_LEFT:
+;./exsoccer.c:998: case DIRECTION_DOWN_LEFT:
 00108$:
-;./exsoccer.c:1000: pose=PLAYER_POSE_MOVE_DOWN_LEFT_1;
+;./exsoccer.c:999: pose=PLAYER_POSE_MOVE_DOWN_LEFT_1;
 	ld	c, #0x09
-;./exsoccer.c:1002: }
+;./exsoccer.c:1001: }
 00109$:
-;./exsoccer.c:1003: return pose;
+;./exsoccer.c:1002: return pose;
 	ld	a, c
-;./exsoccer.c:1004: }
+;./exsoccer.c:1003: }
 	ret
-;./exsoccer.c:1006: u8 GetPatternIdByPoseAndDirection(u8 playerId){
+;./exsoccer.c:1005: u8 GetPatternIdByPoseAndDirection(u8 playerId){
 ;	---------------------------------
 ; Function GetPatternIdByPoseAndDirection
 ; ---------------------------------
 _GetPatternIdByPoseAndDirection::
 	ld	e, a
-;./exsoccer.c:1007: u8 pose = g_Players[playerId].LastPose;
+;./exsoccer.c:1006: u8 pose = g_Players[playerId].LastPose;
 	ld	bc, #_g_Players+0
 	ld	d, #0x00
 	ld	l, e
@@ -4521,25 +4518,25 @@ _GetPatternIdByPoseAndDirection::
 	push	de
 	pop	iy
 	ld	c, 12 (iy)
-;./exsoccer.c:1008: u8 dir = g_Players[playerId].Direction;
+;./exsoccer.c:1007: u8 dir = g_Players[playerId].Direction;
 	ld	hl, #10
 	add	hl, de
 	ld	e, (hl)
-;./exsoccer.c:1011: if (dir > 8) dir = DIRECTION_NONE;
+;./exsoccer.c:1010: if (dir > 8) dir = DIRECTION_NONE;
 	ld	a, #0x08
 	sub	a, e
 	jr	NC, 00102$
 	ld	e, #0x00
 00102$:
-;./exsoccer.c:1013: if (dir == DIRECTION_NONE) {
+;./exsoccer.c:1012: if (dir == DIRECTION_NONE) {
 	ld	a, e
 	or	a, a
 	jr	NZ, 00104$
-;./exsoccer.c:1014: return GetNoMovingPlayerPatternId(dir); // Assuming logic for NONE inside
+;./exsoccer.c:1013: return GetNoMovingPlayerPatternId(dir); // Assuming logic for NONE inside
 	ld	a, e
 	jp	_GetNoMovingPlayerPatternId
 00104$:
-;./exsoccer.c:1032: return k_MovePats[dir * 2 + (pose ? 1 : 0)];
+;./exsoccer.c:1031: return k_MovePats[dir * 2 + (pose ? 1 : 0)];
 	sla	e
 	ld	a, c
 	or	a, a
@@ -4559,7 +4556,7 @@ _GetPatternIdByPoseAndDirection::
 	ld	de, #_GetPatternIdByPoseAndDirection_k_MovePats_65537_1693
 	add	hl, de
 	ld	a, (hl)
-;./exsoccer.c:1033: }
+;./exsoccer.c:1032: }
 	ret
 _GetPatternIdByPoseAndDirection_k_MovePats_65537_1693:
 	.db #0x00	; 0
@@ -4580,7 +4577,7 @@ _GetPatternIdByPoseAndDirection_k_MovePats_65537_1693:
 	.db #0x06	; 6
 	.db #0x83	; 131
 	.db #0x82	; 130
-;./exsoccer.c:1034: void SetPlayerTarget(u8 playerId){
+;./exsoccer.c:1033: void SetPlayerTarget(u8 playerId){
 ;	---------------------------------
 ; Function SetPlayerTarget
 ; ---------------------------------
@@ -4592,7 +4589,7 @@ _SetPlayerTarget::
 	add	hl, sp
 	ld	sp, hl
 	ld	-1 (ix), a
-;./exsoccer.c:1035: if(g_FieldScrollingActionInProgress!=NO_VALUE && g_MatchStatus!=MATCH_BEFORE_KICK_OFF){
+;./exsoccer.c:1034: if(g_FieldScrollingActionInProgress!=NO_VALUE && g_MatchStatus!=MATCH_BEFORE_KICK_OFF){
 	ld	a, (_g_MatchStatus+0)
 	dec	a
 	ld	a, #0x01
@@ -4604,14 +4601,14 @@ _SetPlayerTarget::
 	inc	a
 	jr	Z, 00102$
 	bit	0, -2 (ix)
-;./exsoccer.c:1036: return;
+;./exsoccer.c:1035: return;
 	jp	Z,00121$
 00102$:
-;./exsoccer.c:1038: switch(g_MatchStatus){
+;./exsoccer.c:1037: switch(g_MatchStatus){
 	ld	a, -2 (ix)
 	or	a, a
 	jp	Z, 00121$
-;./exsoccer.c:1060: if(g_Players[playerId].TeamId==REFEREE){
+;./exsoccer.c:1059: if(g_Players[playerId].TeamId==REFEREE){
 	ld	bc, #_g_Players+0
 	ld	e, -1 (ix)
 	ld	d, #0x00
@@ -4629,27 +4626,27 @@ _SetPlayerTarget::
 	pop	iy
 	ld	a, 9 (iy)
 	ld	-13 (ix), a
-;./exsoccer.c:1062: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
+;./exsoccer.c:1061: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
 	ld	hl, #0x0010
 	add	hl, de
 	ld	-12 (ix), l
 	ld	-11 (ix), h
-;./exsoccer.c:1063: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
+;./exsoccer.c:1062: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
 	ld	hl, #0x000e
 	add	hl, de
 	ld	-10 (ix), l
 	ld	-9 (ix), h
-;./exsoccer.c:1060: if(g_Players[playerId].TeamId==REFEREE){
+;./exsoccer.c:1059: if(g_Players[playerId].TeamId==REFEREE){
 	ld	a, -13 (ix)
 	sub	a, #0x0e
 	jr	NZ, 00118$
-;./exsoccer.c:1062: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
+;./exsoccer.c:1061: g_Players[playerId].TargetX=FIELD_POS_X_CENTER - 30; 
 	ld	l, -12 (ix)
 	ld	h, -11 (ix)
 	ld	(hl), #0x5a
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:1063: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
+;./exsoccer.c:1062: g_Players[playerId].TargetY=FIELD_POS_Y_CENTER - 40; 
 	ld	l, -10 (ix)
 	ld	h, -9 (ix)
 	ld	(hl), #0xcb
@@ -4657,18 +4654,18 @@ _SetPlayerTarget::
 	ld	(hl), #0x00
 	jp	00121$
 00118$:
-;./exsoccer.c:1066: u8 role = g_Players[playerId].Role;
+;./exsoccer.c:1065: u8 role = g_Players[playerId].Role;
 	ld	hl, #13
 	add	hl, de
 	ld	a, (hl)
 	ld	-8 (ix), a
-;./exsoccer.c:1067: if (role > 6) role = 0; // Safety
+;./exsoccer.c:1066: if (role > 6) role = 0; // Safety
 	ld	a, #0x06
 	sub	a, -8 (ix)
 	jr	NC, 00106$
 	ld	-8 (ix), #0x00
 00106$:
-;./exsoccer.c:1069: bool isTeam1 = (g_Players[playerId].TeamId == TEAM_1);
+;./exsoccer.c:1068: bool isTeam1 = (g_Players[playerId].TeamId == TEAM_1);
 	ld	a, -13 (ix)
 	dec	a
 	ld	a, #0x01
@@ -4676,7 +4673,7 @@ _SetPlayerTarget::
 	xor	a, a
 00193$:
 	ld	-7 (ix), a
-;./exsoccer.c:1072: u16 tx = k_KO_X[role];
+;./exsoccer.c:1071: u16 tx = k_KO_X[role];
 	ld	bc, #_SetPlayerTarget_k_KO_X_196608_1698+0
 	ld	l, -8 (ix)
 	ld	h, #0x00
@@ -4685,7 +4682,7 @@ _SetPlayerTarget::
 	ld	-2 (ix), a
 	ld	-6 (ix), a
 	ld	-5 (ix), #0x00
-;./exsoccer.c:1073: u16 ty = isTeam1 ? k_KO_Y_T1[role] : k_KO_Y_T2[role];
+;./exsoccer.c:1072: u16 ty = isTeam1 ? k_KO_Y_T1[role] : k_KO_Y_T2[role];
 	ld	a, -8 (ix)
 	ld	-3 (ix), a
 	ld	-2 (ix), #0x00
@@ -4721,18 +4718,18 @@ _SetPlayerTarget::
 	ld	-4 (ix), a
 	ld	a, -14 (ix)
 	ld	-3 (ix), a
-;./exsoccer.c:1076: if (!isTeam1 && role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
+;./exsoccer.c:1075: if (!isTeam1 && role == PLAYER_ROLE_RIGHT_HALFFIELDER) {
 	ld	a, -7 (ix)
 	or	a, a
 	jr	NZ, 00108$
 	ld	a, -8 (ix)
 	sub	a, #0x04
 	jr	NZ, 00108$
-;./exsoccer.c:1077: tx = FIELD_POS_X_RIGHT - 116; 
+;./exsoccer.c:1076: tx = FIELD_POS_X_RIGHT - 116; 
 	ld	-6 (ix), #0x52
 	ld	-5 (ix), #0
 00108$:
-;./exsoccer.c:1081: if ((role == PLAYER_ROLE_LEFT_HALFFIELDER || role == PLAYER_ROLE_RIGHT_HALFFIELDER) &&
+;./exsoccer.c:1080: if ((role == PLAYER_ROLE_LEFT_HALFFIELDER || role == PLAYER_ROLE_RIGHT_HALFFIELDER) &&
 	ld	a, -8 (ix)
 	sub	a, #0x03
 	ld	a, #0x01
@@ -4746,11 +4743,11 @@ _SetPlayerTarget::
 	sub	a, #0x04
 	jr	NZ, 00114$
 00116$:
-;./exsoccer.c:1082: g_RestartKickTeamId == g_Players[playerId].TeamId) 
+;./exsoccer.c:1081: g_RestartKickTeamId == g_Players[playerId].TeamId) 
 	ld	a, (_g_RestartKickTeamId+0)
 	sub	a, -13 (ix)
 	jr	NZ, 00114$
-;./exsoccer.c:1084: ty = isTeam1 ? FIELD_POS_Y_CENTER : (FIELD_POS_Y_CENTER - 10);
+;./exsoccer.c:1083: ty = isTeam1 ? FIELD_POS_Y_CENTER : (FIELD_POS_Y_CENTER - 10);
 	ld	a, -7 (ix)
 	or	a, a
 	jr	Z, 00125$
@@ -4761,7 +4758,7 @@ _SetPlayerTarget::
 	ld	-4 (ix), #0xe9
 	ld	-3 (ix), #0
 00126$:
-;./exsoccer.c:1085: if (role == PLAYER_ROLE_LEFT_HALFFIELDER) tx = FIELD_POS_X_CENTER - 7;
+;./exsoccer.c:1084: if (role == PLAYER_ROLE_LEFT_HALFFIELDER) tx = FIELD_POS_X_CENTER - 7;
 	ld	a, -2 (ix)
 	or	a, a
 	jr	Z, 00111$
@@ -4769,11 +4766,11 @@ _SetPlayerTarget::
 	ld	-5 (ix), #0
 	jp	00114$
 00111$:
-;./exsoccer.c:1086: else tx = FIELD_POS_X_CENTER + 7;
+;./exsoccer.c:1085: else tx = FIELD_POS_X_CENTER + 7;
 	ld	-6 (ix), #0x7f
 	ld	-5 (ix), #0
 00114$:
-;./exsoccer.c:1089: g_Players[playerId].TargetX = tx;
+;./exsoccer.c:1088: g_Players[playerId].TargetX = tx;
 	ld	l, -12 (ix)
 	ld	h, -11 (ix)
 	ld	a, -6 (ix)
@@ -4781,7 +4778,7 @@ _SetPlayerTarget::
 	inc	hl
 	ld	a, -5 (ix)
 	ld	(hl), a
-;./exsoccer.c:1090: g_Players[playerId].TargetY = ty;
+;./exsoccer.c:1089: g_Players[playerId].TargetY = ty;
 	ld	l, -10 (ix)
 	ld	h, -9 (ix)
 	ld	a, -4 (ix)
@@ -4789,9 +4786,9 @@ _SetPlayerTarget::
 	inc	hl
 	ld	a, -3 (ix)
 	ld	(hl), a
-;./exsoccer.c:1094: }
+;./exsoccer.c:1093: }
 00121$:
-;./exsoccer.c:1095: }
+;./exsoccer.c:1094: }
 	ld	sp, ix
 	pop	ix
 	ret
@@ -4819,20 +4816,20 @@ _SetPlayerTarget_k_KO_Y_T2_196608_1698:
 	.dw #0x00b4
 	.dw #0x00dc
 	.dw #0x00dc
-;./exsoccer.c:1096: const TeamStats* GetTeamStats(u8 teamId) {
+;./exsoccer.c:1095: const TeamStats* GetTeamStats(u8 teamId) {
 ;	---------------------------------
 ; Function GetTeamStats
 ; ---------------------------------
 _GetTeamStats::
 	ld	c, a
-;./exsoccer.c:1097: if (teamId > 5) return &g_TeamStats[0];
+;./exsoccer.c:1096: if (teamId > 5) return &g_TeamStats[0];
 	ld	a, #0x05
 	sub	a, c
 	jr	NC, 00102$
 	ld	de, #_g_TeamStats
 	ret
 00102$:
-;./exsoccer.c:1098: return &g_TeamStats[teamId];
+;./exsoccer.c:1097: return &g_TeamStats[teamId];
 	ld	b, #0x00
 	ld	l, c
 	ld	h, b
@@ -4842,9 +4839,9 @@ _GetTeamStats::
 	ld	de, #_g_TeamStats
 	add	hl, de
 	ex	de, hl
-;./exsoccer.c:1099: }
+;./exsoccer.c:1098: }
 	ret
-;./exsoccer.c:1100: bool IsOffside(u8 playerId) {
+;./exsoccer.c:1099: bool IsOffside(u8 playerId) {
 ;	---------------------------------
 ; Function IsOffside
 ; ---------------------------------
@@ -4856,7 +4853,7 @@ _IsOffside::
 	add	hl, sp
 	ld	sp, hl
 	ld	c, a
-;./exsoccer.c:1101: u8 teamId = g_Players[playerId].TeamId;
+;./exsoccer.c:1100: u8 teamId = g_Players[playerId].TeamId;
 	ld	b, #0x00
 	ld	l, c
 	ld	h, b
@@ -4874,15 +4871,15 @@ _IsOffside::
 	pop	iy
 	ld	a, 9 (iy)
 	ld	-7 (ix), a
-;./exsoccer.c:1102: u16 playerY = g_Players[playerId].Y;
+;./exsoccer.c:1101: u16 playerY = g_Players[playerId].Y;
 	ld	a, (de)
 	ld	-6 (ix), a
 	inc	de
 	ld	a, (de)
 	ld	-5 (ix), a
-;./exsoccer.c:1103: u8 opponentCount = 0;
+;./exsoccer.c:1102: u8 opponentCount = 0;
 	ld	-1 (ix), #0x00
-;./exsoccer.c:1107: if (teamId == TEAM_1) {
+;./exsoccer.c:1106: if (teamId == TEAM_1) {
 	ld	a, -7 (ix)
 	dec	a
 	ld	a, #0x01
@@ -4890,16 +4887,16 @@ _IsOffside::
 	xor	a, a
 00198$:
 	ld	-4 (ix), a
-;./exsoccer.c:1108: if (playerY >= FIELD_POS_Y_CENTER) return FALSE; // Own half
+;./exsoccer.c:1107: if (playerY >= FIELD_POS_Y_CENTER) return FALSE; // Own half
 	ld	a, -6 (ix)
 	ld	-3 (ix), a
 	ld	a, -5 (ix)
 	ld	-2 (ix), a
-;./exsoccer.c:1107: if (teamId == TEAM_1) {
+;./exsoccer.c:1106: if (teamId == TEAM_1) {
 	ld	a, -4 (ix)
 	or	a, a
 	jr	Z, 00106$
-;./exsoccer.c:1108: if (playerY >= FIELD_POS_Y_CENTER) return FALSE; // Own half
+;./exsoccer.c:1107: if (playerY >= FIELD_POS_Y_CENTER) return FALSE; // Own half
 	ld	a, -3 (ix)
 	sub	a, #0xf3
 	ld	a, -2 (ix)
@@ -4908,7 +4905,7 @@ _IsOffside::
 	xor	a, a
 	jp	00129$
 00106$:
-;./exsoccer.c:1110: if (playerY <= FIELD_POS_Y_CENTER) return FALSE; // Own half
+;./exsoccer.c:1109: if (playerY <= FIELD_POS_Y_CENTER) return FALSE; // Own half
 	ld	a, #0xf3
 	cp	a, -3 (ix)
 	ld	a, #0x00
@@ -4917,11 +4914,11 @@ _IsOffside::
 	xor	a, a
 	jp	00129$
 00107$:
-;./exsoccer.c:1115: if (teamId == TEAM_1) {
+;./exsoccer.c:1114: if (teamId == TEAM_1) {
 	ld	a, -4 (ix)
 	or	a, a
 	jr	Z, 00113$
-;./exsoccer.c:1116: if (playerY >= g_Ball.Y) return FALSE; 
+;./exsoccer.c:1115: if (playerY >= g_Ball.Y) return FALSE; 
 	ld	hl, (#_g_Ball + 0)
 	ld	a, -6 (ix)
 	sub	a, l
@@ -4931,7 +4928,7 @@ _IsOffside::
 	xor	a, a
 	jp	00129$
 00113$:
-;./exsoccer.c:1118: if (playerY <= g_Ball.Y) return FALSE;
+;./exsoccer.c:1117: if (playerY <= g_Ball.Y) return FALSE;
 	ld	hl, (#_g_Ball + 0)
 	ld	a, l
 	sub	a, -6 (ix)
@@ -4940,11 +4937,11 @@ _IsOffside::
 	jr	C, 00141$
 	xor	a, a
 	jp	00129$
-;./exsoccer.c:1122: for (i = 0; i < 14; i++) {
+;./exsoccer.c:1121: for (i = 0; i < 14; i++) {
 00141$:
 	ld	c, #0x00
 00128$:
-;./exsoccer.c:1123: if (g_Players[i].TeamId == teamId) continue;
+;./exsoccer.c:1122: if (g_Players[i].TeamId == teamId) continue;
 	ld	b, #0x00
 	ld	l, c
 	ld	h, b
@@ -4969,16 +4966,16 @@ _IsOffside::
 	ld	a,-7 (ix)
 	sub	a,(hl)
 	jr	Z, 00124$
-;./exsoccer.c:1127: if (g_Players[i].Y <= playerY) opponentCount++;
+;./exsoccer.c:1126: if (g_Players[i].Y <= playerY) opponentCount++;
 	ex	de,hl
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
-;./exsoccer.c:1126: if (teamId == TEAM_1) { // Attacking UP
+;./exsoccer.c:1125: if (teamId == TEAM_1) { // Attacking UP
 	ld	a, -4 (ix)
 	or	a, a
 	jr	Z, 00122$
-;./exsoccer.c:1127: if (g_Players[i].Y <= playerY) opponentCount++;
+;./exsoccer.c:1126: if (g_Players[i].Y <= playerY) opponentCount++;
 	ld	a, -6 (ix)
 	sub	a, e
 	ld	a, -5 (ix)
@@ -4987,7 +4984,7 @@ _IsOffside::
 	inc	-1 (ix)
 	jp	00124$
 00122$:
-;./exsoccer.c:1129: if (g_Players[i].Y >= playerY) opponentCount++;
+;./exsoccer.c:1128: if (g_Players[i].Y >= playerY) opponentCount++;
 	ld	a, e
 	sub	a, -6 (ix)
 	ld	a, d
@@ -4995,26 +4992,26 @@ _IsOffside::
 	jr	C, 00124$
 	inc	-1 (ix)
 00124$:
-;./exsoccer.c:1122: for (i = 0; i < 14; i++) {
+;./exsoccer.c:1121: for (i = 0; i < 14; i++) {
 	inc	c
 	ld	a, c
 	sub	a, #0x0e
 	jr	C, 00128$
-;./exsoccer.c:1133: if (opponentCount < 2) return TRUE;
+;./exsoccer.c:1132: if (opponentCount < 2) return TRUE;
 	ld	a, -1 (ix)
 	sub	a, #0x02
 	jr	NC, 00127$
 	ld	a, #0x01
 	jp	00129$
 00127$:
-;./exsoccer.c:1134: return FALSE;
+;./exsoccer.c:1133: return FALSE;
 	xor	a, a
 00129$:
-;./exsoccer.c:1135: }
+;./exsoccer.c:1134: }
 	ld	sp, ix
 	pop	ix
 	ret
-;./exsoccer.c:1136: void PerformPass(u8 toPlayerId) {
+;./exsoccer.c:1135: void PerformPass(u8 toPlayerId) {
 ;	---------------------------------
 ; Function PerformPass
 ; ---------------------------------
@@ -5026,21 +5023,21 @@ _PerformPass::
 	add	hl, sp
 	ld	sp, hl
 	ld	-1 (ix), a
-;./exsoccer.c:1138: u8 fromId = g_Ball.PossessionPlayerId;
+;./exsoccer.c:1137: u8 fromId = g_Ball.PossessionPlayerId;
 	ld	a, (#(_g_Ball + 6) + 0)
-;./exsoccer.c:1142: if (fromId == NO_VALUE) return;
+;./exsoccer.c:1141: if (fromId == NO_VALUE) return;
 	ld	-2 (ix), a
 	inc	a
 	jp	Z,00155$
 	jp	00102$
 00102$:
-;./exsoccer.c:1143: if (toPlayerId == NO_VALUE) return;
+;./exsoccer.c:1142: if (toPlayerId == NO_VALUE) return;
 	ld	a, -1 (ix)
 	inc	a
 	jp	Z,00155$
 	jp	00104$
 00104$:
-;./exsoccer.c:1146: if (g_Players[toPlayerId].Role == PLAYER_ROLE_GOALKEEPER) return;
+;./exsoccer.c:1145: if (g_Players[toPlayerId].Role == PLAYER_ROLE_GOALKEEPER) return;
 	ld	bc, #_g_Players+0
 	ld	e, -1 (ix)
 	ld	d, #0x00
@@ -5061,7 +5058,7 @@ _PerformPass::
 	ld	a, (hl)
 	or	a, a
 	jp	Z,00155$
-;./exsoccer.c:1150: if (g_Players[fromId].Role != PLAYER_ROLE_GOALKEEPER) {
+;./exsoccer.c:1149: if (g_Players[fromId].Role != PLAYER_ROLE_GOALKEEPER) {
 	ld	e, -2 (ix)
 	ld	d, #0x00
 	ld	l, e
@@ -5086,14 +5083,14 @@ _PerformPass::
 	ld	a, (hl)
 	or	a, a
 	jr	Z, 00110$
-;./exsoccer.c:1151: if (IsOffside(toPlayerId)) {
+;./exsoccer.c:1150: if (IsOffside(toPlayerId)) {
 	ld	a, -1 (ix)
 	call	_IsOffside
 	or	a, a
-;./exsoccer.c:1153: return;
+;./exsoccer.c:1152: return;
 	jp	NZ,00155$
 00110$:
-;./exsoccer.c:1158: dx = (i16)g_Players[toPlayerId].X - (i16)g_Players[fromId].X;
+;./exsoccer.c:1157: dx = (i16)g_Players[toPlayerId].X - (i16)g_Players[fromId].X;
 	ld	a, -21 (ix)
 	add	a, #0x02
 	ld	-15 (ix), a
@@ -5122,7 +5119,7 @@ _PerformPass::
 	ld	a, b
 	sbc	a, d
 	ld	-4 (ix), a
-;./exsoccer.c:1159: dy = (i16)g_Players[toPlayerId].Y - (i16)g_Players[fromId].Y;
+;./exsoccer.c:1158: dy = (i16)g_Players[toPlayerId].Y - (i16)g_Players[fromId].Y;
 	pop	hl
 	push	hl
 	ld	c, (hl)
@@ -5139,7 +5136,7 @@ _PerformPass::
 	ld	a, b
 	sbc	a, d
 	ld	-10 (ix), a
-;./exsoccer.c:1160: adx = (dx < 0) ? -dx : dx;
+;./exsoccer.c:1159: adx = (dx < 0) ? -dx : dx;
 	ld	a, -5 (ix)
 	ld	-9 (ix), a
 	ld	a, -4 (ix)
@@ -5163,7 +5160,7 @@ _PerformPass::
 	ld	-7 (ix), a
 	ld	a, -2 (ix)
 	ld	-6 (ix), a
-;./exsoccer.c:1161: ady = (dy < 0) ? -dy : dy;
+;./exsoccer.c:1160: ady = (dy < 0) ? -dy : dy;
 	ld	a, -11 (ix)
 	ld	-5 (ix), a
 	ld	a, -10 (ix)
@@ -5185,7 +5182,7 @@ _PerformPass::
 00160$:
 	ld	c, -3 (ix)
 	ld	b, -2 (ix)
-;./exsoccer.c:1163: if (adx > ady * 2) {
+;./exsoccer.c:1162: if (adx > ady * 2) {
 	ld	l, c
 	ld	h, b
 	add	hl, hl
@@ -5199,7 +5196,7 @@ _PerformPass::
 	xor	a, #0x80
 00322$:
 	jp	P, 00118$
-;./exsoccer.c:1164: newDir = (dx > 0) ? DIRECTION_RIGHT : DIRECTION_LEFT;
+;./exsoccer.c:1163: newDir = (dx > 0) ? DIRECTION_RIGHT : DIRECTION_LEFT;
 	xor	a, a
 	cp	a, -9 (ix)
 	sbc	a, -8 (ix)
@@ -5215,11 +5212,11 @@ _PerformPass::
 	ld	-4 (ix), c
 	jp	00119$
 00118$:
-;./exsoccer.c:1165: } else if (ady > adx * 2) {
+;./exsoccer.c:1164: } else if (ady > adx * 2) {
 	ex	de, hl
 	add	hl, hl
 	ex	de, hl
-;./exsoccer.c:1166: newDir = (dy > 0) ? DIRECTION_DOWN : DIRECTION_UP;
+;./exsoccer.c:1165: newDir = (dy > 0) ? DIRECTION_DOWN : DIRECTION_UP;
 	xor	a, a
 	cp	a, -5 (ix)
 	sbc	a, -4 (ix)
@@ -5231,7 +5228,7 @@ _PerformPass::
 	ld	l, a
 ;	spillPairReg hl
 ;	spillPairReg hl
-;./exsoccer.c:1165: } else if (ady > adx * 2) {
+;./exsoccer.c:1164: } else if (ady > adx * 2) {
 	ld	a, e
 	sub	a, c
 	ld	a, d
@@ -5240,7 +5237,7 @@ _PerformPass::
 	xor	a, #0x80
 00325$:
 	jp	P, 00115$
-;./exsoccer.c:1166: newDir = (dy > 0) ? DIRECTION_DOWN : DIRECTION_UP;
+;./exsoccer.c:1165: newDir = (dy > 0) ? DIRECTION_DOWN : DIRECTION_UP;
 	ld	a, l
 	or	a, a
 	jr	Z, 00163$
@@ -5252,7 +5249,7 @@ _PerformPass::
 	ld	-4 (ix), c
 	jp	00119$
 00115$:
-;./exsoccer.c:1168: if (dx > 0) newDir = (dy > 0) ? DIRECTION_DOWN_RIGHT : DIRECTION_UP_RIGHT;
+;./exsoccer.c:1167: if (dx > 0) newDir = (dy > 0) ? DIRECTION_DOWN_RIGHT : DIRECTION_UP_RIGHT;
 	xor	a, a
 	cp	a, -9 (ix)
 	sbc	a, -8 (ix)
@@ -5271,7 +5268,7 @@ _PerformPass::
 	ld	-4 (ix), c
 	jp	00119$
 00112$:
-;./exsoccer.c:1169: else newDir = (dy > 0) ? DIRECTION_DOWN_LEFT : DIRECTION_UP_LEFT;
+;./exsoccer.c:1168: else newDir = (dy > 0) ? DIRECTION_DOWN_LEFT : DIRECTION_UP_LEFT;
 	ld	a, l
 	or	a, a
 	jr	Z, 00167$
@@ -5282,14 +5279,14 @@ _PerformPass::
 00168$:
 	ld	-4 (ix), c
 00119$:
-;./exsoccer.c:1171: g_Players[fromId].Direction = newDir;
+;./exsoccer.c:1170: g_Players[fromId].Direction = newDir;
 	ld	l, -19 (ix)
 	ld	h, -18 (ix)
 	ld	de, #0x000a
 	add	hl, de
 	ld	a, -4 (ix)
 	ld	(hl), a
-;./exsoccer.c:1174: if (newDir == DIRECTION_UP || newDir == DIRECTION_UP_LEFT || newDir == DIRECTION_UP_RIGHT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_FRONT;
+;./exsoccer.c:1173: if (newDir == DIRECTION_UP || newDir == DIRECTION_UP_LEFT || newDir == DIRECTION_UP_RIGHT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_FRONT;
 	ld	a, -4 (ix)
 	dec	a
 	jr	Z, 00130$
@@ -5311,7 +5308,7 @@ _PerformPass::
 	ld	(hl), #0x18
 	jp	00132$
 00131$:
-;./exsoccer.c:1175: else if (newDir == DIRECTION_DOWN || newDir == DIRECTION_DOWN_LEFT || newDir == DIRECTION_DOWN_RIGHT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_BACK;
+;./exsoccer.c:1174: else if (newDir == DIRECTION_DOWN || newDir == DIRECTION_DOWN_LEFT || newDir == DIRECTION_DOWN_RIGHT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_BACK;
 	ld	a, -4 (ix)
 	sub	a, #0x05
 	jr	Z, 00125$
@@ -5329,7 +5326,7 @@ _PerformPass::
 	ld	(hl), #0x15
 	jp	00132$
 00126$:
-;./exsoccer.c:1176: else if (newDir == DIRECTION_LEFT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_LEFT;
+;./exsoccer.c:1175: else if (newDir == DIRECTION_LEFT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_LEFT;
 	ld	a, -4 (ix)
 	sub	a, #0x07
 	jr	NZ, 00123$
@@ -5340,7 +5337,7 @@ _PerformPass::
 	ld	(hl), #0xa4
 	jp	00132$
 00123$:
-;./exsoccer.c:1177: else if (newDir == DIRECTION_RIGHT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_RIGHT;
+;./exsoccer.c:1176: else if (newDir == DIRECTION_RIGHT) g_Players[fromId].PatternId = PLAYER_POSE_SHOT_RIGHT;
 	ld	a, -4 (ix)
 	sub	a, #0x03
 	jr	NZ, 00132$
@@ -5350,7 +5347,7 @@ _PerformPass::
 	add	hl, de
 	ld	(hl), #0x1b
 00132$:
-;./exsoccer.c:1179: g_Players[fromId].Status = PLAYER_STATUS_POSITIONED; // Lock pose for this frame
+;./exsoccer.c:1178: g_Players[fromId].Status = PLAYER_STATUS_POSITIONED; // Lock pose for this frame
 	ld	l, -19 (ix)
 	ld	h, -18 (ix)
 	ld	de, #0x0012
@@ -5358,7 +5355,7 @@ _PerformPass::
 	ld	(hl), #0x04
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:1182: g_Players[fromId].TargetX = g_Players[fromId].X;
+;./exsoccer.c:1181: g_Players[fromId].TargetX = g_Players[fromId].X;
 	ld	a, -19 (ix)
 	add	a, #0x10
 	ld	c, a
@@ -5375,7 +5372,7 @@ _PerformPass::
 	inc	bc
 	ld	a, d
 	ld	(bc), a
-;./exsoccer.c:1183: g_Players[fromId].TargetY = g_Players[fromId].Y;
+;./exsoccer.c:1182: g_Players[fromId].TargetY = g_Players[fromId].Y;
 	ld	a, -19 (ix)
 	add	a, #0x0e
 	ld	c, a
@@ -5392,47 +5389,47 @@ _PerformPass::
 	inc	bc
 	ld	a, d
 	ld	(bc), a
-;./exsoccer.c:1186: SetPlayerBallPossession(NO_VALUE); 
+;./exsoccer.c:1185: SetPlayerBallPossession(NO_VALUE); 
 	ld	a, #0xff
 	call	_SetPlayerBallPossession
-;./exsoccer.c:1187: g_Ball.PossessionPlayerId = NO_VALUE; 
+;./exsoccer.c:1186: g_Ball.PossessionPlayerId = NO_VALUE; 
 	ld	hl, #(_g_Ball + 6)
 	ld	(hl), #0xff
-;./exsoccer.c:1189: g_Ball.PassTargetPlayerId = toPlayerId;
+;./exsoccer.c:1188: g_Ball.PassTargetPlayerId = toPlayerId;
 	ld	hl, #(_g_Ball + 16)
 	ld	a, -1 (ix)
 	ld	(hl), a
-;./exsoccer.c:1190: g_Ball.ShotActive = 0; // Not a shot
+;./exsoccer.c:1189: g_Ball.ShotActive = 0; // Not a shot
 	ld	hl, #(_g_Ball + 27)
 	ld	(hl), #0x00
-;./exsoccer.c:1193: if (g_Players[fromId].Role == PLAYER_ROLE_GOALKEEPER) {
+;./exsoccer.c:1192: if (g_Players[fromId].Role == PLAYER_ROLE_GOALKEEPER) {
 	ld	l, -17 (ix)
 	ld	h, -16 (ix)
-;./exsoccer.c:1205: g_Ball.X = g_Ball.X; 
-;./exsoccer.c:1193: if (g_Players[fromId].Role == PLAYER_ROLE_GOALKEEPER) {
+;./exsoccer.c:1204: g_Ball.X = g_Ball.X; 
+;./exsoccer.c:1192: if (g_Players[fromId].Role == PLAYER_ROLE_GOALKEEPER) {
 	ld	a, (hl)
 	or	a, a
 	jp	NZ, 00154$
-;./exsoccer.c:1196: bool applyOffset = true;
+;./exsoccer.c:1195: bool applyOffset = true;
 	ld	c, #0x01
-;./exsoccer.c:1198: if (g_GkIsGroundKick) {
+;./exsoccer.c:1197: if (g_GkIsGroundKick) {
 	ld	a, (_g_GkIsGroundKick+0)
 	or	a, a
 	jr	Z, 00136$
-;./exsoccer.c:1199: applyOffset = false;
+;./exsoccer.c:1198: applyOffset = false;
 	ld	c, #0x00
-;./exsoccer.c:1205: g_Ball.X = g_Ball.X; 
+;./exsoccer.c:1204: g_Ball.X = g_Ball.X; 
 	ld	de, (#(_g_Ball + 2) + 0)
 	ld	((_g_Ball + 2)), de
-;./exsoccer.c:1206: g_Ball.Y = g_Ball.Y;
+;./exsoccer.c:1205: g_Ball.Y = g_Ball.Y;
 	ld	de, (#_g_Ball + 0)
 	ld	(_g_Ball), de
 00136$:
-;./exsoccer.c:1210: if (g_MatchStatus == MATCH_CORNER_KICK || g_MatchStatus == MATCH_BEFORE_CORNER_KICK ||
+;./exsoccer.c:1209: if (g_MatchStatus == MATCH_CORNER_KICK || g_MatchStatus == MATCH_BEFORE_CORNER_KICK ||
 	ld	a,(_g_MatchStatus+0)
 	cp	a,#0x09
 	jr	Z, 00137$
-;./exsoccer.c:1211: g_MatchStatus == MATCH_GOAL_KICK || g_MatchStatus == MATCH_BEFORE_GOAL_KICK) {
+;./exsoccer.c:1210: g_MatchStatus == MATCH_GOAL_KICK || g_MatchStatus == MATCH_BEFORE_GOAL_KICK) {
 	cp	a,#0x02
 	jr	Z, 00137$
 	cp	a,#0x0a
@@ -5440,16 +5437,16 @@ _PerformPass::
 	sub	a, #0x05
 	jr	NZ, 00138$
 00137$:
-;./exsoccer.c:1212: applyOffset = false;
+;./exsoccer.c:1211: applyOffset = false;
 	ld	c, #0x00
 00138$:
-;./exsoccer.c:1217: if (applyOffset) {
+;./exsoccer.c:1216: if (applyOffset) {
 	ld	a, c
 	or	a, a
 	jr	Z, 00154$
-;./exsoccer.c:1218: i8 offX = 0; i8 offY = 0;
+;./exsoccer.c:1217: i8 offX = 0; i8 offY = 0;
 	ld	bc, #0x0
-;./exsoccer.c:1219: switch (newDir) {
+;./exsoccer.c:1218: switch (newDir) {
 	ld	a, #0x08
 	sub	a, -4 (ix)
 	jr	C, 00150$
@@ -5470,40 +5467,40 @@ _PerformPass::
 	jp	00148$
 	jp	00144$
 	jp	00146$
-;./exsoccer.c:1220: case DIRECTION_UP:        offY = -30; break;
+;./exsoccer.c:1219: case DIRECTION_UP:        offY = -30; break;
 00142$:
 	ld	b, #0xe2
 	jp	00150$
-;./exsoccer.c:1221: case DIRECTION_DOWN:      offY = 30; break;
+;./exsoccer.c:1220: case DIRECTION_DOWN:      offY = 30; break;
 00143$:
 	ld	b, #0x1e
 	jp	00150$
-;./exsoccer.c:1222: case DIRECTION_LEFT:      offX = -30; break;
+;./exsoccer.c:1221: case DIRECTION_LEFT:      offX = -30; break;
 00144$:
 	ld	c, #0xe2
 	jp	00150$
-;./exsoccer.c:1223: case DIRECTION_RIGHT:     offX = 30; break;
+;./exsoccer.c:1222: case DIRECTION_RIGHT:     offX = 30; break;
 00145$:
 	ld	c, #0x1e
 	jp	00150$
-;./exsoccer.c:1224: case DIRECTION_UP_LEFT:   offX = -21; offY = -21; break;
+;./exsoccer.c:1223: case DIRECTION_UP_LEFT:   offX = -21; offY = -21; break;
 00146$:
 	ld	bc, #0xebeb
 	jp	00150$
-;./exsoccer.c:1225: case DIRECTION_UP_RIGHT:  offX = 21; offY = -21; break;
+;./exsoccer.c:1224: case DIRECTION_UP_RIGHT:  offX = 21; offY = -21; break;
 00147$:
 	ld	bc, #0xeb15
 	jp	00150$
-;./exsoccer.c:1226: case DIRECTION_DOWN_LEFT: offX = -21; offY = 21; break;
+;./exsoccer.c:1225: case DIRECTION_DOWN_LEFT: offX = -21; offY = 21; break;
 00148$:
 	ld	bc, #0x15eb
 	jp	00150$
-;./exsoccer.c:1227: case DIRECTION_DOWN_RIGHT:offX = 21; offY = 21; break;
+;./exsoccer.c:1226: case DIRECTION_DOWN_RIGHT:offX = 21; offY = 21; break;
 00149$:
 	ld	bc, #0x1515
-;./exsoccer.c:1228: }
+;./exsoccer.c:1227: }
 00150$:
-;./exsoccer.c:1229: g_Ball.X += offX;
+;./exsoccer.c:1228: g_Ball.X += offX;
 	ld	hl, (#(_g_Ball + 2) + 0)
 	ld	a, c
 	ld	e, a
@@ -5513,7 +5510,7 @@ _PerformPass::
 	add	hl, de
 	ex	de, hl
 	ld	((_g_Ball + 2)), de
-;./exsoccer.c:1230: g_Ball.Y += offY;
+;./exsoccer.c:1229: g_Ball.Y += offY;
 	ld	hl, (#_g_Ball + 0)
 	ld	a, b
 	ld	c, a
@@ -5524,13 +5521,13 @@ _PerformPass::
 	ex	de, hl
 	ld	(_g_Ball), de
 00154$:
-;./exsoccer.c:1236: g_Ball.PassStartX = g_Ball.X;
+;./exsoccer.c:1235: g_Ball.PassStartX = g_Ball.X;
 	ld	bc, (#(_g_Ball + 2) + 0)
 	ld	((_g_Ball + 17)), bc
-;./exsoccer.c:1237: g_Ball.PassStartY = g_Ball.Y;
+;./exsoccer.c:1236: g_Ball.PassStartY = g_Ball.Y;
 	ld	bc, (#_g_Ball + 0)
 	ld	((_g_Ball + 19)), bc
-;./exsoccer.c:1239: dx = (i16)g_Players[toPlayerId].X - (i16)g_Ball.X;
+;./exsoccer.c:1238: dx = (i16)g_Players[toPlayerId].X - (i16)g_Ball.X;
 	ld	l, -15 (ix)
 	ld	h, -14 (ix)
 	ld	c, (hl)
@@ -5543,7 +5540,7 @@ _PerformPass::
 	ld	a, b
 	sbc	a, h
 	ld	b, a
-;./exsoccer.c:1240: dy = (i16)g_Players[toPlayerId].Y - (i16)g_Ball.Y;
+;./exsoccer.c:1239: dy = (i16)g_Players[toPlayerId].Y - (i16)g_Ball.Y;
 	pop	hl
 	push	hl
 	ld	e, (hl)
@@ -5556,7 +5553,7 @@ _PerformPass::
 	ld	a, d
 	sbc	a, h
 	ld	d, a
-;./exsoccer.c:1241: g_Ball.PassTotalDist = (u16)((dx<0?-dx:dx) + (dy<0?-dy:dy)); 
+;./exsoccer.c:1240: g_Ball.PassTotalDist = (u16)((dx<0?-dx:dx) + (dy<0?-dy:dy)); 
 ;	spillPairReg hl
 ;	spillPairReg hl
 	ld	h, b
@@ -5590,23 +5587,23 @@ _PerformPass::
 	ex	de, hl
 	ld	((_g_Ball + 21)), de
 00155$:
-;./exsoccer.c:1242: }
+;./exsoccer.c:1241: }
 	ld	sp, ix
 	pop	ix
 	ret
-;./exsoccer.c:1243: void SetPlayerBallPossession(u8 playerId){
+;./exsoccer.c:1242: void SetPlayerBallPossession(u8 playerId){
 ;	---------------------------------
 ; Function SetPlayerBallPossession
 ; ---------------------------------
 _SetPlayerBallPossession::
-;./exsoccer.c:1244: if (playerId == NO_VALUE) {
+;./exsoccer.c:1243: if (playerId == NO_VALUE) {
 	ld	c, a
 	inc	a
 	ret	Z
-;./exsoccer.c:1249: return;
+;./exsoccer.c:1248: return;
 	jp	00102$
 00102$:
-;./exsoccer.c:1252: if(g_Players[playerId].TeamId==TEAM_1){
+;./exsoccer.c:1251: if(g_Players[playerId].TeamId==TEAM_1){
 	ld	de, #_g_Players+0
 	ld	b, #0x00
 	ld	l, c
@@ -5629,14 +5626,14 @@ _SetPlayerBallPossession::
 	add	hl, bc
 	pop	bc
 	ld	a, (hl)
-;./exsoccer.c:1253: if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team1ActivePlayer=playerId;
+;./exsoccer.c:1252: if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team1ActivePlayer=playerId;
 	ld	hl, #13
 	add	hl, de
 	ld	b, (hl)
-;./exsoccer.c:1252: if(g_Players[playerId].TeamId==TEAM_1){
+;./exsoccer.c:1251: if(g_Players[playerId].TeamId==TEAM_1){
 	dec	a
 	jr	NZ, 00108$
-;./exsoccer.c:1253: if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team1ActivePlayer=playerId;
+;./exsoccer.c:1252: if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team1ActivePlayer=playerId;
 	ld	a, b
 	or	a, a
 	jr	Z, 00109$
@@ -5644,19 +5641,19 @@ _SetPlayerBallPossession::
 	ld	(hl), c
 	jp	00109$
 00108$:
-;./exsoccer.c:1256: if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team2ActivePlayer=playerId;
+;./exsoccer.c:1255: if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) g_Team2ActivePlayer=playerId;
 	ld	a, b
 	or	a, a
 	jr	Z, 00109$
 	ld	hl, #_g_Team2ActivePlayer
 	ld	(hl), c
 00109$:
-;./exsoccer.c:1259: g_Ball.PossessionTimer = 0; // Reset hold timer
+;./exsoccer.c:1258: g_Ball.PossessionTimer = 0; // Reset hold timer
 	ld	hl, #(_g_Ball + 28)
 	ld	(hl), #0x00
-;./exsoccer.c:1260: }
+;./exsoccer.c:1259: }
 	ret
-;./exsoccer.c:1262: void TickGoalKick() {
+;./exsoccer.c:1261: void TickGoalKick() {
 ;	---------------------------------
 ; Function TickGoalKick
 ; ---------------------------------
@@ -5667,11 +5664,11 @@ _TickGoalKick::
 	ld	hl, #-16
 	add	hl, sp
 	ld	sp, hl
-;./exsoccer.c:1263: if (g_MatchStatus != MATCH_BEFORE_GOAL_KICK) return;
+;./exsoccer.c:1262: if (g_MatchStatus != MATCH_BEFORE_GOAL_KICK) return;
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x05
 	jp	NZ,00197$
-;./exsoccer.c:1267: if (g_RestartKickTeamId == TEAM_1) gkId = GetPlayerIdByRole(TEAM_1, PLAYER_ROLE_GOALKEEPER);
+;./exsoccer.c:1266: if (g_RestartKickTeamId == TEAM_1) gkId = GetPlayerIdByRole(TEAM_1, PLAYER_ROLE_GOALKEEPER);
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00104$
@@ -5683,7 +5680,7 @@ _TickGoalKick::
 	ld	-10 (ix), a
 	jp	00105$
 00104$:
-;./exsoccer.c:1268: else gkId = GetPlayerIdByRole(TEAM_2, PLAYER_ROLE_GOALKEEPER);
+;./exsoccer.c:1267: else gkId = GetPlayerIdByRole(TEAM_2, PLAYER_ROLE_GOALKEEPER);
 	ld	l, #0x00
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -5691,66 +5688,66 @@ _TickGoalKick::
 	call	_GetPlayerIdByRole
 	ld	-10 (ix), a
 00105$:
-;./exsoccer.c:1270: if (gkId == NO_VALUE) return; 
+;./exsoccer.c:1269: if (gkId == NO_VALUE) return; 
 	ld	a, -10 (ix)
 	inc	a
 	jp	Z,00197$
 	jp	00107$
 00107$:
-;./exsoccer.c:1273: if (g_Timer < 60) {
+;./exsoccer.c:1272: if (g_Timer < 60) {
 	ld	a, (_g_Timer+0)
 	sub	a, #0x3c
 	jr	NC, 00109$
-;./exsoccer.c:1274: g_Timer++;
+;./exsoccer.c:1273: g_Timer++;
 	ld	hl, #_g_Timer
 	inc	(hl)
-;./exsoccer.c:1275: return;
+;./exsoccer.c:1274: return;
 	jp	00197$
 00109$:
-;./exsoccer.c:1277: g_Ball.Size = 1;
+;./exsoccer.c:1276: g_Ball.Size = 1;
 	ld	hl, #(_g_Ball + 4)
 	ld	(hl), #0x01
-;./exsoccer.c:1279: if (g_Timer == 60) {
+;./exsoccer.c:1278: if (g_Timer == 60) {
 	ld	a, (_g_Timer+0)
 	sub	a, #0x3c
 	jp	NZ,00175$
-;./exsoccer.c:1282: if (g_GoalKickSide == CORNER_SIDE_LEFT) targetX = GK_BOX_X_MIN;
+;./exsoccer.c:1281: if (g_GoalKickSide == CORNER_SIDE_LEFT) targetX = GK_BOX_X_MIN;
 	ld	a, (_g_GoalKickSide+0)
 	or	a, a
 	jr	NZ, 00111$
 	ld	bc, #0x0050
 	jp	00112$
 00111$:
-;./exsoccer.c:1283: else targetX = GK_BOX_X_MAX;
+;./exsoccer.c:1282: else targetX = GK_BOX_X_MAX;
 	ld	bc, #0x00a0
 00112$:
-;./exsoccer.c:1286: if (g_RestartKickTeamId == TEAM_1) { // Bottom Goal
+;./exsoccer.c:1285: if (g_RestartKickTeamId == TEAM_1) { // Bottom Goal
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00114$
-;./exsoccer.c:1287: ballY = GK_BOX_Y_BOTTOM_MIN; 
+;./exsoccer.c:1286: ballY = GK_BOX_Y_BOTTOM_MIN; 
 	ld	de, #0x0195
 	jp	00115$
 00114$:
-;./exsoccer.c:1289: ballY = GK_BOX_Y_TOP_MAX; 
+;./exsoccer.c:1288: ballY = GK_BOX_Y_TOP_MAX; 
 	ld	de, #0x004b
 00115$:
-;./exsoccer.c:1293: g_Ball.X = targetX;
+;./exsoccer.c:1292: g_Ball.X = targetX;
 	ld	((_g_Ball + 2)), bc
-;./exsoccer.c:1294: g_Ball.Y = ballY;
+;./exsoccer.c:1293: g_Ball.Y = ballY;
 	ld	(_g_Ball), de
-;./exsoccer.c:1295: g_Ball.PossessionPlayerId = NO_VALUE;
+;./exsoccer.c:1294: g_Ball.PossessionPlayerId = NO_VALUE;
 	ld	hl, #(_g_Ball + 6)
 	ld	(hl), #0xff
-;./exsoccer.c:1300: runStartY = ballY + 32; 
-;./exsoccer.c:1299: if (g_RestartKickTeamId == TEAM_1) {
+;./exsoccer.c:1299: runStartY = ballY + 32; 
+;./exsoccer.c:1298: if (g_RestartKickTeamId == TEAM_1) {
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00121$
-;./exsoccer.c:1300: runStartY = ballY + 32; 
+;./exsoccer.c:1299: runStartY = ballY + 32; 
 	ld	hl, #0x0020
 	add	hl, de
-;./exsoccer.c:1301: if(runStartY > FIELD_BOUND_Y_BOTTOM) runStartY = FIELD_BOUND_Y_BOTTOM;
+;./exsoccer.c:1300: if(runStartY > FIELD_BOUND_Y_BOTTOM) runStartY = FIELD_BOUND_Y_BOTTOM;
 	ld	-2 (ix), l
 	ld	-1 (ix), h
 	ex	de,hl
@@ -5763,13 +5760,13 @@ _TickGoalKick::
 	ld	-1 (ix), #0x01
 	jp	00122$
 00121$:
-;./exsoccer.c:1303: runStartY = ballY - 32;
+;./exsoccer.c:1302: runStartY = ballY - 32;
 	ld	a, e
 	add	a, #0xe0
 	ld	e, a
 	ld	a, d
 	adc	a, #0xff
-;./exsoccer.c:1304: if(runStartY < FIELD_BOUND_Y_TOP) runStartY = FIELD_BOUND_Y_TOP;
+;./exsoccer.c:1303: if(runStartY < FIELD_BOUND_Y_TOP) runStartY = FIELD_BOUND_Y_TOP;
 	ld	-2 (ix), e
 	ld	-1 (ix), a
 	ld	d, a
@@ -5781,7 +5778,7 @@ _TickGoalKick::
 	ld	-2 (ix), #0x32
 	ld	-1 (ix), #0
 00122$:
-;./exsoccer.c:1307: g_Players[gkId].TargetX = targetX;
+;./exsoccer.c:1306: g_Players[gkId].TargetX = targetX;
 	ld	e, -10 (ix)
 	ld	d, #0x00
 	ld	l, e
@@ -5801,7 +5798,7 @@ _TickGoalKick::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:1308: g_Players[gkId].TargetY = runStartY;
+;./exsoccer.c:1307: g_Players[gkId].TargetY = runStartY;
 	ld	hl, #0x000e
 	add	hl, de
 	ld	a, -2 (ix)
@@ -5809,14 +5806,14 @@ _TickGoalKick::
 	inc	hl
 	ld	a, -1 (ix)
 	ld	(hl), a
-;./exsoccer.c:1309: g_Players[gkId].Status = PLAYER_STATUS_NONE; 
+;./exsoccer.c:1308: g_Players[gkId].Status = PLAYER_STATUS_NONE; 
 	ld	hl, #0x0012
 	add	hl, de
 	xor	a, a
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
-;./exsoccer.c:1311: if (g_RestartKickTeamId == TEAM_1) g_Players[gkId].Direction = DIRECTION_UP;
+;./exsoccer.c:1310: if (g_RestartKickTeamId == TEAM_1) g_Players[gkId].Direction = DIRECTION_UP;
 	ld	hl, #0x000a
 	add	hl, de
 	ld	a, (_g_RestartKickTeamId+0)
@@ -5825,10 +5822,10 @@ _TickGoalKick::
 	ld	(hl), #0x01
 	jp	00125$
 00124$:
-;./exsoccer.c:1312: else g_Players[gkId].Direction = DIRECTION_DOWN;
+;./exsoccer.c:1311: else g_Players[gkId].Direction = DIRECTION_DOWN;
 	ld	(hl), #0x05
 00125$:
-;./exsoccer.c:1314: if (g_RestartKickTeamId == TEAM_1) ShowFieldZone(FIELD_SOUTH_ZONE);
+;./exsoccer.c:1313: if (g_RestartKickTeamId == TEAM_1) ShowFieldZone(FIELD_SOUTH_ZONE);
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00127$
@@ -5836,21 +5833,21 @@ _TickGoalKick::
 	call	_ShowFieldZone
 	jp	00239$
 00127$:
-;./exsoccer.c:1315: else ShowFieldZone(FIELD_NORTH_ZONE);
+;./exsoccer.c:1314: else ShowFieldZone(FIELD_NORTH_ZONE);
 	xor	a, a
 	call	_ShowFieldZone
-;./exsoccer.c:1318: for(u8 i=0; i<14; i++){
+;./exsoccer.c:1317: for(u8 i=0; i<14; i++){
 00239$:
 	ld	-1 (ix), #0x00
 00196$:
 	ld	a, -1 (ix)
 	sub	a, #0x0e
 	jp	NC, 00175$
-;./exsoccer.c:1319: if(i == gkId) continue;
+;./exsoccer.c:1318: if(i == gkId) continue;
 	ld	a, -10 (ix)
 	sub	a, -1 (ix)
 	jp	Z,00172$
-;./exsoccer.c:1320: if(g_Players[i].TeamId == REFEREE) continue;
+;./exsoccer.c:1319: if(g_Players[i].TeamId == REFEREE) continue;
 	ld	c, -1 (ix)
 	ld	b, #0x00
 	ld	l, c
@@ -5872,7 +5869,7 @@ _TickGoalKick::
 	ld	a, 0 (iy)
 	sub	a, #0x0e
 	jp	Z,00172$
-;./exsoccer.c:1321: if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
+;./exsoccer.c:1320: if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
 	ld	a, -9 (ix)
 	add	a, #0x0d
 	ld	e, a
@@ -5882,7 +5879,7 @@ _TickGoalKick::
 	ld	a, (de)
 	or	a, a
 	jp	Z, 00172$
-;./exsoccer.c:1324: g_Players[i].Status = PLAYER_STATUS_NONE;
+;./exsoccer.c:1323: g_Players[i].Status = PLAYER_STATUS_NONE;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	bc, #0x0012
@@ -5891,7 +5888,7 @@ _TickGoalKick::
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
-;./exsoccer.c:1327: u16 targetX = g_Players[i].X;
+;./exsoccer.c:1326: u16 targetX = g_Players[i].X;
 	ld	l, -9 (ix)
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -5905,11 +5902,11 @@ _TickGoalKick::
 	inc	hl
 	ld	a, (hl)
 	ld	-6 (ix), a
-;./exsoccer.c:1320: if(g_Players[i].TeamId == REFEREE) continue;
+;./exsoccer.c:1319: if(g_Players[i].TeamId == REFEREE) continue;
 	ld	c, 0 (iy)
-;./exsoccer.c:1321: if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
+;./exsoccer.c:1320: if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
 	ld	a, (de)
-;./exsoccer.c:1334: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 200;
+;./exsoccer.c:1333: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 200;
 	ld	-5 (ix), a
 	sub	a, #0x05
 	ld	a, #0x01
@@ -5917,7 +5914,7 @@ _TickGoalKick::
 	xor	a, a
 00432$:
 	ld	e, a
-;./exsoccer.c:1335: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 350; // Defenders move out of box
+;./exsoccer.c:1334: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 350; // Defenders move out of box
 	ld	a, -5 (ix)
 	dec	a
 	ld	a, #0x01
@@ -5925,17 +5922,17 @@ _TickGoalKick::
 	xor	a, a
 00434$:
 	ld	-4 (ix), a
-;./exsoccer.c:1329: if (g_RestartKickTeamId == TEAM_1) {
+;./exsoccer.c:1328: if (g_RestartKickTeamId == TEAM_1) {
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00166$
-;./exsoccer.c:1331: if(g_Players[i].TeamId == TEAM_1) {
+;./exsoccer.c:1330: if(g_Players[i].TeamId == TEAM_1) {
 	dec	c
 	jr	NZ, 00148$
-;./exsoccer.c:1333: targetY = 300; // Midfielders
+;./exsoccer.c:1332: targetY = 300; // Midfielders
 	ld	-3 (ix), #0x2c
 	ld	-2 (ix), #0x01
-;./exsoccer.c:1334: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 200;
+;./exsoccer.c:1333: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 200;
 	ld	a, e
 	or	a, a
 	jr	NZ, 00135$
@@ -5946,7 +5943,7 @@ _TickGoalKick::
 	ld	-3 (ix), #0xc8
 	ld	-2 (ix), #0
 00136$:
-;./exsoccer.c:1335: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 350; // Defenders move out of box
+;./exsoccer.c:1334: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 350; // Defenders move out of box
 	ld	a, -4 (ix)
 	or	a, a
 	jr	NZ, 00138$
@@ -5958,10 +5955,10 @@ _TickGoalKick::
 	ld	-2 (ix), #0x01
 	jp	00167$
 00148$:
-;./exsoccer.c:1337: targetY = 250;
+;./exsoccer.c:1336: targetY = 250;
 	ld	-3 (ix), #0xfa
 	ld	-2 (ix), #0
-;./exsoccer.c:1338: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 320; // Pressing High (but not too close)
+;./exsoccer.c:1337: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 320; // Pressing High (but not too close)
 	ld	a, e
 	or	a, a
 	jr	NZ, 00141$
@@ -5972,7 +5969,7 @@ _TickGoalKick::
 	ld	-3 (ix), #0x40
 	ld	-2 (ix), #0x01
 00142$:
-;./exsoccer.c:1339: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 150;
+;./exsoccer.c:1338: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 150;
 	ld	a, -4 (ix)
 	or	a, a
 	jr	NZ, 00144$
@@ -5984,14 +5981,14 @@ _TickGoalKick::
 	ld	-2 (ix), #0
 	jp	00167$
 00166$:
-;./exsoccer.c:1343: if(g_Players[i].TeamId == TEAM_2) {
+;./exsoccer.c:1342: if(g_Players[i].TeamId == TEAM_2) {
 	ld	a, c
 	sub	a, #0x02
 	jr	NZ, 00163$
-;./exsoccer.c:1345: targetY = 150; 
+;./exsoccer.c:1344: targetY = 150; 
 	ld	-3 (ix), #0x96
 	ld	-2 (ix), #0
-;./exsoccer.c:1346: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 250;
+;./exsoccer.c:1345: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 250;
 	ld	a, e
 	or	a, a
 	jr	NZ, 00150$
@@ -6002,7 +5999,7 @@ _TickGoalKick::
 	ld	-3 (ix), #0xfa
 	ld	-2 (ix), #0
 00151$:
-;./exsoccer.c:1347: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 120; // Defenders move out of box
+;./exsoccer.c:1346: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 120; // Defenders move out of box
 	ld	a, -4 (ix)
 	or	a, a
 	jr	NZ, 00153$
@@ -6014,10 +6011,10 @@ _TickGoalKick::
 	ld	-2 (ix), #0
 	jp	00167$
 00163$:
-;./exsoccer.c:1349: targetY = 200;
+;./exsoccer.c:1348: targetY = 200;
 	ld	-3 (ix), #0xc8
 	ld	-2 (ix), #0
-;./exsoccer.c:1350: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 160; // Pressing High (but not too close)
+;./exsoccer.c:1349: if (g_Players[i].Role == PLAYER_ROLE_LEFT_STRIKER || g_Players[i].Role == PLAYER_ROLE_RIGHT_STRIKER) targetY = 160; // Pressing High (but not too close)
 	ld	a, e
 	or	a, a
 	jr	NZ, 00156$
@@ -6028,7 +6025,7 @@ _TickGoalKick::
 	ld	-3 (ix), #0xa0
 	ld	-2 (ix), #0
 00157$:
-;./exsoccer.c:1351: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 300;
+;./exsoccer.c:1350: if (g_Players[i].Role == PLAYER_ROLE_LEFT_DEFENDER || g_Players[i].Role == PLAYER_ROLE_RIGHT_DEFENDER) targetY = 300;
 	ld	a, -4 (ix)
 	or	a, a
 	jr	NZ, 00159$
@@ -6039,7 +6036,7 @@ _TickGoalKick::
 	ld	-3 (ix), #0x2c
 	ld	-2 (ix), #0x01
 00167$:
-;./exsoccer.c:1356: if (targetX < 30) targetX = 30;
+;./exsoccer.c:1355: if (targetX < 30) targetX = 30;
 	ld	a, -7 (ix)
 	ld	b, -6 (ix)
 	sub	a, #0x1e
@@ -6049,7 +6046,7 @@ _TickGoalKick::
 	ld	-7 (ix), #0x1e
 	ld	-6 (ix), #0
 00169$:
-;./exsoccer.c:1357: if (targetX > 220) targetX = 220;
+;./exsoccer.c:1356: if (targetX > 220) targetX = 220;
 	ld	c, -7 (ix)
 	ld	b, -6 (ix)
 	ld	a, #0xdc
@@ -6060,7 +6057,7 @@ _TickGoalKick::
 	ld	-7 (ix), #0xdc
 	ld	-6 (ix), #0
 00171$:
-;./exsoccer.c:1359: g_Players[i].TargetX = targetX;
+;./exsoccer.c:1358: g_Players[i].TargetX = targetX;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	de, #0x0010
@@ -6070,7 +6067,7 @@ _TickGoalKick::
 	inc	hl
 	ld	a, -6 (ix)
 	ld	(hl), a
-;./exsoccer.c:1360: g_Players[i].TargetY = targetY;
+;./exsoccer.c:1359: g_Players[i].TargetY = targetY;
 	ld	l, -9 (ix)
 	ld	h, -8 (ix)
 	ld	de, #0x000e
@@ -6081,11 +6078,11 @@ _TickGoalKick::
 	ld	a, -2 (ix)
 	ld	(hl), a
 00172$:
-;./exsoccer.c:1318: for(u8 i=0; i<14; i++){
+;./exsoccer.c:1317: for(u8 i=0; i<14; i++){
 	inc	-1 (ix)
 	jp	00196$
 00175$:
-;./exsoccer.c:1365: i16 dx = (i16)g_Players[gkId].X - (i16)g_Players[gkId].TargetX;
+;./exsoccer.c:1364: i16 dx = (i16)g_Players[gkId].X - (i16)g_Players[gkId].TargetX;
 	ld	bc, #_g_Players+0
 	ld	e, -10 (ix)
 	ld	d, #0x00
@@ -6143,7 +6140,7 @@ _TickGoalKick::
 	ld	-10 (ix), a
 	ld	a, -1 (ix)
 	ld	-9 (ix), a
-;./exsoccer.c:1366: i16 dy = (i16)g_Players[gkId].Y - (i16)g_Players[gkId].TargetY;
+;./exsoccer.c:1365: i16 dy = (i16)g_Players[gkId].Y - (i16)g_Players[gkId].TargetY;
 	pop	hl
 	push	hl
 	ld	a, (hl)
@@ -6178,7 +6175,7 @@ _TickGoalKick::
 	ld	a, -7 (ix)
 	sbc	a, -3 (ix)
 	ld	-1 (ix), a
-;./exsoccer.c:1368: bool arrived = (dx >= -4 && dx <= 4 && dy >= -4 && dy <= 4);
+;./exsoccer.c:1367: bool arrived = (dx >= -4 && dx <= 4 && dy >= -4 && dy <= 4);
 	ld	a, -10 (ix)
 	sub	a, #0xfc
 	ld	a, -9 (ix)
@@ -6222,10 +6219,10 @@ _TickGoalKick::
 	ld	-1 (ix), #0x01
 00201$:
 	ld	a, -1 (ix)
-;./exsoccer.c:1370: if (arrived) {
+;./exsoccer.c:1369: if (arrived) {
 	or	a, a
 	jp	Z, 00193$
-;./exsoccer.c:1371: g_Players[gkId].X = g_Players[gkId].TargetX;
+;./exsoccer.c:1370: g_Players[gkId].X = g_Players[gkId].TargetX;
 	pop	bc
 	pop	hl
 	push	hl
@@ -6235,7 +6232,7 @@ _TickGoalKick::
 	inc	hl
 	ld	a, -11 (ix)
 	ld	(hl), a
-;./exsoccer.c:1372: g_Players[gkId].Y = g_Players[gkId].TargetY;
+;./exsoccer.c:1371: g_Players[gkId].Y = g_Players[gkId].TargetY;
 	ld	l, -6 (ix)
 	ld	h, -5 (ix)
 	ld	c, (hl)
@@ -6246,7 +6243,7 @@ _TickGoalKick::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:1374: if (g_RestartKickTeamId == TEAM_1) g_Players[gkId].Direction = DIRECTION_UP;
+;./exsoccer.c:1373: if (g_RestartKickTeamId == TEAM_1) g_Players[gkId].Direction = DIRECTION_UP;
 	ld	a, -16 (ix)
 	add	a, #0x0a
 	ld	-8 (ix), a
@@ -6261,12 +6258,12 @@ _TickGoalKick::
 	ld	(hl), #0x01
 	jp	00178$
 00177$:
-;./exsoccer.c:1375: else g_Players[gkId].Direction = DIRECTION_DOWN;
+;./exsoccer.c:1374: else g_Players[gkId].Direction = DIRECTION_DOWN;
 	ld	l, -8 (ix)
 	ld	h, -7 (ix)
 	ld	(hl), #0x05
 00178$:
-;./exsoccer.c:1376: g_Players[gkId].PatternId = GetNoMovingPlayerPatternId(g_Players[gkId].Direction);
+;./exsoccer.c:1375: g_Players[gkId].PatternId = GetNoMovingPlayerPatternId(g_Players[gkId].Direction);
 	ld	a, -16 (ix)
 	add	a, #0x08
 	ld	-3 (ix), a
@@ -6281,7 +6278,7 @@ _TickGoalKick::
 	ld	l, -3 (ix)
 	ld	h, -2 (ix)
 	ld	(hl), a
-;./exsoccer.c:1377: g_Players[gkId].Status = PLAYER_STATUS_POSITIONED;
+;./exsoccer.c:1376: g_Players[gkId].Status = PLAYER_STATUS_POSITIONED;
 	ld	a, -16 (ix)
 	add	a, #0x12
 	ld	-2 (ix), a
@@ -6293,13 +6290,13 @@ _TickGoalKick::
 	ld	(hl), #0x04
 	inc	hl
 	ld	(hl), #0x00
-;./exsoccer.c:1366: i16 dy = (i16)g_Players[gkId].Y - (i16)g_Players[gkId].TargetY;
+;./exsoccer.c:1365: i16 dy = (i16)g_Players[gkId].Y - (i16)g_Players[gkId].TargetY;
 	pop	hl
 	push	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;./exsoccer.c:1380: u16 distY = (g_Players[gkId].Y > g_Ball.Y) ? (g_Players[gkId].Y - g_Ball.Y) : (g_Ball.Y - g_Players[gkId].Y);
+;./exsoccer.c:1379: u16 distY = (g_Players[gkId].Y > g_Ball.Y) ? (g_Players[gkId].Y - g_Ball.Y) : (g_Ball.Y - g_Players[gkId].Y);
 	ld	hl, (#_g_Ball + 0)
 	ld	a, l
 	sub	a, c
@@ -6319,29 +6316,29 @@ _TickGoalKick::
 	ld	a, h
 	sbc	a, b
 00209$:
-;./exsoccer.c:1382: if (distY > 16) {
+;./exsoccer.c:1381: if (distY > 16) {
 	ld	b, a
-;./exsoccer.c:1274: g_Timer++;
+;./exsoccer.c:1273: g_Timer++;
 	ld	a, (_g_Timer+0)
 	inc	a
 	ld	-3 (ix), a
-;./exsoccer.c:1382: if (distY > 16) {
+;./exsoccer.c:1381: if (distY > 16) {
 	ld	a, #0x10
 	cp	a, c
 	ld	a, #0x00
 	sbc	a, b
 	jr	NC, 00187$
-;./exsoccer.c:1384: g_Timer++;
+;./exsoccer.c:1383: g_Timer++;
 	ld	a, -3 (ix)
 	ld	(_g_Timer+0), a
-;./exsoccer.c:1385: if (g_Timer > 100) {
+;./exsoccer.c:1384: if (g_Timer > 100) {
 	ld	a, #0x64
 	ld	hl, #_g_Timer
 	sub	a, (hl)
 	jr	NC, 00197$
-;./exsoccer.c:1380: u16 distY = (g_Players[gkId].Y > g_Ball.Y) ? (g_Players[gkId].Y - g_Ball.Y) : (g_Ball.Y - g_Players[gkId].Y);
+;./exsoccer.c:1379: u16 distY = (g_Players[gkId].Y > g_Ball.Y) ? (g_Players[gkId].Y - g_Ball.Y) : (g_Ball.Y - g_Players[gkId].Y);
 	ld	hl, (#_g_Ball + 0)
-;./exsoccer.c:1388: if (g_RestartKickTeamId == TEAM_1) kickY = g_Ball.Y + 6; 
+;./exsoccer.c:1387: if (g_RestartKickTeamId == TEAM_1) kickY = g_Ball.Y + 6; 
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
 	jr	NZ, 00180$
@@ -6351,19 +6348,19 @@ _TickGoalKick::
 	ld	b, h
 	jp	00181$
 00180$:
-;./exsoccer.c:1389: else kickY = g_Ball.Y - 6;
+;./exsoccer.c:1388: else kickY = g_Ball.Y - 6;
 	ld	bc, #0xfffa
 	add	hl,bc
 	ld	c, l
 	ld	b, h
 00181$:
-;./exsoccer.c:1391: g_Players[gkId].TargetY = kickY;
+;./exsoccer.c:1390: g_Players[gkId].TargetY = kickY;
 	ld	l, -6 (ix)
 	ld	h, -5 (ix)
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;./exsoccer.c:1392: g_Players[gkId].Status = PLAYER_STATUS_NONE;
+;./exsoccer.c:1391: g_Players[gkId].Status = PLAYER_STATUS_NONE;
 	ld	l, -2 (ix)
 	ld	h, -1 (ix)
 	xor	a, a
@@ -6372,15 +6369,15 @@ _TickGoalKick::
 	ld	(hl), a
 	jp	00197$
 00187$:
-;./exsoccer.c:1396: g_Timer++;
+;./exsoccer.c:1395: g_Timer++;
 	ld	a, -3 (ix)
 	ld	(_g_Timer+0), a
-;./exsoccer.c:1397: if (g_Timer > 110) {
+;./exsoccer.c:1396: if (g_Timer > 110) {
 	ld	a, #0x6e
 	ld	hl, #_g_Timer
 	sub	a, (hl)
 	jr	NC, 00197$
-;./exsoccer.c:1398: ClearTextFromLayerA(10, 18, 9); 
+;./exsoccer.c:1397: ClearTextFromLayerA(10, 18, 9); 
 	ld	a, #0x09
 	push	af
 	inc	sp
@@ -6389,18 +6386,18 @@ _TickGoalKick::
 ;	spillPairReg hl
 	ld	a, #0x0a
 	call	_ClearTextFromLayerA
-;./exsoccer.c:1399: GoalkeeperWithBall(g_RestartKickTeamId, true); 
+;./exsoccer.c:1398: GoalkeeperWithBall(g_RestartKickTeamId, true); 
 	ld	l, #0x01
 ;	spillPairReg hl
 ;	spillPairReg hl
 	ld	a, (_g_RestartKickTeamId+0)
 	call	_GoalkeeperWithBall
-;./exsoccer.c:1400: g_GkRecoilY = 0;
+;./exsoccer.c:1399: g_GkRecoilY = 0;
 	ld	hl, #_g_GkRecoilY
 	ld	(hl), #0x00
 	jp	00197$
 00193$:
-;./exsoccer.c:1405: if (g_Timer < 100) g_Timer = 61; // Hold at 61 while moving to start
+;./exsoccer.c:1404: if (g_Timer < 100) g_Timer = 61; // Hold at 61 while moving to start
 	ld	a, (_g_Timer+0)
 	sub	a, #0x64
 	jr	NC, 00190$
@@ -6408,11 +6405,11 @@ _TickGoalKick::
 	ld	(hl), #0x3d
 	jp	00197$
 00190$:
-;./exsoccer.c:1406: else g_Timer = 101; // Hold at 101 while moving to ball
+;./exsoccer.c:1405: else g_Timer = 101; // Hold at 101 while moving to ball
 	ld	hl, #_g_Timer
 	ld	(hl), #0x65
 00197$:
-;./exsoccer.c:1408: }
+;./exsoccer.c:1407: }
 	ld	sp, ix
 	pop	ix
 	ret
@@ -6470,8 +6467,6 @@ __xinit__g_ShotCursorX:
 	.dw #0x0078
 __xinit__g_ShotCursorDir:
 	.db #0x02	;  2
-__xinit__g_FioBre:
-	.db #0x00	; 0
 __xinit__g_GoalScorerId:
 	.db #0xff	; 255
 __xinit__g_CornerKickSide:
