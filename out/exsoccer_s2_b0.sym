@@ -9,33 +9,33 @@ Symbol Table
     .__.H$L.                                                    =   00000000 L
     _BallInGoal                                                     ******** GX
     _BallThrowIn                                                    ******** GX
-  7 _ClearTextFromLayerA                                            00000966 GR
+  7 _ClearTextFromLayerA                                            00000972 GR
     _CornerKick                                                     ******** GX
-  7 _GetBestPassTarget                                              000016A5 GR
-  7 _GetClosestPlayerToBall                                         0000156C GR
-  7 _GetJoystick1Direction                                          00001277 GR
-  7 _GetJoystick2Direction                                          00001377 GR
+  7 _GetBestPassTarget                                              000016B1 GR
+  7 _GetClosestPlayerToBall                                         00001578 GR
+  7 _GetJoystick1Direction                                          00001283 GR
+  7 _GetJoystick2Direction                                          00001383 GR
     _GetNoMovingPlayerPatternId                                     ******** GX
-  7 _GetNumberString                                                00001211 GR
+  7 _GetNumberString                                                0000121D GR
   1 _GetNumberString_str_65536_1310                                 00000002 R
   7 _GetPlayerIdByRole                                              0000005E GR
     _GetTeamStats                                                   ******** GX
     _GoalKick                                                       ******** GX
-  7 _GoalkeeperWithBall                                             00001AD2 GR
+  7 _GoalkeeperWithBall                                             00001ADE GR
     _InitPalette                                                    ******** GX
   7 _InitPonPonGirls                                                00000497 GR
-  7 _IsTeamJoystickTriggerPressed                                   00001250 GR
+  7 _IsTeamJoystickTriggerPressed                                   0000125C GR
     _Joystick_Read                                                  ******** GX
     _Keyboard_IsKeyPressed                                          ******** GX
     _LoadP1LayerA                                                   ******** GX
     _LoadP1LayerB                                                   ******** GX
-  7 _LoadPresentation                                               000021D9 GR
+  7 _LoadPresentation                                               000021F3 GR
     _LoadSprites                                                    ******** GX
-  7 _Math_Abs32                                                     0000168F GR
+  7 _Math_Abs32                                                     0000169B GR
     _PenaltyShots                                                   ******** GX
     _PeopleMoving                                                   ******** GX
     _PerformPass                                                    ******** GX
-  7 _PerformShot                                                    0000251A GR
+  7 _PerformShot                                                    00002534 GR
   7 _PrintTeamName                                                  0000021E GR
     _PutBallOnPlayerFeet                                            ******** GX
   7 _PutBallSprite                                                  000000CB GR
@@ -43,20 +43,20 @@ Symbol Table
   1 _PutBallSprite_s_StopCooldown_65538_1167                        00000000 R
   7 _PutPlayerSprite                                                0000063C GR
   7 _PutPonPonGirlSprite                                            0000059F GR
-  7 _ResetPlayersInfo                                               0000090C GR
-  7 _SelectTeam                                                     00001CDB GR
+  7 _ResetPlayersInfo                                               00000918 GR
+  7 _SelectTeam                                                     00001CE7 GR
     _SetPlayerBallPossession                                        ******** GX
     _ShowField                                                      ******** GX
-  7 _ShowFieldZone                                                  0000137C GR
+  7 _ShowFieldZone                                                  00001388 GR
   7 _ShowHeaderInfo                                                 00000345 GR
-  7 _ShowMenu                                                       00001E6C GR
+  7 _ShowMenu                                                       00001E78 GR
     _TeamVictory                                                    ******** GX
-  7 _TickBallFlying                                                 000027F7 GR
-  7 _TickCheckBallBoundaries                                        00001380 GR
+  7 _TickBallFlying                                                 00002811 GR
+  7 _TickCheckBallBoundaries                                        0000138C GR
     _TickFieldScrollingAction                                       ******** GX
-  7 _TickGoalkeeperAnimation                                        000022CD GR
+  7 _TickGoalkeeperAnimation                                        000022E7 GR
   7 _TickP1                                                         0000005B GR
-  7 _TickPlayerToOwnTarget                                          00000987 GR
+  7 _TickPlayerToOwnTarget                                          00000993 GR
   1 _TickPlayerToOwnTarget_s_GkMoveTick_131072_1261                 00000001 R
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
 Hexadecimal [32-Bits]
@@ -65,13 +65,13 @@ Symbol Table
 
   7 _TickPonPonGirlsAnimation                                       0000051C GR
   7 _TickPonPonGirlsAnimation_k_GirlPatterns_65537_1213             00000596 R
-  7 _TickShotCursor                                                 00003DBF GR
-  7 _TickThrowIn                                                    00003108 GR
-  1 _TickThrowIn_s_ForceThrowTimer_65537_1831                       0000000A R
-  1 _TickThrowIn_s_JoyMoved_65537_1831                              00000009 R
-  1 _TickThrowIn_s_ThrowTargetId_65537_1831                         00000008 R
-  7 _TimeUp                                                         0000152D GR
-  7 _UpdatePassTarget                                               00001A95 GR
+  7 _TickShotCursor                                                 00003DD9 GR
+  7 _TickThrowIn                                                    00003122 GR
+  1 _TickThrowIn_s_ForceThrowTimer_65537_1843                       0000000A R
+  1 _TickThrowIn_s_JoyMoved_65537_1843                              00000009 R
+  1 _TickThrowIn_s_ThrowTargetId_65537_1843                         00000008 R
+  7 _TimeUp                                                         00001539 GR
+  7 _UpdatePassTarget                                               00001AA1 GR
   1 _UpdatePassTarget_passUpdateTimer_65537_1420                    00000007 R
     _UpdatePlayerPatternByDirection                                 ******** GX
   7 _UpdateSpritesPositions                                         000000B9 GR
@@ -96,8 +96,8 @@ Symbol Table
   7 ___str_1                                                        00000325 R
   7 ___str_10                                                       0000041D R
   7 ___str_11                                                       0000041F R
-  7 ___str_12                                                       000021B8 R
-  7 ___str_13                                                       000021C8 R
+  7 ___str_12                                                       000021D2 R
+  7 ___str_13                                                       000021E2 R
   7 ___str_2                                                        00000329 R
   7 ___str_3                                                        0000032D R
   7 ___str_4                                                        00000331 R
@@ -453,7 +453,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size       2B   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG2                                      size     3EC0   flags    0
+   7 _SEG2                                      size     3EDA   flags    0
    8 _INITIALIZER                               size        7   flags    0
    9 _CABS                                      size        0   flags    8
 

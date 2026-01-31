@@ -349,7 +349,7 @@ void PutPlayerSprite(u8 playerId){
 	attr.Pattern = g_Players[playerId].PatternId;
 	
 	// Highlight logic (Human Only)
-	if(g_Players[playerId].TeamId != REFEREE)
+	if(g_Players[playerId].TeamId != REFEREE && g_MatchStatus != MATCH_PENALTY_SHOOTOUT && g_MatchStatus != MATCH_PENALTY_SETUP)
 	{
 		bool isHumanTeam = (g_Players[playerId].TeamId == TEAM_1) || (g_GameWith2Players && g_Players[playerId].TeamId == TEAM_2);
 		
@@ -1175,6 +1175,7 @@ u8 SelectTeam(u8 cursorPatternId, u8 excludeIndex) {
     }
 }
 void ShowMenu(){
+	SET_BANK_SEGMENT(2, 1); 
 	for(u8 i=0;i<20;i++){
 		struct V9_Sprite attr;
 		attr.D = 1;
@@ -1264,7 +1265,7 @@ void ShowMenu(){
 		}
 		V9_SetDisplayEnable(FALSE);
 	}
-	
+	g_MatchStatus=MATCH_NOT_STARTED;
 	LoadP1LayerA();
 	LoadP1LayerB();
     InitPalette();
@@ -1989,4 +1990,3 @@ void TickShotCursor() {
         V9_SetSpriteP1(16, &attr);
     }
 }
-
