@@ -258,6 +258,8 @@ typedef struct TeamStats
 #define MATCH_BEFORE_OFFSIDE                14
 #define MATCH_PRESENTATION					15
 #define MATCH_VICTORY_LAP					16
+#define MATCH_PENALTY_SHOOTOUT              17
+#define MATCH_PENALTY_SETUP                 18
 
 #define PON_PON_GIRLS_POSE_SPEED			3
 

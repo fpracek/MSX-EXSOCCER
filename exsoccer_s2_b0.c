@@ -60,7 +60,7 @@ u8 g_ponPonPatternIndex=0;
 u8 g_PonPonGrilsPoseCounter=0;
 bool g_peopleState=false;
 u8   g_ponPonGirlsInitailized=false;
-
+bool g_ShowButtonsInfo=true;
 // CONSTANTS
 
 // *** HELPER FUNCTIONS ***
@@ -1210,30 +1210,33 @@ void ShowMenu(){
 	V9_SetSpriteP1(20, &attr);
 
 	V9_SetDisplayEnable(FALSE);
+	if(g_ShowButtonsInfo){
+		g_ShowButtonsInfo=false;
+		V9_FillVRAM(V9_P1_PGT_A, 0x00, 128*212); // Clean layer B pattern
+		SET_BANK_SEGMENT(2, 20); 
+		V9_WriteVRAM(V9_P1_PGT_A, g_Buttons_part1, sizeof(g_Buttons_part1)); // Load tiles (part 1)
+		SET_BANK_SEGMENT(2, 21); 
+		V9_WriteVRAM(V9_P1_PGT_A + 16384, g_Buttons_part2, sizeof(g_Buttons_part2)); // Load tiles (part 2)
+		
+		SET_BANK_SEGMENT(2, 1); 
 
-	V9_FillVRAM(V9_P1_PGT_A, 0x00, 128*212); // Clean layer B pattern
-	SET_BANK_SEGMENT(2, 20); 
-	V9_WriteVRAM(V9_P1_PGT_A, g_Buttons_part1, sizeof(g_Buttons_part1)); // Load tiles (part 1)
-	SET_BANK_SEGMENT(2, 21); 
-	V9_WriteVRAM(V9_P1_PGT_A + 16384, g_Buttons_part2, sizeof(g_Buttons_part2)); // Load tiles (part 2)
-	
-	SET_BANK_SEGMENT(2, 1); 
+		SET_BANK_SEGMENT(2, 19); 
+		V9_SetPalette(0, 16, g_Buttons_palette);
 
-	SET_BANK_SEGMENT(2, 19); 
-	V9_SetPalette(0, 16, g_Buttons_palette);
+		u16 tileId=0;
 
-	u16 tileId=0;
-
-    for (u8 y=0;y<64;y++){
-		for (u8 x=0;x<32;x++){
-			V9_PutLayerATileAtPos(x,y,tileId++);
+		for (u8 y=0;y<64;y++){
+			for (u8 x=0;x<32;x++){
+				V9_PutLayerATileAtPos(x,y,tileId++);
+			}
 		}
-	}
-	V9_SetDisplayEnable(TRUE);
-	while(!IsTeamJoystickTriggerPressed(TEAM_1)){
+		V9_SetDisplayEnable(TRUE);
+		while(!IsTeamJoystickTriggerPressed(TEAM_1)){
 
+		}
+		V9_SetDisplayEnable(FALSE);
 	}
-	V9_SetDisplayEnable(FALSE);
+	
 	LoadP1LayerA();
 	LoadP1LayerB();
     InitPalette();
