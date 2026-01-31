@@ -1,0 +1,169 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 1
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =   00002710 L
+    .__.ABS.                                                    =   00000000 G
+    .__.CPU.                                                    =   00000000 L
+    .__.H$L.                                                    =   00000000 L
+  0 CHREGS                                                          0000043F R
+  0 CH_AMIN                                                         00000513 R
+  0 CH_AMP                                                          00000501 R
+  0 CH_APOS                                                         00000524 R
+  0 CH_ENV                                                          00000535 R
+  0 CH_EXIT                                                         0000056F R
+  0 CH_MIX                                                          0000056B R
+  0 CH_NOAC                                                         000004A4 R
+  0 CH_NOAM                                                         0000051B R
+  0 CH_NOEN                                                         0000053C R
+  0 CH_NOK                                                          00000473 R
+  0 CH_NTP                                                          0000046D R
+  0 CH_ONDL                                                         0000058E R
+  0 CH_ORPS                                                         00000462 R
+  0 CH_SMPS                                                         0000048E R
+  0 CH_STPP                                                         000004EC R
+  0 CH_SVAM                                                         00000518 R
+  0 CH_VOL                                                          0000052A R
+  0 C_DELAY                                                         000003E4 R
+  0 C_ENGLS                                                         000003D2 R
+  0 C_GLISS                                                         0000039B R
+  0 C_NOP                                                           00000405 R
+  0 C_ORPOS                                                         000003B4 R
+  0 C_PORTM                                                         00000339 R
+  0 C_SMPOS                                                         000003AE R
+  0 C_VIBRT                                                         000003BA R
+  0 DecodeCheckLoop                                                 00000261 R
+  0 EMPTYSAMORN                                                     00000593 R
+  0 INITV1                                                          0000000C R
+  0 INITV2                                                          00000014 R
+  0 INITV3                                                          00000028 R
+  0 InitClearRegs                                                   0000002B R
+  0 LoopON                                                          000000D0 R
+  0 NOSIG                                                           00000385 R
+  0 NO_ENAC                                                         00000556 R
+  0 NO_ENSL                                                         0000055D R
+  0 PD_ENV                                                          000002B7 R
+  0 PD_EOff                                                         000002A5 R
+  0 PD_ESAM                                                         000002C1 R
+  0 PD_FIN                                                          00000332 R
+  0 PD_LOOP                                                         000002DD R
+  0 PD_LP2                                                          000002E0 R
+  0 PD_NOIS                                                         0000030D R
+  0 PD_NOTE                                                         00000318 R
+  0 PD_ORN                                                          000002BC R
+  0 PD_OrSm                                                         0000027B R
+  0 PD_REL                                                          00000312 R
+  0 PD_RES                                                          00000320 R
+  0 PD_SAM                                                          00000285 R
+  0 PD_SAM_                                                         00000286 R
+  0 PD_SorE                                                         000002AD R
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+  0 PD_VOL                                                          0000029C R
+  0 PL1A                                                            000001C4 R
+  0 PL1B                                                            000001CF R
+  0 PL1C                                                            000001E4 R
+  0 PL1D                                                            000001F9 R
+  0 PL2                                                             000001FF R
+  0 PLNLP                                                           0000019D R
+  0 PT3_CALL_HL                                                     00000592 R
+  0 PTDECOD                                                         000002CE R
+  0 SETENV                                                          000003EA R
+  0 SETORN                                                          00000406 R
+  0 SET_STP                                                         0000038F R
+  0 SPCCOMS                                                         0000041F R
+  0 UpdatePSGMuteA                                                  000000E4 R
+  0 UpdatePSGMuteB                                                  000000EC R
+  0 UpdatePSGMuteC                                                  000000F4 R
+  0 UpdatePSGMuteEnd                                                000000FC R
+  1 _AddToNs                                                        0000005C GR
+  1 _ChanA                                                          00000000 GR
+  1 _ChanB                                                          0000001D GR
+  1 _ChanC                                                          0000003A GR
+  1 _CurEDel                                                        0000005A GR
+  1 _CurESld                                                        00000058 GR
+  1 _DelyCnt                                                        00000057 GR
+  0 _EmptyCB                                                        00000000 GR
+  1 _EnvBase                                                        0000006B GR
+  1 _Ns_Base                                                        0000005B GR
+  1 _PT3_AdInPtA                                                    0000016F GR
+  1 _PT3_AdInPtB                                                    00000171 GR
+  1 _PT3_AdInPtC                                                    00000173 GR
+  1 _PT3_AddToEn                                                    0000017A GR
+  1 _PT3_CSP                                                        00000168 GR
+  1 _PT3_CrPsPtr                                                    00000160 GR
+  0 _PT3_Decode                                                     0000015D GR
+  1 _PT3_Delay                                                      00000179 GR
+  1 _PT3_ESldAdd                                                    0000017C GR
+  1 _PT3_Env_Del                                                    0000017B GR
+  2 _PT3_Finish                                                     00000000 GR
+  0 _PT3_Init                                                       00000001 GR
+  0 _PT3_InitSong                                                   0000003C GR
+  1 _PT3_LPosPtr                                                    00000175 GR
+  1 _PT3_ModAddr                                                    0000015E GR
+  1 _PT3_NoteTable                                                  0000017E GR
+  1 _PT3_OrnPtrs                                                    00000164 GR
+  1 _PT3_PDSP                                                       00000166 GR
+  1 _PT3_PSP                                                        0000016A GR
+  1 _PT3_PatsPtr                                                    00000177 GR
+  0 _PT3_Pause                                                      000000B9 GR
+  1 _PT3_PrNote                                                     0000016C GR
+  1 _PT3_PrSlide                                                    0000016D GR
+  1 _PT3_Regs                                                       0000005D GR
+  0 _PT3_Resume                                                     000000C1 GR
+  1 _PT3_SamPtrs                                                    00000162 GR
+  0 _PT3_SetLoop                                                    000000C7 GR
+  0 _PT3_Silence                                                    000000D3 GR
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 3
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+  1 _PT3_SrtCrPsPtr                                                 00000180 GR
+  1 _PT3_State                                                      0000015D GR
+  0 _PT3_UpdatePSG                                                  000000E0 GR
+  1 _VAR0END                                                        0000006D GR
+  7 __xinit__PT3_Finish                                             00000000 R
+    _g_MSXAudio_DataPort                                        =   000000C1 
+    _g_MSXAudio_DataPort2                                       =   000000C3 
+    _g_MSXAudio_IndexPort                                       =   000000C0 
+    _g_MSXAudio_IndexPort2                                      =   000000C2 
+    _g_MSXMusic_DataPort                                        =   0000007D 
+    _g_MSXMusic_IndexPort                                       =   0000007C 
+    _g_PSG_DataPort                                             =   000000A1 
+    _g_PSG_Ext_DataPort                                         =   00000011 
+    _g_PSG_Ext_RegPort                                          =   00000010 
+    _g_PSG_Ext_StatPort                                         =   00000012 
+    _g_PSG_RegPort                                              =   000000A0 
+    _g_PSG_StatPort                                             =   000000A2 
+    _g_PortAccessKeyboard                                       =   000000AA 
+    _g_PortControl                                              =   000000AB 
+    _g_PortPrimarySlot                                          =   000000A8 
+    _g_PortReadKeyboard                                         =   000000A9 
+    _g_RTC_AddrPort                                             =   000000B4 
+    _g_RTC_DataPort                                             =   000000B5 
+    _g_VDP_AddrPort                                             =   00000099 
+    _g_VDP_DataPort                                             =   00000098 
+    _g_VDP_RegPort                                              =   00000099 
+    _g_VDP_StatPort                                             =   00000099 
+  0 decode_start                                                    00000163 R
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 4
+Hexadecimal [32-Bits]
+
+Area Table
+
+   0 _CODE                                      size      597   flags    0
+   1 _DATA                                      size      182   flags    0
+   2 _INITIALIZED                               size        2   flags    0
+   3 _DABS                                      size        0   flags    8
+   4 _HOME                                      size        0   flags    0
+   5 _GSINIT                                    size        0   flags    0
+   6 _GSFINAL                                   size        0   flags    0
+   7 _INITIALIZER                               size        2   flags    0
+   8 _CABS                                      size        0   flags    8
+

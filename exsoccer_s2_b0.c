@@ -145,10 +145,9 @@ void PutBallSprite(){
 }
 
 void PrintTeamName(u8 x, u8 teamPaletteId) {
-	DEBUG_LOG("oio");
+
     const char* pName = 0;
     if (g_FioBre) {
-		DEBUG_LOG("FIOBRE");
         if (teamPaletteId == TEAM_AUS) pName = "FIO";
         else if (teamPaletteId == TEAM_ITA) pName = "BRE";
     }

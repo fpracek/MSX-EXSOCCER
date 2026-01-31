@@ -27,7 +27,7 @@ ProjModules = [ ProjName ];
 // ProjSegments = "";
 
 //-- List of library modules to build (array)
-LibModules = [ "v9990", "system", "input", "vdp", "print", "input", "memory", "debug", "math" ];
+LibModules = [ "v9990", "system", "input", "vdp", "print", "input", "memory", "debug", "math", "pt3/pt3_player" ];
 
 //-- Additional sources to be compiled and linked with the project (array)
 // AddSources = [];

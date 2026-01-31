@@ -1,0 +1,1032 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.2.0 #13081 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module pt3_player
+                                      6 	.optsdcc -mz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _PT3_Finish
+                                     12 	.globl _PT3_SrtCrPsPtr
+                                     13 	.globl _PT3_NoteTable
+                                     14 	.globl _PT3_ESldAdd
+                                     15 	.globl _PT3_Env_Del
+                                     16 	.globl _PT3_AddToEn
+                                     17 	.globl _PT3_Delay
+                                     18 	.globl _PT3_PatsPtr
+                                     19 	.globl _PT3_LPosPtr
+                                     20 	.globl _PT3_AdInPtC
+                                     21 	.globl _PT3_AdInPtB
+                                     22 	.globl _PT3_AdInPtA
+                                     23 	.globl _PT3_PrSlide
+                                     24 	.globl _PT3_PrNote
+                                     25 	.globl _PT3_PSP
+                                     26 	.globl _PT3_CSP
+                                     27 	.globl _PT3_PDSP
+                                     28 	.globl _PT3_OrnPtrs
+                                     29 	.globl _PT3_SamPtrs
+                                     30 	.globl _PT3_CrPsPtr
+                                     31 	.globl _PT3_ModAddr
+                                     32 	.globl _PT3_State
+                                     33 	.globl _VAR0END
+                                     34 	.globl _EnvBase
+                                     35 	.globl _PT3_Regs
+                                     36 	.globl _AddToNs
+                                     37 	.globl _Ns_Base
+                                     38 	.globl _CurEDel
+                                     39 	.globl _CurESld
+                                     40 	.globl _DelyCnt
+                                     41 	.globl _ChanC
+                                     42 	.globl _ChanB
+                                     43 	.globl _ChanA
+                                     44 	.globl _EmptyCB
+                                     45 	.globl _PT3_Init
+                                     46 	.globl _PT3_InitSong
+                                     47 	.globl _PT3_Pause
+                                     48 	.globl _PT3_Resume
+                                     49 	.globl _PT3_SetLoop
+                                     50 	.globl _PT3_Silence
+                                     51 	.globl _PT3_UpdatePSG
+                                     52 	.globl _PT3_Decode
+                                     53 ;--------------------------------------------------------
+                                     54 ; special function registers
+                                     55 ;--------------------------------------------------------
+                         000000A8    56 _g_PortPrimarySlot	=	0x00a8
+                         000000A9    57 _g_PortReadKeyboard	=	0x00a9
+                         000000AA    58 _g_PortAccessKeyboard	=	0x00aa
+                         000000AB    59 _g_PortControl	=	0x00ab
+                         00000098    60 _g_VDP_DataPort	=	0x0098
+                         00000099    61 _g_VDP_RegPort	=	0x0099
+                         00000099    62 _g_VDP_AddrPort	=	0x0099
+                         00000099    63 _g_VDP_StatPort	=	0x0099
+                         000000A0    64 _g_PSG_RegPort	=	0x00a0
+                         000000A1    65 _g_PSG_DataPort	=	0x00a1
+                         000000A2    66 _g_PSG_StatPort	=	0x00a2
+                         00000010    67 _g_PSG_Ext_RegPort	=	0x0010
+                         00000011    68 _g_PSG_Ext_DataPort	=	0x0011
+                         00000012    69 _g_PSG_Ext_StatPort	=	0x0012
+                         0000007C    70 _g_MSXMusic_IndexPort	=	0x007c
+                         0000007D    71 _g_MSXMusic_DataPort	=	0x007d
+                         000000C0    72 _g_MSXAudio_IndexPort	=	0x00c0
+                         000000C1    73 _g_MSXAudio_DataPort	=	0x00c1
+                         000000C2    74 _g_MSXAudio_IndexPort2	=	0x00c2
+                         000000C3    75 _g_MSXAudio_DataPort2	=	0x00c3
+                         000000B4    76 _g_RTC_AddrPort	=	0x00b4
+                         000000B5    77 _g_RTC_DataPort	=	0x00b5
+                                     78 ;--------------------------------------------------------
+                                     79 ; ram data
+                                     80 ;--------------------------------------------------------
+                                     81 	.area _DATA
+    00000000                         82 _ChanA::
+    00000000                         83 	.ds 29
+    0000001D                         84 _ChanB::
+    0000001D                         85 	.ds 29
+    0000003A                         86 _ChanC::
+    0000003A                         87 	.ds 29
+    00000057                         88 _DelyCnt::
+    00000057                         89 	.ds 1
+    00000058                         90 _CurESld::
+    00000058                         91 	.ds 2
+    0000005A                         92 _CurEDel::
+    0000005A                         93 	.ds 1
+    0000005B                         94 _Ns_Base::
+    0000005B                         95 	.ds 1
+    0000005C                         96 _AddToNs::
+    0000005C                         97 	.ds 1
+    0000005D                         98 _PT3_Regs::
+    0000005D                         99 	.ds 14
+    0000006B                        100 _EnvBase::
+    0000006B                        101 	.ds 2
+    0000006D                        102 _VAR0END::
+    0000006D                        103 	.ds 240
+    0000015D                        104 _PT3_State::
+    0000015D                        105 	.ds 1
+    0000015E                        106 _PT3_ModAddr::
+    0000015E                        107 	.ds 2
+    00000160                        108 _PT3_CrPsPtr::
+    00000160                        109 	.ds 2
+    00000162                        110 _PT3_SamPtrs::
+    00000162                        111 	.ds 2
+    00000164                        112 _PT3_OrnPtrs::
+    00000164                        113 	.ds 2
+    00000166                        114 _PT3_PDSP::
+    00000166                        115 	.ds 2
+    00000168                        116 _PT3_CSP::
+    00000168                        117 	.ds 2
+    0000016A                        118 _PT3_PSP::
+    0000016A                        119 	.ds 2
+    0000016C                        120 _PT3_PrNote::
+    0000016C                        121 	.ds 1
+    0000016D                        122 _PT3_PrSlide::
+    0000016D                        123 	.ds 2
+    0000016F                        124 _PT3_AdInPtA::
+    0000016F                        125 	.ds 2
+    00000171                        126 _PT3_AdInPtB::
+    00000171                        127 	.ds 2
+    00000173                        128 _PT3_AdInPtC::
+    00000173                        129 	.ds 2
+    00000175                        130 _PT3_LPosPtr::
+    00000175                        131 	.ds 2
+    00000177                        132 _PT3_PatsPtr::
+    00000177                        133 	.ds 2
+    00000179                        134 _PT3_Delay::
+    00000179                        135 	.ds 1
+    0000017A                        136 _PT3_AddToEn::
+    0000017A                        137 	.ds 1
+    0000017B                        138 _PT3_Env_Del::
+    0000017B                        139 	.ds 1
+    0000017C                        140 _PT3_ESldAdd::
+    0000017C                        141 	.ds 2
+    0000017E                        142 _PT3_NoteTable::
+    0000017E                        143 	.ds 2
+    00000180                        144 _PT3_SrtCrPsPtr::
+    00000180                        145 	.ds 2
+                                    146 ;--------------------------------------------------------
+                                    147 ; ram data
+                                    148 ;--------------------------------------------------------
+                                    149 	.area _INITIALIZED
+    00000000                        150 _PT3_Finish::
+    00000000                        151 	.ds 2
+                                    152 ;--------------------------------------------------------
+                                    153 ; absolute external ram data
+                                    154 ;--------------------------------------------------------
+                                    155 	.area _DABS (ABS)
+                                    156 ;--------------------------------------------------------
+                                    157 ; global & static initialisations
+                                    158 ;--------------------------------------------------------
+                                    159 	.area _HOME
+                                    160 	.area _GSINIT
+                                    161 	.area _GSFINAL
+                                    162 	.area _GSINIT
+                                    163 ;--------------------------------------------------------
+                                    164 ; Home
+                                    165 ;--------------------------------------------------------
+                                    166 	.area _HOME
+                                    167 	.area _HOME
+                                    168 ;--------------------------------------------------------
+                                    169 ; code
+                                    170 ;--------------------------------------------------------
+                                    171 	.area _CODE
+                                    172 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:117: void EmptyCB() {}
+                                    173 ;	---------------------------------
+                                    174 ; Function EmptyCB
+                                    175 ; ---------------------------------
+    00000000                        176 _EmptyCB::
+    00000000 C9               [10]  177 	ret
+                                    178 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:134: void PT3_Init()
+                                    179 ;	---------------------------------
+                                    180 ; Function PT3_Init
+                                    181 ; ---------------------------------
+    00000001                        182 _PT3_Init::
+                                    183 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:178: __endasm;
+    00000001 21 11 00         [10]  184 	ld	HL, #0x11
+    00000004 54               [ 4]  185 	ld	D, H
+    00000005 5C               [ 4]  186 	ld	E, H
+    00000006 FD 21r6Dr00      [14]  187 	ld	IY, #_VAR0END
+    0000000A 06 0F            [ 7]  188 	ld	B, #15
+    0000000C                        189 	INITV1:
+    0000000C E5               [11]  190 	push	HL
+    0000000D 19               [11]  191 	add	HL, DE
+    0000000E EB               [ 4]  192 	ex	DE, HL
+    0000000F ED 62            [15]  193 	sbc	HL, HL
+    00000011 48               [ 4]  194 	ld	C, B
+    00000012 06 10            [ 7]  195 	ld	B, #16
+    00000014                        196 	INITV2:
+    00000014 7D               [ 4]  197 	ld	A, L
+    00000015 17               [ 4]  198 	rla
+    00000016 7C               [ 4]  199 	ld	A, H
+    00000017 CE 00            [ 7]  200 	adc	A, #0
+    00000019 FD 77 00         [19]  201 	ld	(IY), A
+    0000001C FD 23            [10]  202 	inc	IY
+    0000001E 19               [11]  203 	add	HL, DE
+    0000001F 10 F3            [13]  204 	djnz	INITV2
+    00000021 E1               [10]  205 	pop	HL
+    00000022 7B               [ 4]  206 	ld	A, E
+    00000023 FE 77            [ 7]  207 	cp	#0x77
+    00000025 20 01            [12]  208 	jr	NZ, INITV3
+    00000027 1C               [ 4]  209 	inc	E
+    00000028                        210 	INITV3:
+    00000028 41               [ 4]  211 	ld	B, C
+    00000029 10 E1            [13]  212 	djnz	INITV1
+    0000002B                        213 	InitClearRegs:
+    0000002B AF               [ 4]  214 	xor	A
+    0000002C 32r5Dr01         [13]  215 	ld	(#_PT3_State), A
+    0000002F 21r5Dr00         [10]  216 	ld	HL, #_PT3_Regs
+    00000032 11r5Er00         [10]  217 	ld	DE, #_PT3_Regs + 1
+    00000035 01 0D 00         [10]  218 	ld	BC, #13
+    00000038 77               [ 7]  219 	ld	(HL), A
+    00000039 ED B0            [21]  220 	ldir
+                                    221 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:179: }
+    0000003B C9               [10]  222 	ret
+                                    223 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:185: void PT3_InitSong(const void* songAddr)
+                                    224 ;	---------------------------------
+                                    225 ; Function PT3_InitSong
+                                    226 ; ---------------------------------
+    0000003C                        227 _PT3_InitSong::
+                                    228 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:268: __endasm;
+    0000003C 11 9C FF         [10]  229 	ld	DE, #-100
+    0000003F 19               [11]  230 	add	HL, DE
+    00000040 22r5Er01         [16]  231 	ld	(#_PT3_ModAddr), HL
+    00000043 EB               [ 4]  232 	ex	DE, HL
+    00000044 21 64 00         [10]  233 	ld	HL, #100
+    00000047 19               [11]  234 	add	HL, DE
+    00000048 7E               [ 7]  235 	ld	A, (HL)
+    00000049 32r79r01         [13]  236 	ld	(#_PT3_Delay), A
+    0000004C 21 69 00         [10]  237 	ld	HL, #105
+    0000004F 19               [11]  238 	add	HL, DE
+    00000050 22r62r01         [16]  239 	ld	(#_PT3_SamPtrs), HL
+    00000053 21 A9 00         [10]  240 	ld	HL, #169
+    00000056 19               [11]  241 	add	HL, DE
+    00000057 22r64r01         [16]  242 	ld	(#_PT3_OrnPtrs), HL
+    0000005A 21 C8 00         [10]  243 	ld	HL, #200
+    0000005D 19               [11]  244 	add	HL, DE
+    0000005E 22r60r01         [16]  245 	ld	(#_PT3_CrPsPtr), HL
+    00000061 22r80r01         [16]  246 	ld	(#_PT3_SrtCrPsPtr), HL
+    00000064 FD 2Ar5Er01      [20]  247 	ld	IY, (#_PT3_ModAddr)
+    00000068 06 00            [ 7]  248 	ld	B, #0
+    0000006A FD 4E 66         [19]  249 	ld	C, 102(IY)
+    0000006D 21 C9 00         [10]  250 	ld	HL, #201
+    00000070 19               [11]  251 	add	HL, DE
+    00000071 09               [11]  252 	add	HL, BC
+    00000072 22r75r01         [16]  253 	ld	(#_PT3_LPosPtr), HL
+    00000075 FD 46 68         [19]  254 	ld	B, 104(IY)
+    00000078 FD 4E 67         [19]  255 	ld	C, 103(IY)
+    0000007B EB               [ 4]  256 	ex	DE, HL
+    0000007C 09               [11]  257 	add	HL, BC
+    0000007D 22r77r01         [16]  258 	ld	(#_PT3_PatsPtr), HL
+    00000080 AF               [ 4]  259 	xor	A
+    00000081 21r00r00         [10]  260 	ld	HL, #_ChanA
+    00000084 77               [ 7]  261 	ld	(HL), A
+    00000085 11r01r00         [10]  262 	ld	DE, #_ChanA + 1
+    00000088 01 6C 00         [10]  263 	ld	BC, #_VAR0END - _ChanA -1
+    0000008B ED B0            [21]  264 	ldir
+    0000008D 3C               [ 4]  265 	inc	A
+    0000008E 32r57r00         [13]  266 	ld	(#_DelyCnt), A
+    00000091 21 01 F0         [10]  267 	ld	HL, #0xF001
+    00000094 22r1Br00         [16]  268 	ld	(#_ChanA + 27), HL
+    00000097 22r38r00         [16]  269 	ld	(#_ChanB + 27), HL
+    0000009A 22r55r00         [16]  270 	ld	(#_ChanC + 27), HL
+    0000009D 21r93r05         [10]  271 	ld	HL, #EMPTYSAMORN
+    000000A0 22r6Fr01         [16]  272 	ld	(#_PT3_AdInPtA), HL
+    000000A3 22r0Dr00         [16]  273 	ld	(#_ChanA + 13), HL
+    000000A6 22r2Ar00         [16]  274 	ld	(#_ChanB + 13), HL
+    000000A9 22r47r00         [16]  275 	ld	(#_ChanC + 13), HL
+    000000AC 22r0Fr00         [16]  276 	ld	(#_ChanA + 15), HL
+    000000AF 22r2Cr00         [16]  277 	ld	(#_ChanB + 15), HL
+    000000B2 22r49r00         [16]  278 	ld	(#_ChanC + 15), HL
+    000000B5 C3rC1r00         [10]  279 	jp	_PT3_Resume
+                                    280 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:269: }
+    000000B8 C9               [10]  281 	ret
+                                    282 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:273: void PT3_Pause() __NAKED
+                                    283 ;	---------------------------------
+                                    284 ; Function PT3_Pause
+                                    285 ; ---------------------------------
+    000000B9                        286 _PT3_Pause::
+                                    287 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:280: __endasm;
+    000000B9 21r5Dr01         [10]  288 	ld	HL, #_PT3_State
+    000000BC CB 86            [15]  289 	res	0, (HL)
+    000000BE C3rD3r00         [10]  290 	jp	_PT3_Silence
+                                    291 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:281: }
+                                    292 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:285: void PT3_Resume()
+                                    293 ;	---------------------------------
+                                    294 ; Function PT3_Resume
+                                    295 ; ---------------------------------
+    000000C1                        296 _PT3_Resume::
+                                    297 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:290: __endasm;
+    000000C1 21r5Dr01         [10]  298 	ld	HL, #_PT3_State
+    000000C4 CB C6            [15]  299 	set	0, (HL)
+                                    300 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:291: }
+    000000C6 C9               [10]  301 	ret
+                                    302 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:296: void PT3_SetLoop(u8 loop)
+                                    303 ;	---------------------------------
+                                    304 ; Function PT3_SetLoop
+                                    305 ; ---------------------------------
+    000000C7                        306 _PT3_SetLoop::
+                                    307 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:310: __endasm;
+    000000C7 21r5Dr01         [10]  308 	ld	HL, #_PT3_State
+    000000CA B7               [ 4]  309 	or	A
+    000000CB 20 03            [12]  310 	jr	NZ, LoopON
+    000000CD CB A6            [15]  311 	res	4, (HL)
+    000000CF C9               [10]  312 	ret
+    000000D0                        313 	LoopON:
+    000000D0 CB E6            [15]  314 	set	4, (HL)
+                                    315 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:311: }
+    000000D2 C9               [10]  316 	ret
+                                    317 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:315: void PT3_Silence() __NAKED
+                                    318 ;	---------------------------------
+                                    319 ; Function PT3_Silence
+                                    320 ; ---------------------------------
+    000000D3                        321 _PT3_Silence::
+                                    322 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:324: __endasm;
+    000000D3 AF               [ 4]  323 	xor	A
+    000000D4 32r65r00         [13]  324 	ld	(#_PT3_Regs + 8), A
+    000000D7 32r66r00         [13]  325 	ld	(#_PT3_Regs + 9), A
+    000000DA 32r67r00         [13]  326 	ld	(#_PT3_Regs + 10), A
+    000000DD C3rE0r00         [10]  327 	jp	_PT3_UpdatePSG
+                                    328 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:325: }
+                                    329 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:330: void PT3_UpdatePSG()
+                                    330 ;	---------------------------------
+                                    331 ; Function PT3_UpdatePSG
+                                    332 ; ---------------------------------
+    000000E0                        333 _PT3_UpdatePSG::
+                                    334 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:387: __endasm;
+    000000E0 21r5Dr01         [10]  335 	ld	HL, #_PT3_State
+    000000E3 AF               [ 4]  336 	xor	A
+    000000E4                        337 	UpdatePSGMuteA:
+    000000E4 CB 4E            [12]  338 	bit	1, (HL)
+    000000E6 CArECr00         [10]  339 	jp	z, UpdatePSGMuteB
+    000000E9 32r65r00         [13]  340 	ld	(#_PT3_Regs + 8), A
+    000000EC                        341 	UpdatePSGMuteB:
+    000000EC CB 56            [12]  342 	bit	2, (HL)
+    000000EE CArF4r00         [10]  343 	jp	z, UpdatePSGMuteC
+    000000F1 32r66r00         [13]  344 	ld	(#_PT3_Regs + 9), A
+    000000F4                        345 	UpdatePSGMuteC:
+    000000F4 CB 5E            [12]  346 	bit	3, (HL)
+    000000F6 CArFCr00         [10]  347 	jp	z, UpdatePSGMuteEnd
+    000000F9 32r67r00         [13]  348 	ld	(#_PT3_Regs + 10), A
+    000000FC                        349 	UpdatePSGMuteEnd:
+    000000FC 3Ar64r00         [13]  350 	ld	A, (#_PT3_Regs + 7)
+    000000FF E6 3F            [ 7]  351 	and	#0b00111111
+    00000101 47               [ 4]  352 	ld	B, A
+    00000102 3E 07            [ 7]  353 	ld	A, #7
+    00000104 D3 A0            [11]  354 	out	(#0xA0), A
+    00000106 DB A2            [11]  355 	in	A, (#0xA2)
+    00000108 E6 C0            [ 7]  356 	and	#0b11000000
+    0000010A B0               [ 4]  357 	or	B
+    0000010B 32r64r00         [13]  358 	ld	(#_PT3_Regs + 7), A
+    0000010E 21r5Dr00         [10]  359 	ld	HL, #_PT3_Regs
+    00000111 0E A1            [ 7]  360 	ld	C, #0xA1
+    00000113 AF               [ 4]  361 	xor	A
+                                    362 	.rept	13
+                                    363 	out	(0xA0), A
+                                    364 	outi
+                                    365 	inc	A
+                                    366 	.endm
+    00000114 D3 A0            [11]    1 	out	(0xA0), A
+    00000116 ED A3            [16]    2 	outi
+    00000118 3C               [ 4]    3 	inc	A
+    00000119 D3 A0            [11]    1 	out	(0xA0), A
+    0000011B ED A3            [16]    2 	outi
+    0000011D 3C               [ 4]    3 	inc	A
+    0000011E D3 A0            [11]    1 	out	(0xA0), A
+    00000120 ED A3            [16]    2 	outi
+    00000122 3C               [ 4]    3 	inc	A
+    00000123 D3 A0            [11]    1 	out	(0xA0), A
+    00000125 ED A3            [16]    2 	outi
+    00000127 3C               [ 4]    3 	inc	A
+    00000128 D3 A0            [11]    1 	out	(0xA0), A
+    0000012A ED A3            [16]    2 	outi
+    0000012C 3C               [ 4]    3 	inc	A
+    0000012D D3 A0            [11]    1 	out	(0xA0), A
+    0000012F ED A3            [16]    2 	outi
+    00000131 3C               [ 4]    3 	inc	A
+    00000132 D3 A0            [11]    1 	out	(0xA0), A
+    00000134 ED A3            [16]    2 	outi
+    00000136 3C               [ 4]    3 	inc	A
+    00000137 D3 A0            [11]    1 	out	(0xA0), A
+    00000139 ED A3            [16]    2 	outi
+    0000013B 3C               [ 4]    3 	inc	A
+    0000013C D3 A0            [11]    1 	out	(0xA0), A
+    0000013E ED A3            [16]    2 	outi
+    00000140 3C               [ 4]    3 	inc	A
+    00000141 D3 A0            [11]    1 	out	(0xA0), A
+    00000143 ED A3            [16]    2 	outi
+    00000145 3C               [ 4]    3 	inc	A
+    00000146 D3 A0            [11]    1 	out	(0xA0), A
+    00000148 ED A3            [16]    2 	outi
+    0000014A 3C               [ 4]    3 	inc	A
+    0000014B D3 A0            [11]    1 	out	(0xA0), A
+    0000014D ED A3            [16]    2 	outi
+    0000014F 3C               [ 4]    3 	inc	A
+    00000150 D3 A0            [11]    1 	out	(0xA0), A
+    00000152 ED A3            [16]    2 	outi
+    00000154 3C               [ 4]    3 	inc	A
+    00000155 D3 A0            [11]  367 	out	(0xA0), A
+    00000157 7E               [ 7]  368 	ld	A, (HL)
+    00000158 A7               [ 4]  369 	and	A
+    00000159 F8               [11]  370 	ret	M
+    0000015A D3 A1            [11]  371 	out	(0xA1), A
+                                    372 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:388: }
+    0000015C C9               [10]  373 	ret
+                                    374 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:392: void PT3_Decode() __NAKED
+                                    375 ;	---------------------------------
+                                    376 ; Function PT3_Decode
+                                    377 ; ---------------------------------
+    0000015D                        378 _PT3_Decode::
+                                    379 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:1093: __endasm;
+    0000015D F3               [ 4]  380 	di
+    0000015E CDr63r01         [17]  381 	call	decode_start
+    00000161 FB               [ 4]  382 	ei
+    00000162 C9               [10]  383 	ret
+    00000163                        384 	 decode_start:
+    00000163 21r5Dr01         [10]  385 	ld	HL, #_PT3_State
+    00000166 CB 46            [12]  386 	bit	0, (HL)
+    00000168 C8               [11]  387 	ret	Z
+    00000169 AF               [ 4]  388 	xor	A
+    0000016A 32r7Ar01         [13]  389 	ld	(#_PT3_AddToEn), A
+    0000016D 32r64r00         [13]  390 	ld	(#_PT3_Regs + 7), A
+    00000170 3D               [ 4]  391 	dec	A
+    00000171 32r6Ar00         [13]  392 	ld	(#_PT3_Regs + 13), A
+    00000174 21r57r00         [10]  393 	LD	HL,#_DelyCnt
+    00000177 35               [11]  394 	DEC	(HL)
+    00000178 C2rFFr01         [10]  395 	JP	NZ,PL2
+    0000017B 21r1Br00         [10]  396 	LD	HL,#_ChanA + 27
+    0000017E 35               [11]  397 	DEC	(HL)
+    0000017F 20 4E            [12]  398 	JR	NZ,PL1B
+    00000181 ED 4Br6Fr01      [20]  399 	ld	BC,(#_PT3_AdInPtA)
+    00000185 0A               [ 7]  400 	LD	A,(BC)
+    00000186 A7               [ 4]  401 	AND	A
+    00000187 20 3B            [12]  402 	JR	NZ,PL1A
+    00000189 57               [ 4]  403 	LD	D,A
+    0000018A 32r5Br00         [13]  404 	LD	(#_Ns_Base),A
+    0000018D 2Ar60r01         [16]  405 	LD	HL,(#_PT3_CrPsPtr)
+    00000190 23               [ 6]  406 	INC	HL
+    00000191 7E               [ 7]  407 	LD	A,(HL)
+    00000192 3C               [ 4]  408 	INC	A
+    00000193 20 08            [12]  409 	JR	NZ,PLNLP
+    00000195 CDr61r02         [17]  410 	CALL	DecodeCheckLoop
+    00000198 2Ar75r01         [16]  411 	ld	HL,(#_PT3_LPosPtr)
+    0000019B 7E               [ 7]  412 	LD	A,(HL)
+    0000019C 3C               [ 4]  413 	INC	A
+    0000019D                        414 	PLNLP:
+    0000019D 22r60r01         [16]  415 	LD	(#_PT3_CrPsPtr),HL
+    000001A0 3D               [ 4]  416 	DEC	A
+    000001A1 87               [ 4]  417 	ADD	A,A
+    000001A2 5F               [ 4]  418 	LD	E,A
+    000001A3 CB 12            [ 8]  419 	RL	D
+    000001A5 2Ar77r01         [16]  420 	ld	HL,(#_PT3_PatsPtr)
+    000001A8 19               [11]  421 	ADD	HL,DE
+    000001A9 ED 5Br5Er01      [20]  422 	LD	DE,(#_PT3_ModAddr)
+    000001AD ED 73r6Ar01      [20]  423 	ld	(#_PT3_PSP),SP
+    000001B1 F9               [ 6]  424 	LD	SP,HL
+    000001B2 E1               [10]  425 	POP	HL
+    000001B3 19               [11]  426 	ADD	HL,DE
+    000001B4 44               [ 4]  427 	LD	B,H
+    000001B5 4D               [ 4]  428 	LD	C,L
+    000001B6 E1               [10]  429 	POP	HL
+    000001B7 19               [11]  430 	ADD	HL,DE
+    000001B8 22r71r01         [16]  431 	LD	(#_PT3_AdInPtB),HL
+    000001BB E1               [10]  432 	POP	HL
+    000001BC 19               [11]  433 	ADD	HL,DE
+    000001BD 22r73r01         [16]  434 	LD	(#_PT3_AdInPtC),HL
+    000001C0 ED 7Br6Ar01      [20]  435 	ld	SP,(#_PT3_PSP)
+    000001C4                        436 	PL1A:
+    000001C4 FD 21r0Cr00      [14]  437 	LD	IY,#_ChanA + 12
+    000001C8 CDrCEr02         [17]  438 	CALL	PTDECOD
+    000001CB ED 43r6Fr01      [20]  439 	LD	(#_PT3_AdInPtA),BC
+    000001CF                        440 	PL1B:
+    000001CF 21r38r00         [10]  441 	LD	HL,#_ChanB + 27
+    000001D2 35               [11]  442 	DEC	(HL)
+    000001D3 20 0F            [12]  443 	JR	NZ,PL1C
+    000001D5 FD 21r29r00      [14]  444 	LD	IY,#_ChanB + 12
+    000001D9 ED 4Br71r01      [20]  445 	ld	BC,(#_PT3_AdInPtB)
+    000001DD CDrCEr02         [17]  446 	CALL	PTDECOD
+    000001E0 ED 43r71r01      [20]  447 	LD	(#_PT3_AdInPtB),BC
+    000001E4                        448 	PL1C:
+    000001E4 21r55r00         [10]  449 	LD	HL,#_ChanC + 27
+    000001E7 35               [11]  450 	DEC	(HL)
+    000001E8 20 0F            [12]  451 	JR	NZ,PL1D
+    000001EA FD 21r46r00      [14]  452 	LD	IY,#_ChanC + 12
+    000001EE ED 4Br73r01      [20]  453 	ld	BC,(#_PT3_AdInPtC)
+    000001F2 CDrCEr02         [17]  454 	CALL	PTDECOD
+    000001F5 ED 43r73r01      [20]  455 	LD	(#_PT3_AdInPtC),BC
+    000001F9                        456 	PL1D:
+    000001F9 3Ar79r01         [13]  457 	ld	A,(#_PT3_Delay)
+    000001FC 32r57r00         [13]  458 	ld	(#_DelyCnt),A
+    000001FF                        459 	PL2:
+    000001FF FD 21r00r00      [14]  460 	LD	IY,#_ChanA
+    00000203 2Ar5Dr00         [16]  461 	LD	HL,(#_PT3_Regs + 0)
+    00000206 CDr3Fr04         [17]  462 	CALL	CHREGS
+    00000209 22r5Dr00         [16]  463 	LD	(#_PT3_Regs + 0),HL
+    0000020C 3Ar67r00         [13]  464 	LD	A,(#_PT3_Regs + 10)
+    0000020F 32r65r00         [13]  465 	LD	(#_PT3_Regs + 8),A
+    00000212 FD 21r1Dr00      [14]  466 	LD	IY,#_ChanB
+    00000216 2Ar5Fr00         [16]  467 	LD	HL,(#_PT3_Regs + 2)
+    00000219 CDr3Fr04         [17]  468 	CALL	CHREGS
+    0000021C 22r5Fr00         [16]  469 	LD	(#_PT3_Regs + 2),HL
+    0000021F 3Ar67r00         [13]  470 	LD	A,(#_PT3_Regs + 10)
+    00000222 32r66r00         [13]  471 	LD	(#_PT3_Regs + 9),A
+    00000225 FD 21r3Ar00      [14]  472 	LD	IY,#_ChanC
+    00000229 2Ar61r00         [16]  473 	LD	HL,(#_PT3_Regs + 4)
+    0000022C CDr3Fr04         [17]  474 	CALL	CHREGS
+    0000022F 22r61r00         [16]  475 	LD	(#_PT3_Regs + 4),HL
+    00000232 2Ar5Br00         [16]  476 	LD	HL,(#_Ns_Base)
+    00000235 7C               [ 4]  477 	LD	A,H
+    00000236 85               [ 4]  478 	ADD	A,L
+    00000237 32r63r00         [13]  479 	LD	(#_PT3_Regs + 6),A
+    0000023A 3Ar7Ar01         [13]  480 	ld	A,(#_PT3_AddToEn)
+    0000023D 5F               [ 4]  481 	LD	E,A
+    0000023E 87               [ 4]  482 	ADD	A,A
+    0000023F 9F               [ 4]  483 	SBC	A,A
+    00000240 57               [ 4]  484 	LD	D,A
+    00000241 2Ar6Br00         [16]  485 	LD	HL,(#_EnvBase)
+    00000244 19               [11]  486 	ADD	HL,DE
+    00000245 ED 5Br58r00      [20]  487 	LD	DE,(#_CurESld)
+    00000249 19               [11]  488 	ADD	HL,DE
+    0000024A 22r68r00         [16]  489 	LD	(#_PT3_Regs + 11),HL
+    0000024D AF               [ 4]  490 	XOR	A
+    0000024E 21r5Ar00         [10]  491 	LD	HL,#_CurEDel
+    00000251 B6               [ 7]  492 	OR	(HL)
+    00000252 C8               [11]  493 	RET	Z
+    00000253 35               [11]  494 	DEC	(HL)
+    00000254 C0               [11]  495 	RET	NZ
+    00000255 3Ar7Br01         [13]  496 	LD	A,(#_PT3_Env_Del)
+    00000258 77               [ 7]  497 	LD	(HL),A
+    00000259 2Ar7Cr01         [16]  498 	LD	HL,(#_PT3_ESldAdd)
+    0000025C 19               [11]  499 	ADD	HL,DE
+    0000025D 22r58r00         [16]  500 	LD	(#_CurESld),HL
+    00000260 C9               [10]  501 	RET
+    00000261                        502 	DecodeCheckLoop:
+    00000261 2Ar00r00         [16]  503 	ld	HL, (_PT3_Finish)
+    00000264 CDr92r05         [17]  504 	call	PT3_CALL_HL
+    00000267 21r5Dr01         [10]  505 	ld	HL, #_PT3_State
+    0000026A CB EE            [15]  506 	set	5, (HL)
+    0000026C CB 66            [12]  507 	bit	4, (HL)
+    0000026E C0               [11]  508 	ret	NZ
+    0000026F E1               [10]  509 	POP	HL
+    00000270 21r57r00         [10]  510 	LD	HL,#_DelyCnt
+    00000273 34               [11]  511 	INC	(HL)
+    00000274 21r1Br00         [10]  512 	LD	HL,#_ChanA + 27
+    00000277 34               [11]  513 	INC	(HL)
+    00000278 C3rB9r00         [10]  514 	jp	_PT3_Pause
+    0000027B                        515 	PD_OrSm:
+    0000027B FD 36 08 00      [19]  516 	LD	-12 + 20(IY),#0
+    0000027F CDr06r04         [17]  517 	CALL	SETORN
+    00000282 0A               [ 7]  518 	LD	A,(BC)
+    00000283 03               [ 6]  519 	INC	BC
+    00000284 0F               [ 4]  520 	RRCA
+    00000285                        521 	PD_SAM:
+    00000285 87               [ 4]  522 	ADD	A,A
+    00000286                        523 	PD_SAM_:
+    00000286 5F               [ 4]  524 	LD	E,A
+    00000287 16 00            [ 7]  525 	LD	D,#0
+    00000289 2Ar62r01         [16]  526 	ld	HL,(#_PT3_SamPtrs)
+    0000028C 19               [11]  527 	ADD	HL,DE
+    0000028D 5E               [ 7]  528 	LD	E,(HL)
+    0000028E 23               [ 6]  529 	INC	HL
+    0000028F 56               [ 7]  530 	LD	D,(HL)
+    00000290 2Ar5Er01         [16]  531 	ld	HL,(#_PT3_ModAddr)
+    00000293 19               [11]  532 	ADD	HL,DE
+    00000294 FD 75 03         [19]  533 	LD	-12 + 15(IY),L
+    00000297 FD 74 04         [19]  534 	LD	-12 + 15 + 1(IY),H
+    0000029A 18 41            [12]  535 	JR	PD_LOOP
+    0000029C                        536 	PD_VOL:
+    0000029C 07               [ 4]  537 	RLCA
+    0000029D 07               [ 4]  538 	RLCA
+    0000029E 07               [ 4]  539 	RLCA
+    0000029F 07               [ 4]  540 	RLCA
+    000002A0 FD 77 10         [19]  541 	LD	-12 + 28(IY),A
+    000002A3 18 3B            [12]  542 	JR	PD_LP2
+    000002A5                        543 	PD_EOff:
+    000002A5 FD 77 08         [19]  544 	LD	-12 + 20(IY),A
+    000002A8 FD 77 F4         [19]  545 	LD	-12 + 0(IY),A
+    000002AB 18 33            [12]  546 	JR	PD_LP2
+    000002AD                        547 	PD_SorE:
+    000002AD 3D               [ 4]  548 	DEC	A
+    000002AE 20 07            [12]  549 	JR	NZ,PD_ENV
+    000002B0 0A               [ 7]  550 	LD	A,(BC)
+    000002B1 03               [ 6]  551 	INC	BC
+    000002B2 FD 77 05         [19]  552 	LD	-12 + 17(IY),A
+    000002B5 18 29            [12]  553 	JR	PD_LP2
+    000002B7                        554 	PD_ENV:
+    000002B7 CDrEAr03         [17]  555 	CALL	SETENV
+    000002BA 18 24            [12]  556 	JR	PD_LP2
+    000002BC                        557 	PD_ORN:
+    000002BC CDr06r04         [17]  558 	CALL	SETORN
+    000002BF 18 1C            [12]  559 	JR	PD_LOOP
+    000002C1                        560 	PD_ESAM:
+    000002C1 FD 77 08         [19]  561 	LD	-12 + 20(IY),A
+    000002C4 FD 77 F4         [19]  562 	LD	-12 + 0(IY),A
+    000002C7 C4rEAr03         [17]  563 	CALL	NZ,SETENV
+    000002CA 0A               [ 7]  564 	LD	A,(BC)
+    000002CB 03               [ 6]  565 	INC	BC
+    000002CC 18 B8            [12]  566 	JR	PD_SAM_
+    000002CE                        567 	PTDECOD:
+    000002CE FD 7E 06         [19]  568 	LD	A,-12 + 18(IY)
+    000002D1 32r6Cr01         [13]  569 	LD	(#_PT3_PrNote),A
+    000002D4 FD 6E FA         [19]  570 	LD	L,6 -12(IY)
+    000002D7 FD 66 FB         [19]  571 	LD	H,6 + 1-12(IY)
+    000002DA 22r6Dr01         [16]  572 	LD	(#_PT3_PrSlide),HL
+    000002DD                        573 	PD_LOOP:
+    000002DD 11 10 20         [10]  574 	ld	DE,#0x2010
+    000002E0                        575 	PD_LP2:
+    000002E0 0A               [ 7]  576 	ld	A,(BC)
+    000002E1 03               [ 6]  577 	inc	BC
+    000002E2 83               [ 4]  578 	ADD	A,E
+    000002E3 38 96            [12]  579 	JR	C,PD_OrSm
+    000002E5 82               [ 4]  580 	ADD	A,D
+    000002E6 28 4A            [12]  581 	JR	Z,PD_FIN
+    000002E8 38 9B            [12]  582 	JR	C,PD_SAM
+    000002EA 83               [ 4]  583 	ADD	A,E
+    000002EB 28 25            [12]  584 	JR	Z,PD_REL
+    000002ED 38 AD            [12]  585 	JR	C,PD_VOL
+    000002EF 83               [ 4]  586 	ADD	A,E
+    000002F0 28 B3            [12]  587 	JR	Z,PD_EOff
+    000002F2 38 B9            [12]  588 	JR	C,PD_SorE
+    000002F4 C6 60            [ 7]  589 	ADD	A,#96
+    000002F6 38 20            [12]  590 	JR	C,PD_NOTE
+    000002F8 83               [ 4]  591 	ADD	A,E
+    000002F9 38 C1            [12]  592 	JR	C,PD_ORN
+    000002FB 82               [ 4]  593 	ADD	A,D
+    000002FC 38 0F            [12]  594 	JR	C,PD_NOIS
+    000002FE 83               [ 4]  595 	ADD	A,E
+    000002FF 38 C0            [12]  596 	JR	C,PD_ESAM
+    00000301 87               [ 4]  597 	ADD	A,A
+    00000302 5F               [ 4]  598 	LD	E,A
+    00000303 21r3FrE3         [10]  599 	LD	HL,#(SPCCOMS + 0xDF20)
+    00000306 19               [11]  600 	ADD	HL,DE
+    00000307 5E               [ 7]  601 	LD	E,(HL)
+    00000308 23               [ 6]  602 	INC	HL
+    00000309 56               [ 7]  603 	LD	D,(HL)
+    0000030A D5               [11]  604 	PUSH	DE
+    0000030B 18 D0            [12]  605 	JR	PD_LOOP
+    0000030D                        606 	PD_NOIS:
+    0000030D 32r5Br00         [13]  607 	LD	(#_Ns_Base),A
+    00000310 18 CE            [12]  608 	JR	PD_LP2
+    00000312                        609 	PD_REL:
+    00000312 FD CB 09 86      [23]  610 	RES	0,-12 + 21(IY)
+    00000316 18 08            [12]  611 	JR	PD_RES
+    00000318                        612 	PD_NOTE:
+    00000318 FD 77 06         [19]  613 	ld	-12 + 18(IY),A
+    0000031B FD CB 09 C6      [23]  614 	SET	0,-12 + 21(IY)
+    0000031F AF               [ 4]  615 	XOR	A
+    00000320                        616 	PD_RES:
+    00000320 ED 73r66r01      [20]  617 	LD	(#_PT3_PDSP),SP
+    00000324 FD F9            [10]  618 	LD	SP,IY
+    00000326 67               [ 4]  619 	LD	H,A
+    00000327 6F               [ 4]  620 	LD	L,A
+    00000328 E5               [11]  621 	PUSH	HL
+    00000329 E5               [11]  622 	PUSH	HL
+    0000032A E5               [11]  623 	PUSH	HL
+    0000032B E5               [11]  624 	PUSH	HL
+    0000032C E5               [11]  625 	PUSH	HL
+    0000032D E5               [11]  626 	PUSH	HL
+    0000032E ED 7Br66r01      [20]  627 	LD	SP,(#_PT3_PDSP)
+    00000332                        628 	PD_FIN:
+    00000332 FD 7E 05         [19]  629 	ld	A,-12 + 17(IY)
+    00000335 FD 77 0F         [19]  630 	ld	-12 + 27(IY),A
+    00000338 C9               [10]  631 	ret
+    00000339                        632 	C_PORTM:
+    00000339 FD CB 09 96      [23]  633 	RES	2,-12 + 21(IY)
+    0000033D 0A               [ 7]  634 	LD	A,(BC)
+    0000033E 03               [ 6]  635 	INC	BC
+    0000033F 03               [ 6]  636 	INC	BC
+    00000340 03               [ 6]  637 	INC	BC
+    00000341 FD 77 0A         [19]  638 	LD	-12 + 22(IY),A
+    00000344 FD 77 F9         [19]  639 	LD	-12 + 5(IY),A
+    00000347 ED 5Br7Er01      [20]  640 	LD	DE,(#_PT3_NoteTable)
+    0000034B FD 7E 06         [19]  641 	LD	A,-12 + 18(IY)
+    0000034E FD 77 07         [19]  642 	LD	-12 + 19(IY),A
+    00000351 87               [ 4]  643 	ADD	A,A
+    00000352 6F               [ 4]  644 	LD	L,A
+    00000353 26 00            [ 7]  645 	LD	H,#0
+    00000355 19               [11]  646 	ADD	HL,DE
+    00000356 7E               [ 7]  647 	LD	A,(HL)
+    00000357 23               [ 6]  648 	INC	HL
+    00000358 66               [ 7]  649 	LD	H,(HL)
+    00000359 6F               [ 4]  650 	LD	L,A
+    0000035A E5               [11]  651 	PUSH	HL
+    0000035B 3Ar6Cr01         [13]  652 	LD	A,(#_PT3_PrNote)
+    0000035E FD 77 06         [19]  653 	LD	-12 + 18(IY),A
+    00000361 87               [ 4]  654 	ADD	A,A
+    00000362 6F               [ 4]  655 	LD	L,A
+    00000363 26 00            [ 7]  656 	LD	H,#0
+    00000365 19               [11]  657 	ADD	HL,DE
+    00000366 5E               [ 7]  658 	LD	E,(HL)
+    00000367 23               [ 6]  659 	INC	HL
+    00000368 56               [ 7]  660 	LD	D,(HL)
+    00000369 E1               [10]  661 	POP	HL
+    0000036A ED 52            [15]  662 	SBC	HL,DE
+    0000036C FD 75 0D         [19]  663 	LD	-12 + 25(IY),L
+    0000036F FD 74 0E         [19]  664 	LD	-12 + 25 + 1(IY),H
+    00000372 ED 5Br6Dr01      [20]  665 	LD	DE,(#_PT3_PrSlide)
+    00000376 FD 73 FA         [19]  666 	LD	-12 + 6(IY),E
+    00000379 FD 72 FB         [19]  667 	LD	-12 + 6 + 1(IY),D
+    0000037C 0A               [ 7]  668 	LD	A,(BC)
+    0000037D 03               [ 6]  669 	INC	BC
+    0000037E 08               [ 4]  670 	EX	AF,AF
+    0000037F 0A               [ 7]  671 	LD	A,(BC)
+    00000380 03               [ 6]  672 	INC	BC
+    00000381 A7               [ 4]  673 	AND	A
+    00000382 28 01            [12]  674 	JR	Z,NOSIG
+    00000384 EB               [ 4]  675 	EX	DE,HL
+    00000385                        676 	NOSIG:
+    00000385 ED 52            [15]  677 	SBC	HL,DE
+    00000387 F2r8Fr03         [10]  678 	JP	P,SET_STP
+    0000038A 2F               [ 4]  679 	CPL
+    0000038B 08               [ 4]  680 	EX	AF,AF
+    0000038C ED 44            [ 8]  681 	NEG
+    0000038E 08               [ 4]  682 	EX	AF,AF
+    0000038F                        683 	SET_STP:
+    0000038F FD 77 0C         [19]  684 	LD	-12 + 23 + 1(IY),A
+    00000392 08               [ 4]  685 	EX	AF,AF
+    00000393 FD 77 0B         [19]  686 	ld	-12 + 23(IY),A
+    00000396 FD 36 FE 00      [19]  687 	ld	-12 + 10(IY),#0
+    0000039A C9               [10]  688 	ret
+    0000039B                        689 	C_GLISS:
+    0000039B FD CB 09 D6      [23]  690 	SET	2,-12 + 21(IY)
+    0000039F 0A               [ 7]  691 	LD	A,(BC)
+    000003A0 03               [ 6]  692 	INC	BC
+    000003A1 FD 77 0A         [19]  693 	LD	-12 + 22(IY),A
+    000003A4 FD 77 F9         [19]  694 	LD	-12 + 5(IY),A
+    000003A7 0A               [ 7]  695 	LD	A,(BC)
+    000003A8 03               [ 6]  696 	INC	BC
+    000003A9 08               [ 4]  697 	EX	AF,AF
+    000003AA 0A               [ 7]  698 	LD	A,(BC)
+    000003AB 03               [ 6]  699 	INC	BC
+    000003AC 18 E1            [12]  700 	JR	SET_STP
+    000003AE                        701 	C_SMPOS:
+    000003AE 0A               [ 7]  702 	LD	A,(BC)
+    000003AF 03               [ 6]  703 	INC	BC
+    000003B0 FD 77 F5         [19]  704 	LD	-12 + 1(IY),A
+    000003B3 C9               [10]  705 	RET
+    000003B4                        706 	C_ORPOS:
+    000003B4 0A               [ 7]  707 	LD	A,(BC)
+    000003B5 03               [ 6]  708 	INC	BC
+    000003B6 FD 77 F4         [19]  709 	LD	-12 + 0(IY),A
+    000003B9 C9               [10]  710 	RET
+    000003BA                        711 	C_VIBRT:
+    000003BA 0A               [ 7]  712 	LD	A,(BC)
+    000003BB 03               [ 6]  713 	INC	BC
+    000003BC FD 77 FF         [19]  714 	LD	-12 + 11(IY),A
+    000003BF FD 77 FE         [19]  715 	LD	-12 + 10(IY),A
+    000003C2 0A               [ 7]  716 	LD	A,(BC)
+    000003C3 03               [ 6]  717 	INC	BC
+    000003C4 FD 77 00         [19]  718 	LD	-12 + 12(IY),A
+    000003C7 AF               [ 4]  719 	XOR	A
+    000003C8 FD 77 F9         [19]  720 	LD	-12 + 5(IY),A
+    000003CB FD 77 FA         [19]  721 	LD	-12 + 6(IY),A
+    000003CE FD 77 FB         [19]  722 	LD	-12 + 6 + 1(IY),A
+    000003D1 C9               [10]  723 	RET
+    000003D2                        724 	C_ENGLS:
+    000003D2 0A               [ 7]  725 	LD	A,(BC)
+    000003D3 03               [ 6]  726 	INC	BC
+    000003D4 32r7Br01         [13]  727 	LD	(#_PT3_Env_Del),A
+    000003D7 32r5Ar00         [13]  728 	LD	(#_CurEDel),A
+    000003DA 0A               [ 7]  729 	LD	A,(BC)
+    000003DB 03               [ 6]  730 	INC	BC
+    000003DC 6F               [ 4]  731 	LD	L,A
+    000003DD 0A               [ 7]  732 	LD	A,(BC)
+    000003DE 03               [ 6]  733 	INC	BC
+    000003DF 67               [ 4]  734 	LD	H,A
+    000003E0 22r7Cr01         [16]  735 	LD	(#_PT3_ESldAdd),HL
+    000003E3 C9               [10]  736 	RET
+    000003E4                        737 	C_DELAY:
+    000003E4 0A               [ 7]  738 	LD	A,(BC)
+    000003E5 03               [ 6]  739 	INC	BC
+    000003E6 32r79r01         [13]  740 	LD	(#_PT3_Delay),A
+    000003E9 C9               [10]  741 	RET
+    000003EA                        742 	SETENV:
+    000003EA FD 73 08         [19]  743 	LD	-12 + 20(IY),E
+    000003ED 32r6Ar00         [13]  744 	LD	(#_PT3_Regs + 13),A
+    000003F0 0A               [ 7]  745 	LD	A,(BC)
+    000003F1 03               [ 6]  746 	INC	BC
+    000003F2 67               [ 4]  747 	LD	H,A
+    000003F3 0A               [ 7]  748 	LD	A,(BC)
+    000003F4 03               [ 6]  749 	INC	BC
+    000003F5 6F               [ 4]  750 	LD	L,A
+    000003F6 22r6Br00         [16]  751 	LD	(#_EnvBase),HL
+    000003F9 AF               [ 4]  752 	XOR	A
+    000003FA FD 77 F4         [19]  753 	LD	-12 + 0(IY),A
+    000003FD 32r5Ar00         [13]  754 	LD	(#_CurEDel),A
+    00000400 67               [ 4]  755 	LD	H,A
+    00000401 6F               [ 4]  756 	LD	L,A
+    00000402 22r58r00         [16]  757 	LD	(#_CurESld),HL
+    00000405                        758 	C_NOP:
+    00000405 C9               [10]  759 	RET
+    00000406                        760 	SETORN:
+    00000406 87               [ 4]  761 	ADD	A,A
+    00000407 5F               [ 4]  762 	LD	E,A
+    00000408 16 00            [ 7]  763 	LD	D,#0
+    0000040A FD 72 F4         [19]  764 	LD	-12 + 0(IY),D
+    0000040D 2Ar64r01         [16]  765 	ld	HL,(#_PT3_OrnPtrs)
+    00000410 19               [11]  766 	ADD	HL,DE
+    00000411 5E               [ 7]  767 	LD	E,(HL)
+    00000412 23               [ 6]  768 	INC	HL
+    00000413 56               [ 7]  769 	LD	D,(HL)
+    00000414 2Ar5Er01         [16]  770 	ld	HL,(#_PT3_ModAddr)
+    00000417 19               [11]  771 	ADD	HL,DE
+    00000418 FD 75 01         [19]  772 	LD	-12 + 13(IY),L
+    0000041B FD 74 02         [19]  773 	LD	-12 + 13 + 1(IY),H
+    0000041E C9               [10]  774 	RET
+    0000041F                        775 	SPCCOMS:
+    0000041Fr05r04                  776 	.dw	C_NOP
+    00000421r9Br03                  777 	.dw	C_GLISS
+    00000423r39r03                  778 	.dw	C_PORTM
+    00000425rAEr03                  779 	.dw	C_SMPOS
+    00000427rB4r03                  780 	.dw	C_ORPOS
+    00000429rBAr03                  781 	.dw	C_VIBRT
+    0000042Br05r04                  782 	.dw	C_NOP
+    0000042Dr05r04                  783 	.dw	C_NOP
+    0000042FrD2r03                  784 	.dw	C_ENGLS
+    00000431rE4r03                  785 	.dw	C_DELAY
+    00000433r05r04                  786 	.dw	C_NOP
+    00000435r05r04                  787 	.dw	C_NOP
+    00000437r05r04                  788 	.dw	C_NOP
+    00000439r05r04                  789 	.dw	C_NOP
+    0000043Br05r04                  790 	.dw	C_NOP
+    0000043Dr05r04                  791 	.dw	C_NOP
+    0000043F                        792 	CHREGS:
+    0000043F AF               [ 4]  793 	XOR	A
+    00000440 32r67r00         [13]  794 	LD	(#_PT3_Regs + 10),A
+    00000443 FD CB 15 46      [20]  795 	BIT	0,21(IY)
+    00000447 E5               [11]  796 	PUSH	HL
+    00000448 CAr6Fr05         [10]  797 	JP	Z,CH_EXIT
+    0000044B ED 73r68r01      [20]  798 	ld	(#_PT3_CSP),sp
+    0000044F FD 6E 0D         [19]  799 	LD	L,13(IY)
+    00000452 FD 66 0E         [19]  800 	LD	H,13 + 1(IY)
+    00000455 F9               [ 6]  801 	LD	SP,HL
+    00000456 D1               [10]  802 	POP	DE
+    00000457 67               [ 4]  803 	LD	H,A
+    00000458 FD 7E 00         [19]  804 	LD	A,0(IY)
+    0000045B 6F               [ 4]  805 	LD	L,A
+    0000045C 39               [11]  806 	ADD	HL,SP
+    0000045D 3C               [ 4]  807 	INC	A
+    0000045E BA               [ 4]  808 	CP	D
+    0000045F 38 01            [12]  809 	JR	C,CH_ORPS
+    00000461 7B               [ 4]  810 	LD	A,E
+    00000462                        811 	CH_ORPS:
+    00000462 FD 77 00         [19]  812 	LD	0(IY),A
+    00000465 FD 7E 12         [19]  813 	LD	A,18(IY)
+    00000468 86               [ 7]  814 	ADD	A,(HL)
+    00000469 F2r6Dr04         [10]  815 	JP	P,CH_NTP
+    0000046C AF               [ 4]  816 	XOR	A
+    0000046D                        817 	CH_NTP:
+    0000046D FE 60            [ 7]  818 	CP	#96
+    0000046F 38 02            [12]  819 	JR	C,CH_NOK
+    00000471 3E 5F            [ 7]  820 	LD	A,#95
+    00000473                        821 	CH_NOK:
+    00000473 87               [ 4]  822 	ADD	A,A
+    00000474 08               [ 4]  823 	EX	AF,AF
+    00000475 FD 6E 0F         [19]  824 	LD	L,15(IY)
+    00000478 FD 66 10         [19]  825 	LD	H,15 + 1(IY)
+    0000047B F9               [ 6]  826 	LD	SP,HL
+    0000047C D1               [10]  827 	POP	DE
+    0000047D 26 00            [ 7]  828 	LD	H,#0
+    0000047F FD 7E 01         [19]  829 	LD	A,1(IY)
+    00000482 47               [ 4]  830 	LD	B,A
+    00000483 87               [ 4]  831 	ADD	A,A
+    00000484 87               [ 4]  832 	ADD	A,A
+    00000485 6F               [ 4]  833 	LD	L,A
+    00000486 39               [11]  834 	ADD	HL,SP
+    00000487 F9               [ 6]  835 	LD	SP,HL
+    00000488 78               [ 4]  836 	LD	A,B
+    00000489 3C               [ 4]  837 	INC	A
+    0000048A BA               [ 4]  838 	CP	D
+    0000048B 38 01            [12]  839 	JR	C,CH_SMPS
+    0000048D 7B               [ 4]  840 	LD	A,E
+    0000048E                        841 	CH_SMPS:
+    0000048E FD 77 01         [19]  842 	LD	1(IY),A
+    00000491 C1               [10]  843 	POP	BC
+    00000492 E1               [10]  844 	POP	HL
+    00000493 FD 5E 08         [19]  845 	LD	E,8(IY)
+    00000496 FD 56 09         [19]  846 	LD	D,8 + 1(IY)
+    00000499 19               [11]  847 	ADD	HL,DE
+    0000049A CB 70            [ 8]  848 	BIT	6,B
+    0000049C 28 06            [12]  849 	JR	Z,CH_NOAC
+    0000049E FD 75 08         [19]  850 	LD	8(IY),L
+    000004A1 FD 74 09         [19]  851 	LD	8 + 1(IY),H
+    000004A4                        852 	CH_NOAC:
+    000004A4 EB               [ 4]  853 	EX	DE,HL
+    000004A5 08               [ 4]  854 	EX	AF,AF
+    000004A6 6F               [ 4]  855 	LD	L,A
+    000004A7 26 00            [ 7]  856 	LD	H,#0
+    000004A9 ED 7Br7Er01      [20]  857 	LD	SP,(#_PT3_NoteTable)
+    000004AD 39               [11]  858 	ADD	HL,SP
+    000004AE F9               [ 6]  859 	LD	SP,HL
+    000004AF E1               [10]  860 	POP	HL
+    000004B0 19               [11]  861 	ADD	HL,DE
+    000004B1 FD 5E 06         [19]  862 	LD	E,6(IY)
+    000004B4 FD 56 07         [19]  863 	LD	D,6 + 1(IY)
+    000004B7 19               [11]  864 	ADD	HL,DE
+    000004B8 ED 7Br68r01      [20]  865 	ld	SP,(#_PT3_CSP)
+    000004BC E3               [19]  866 	EX	(SP),HL
+    000004BD AF               [ 4]  867 	XOR	A
+    000004BE FD B6 05         [19]  868 	OR	5(IY)
+    000004C1 28 3E            [12]  869 	JR	Z,CH_AMP
+    000004C3 FD 35 05         [23]  870 	DEC	5(IY)
+    000004C6 20 39            [12]  871 	JR	NZ,CH_AMP
+    000004C8 FD 7E 16         [19]  872 	LD	A,22(IY)
+    000004CB FD 77 05         [19]  873 	LD	5(IY),A
+    000004CE FD 6E 17         [19]  874 	LD	L,23(IY)
+    000004D1 FD 66 18         [19]  875 	LD	H,23 + 1(IY)
+    000004D4 7C               [ 4]  876 	LD	A,H
+    000004D5 19               [11]  877 	ADD	HL,DE
+    000004D6 FD 75 06         [19]  878 	LD	6(IY),L
+    000004D9 FD 74 07         [19]  879 	LD	6 + 1(IY),H
+    000004DC FD CB 15 56      [20]  880 	BIT	2,21(IY)
+    000004E0 20 1F            [12]  881 	JR	NZ,CH_AMP
+    000004E2 FD 5E 19         [19]  882 	LD	E,25(IY)
+    000004E5 FD 56 1A         [19]  883 	LD	D,25 + 1(IY)
+    000004E8 A7               [ 4]  884 	AND	A
+    000004E9 28 01            [12]  885 	JR	Z,CH_STPP
+    000004EB EB               [ 4]  886 	EX	DE,HL
+    000004EC                        887 	CH_STPP:
+    000004EC ED 52            [15]  888 	SBC	HL,DE
+    000004EE FAr01r05         [10]  889 	JP	M,CH_AMP
+    000004F1 FD 7E 13         [19]  890 	LD	A,19(IY)
+    000004F4 FD 77 12         [19]  891 	LD	18(IY),A
+    000004F7 AF               [ 4]  892 	XOR	A
+    000004F8 FD 77 05         [19]  893 	LD	5(IY),A
+    000004FB FD 77 06         [19]  894 	LD	6(IY),A
+    000004FE FD 77 07         [19]  895 	LD	6 + 1(IY),A
+    00000501                        896 	CH_AMP:
+    00000501 FD 7E 02         [19]  897 	LD	A,2(IY)
+    00000504 CB 79            [ 8]  898 	BIT	7,C
+    00000506 28 13            [12]  899 	JR	Z,CH_NOAM
+    00000508 CB 71            [ 8]  900 	BIT	6,C
+    0000050A 28 07            [12]  901 	JR	Z,CH_AMIN
+    0000050C FE 0F            [ 7]  902 	CP	#15
+    0000050E 28 0B            [12]  903 	JR	Z,CH_NOAM
+    00000510 3C               [ 4]  904 	INC	A
+    00000511 18 05            [12]  905 	JR	CH_SVAM
+    00000513                        906 	CH_AMIN:
+    00000513 FE F1            [ 7]  907 	CP	#-15
+    00000515 28 04            [12]  908 	JR	Z,CH_NOAM
+    00000517 3D               [ 4]  909 	DEC	A
+    00000518                        910 	CH_SVAM:
+    00000518 FD 77 02         [19]  911 	LD	2(IY),A
+    0000051B                        912 	CH_NOAM:
+    0000051B 6F               [ 4]  913 	LD	L,A
+    0000051C 78               [ 4]  914 	LD	A,B
+    0000051D E6 0F            [ 7]  915 	AND	#15
+    0000051F 85               [ 4]  916 	ADD	A,L
+    00000520 F2r24r05         [10]  917 	JP	P,CH_APOS
+    00000523 AF               [ 4]  918 	XOR	A
+    00000524                        919 	CH_APOS:
+    00000524 FE 10            [ 7]  920 	CP	#16
+    00000526 38 02            [12]  921 	JR	C,CH_VOL
+    00000528 3E 0F            [ 7]  922 	LD	A,#15
+    0000052A                        923 	CH_VOL:
+    0000052A FD B6 1C         [19]  924 	OR	28(IY)
+    0000052D 6F               [ 4]  925 	LD	L,A
+    0000052E 26 00            [ 7]  926 	LD	H,#0
+    00000530 11r5Dr00         [10]  927 	LD	DE,#_PT3_Regs
+    00000533 19               [11]  928 	ADD	HL,DE
+    00000534 7E               [ 7]  929 	LD	A,(HL)
+    00000535                        930 	CH_ENV:
+    00000535 CB 41            [ 8]  931 	BIT	0,C
+    00000537 20 03            [12]  932 	JR	NZ,CH_NOEN
+    00000539 FD B6 14         [19]  933 	OR	20(IY)
+    0000053C                        934 	CH_NOEN:
+    0000053C 32r67r00         [13]  935 	LD	(#_PT3_Regs + 10),A
+    0000053F CB 78            [ 8]  936 	BIT	7,B
+    00000541 79               [ 4]  937 	LD	A,C
+    00000542 28 19            [12]  938 	JR	Z,NO_ENSL
+    00000544 17               [ 4]  939 	RLA
+    00000545 17               [ 4]  940 	RLA
+    00000546 CB 2F            [ 8]  941 	SRA	A
+    00000548 CB 2F            [ 8]  942 	SRA	A
+    0000054A CB 2F            [ 8]  943 	SRA	A
+    0000054C FD 86 04         [19]  944 	ADD	A,4(IY)
+    0000054F CB 68            [ 8]  945 	BIT	5,B
+    00000551 28 03            [12]  946 	JR	Z,NO_ENAC
+    00000553 FD 77 04         [19]  947 	LD	4(IY),A
+    00000556                        948 	NO_ENAC:
+    00000556 21r7Ar01         [10]  949 	ld	HL,#_PT3_AddToEn
+    00000559 86               [ 7]  950 	ADD	A,(HL)
+    0000055A 77               [ 7]  951 	LD	(HL),A
+    0000055B 18 0E            [12]  952 	JR	CH_MIX
+    0000055D                        953 	NO_ENSL:
+    0000055D 1F               [ 4]  954 	RRA
+    0000055E FD 86 03         [19]  955 	ADD	A,3(IY)
+    00000561 32r5Cr00         [13]  956 	LD	(#_AddToNs),A
+    00000564 CB 68            [ 8]  957 	BIT	5,B
+    00000566 28 03            [12]  958 	JR	Z,CH_MIX
+    00000568 FD 77 03         [19]  959 	LD	3(IY),A
+    0000056B                        960 	CH_MIX:
+    0000056B 78               [ 4]  961 	LD	A,B
+    0000056C 1F               [ 4]  962 	RRA
+    0000056D E6 48            [ 7]  963 	AND	#0x48
+    0000056F                        964 	CH_EXIT:
+    0000056F 21r64r00         [10]  965 	LD	HL,#_PT3_Regs + 7
+    00000572 B6               [ 7]  966 	OR	(HL)
+    00000573 0F               [ 4]  967 	RRCA
+    00000574 77               [ 7]  968 	LD	(HL),A
+    00000575 E1               [10]  969 	POP	HL
+    00000576 AF               [ 4]  970 	XOR	A
+    00000577 FD B6 0A         [19]  971 	OR	10(IY)
+    0000057A C8               [11]  972 	RET	Z
+    0000057B FD 35 0A         [23]  973 	DEC	10(IY)
+    0000057E C0               [11]  974 	RET	NZ
+    0000057F FD AE 15         [19]  975 	XOR	21(IY)
+    00000582 FD 77 15         [19]  976 	LD	21(IY),A
+    00000585 1F               [ 4]  977 	RRA
+    00000586 FD 7E 0B         [19]  978 	LD	A,11(IY)
+    00000589 38 03            [12]  979 	JR	C,CH_ONDL
+    0000058B FD 7E 0C         [19]  980 	LD	A,12(IY)
+    0000058E                        981 	CH_ONDL:
+    0000058E FD 77 0A         [19]  982 	LD	10(IY),A
+    00000591 C9               [10]  983 	RET
+    00000592                        984 	PT3_CALL_HL:
+    00000592 E9               [ 4]  985 	jp	(hl)
+    00000593                        986 	EMPTYSAMORN:
+    00000593 00 01 00 90            987 	.db	0,1,0,0x90
+                                    988 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pt3/pt3_player.c:1094: }
+                                    989 	.area _CODE
+                                    990 	.area _INITIALIZER
+    00000000                        991 __xinit__PT3_Finish:
+    00000000r00r00                  992 	.dw _EmptyCB
+                                    993 	.area _CABS (ABS)
