@@ -1044,6 +1044,7 @@ void PenaltyShots() {
         g_Players[kickerId].PatternId = PLAYER_POSE_BACK;
         g_Players[gkId].Direction = DIRECTION_DOWN;
         g_Players[gkId].PatternId = PLAYER_POSE_FRONT;
+        g_Players[REFEREE].PatternId = PLAYER_POSE_RIGHT;
         
         g_Ball.PossessionPlayerId = NO_VALUE;
         g_Ball.X = kickSpotX;
@@ -1058,16 +1059,37 @@ void PenaltyShots() {
         
         // --- AIM / DECIDE ---
         u16 targetX = FIELD_POS_X_CENTER;
+        u8 shotDirIdx = 1; // 0=Left, 1=Center, 2=Right
         bool shotTaken = false;
+        u8 playerGkChoice = 1; // 0=Left, 1=Center, 2=Right
         
         if (kickingTeam == TEAM_1) {
             g_ShotCursorX = FIELD_POS_X_CENTER;
-            i8 arrowDir = 2;
+            i8 aimPos = 1;
+            i8 aimDir = 1;
+            u16 moveTimer = 0;
+            u16 timeoutTimer = 0;
+
             while(!shotTaken) {
                 UpdateV9990();
-                g_ShotCursorX += arrowDir;
-                if (g_ShotCursorX < GOAL_X_MIN - 10) arrowDir = 2;
-                if (g_ShotCursorX > GOAL_X_MAX + 10) arrowDir = -2;
+                
+                // Auto-move cursor
+                moveTimer++;
+                if (moveTimer > 8) { // Speed of cursor
+                    moveTimer = 0;
+                    aimPos += aimDir;
+                    if (aimPos >= 2) {
+                        aimPos = 2;
+                        aimDir = -1;
+                    } else if (aimPos <= 0) {
+                        aimPos = 0;
+                        aimDir = 1;
+                    }
+                }
+
+                if (aimPos == 0) g_ShotCursorX = GOAL_X_MIN;
+                else if (aimPos == 1) g_ShotCursorX = FIELD_POS_X_CENTER;
+                else g_ShotCursorX = GOAL_X_MAX;
                 
                 struct V9_Sprite attr;
                 attr.Y = FIELD_BOUND_Y_TOP - 20 - g_FieldCurrentYPosition;
@@ -1076,17 +1098,31 @@ void PenaltyShots() {
                 attr.P = 1; attr.SC = 0; attr.D = 0;
                 V9_SetSpriteP1(16, &attr);
                 
-                if (IsTeamJoystickTriggerPressed(TEAM_1)) {
+                timeoutTimer++;
+                
+                if (IsTeamJoystickTriggerPressed(TEAM_1) || timeoutTimer >= 300) {
                     targetX = g_ShotCursorX;
+                    shotDirIdx = (u8)aimPos;
                     shotTaken = true;
                     attr.D = 1;
                     V9_SetSpriteP1(16, &attr);
                 }
             }
         } else {
-            u8 r = g_FrameCounter % 48;
-            targetX = GOAL_X_MIN + r;
-            for(u8 w=0; w<120; w++) UpdateV9990(); // Wait 2 seconds
+            // CPU Shot
+            shotDirIdx = g_FrameCounter % 3;
+            if (shotDirIdx == 0) targetX = GOAL_X_MIN;
+            else if (shotDirIdx == 1) targetX = FIELD_POS_X_CENTER;
+            else targetX = GOAL_X_MAX;
+
+            // Wait loop allowing Player GK to choose direction
+            for(u8 w=0; w<120; w++) {
+                UpdateV9990();
+                u8 joy = GetJoystick1Direction();
+                if (joy == DIRECTION_LEFT) playerGkChoice = 0;
+                else if (joy == DIRECTION_RIGHT) playerGkChoice = 2;
+                // If none, keep previous choice (sticky) or default center
+            }
             shotTaken = true;
         }
         
@@ -1095,55 +1131,65 @@ void PenaltyShots() {
         bool goal = false;
         bool saved = false;
         u8 gkDiveDir = DIRECTION_NONE; 
+        u8 gkChoice = 1;
         
         if (kickingTeam == TEAM_1) {
-            bool isHard = (targetX < 105 || targetX > 135);
+            // CPU GK Logic
             const TeamStats* stats = GetTeamStats(gkTeam);
             u8 skill = stats->GkSkill; 
             u8 rnd = g_FrameCounter % 100;
             
-            if (targetX < 120) { 
-                if (rnd < (isHard ? 20 : (40 + skill))) gkDiveDir = DIRECTION_LEFT; 
-                else if (rnd < 90) gkDiveDir = DIRECTION_RIGHT; 
-            } else { 
-                if (rnd < (isHard ? 20 : (40 + skill))) gkDiveDir = DIRECTION_RIGHT;
-                else if (rnd < 90) gkDiveDir = DIRECTION_LEFT;
+            // Probability to guess correctly
+            if (rnd < (33 + skill * 2)) {
+                gkChoice = shotDirIdx;
+            } else {
+                // Wrong guess
+                u8 wrong = (g_FrameCounter / 7) % 2;
+                if (shotDirIdx == 0) gkChoice = (wrong ? 1 : 2);
+                else if (shotDirIdx == 1) gkChoice = (wrong ? 0 : 2);
+                else gkChoice = (wrong ? 0 : 1);
             }
-            if (isHard && (g_FrameCounter & 1) == 0) gkDiveDir = DIRECTION_NONE; 
         } else {
-            u8 joy = GetJoystick1Direction();
-            if (joy == DIRECTION_LEFT) gkDiveDir = DIRECTION_LEFT;
-            else if (joy == DIRECTION_RIGHT) gkDiveDir = DIRECTION_RIGHT;
+            // Player GK Logic
+            gkChoice = playerGkChoice;
         }
         
+        if (gkChoice == 0) gkDiveDir = DIRECTION_LEFT;
+        else if (gkChoice == 2) gkDiveDir = DIRECTION_RIGHT;
+        else gkDiveDir = DIRECTION_NONE;
+
         while (ballTimer < 60) {
             UpdateV9990();
             ballTimer++;
             
             i16 dx = (i16)targetX - (i16)g_Ball.X;
             i16 dy = (i16)(FIELD_BOUND_Y_TOP - 10) - (i16)g_Ball.Y;
-            if (Math_Abs32_Local(dy) > 2) {
-                g_Ball.Y -= 4;
-                g_Ball.X += (dx / 10); 
-            }
+            
+            g_Ball.Y -= 6;
+            g_Ball.X += (dx / 8); 
             
             if (ballTimer < 20) {
                 if (gkDiveDir == DIRECTION_LEFT) {
-                    g_Players[gkId].X -= 2;
+                    g_Players[gkId].X -= 3;
                     g_Players[gkId].PatternId = PLAYER_POSE_TEAM2_GK_DOWN_LEFT;
                 } else if (gkDiveDir == DIRECTION_RIGHT) {
-                    g_Players[gkId].X += 2;
+                    g_Players[gkId].X += 3;
                     g_Players[gkId].PatternId = PLAYER_POSE_TEAM2_GK_DOWN_RIGHT;
                 }
             }
             
-            if (g_Ball.Y <= FIELD_BOUND_Y_TOP + 5) {
-                if (g_Ball.X > GOAL_X_MIN && g_Ball.X < GOAL_X_MAX) {
-                    u16 gkX = g_Players[gkId].X;
-                    if (g_Ball.X > gkX - 12 && g_Ball.X < gkX + 12) saved = true;
-                    else goal = true;
+            if (g_Ball.Y <= FIELD_BOUND_Y_TOP + 8) {
+                if (gkChoice == shotDirIdx) {
+                    saved = true;
+                } else {
+                    goal = true;
                 }
-                break; 
+                
+                if (saved) break;
+            }
+            
+            if (goal) {
+                 if (g_Ball.Y <= FIELD_BOUND_Y_TOP - 10) break;
             }
             UpdateSpritesPositions();
         }

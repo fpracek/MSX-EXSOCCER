@@ -37,7 +37,7 @@ DEF l__SEG19 0x1060
 DEF l__SEG15 0x1400
 DEF l__SEG1 0x26AB
 DEF l__CODE 0x372C
-DEF l__SEG22 0x3AA8
+DEF l__SEG22 0x3AE3
 DEF l__SEG6 0x3C00
 DEF l__SEG2 0x3EC0
 DEF l__SEG11 0x4000
@@ -585,5 +585,5 @@ DEF _g_Buttons_part1 0x148000
 DEF _g_Buttons_part2 0x158000
 DEF _TickAI 0x168000
 DEF _PenaltyShots 0x169D28
-DEF _TeamVictory 0x16B2D2
+DEF _TeamVictory 0x16B30D
 LOAD E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/out/exsoccer.ihx

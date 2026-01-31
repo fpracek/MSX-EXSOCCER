@@ -46,7 +46,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00001400  l__SEG15                        
      000026AB  l__SEG1                         
      0000372C  l__CODE                         
-     00003AA8  l__SEG22                        
+     00003AE3  l__SEG22                        
      00003C00  l__SEG6                         
      00003EC0  l__SEG2                         
      00004000  l__SEG11                        
@@ -952,13 +952,13 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_SEG22                              00168000    00003AA8 =       15016. bytes (REL,CON)
+_SEG22                              00168000    00003AE3 =       15075. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00168000  _TickAI                            exsoccer_s22_b2
      00169D28  _PenaltyShots                      exsoccer_s22_b2
-     0016B2D2  _TeamVictory                       exsoccer_s22_b2
+     0016B30D  _TeamVictory                       exsoccer_s22_b2
 ASxxxx Linker V03.00 + NoICE + sdld,  page 40.
 
 Files Linked                              [ module(s) ]
