@@ -26,6 +26,8 @@ extern const unsigned char  g_Teams_part1[16384];
 extern const unsigned char  g_Teams_part2[4096];
 
 // VARIABLES
+char                g_History1[20] = "PLY:      ";
+char                g_History2[20] = "CPU:      ";
 u16 		        g_FrameCounter;
 int  		        g_FieldCurrentYPosition=0;
 u8   		        g_FieldScrollingActionInProgress=0;

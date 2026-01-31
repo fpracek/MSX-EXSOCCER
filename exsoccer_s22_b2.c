@@ -34,7 +34,8 @@ extern u16 				g_FrameCounter;
 extern u16              g_ShotCursorX;
 extern i8               g_ShotCursorDir;
 extern bool 			g_GameWith2Players;
-
+extern char 			g_History1[20];
+extern char 			g_History2[20];
 
 void TickAI(u8 playerId){
 	if(g_MatchStatus==MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER){
@@ -866,8 +867,8 @@ void PenaltyShots() {
         UpdateV9990();
     }
     
-    ClearTextFromLayerA(0, 0, 32); 
-
+    //ClearTextFromLayerA(0, 0, 32); 
+	ShowHeaderInfo();
     // --- INTRO TEXT ---
     V9_PrintLayerAStringAtPos(8, 10, "PENALTY SHOOTOUT");
     for(u8 w=0; w<120; w++) UpdateV9990();
@@ -923,8 +924,7 @@ void PenaltyShots() {
     u8 shots2 = 0;
     u8 goals1 = 0;
     u8 goals2 = 0;
-    char history1[20] = "PLY:      ";
-    char history2[20] = "CPU:      ";
+
     u8 h1_idx = 4;
     u8 h2_idx = 4;
     
@@ -967,7 +967,7 @@ void PenaltyShots() {
         
         // Targets (Penalty Area)
         u16 kickSpotX = FIELD_POS_X_CENTER;
-        u16 kickSpotY = FIELD_BOUND_Y_TOP + 56; // Penalty Spot (Moved North)
+        u16 kickSpotY = FIELD_BOUND_Y_TOP + 47; // Penalty Spot (Moved North)
         u16 gkSpotY = FIELD_BOUND_Y_TOP + 4;    // Goal Line
         
         g_Players[kickerId].TargetX = kickSpotX;
@@ -1051,8 +1051,8 @@ void PenaltyShots() {
         
         UpdateSpritesPositions();
         
-        V9_PrintLayerAStringAtPos(10, 22, history1);
-        V9_PrintLayerAStringAtPos(10, 23, history2);
+        V9_PrintLayerAStringAtPos(10, 22, g_History1);
+        V9_PrintLayerAStringAtPos(10, 23, g_History2);
         
         for(u8 w=0; w<60; w++) UpdateV9990();
         
@@ -1130,10 +1130,10 @@ void PenaltyShots() {
             if (ballTimer < 20) {
                 if (gkDiveDir == DIRECTION_LEFT) {
                     g_Players[gkId].X -= 2;
-                    g_Players[gkId].PatternId = (gkTeam == TEAM_1) ? PLAYER_POSE_TEAM1_GK_UP_LEFT : PLAYER_POSE_TEAM2_GK_UP_LEFT;
+                    g_Players[gkId].PatternId = PLAYER_POSE_TEAM2_GK_DOWN_LEFT;
                 } else if (gkDiveDir == DIRECTION_RIGHT) {
                     g_Players[gkId].X += 2;
-                    g_Players[gkId].PatternId = (gkTeam == TEAM_1) ? PLAYER_POSE_TEAM1_GK_UP_RIGHT : PLAYER_POSE_TEAM2_GK_UP_RIGHT;
+                    g_Players[gkId].PatternId = PLAYER_POSE_TEAM2_GK_DOWN_RIGHT;
                 }
             }
             
@@ -1158,12 +1158,12 @@ void PenaltyShots() {
             V9_PrintLayerAStringAtPos(12, 10, saved ? "SAVED!" : "MISS!");
         }
         
-        if (kickingTeam == TEAM_1) { if(h1_idx < 19) { history1[h1_idx++] = resChar; history1[h1_idx] = 0; } shots1++; } 
-        else { if(h2_idx < 19) { history2[h2_idx++] = resChar; history2[h2_idx] = 0; } shots2++; }
+        if (kickingTeam == TEAM_1) { if(h1_idx < 19) { g_History1[h1_idx++] = resChar; g_History1[h1_idx] = 0; } shots1++; } 
+        else { if(h2_idx < 19) { g_History2[h2_idx++] = resChar; g_History2[h2_idx] = 0; } shots2++; }
         
         // Update Labels Immediately
-        V9_PrintLayerAStringAtPos(10, 22, history1);
-        V9_PrintLayerAStringAtPos(10, 23, history2);
+        V9_PrintLayerAStringAtPos(10, 22, g_History1);
+        V9_PrintLayerAStringAtPos(10, 23, g_History2);
 
         for(u8 w=0; w<120; w++) UpdateV9990();
         ClearTextFromLayerA(12, 10, 10);
@@ -1245,6 +1245,19 @@ void PenaltyShots() {
             if (kDone && gDone && rDone && g_FieldCurrentYPosition >= 137) break;
         }
         
+        // Reset all players to standing pose to clear celebration
+        for(u8 i=0; i<15; i++) {
+            if (g_Players[i].Y < 243) {
+                g_Players[i].Direction = DIRECTION_DOWN;
+                g_Players[i].PatternId = PLAYER_POSE_FRONT;
+            } else {
+                g_Players[i].Direction = DIRECTION_UP;
+                g_Players[i].PatternId = PLAYER_POSE_BACK;
+            }
+            g_Players[i].Status = PLAYER_STATUS_POSITIONED;
+        }
+        UpdateSpritesPositions();
+
         turn++;
     }
 }

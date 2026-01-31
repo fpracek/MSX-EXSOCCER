@@ -44,6 +44,8 @@ extern const unsigned char  g_Teams_Gray_palette[];
 extern const unsigned char  g_Buttons_part1[16384]; // Bank 1 = Segment 13
 extern const unsigned char  g_Buttons_part2[16384]; // Bank 1 = Segment 14
 extern const unsigned char g_Buttons_palette[];
+extern char g_History1[20];
+extern char g_History2[20];
 static const struct { u16 x; u16 y; } g_TeamPos[6] = {
     { 33, 109 }, { 114, 109 }, { 197, 109 },   // Row 1
     { 33, 192 }, { 114, 192 }, { 197, 192 } // Row 2
@@ -171,6 +173,32 @@ void PrintTeamName(u8 x, u8 teamPaletteId) {
         }
     }
     V9_PrintLayerAStringAtPos(x, 0, pName);
+	if(x==0){
+		g_History1[0] = pName[0];
+		g_History1[1] = pName[1];
+		g_History1[2] = pName[2];
+		g_History1[3] = ':';
+		g_History1[4] = ' ';
+		g_History1[5] = ' ';
+		g_History1[6] = ' ';
+		g_History1[7] = ' ';
+		g_History1[8] = ' ';
+		g_History1[9] = ' ';
+		g_History1[10] = '\0';
+	}
+	else{
+		g_History2[0] = pName[0];
+		g_History2[1] = pName[1];
+		g_History2[2] = pName[2];
+		g_History2[3] = ':';
+		g_History2[4] = ' ';
+		g_History2[5] = ' ';
+		g_History2[6] = ' ';
+		g_History2[7] = ' ';
+		g_History2[8] = ' ';
+		g_History2[9] = ' ';
+		g_History2[10] = '\0';
+	}
 }
 
 void ShowHeaderInfo(){
