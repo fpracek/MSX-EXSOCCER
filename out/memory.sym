@@ -8,6 +8,7 @@ Symbol Table
     .__.CPU.                                                    =   00000000 L
     .__.H$L.                                                    =   00000000 L
   0 _Mem_Copy                                                       00000026 GR
+  0 _Mem_FastSet                                                    0000004D GR
   0 _Mem_GetStackAddress                                            00000000 GR
   0 _Mem_HeapAlloc                                                  00000009 GR
   0 _Mem_HeapFree                                                   0000001A GR
@@ -16,15 +17,19 @@ Symbol Table
     _g_HeapStartAddress                                             ******** GX
   1 _g_StackAddress                                                 00000000 GR
   0 mem_copy_end                                                    0000002B R
+  0 mem_fastfill_end                                                0000008C R
+  0 mem_fastfill_loop                                               00000069 R
+  0 mem_fastfill_setup                                              00000055 R
   0 mem_fill16_end                                                  00000048 R
   0 mem_fill_end                                                    00000037 R
+
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
 Hexadecimal [32-Bits]
 
 Area Table
 
-   0 _CODE                                      size       4D   flags    0
+   0 _CODE                                      size       8E   flags    0
    1 _DATA                                      size        2   flags    0
    2 _INITIALIZED                               size        0   flags    0
    3 _DABS                                      size        0   flags    8

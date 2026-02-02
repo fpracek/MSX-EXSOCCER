@@ -76,6 +76,8 @@ typedef struct TeamStats
 // *** GLOBAL DEFINES ***
 // =======================
 
+#define PT3_MENU                            10
+
 #define MENU_POS_1							0
 #define MENU_POS_2							1
 #define MENU_POS_3							2
@@ -105,7 +107,7 @@ typedef struct TeamStats
 
 #define DEFENDER_MAX_Y_UP                   180 // Difensori Team 1 non salgono oltre qui (met? campo alta)
 #define DEFENDER_MIN_Y_DOWN                 300 // Difensori Team 2 non scendono oltre qui (met? campo bassa)
-#define MATCH_DURATION                      2 //120
+#define MATCH_DURATION                      120
 
 #define PLAYER_STATUS_NONE                  0
 #define PLAYER_STATUS_HAS_BALL              1
@@ -285,6 +287,8 @@ typedef struct TeamStats
 
 
 #define NO_VALUE                            255
+
+#define PT3_VRAM_MENU_DATA_ADDRESS			0x7B000
 // ===========================
 // *** FUNCTION PROTOTYPES ***
 // ===========================
@@ -356,7 +360,6 @@ void TickCornerKick();
 extern u8 g_ThrowInPlayerId;
 void TickThrowIn();
 void TickGoalKick();
-extern u8 g_GoalKickSide;
 void GoalkeeperWithBall(u8 teamId, bool isSteal);
 void TickBallFlying();													
 u8 GetClosestPlayerToBall(u8 teamId, u8 excludePlayerId);				
@@ -379,3 +382,7 @@ bool IsOffside(u8 playerId);
 void TeamVictory(u8 teamId);
 void PenaltyShots();
 void SpriteBlinking();
+void StopPT3Music();
+void PlayPT3Music(u8 id);
+void InitPresentationPT3Song();
+void UpdatePT3VRAM();

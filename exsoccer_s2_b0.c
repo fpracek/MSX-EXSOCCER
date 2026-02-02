@@ -349,13 +349,13 @@ void PutPlayerSprite(u8 playerId){
 			if (g_Players[playerId].Role != PLAYER_ROLE_GOALKEEPER) {
 				if (playerId==g_Team1ActivePlayer || (g_GameWith2Players && playerId==g_Team2ActivePlayer)) {
 					// Ensure we are not highlighting REFEREE even if logic fails (safety check)
-					attr.Pattern=attr.Pattern+64;
+					attr.Pattern=(u8)(attr.Pattern+64);
 
 				}
 			}
 			// Highlight Pass Target if team has ball
 			if (playerId == g_PassTargetPlayer) {
-				attr.Pattern=attr.Pattern+64;
+				attr.Pattern=(u8)(attr.Pattern+64);
 
 			}
 		}
@@ -1158,7 +1158,7 @@ u8 SelectTeam(u8 cursorPatternId, u8 excludeIndex) {
     }
 }
 void ShowMenu(){
-	V9_SetInterrupt(V9_INT_NONE); // Disable interrupts during loading
+	////// V9_SetInterrupt(V9_INT_NONE); // Disable interrupts during loading
 
 	SET_BANK_SEGMENT(2, 1); 
 	for(u8 i=0;i<32;i++){
@@ -1241,7 +1241,7 @@ void ShowMenu(){
 	V9_SetSpriteEnable(true);
 
 	V9_SetDisplayEnable(FALSE);
-	V9_SetInterrupt(V9_INT_NONE); // Disable interrupts for loading
+	//////// V9_SetInterrupt(V9_INT_NONE); // Disable interrupts for loading
 
 	if(g_ShowButtonsInfo){
 		g_ShowButtonsInfo=false;
@@ -1268,7 +1268,7 @@ void ShowMenu(){
 		while(!IsTeamJoystickTriggerPressed(TEAM_1)){
 			UpdateV9990();
 		}
-		V9_SetInterrupt(V9_INT_NONE);
+		//////// V9_SetInterrupt(V9_INT_NONE);
 		V9_SetDisplayEnable(FALSE);
 	}
 	g_MatchStatus=MATCH_NOT_STARTED;
@@ -1317,7 +1317,7 @@ void LoadPresentation(){
     }
 
     g_MatchStatus=MATCH_NOT_STARTED;
-    V9_SetInterrupt(V9_INT_NONE);
+   //////// V9_SetInterrupt(V9_INT_NONE);
     V9_SetDisplayEnable(FALSE);
     
 }
@@ -1956,5 +1956,3 @@ void TickThrowIn() {
         }
     }
 }
-
-

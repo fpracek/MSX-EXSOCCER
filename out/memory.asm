@@ -15,6 +15,7 @@
 	.globl _Mem_Copy
 	.globl _Mem_Set
 	.globl _Mem_Set_16b
+	.globl _Mem_FastSet
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -150,6 +151,42 @@ _Mem_Set_16b::
 	pop	hl
 	pop	af
 	jp	(hl)
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/memory.c:202: void Mem_FastSet(u8 val, void* dest, u16 size) __NAKED // Stack: 4 bytes
+;	---------------------------------
+; Function Mem_FastSet
+; ---------------------------------
+_Mem_FastSet::
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/memory.c:251: __endasm;
+	push	de
+	pop	hl
+	ld	(hl), a
+	inc	de
+	pop	iy
+	pop	bc
+	dec	bc
+	mem_fastfill_setup:
+	xor	a
+	sub	c
+	and	#15
+	jp	z, mem_fastfill_loop
+	add	a
+	exx
+	add	a, #mem_fastfill_loop
+	ld	l, a
+	ld	a, #0
+	adc	a, #mem_fastfill_loop >> 8
+	ld	h, a
+	push	hl
+	exx
+	ret
+	mem_fastfill_loop:
+	.rept	16
+	ldi
+	.endm
+	jp	pe, mem_fastfill_loop
+	mem_fastfill_end:
+	jp	(iy)
+;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/memory.c:252: }
 	.area _CODE
 	.area _INITIALIZER
 	.area _CABS (ABS)
