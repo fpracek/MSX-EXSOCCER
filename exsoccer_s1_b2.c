@@ -81,6 +81,119 @@ void BallInGoal(u8 teamScored){
     g_Ball.PassTargetPlayerId = NO_VALUE;
     g_Ball.PossessionPlayerId = NO_VALUE;
 }
+u8 GetBestPassTarget(u8 passerId) {
+	u8 bestTarget = NO_VALUE;
+	i32 bestScore = -2100000000;
+	u8 teamId = g_Players[passerId].TeamId;
+	u8 dir = g_Players[passerId].Direction;
+    i16 px = (i16)g_Players[passerId].X;
+    i16 py = (i16)g_Players[passerId].Y;
+    
+	// Vector for direction
+	i16 dirX = 0, dirY = 0;
+	u8 i; 
+
+	if (dir == DIRECTION_NONE) dir = g_Players[passerId].PreviousDirection;
+
+    if (dir == DIRECTION_UP) dirY = -100;
+    else if (dir == DIRECTION_DOWN) dirY = 100;
+    else if (dir == DIRECTION_LEFT) dirX = -100;
+    else if (dir == DIRECTION_RIGHT) dirX = 100;
+    else if (dir == DIRECTION_UP_RIGHT) { dirX = 70; dirY = -70; }
+    else if (dir == DIRECTION_UP_LEFT) { dirX = -70; dirY = -70; }
+    else if (dir == DIRECTION_DOWN_RIGHT) { dirX = 70; dirY = 70; }
+    else if (dir == DIRECTION_DOWN_LEFT) { dirX = -70; dirY = 70; }
+    else {
+        if (teamId == TEAM_1) dirY = -100; 
+        else dirY = 100; 
+    }
+
+	for(i=0; i<14; i++) {
+        // Optimized variables
+        i16 dx, dy, adx, ady;
+        i32 dot, score;
+
+		if(g_Players[i].TeamId != teamId) continue;
+		if(i == passerId) continue;
+        // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // Allow passing to moving players!
+		if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue; 
+		
+        // VISIBILITY CHECK (Moved up for optimization)
+        if (g_Players[i].Y < g_FieldCurrentYPosition || g_Players[i].Y > (g_FieldCurrentYPosition + 220)) {
+            continue;
+        }
+
+		dx = (i16)g_Players[i].X - px;
+		dy = (i16)g_Players[i].Y - py;
+        
+        // MINIMUM DISTANCE CHECK (Box check is lighter than distSq)
+        // Reduced to ~30px to improve responsiveness for short passes
+        adx = (dx < 0) ? -dx : dx;
+        ady = (dy < 0) ? -dy : dy;
+        if (adx < 32 && ady < 32) continue;
+
+		// GK RESTRICTED KICK DISTANCE
+		if (g_Players[passerId].Role == PLAYER_ROLE_GOALKEEPER) {
+			// Limit to 200px (approx full screen height). 
+			if (((i32)dx*(i32)dx + (i32)dy*(i32)dy) > 40000) continue;
+		}
+
+        dot = ((i32)dx * dirX) + ((i32)dy * dirY);
+		
+		// DIRECTION CHECK
+		if (dot <= 0) {
+            // RELAXED CHECK: Allow slight backward passes if very close?
+            // Or just allow wider cone (dot > -0.2?)
+            // Let's stick to 90 degrees but check if vector calculation is correct.
+            // If stopped, dirX/dirY might be tricky.
+            continue; 
+        }
+
+        // Heuristic
+        // Simplified scoring: Dot Product (Alignment) - Linear Distance Penalty
+        // Avoids expensive squares and divisions.
+        score = dot - ((i32)(adx + ady) * 40); 
+		
+        if (score > bestScore) {
+            bestScore = score;
+            bestTarget = i;
+        }
+	}
+    
+    // --- FALLBACK ---
+    // If no target found with strict direction, try finding ANY closest teammate
+    // regardless of direction, but within reasonable distance (e.g. 80px)
+    //if (bestTarget == NO_VALUE) {
+    //    for(i=0; i<14; i++) {
+    //         if(g_Players[i].TeamId != teamId) continue;
+    //         if(i == passerId) continue;
+    //         // if(g_Players[i].Status == PLAYER_STATUS_NONE) continue; // Allow passing to moving players!
+    //         if(g_Players[i].Role == PLAYER_ROLE_GOALKEEPER) continue;
+    //         
+    //         // Visibility
+    //         if (g_Players[i].Y < g_FieldCurrentYPosition || g_Players[i].Y > (g_FieldCurrentYPosition + 220)) continue;
+//
+    //         i16 dx = (i16)g_Players[i].X - px;
+    //         i16 dy = (i16)g_Players[i].Y - py;
+    //         
+    //         // Ignore min distance check here?
+    //         
+    //         // Max Distance for fallback
+    //         i16 adx = (dx < 0) ? -dx : dx;
+    //         i16 ady = (dy < 0) ? -dy : dy;
+    //         if (adx + ady > 100) continue; // Only close teammates
+    //         
+    //         // Simple closeness score
+    //         i32 score = 1000 - (adx + ady);
+    //         if (score > bestScore) {
+    //             bestScore = score;
+    //             bestTarget = i;
+    //         }
+    //    }
+    //}
+    
+	return bestTarget;
+}
 void BallThrowIn(u8 teamId){
 	u8 i; // C89 declaration
 	// Placeholder for Throw-in Logic

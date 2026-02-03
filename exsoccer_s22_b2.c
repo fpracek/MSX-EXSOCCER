@@ -29,13 +29,14 @@ extern u8          		g_Team2ActivePlayer;				// Bank 1 = Segment 0
 extern u8				g_PassTargetPlayer;					// Bank 1 = Segment 0
 extern bool         	g_FioBre;							// Bank 1 = Segment 0
 extern i8 				g_GkRecoilY;					    // Bank 1 = Segment 0
-extern PonPonGirlInfo   g_PonPonGirls[6];					// Bank 1 = Segment 0
 extern u16 				g_FrameCounter;
 extern u16              g_ShotCursorX;
 extern i8               g_ShotCursorDir;
 extern bool 			g_GameWith2Players;
 extern char 			g_History1[20];
 extern char 			g_History2[20];
+
+static i32 Math_Abs32_Local(i32 v);
 
 void TickAI(u8 playerId){
 	if(g_MatchStatus==MATCH_IN_ACTION || g_MatchStatus == MATCH_BALL_ON_GOALKEEPER){
@@ -384,7 +385,10 @@ void TickAI(u8 playerId){
 						for(t=0; t<14; t++) {
 							if(g_Players[t].TeamId != playerTeamId) continue;
 							if(t == playerId) continue;
-							if(g_Players[t].Status == PLAYER_STATUS_NONE) continue;
+                            // Allow strong teams to pass to moving players
+                            if (stats->PassFreq < 8) {
+							    if(g_Players[t].Status == PLAYER_STATUS_NONE) continue;
+                            }
 							if(g_Players[t].Role == PLAYER_ROLE_GOALKEEPER) continue;
 
                             // Prevent passing to offside players
@@ -404,13 +408,23 @@ void TickAI(u8 playerId){
 							
 							// If not in trouble, only pass forward!
 							if (!isPanicPass) {
-								if (advanceScore < 40) continue; // Must gain at least 40px ground
+                                bool allowSwitch = (stats->PassFreq >= 8 && adx > 80); // Strong teams switch play
+                                if (allowSwitch) {
+                                    if (advanceScore < -10) continue; // Allow flat/slight back for wide balls
+                                } else {
+								    if (advanceScore < 40) continue; // Must gain at least 40px ground
+                                }
 							} else {
 								// Panic? Just don't pass into own goal if possible
 								if (advanceScore < -150) continue;
 							}
 							
-							i16 score = advanceScore - (adx/4); // Minimal lateral penalty
+							i16 score;
+                            if (stats->PassFreq >= 8) {
+                                score = advanceScore + (adx/4); // Reward width (Switch play)
+                            } else {
+                                score = advanceScore - (adx/4); // Penalize width (Direct play)
+                            }
 							
 							if (score > bestScore) {
 								bestScore = score;
@@ -590,15 +604,15 @@ void TickAI(u8 playerId){
                  
                  effectiveLimit = (g_Ball.Y < offsideY) ? g_Ball.Y : offsideY;
 
-                 if (g_Players[playerId].TargetY < (effectiveLimit + 10)) { 
-                     g_Players[playerId].TargetY = effectiveLimit + 10;
+                 if (g_Players[playerId].TargetY < (effectiveLimit + 30)) { 
+                     g_Players[playerId].TargetY = effectiveLimit + 30;
                  }
             } else { // Attacking DOWN (TargetY increases)
                  
                  effectiveLimit = (g_Ball.Y > offsideY) ? g_Ball.Y : offsideY;
 
-                 if (g_Players[playerId].TargetY > (effectiveLimit - 10)) {
-                     g_Players[playerId].TargetY = effectiveLimit - 10;
+                 if (g_Players[playerId].TargetY > (effectiveLimit - 30)) {
+                     g_Players[playerId].TargetY = effectiveLimit - 30;
                  }
             }
 
@@ -770,11 +784,11 @@ void TickAI(u8 playerId){
                          
                          // If few teammates ahead, or Ball is dangerously close, Step Up
                          if (teammatesAhead < 2 || g_Ball.Y > 280) {
-                              // "Pronti ad andare verso la palla"
-                              // If ball is within range, don't retreat blindly. Hold ground or engage.
-                              if (g_Ball.Y < g_Players[playerId].Y) {
-                                   defenseLineY = g_Ball.Y + 40; // Maintain gap
-                                   if (defenseLineY > 380) defenseLineY = 380; // Cap
+                              // If ball is threateningly close to our line
+                              if (g_Ball.Y > defenseLineY - 40) {
+                                   // Position between ball and goal (Goal is 430)
+                                   defenseLineY = g_Ball.Y + 15; 
+                                   if (defenseLineY > FIELD_BOUND_Y_BOTTOM - 10) defenseLineY = FIELD_BOUND_Y_BOTTOM - 10;
                               }
                          }
                          g_Players[playerId].TargetY = defenseLineY; 
@@ -804,9 +818,10 @@ void TickAI(u8 playerId){
                          }
 
                          if (teammatesAhead < 2 || g_Ball.Y < 200) {
-                              if (g_Ball.Y > g_Players[playerId].Y) {
-                                   defenseLineY = g_Ball.Y - 40;
-                                   if (defenseLineY < 100) defenseLineY = 100;
+                              // If ball is threateningly close to our line
+                              if (g_Ball.Y < defenseLineY + 40) {
+                                   defenseLineY = g_Ball.Y - 15;
+                                   if (defenseLineY < FIELD_BOUND_Y_TOP + 10) defenseLineY = FIELD_BOUND_Y_TOP + 10;
                               }
                          }
                          g_Players[playerId].TargetY = defenseLineY;
@@ -836,6 +851,54 @@ void TickAI(u8 playerId){
 				if (g_Players[playerId].TargetX > FIELD_BOUND_X_RIGHT - 20) g_Players[playerId].TargetX = FIELD_BOUND_X_RIGHT - 20;
 			}
 
+            // MARKING (High Aggression Teams - Man Marking)
+            if (stats->Aggression >= 15 && !amIEffectiveChaser) {
+                u8 bestMark = NO_VALUE;
+                u16 minD = 120; // Look for opponents within this range
+                
+                for(u8 m=0; m<14; m++) {
+                    if (g_Players[m].TeamId == playerTeamId) continue;
+                    if (m == g_Ball.PossessionPlayerId) continue; // Don't mark ball carrier (chaser handles it)
+                    if (g_Players[m].Role == PLAYER_ROLE_GOALKEEPER) continue;
+                    
+                    // CHECK: Is opponent inside my penalty box? If so, ignore marking (switch to ball chase)
+                    bool inBox = false;
+                    if (playerTeamId == TEAM_1) { // Defending Bottom
+                        if (g_Players[m].Y > PENALTY_BOX_Y_BOTTOM) inBox = true;
+                    } else { // Defending Top
+                        if (g_Players[m].Y < PENALTY_BOX_Y_TOP) inBox = true;
+                    }
+                    if (inBox) continue; 
+
+                    i16 mdx = (i16)g_Players[m].X - (i16)g_Players[playerId].X;
+                    i16 mdy = (i16)g_Players[m].Y - (i16)g_Players[playerId].Y;
+                    u16 dist = (u16)(Math_Abs32_Local(mdx) + Math_Abs32_Local(mdy));
+                    
+                    if (dist < minD) {
+                        minD = dist;
+                        bestMark = m;
+                    }
+                }
+                
+                if (bestMark != NO_VALUE) {
+                    // Stick to opponent (Marking)
+                    g_Players[playerId].TargetX = g_Players[bestMark].X;
+                    // Stay goal-side (between player and goal)
+                    if (playerTeamId == TEAM_1) g_Players[playerId].TargetY = g_Players[bestMark].Y + 12;
+                    else g_Players[playerId].TargetY = g_Players[bestMark].Y - 12;
+                } else {
+                    // If no one to mark (e.g. everyone is deep in box), target the ball to crowd defense
+                    bool deepDefense = false;
+                    if (playerTeamId == TEAM_1 && g_Ball.Y > PENALTY_BOX_Y_BOTTOM) deepDefense = true;
+                    if (playerTeamId == TEAM_2 && g_Ball.Y < PENALTY_BOX_Y_TOP) deepDefense = true;
+                    
+                    if (deepDefense) {
+                         g_Players[playerId].TargetX = g_Ball.X;
+                         g_Players[playerId].TargetY = g_Ball.Y;
+                    }
+                }
+            }
+
             // SEPARATION (DEFENSE)
 			for(u8 i=0; i<14; i++) {
                 if (i == playerId) continue;
@@ -848,6 +911,12 @@ void TickAI(u8 playerId){
 					if (dy >= 0) g_Players[playerId].TargetY += 12; else g_Players[playerId].TargetY -= 12;
 				}
 			}
+
+            // GLOBAL TARGET CLAMP (Prevent running out of field)
+            if (g_Players[playerId].TargetY < FIELD_BOUND_Y_TOP) g_Players[playerId].TargetY = FIELD_BOUND_Y_TOP;
+            if (g_Players[playerId].TargetY > FIELD_BOUND_Y_BOTTOM) g_Players[playerId].TargetY = FIELD_BOUND_Y_BOTTOM;
+            if (g_Players[playerId].TargetX < FIELD_BOUND_X_LEFT) g_Players[playerId].TargetX = FIELD_BOUND_X_LEFT;
+            if (g_Players[playerId].TargetX > FIELD_BOUND_X_RIGHT) g_Players[playerId].TargetX = FIELD_BOUND_X_RIGHT;
 		}
 	}
 }

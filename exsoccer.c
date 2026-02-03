@@ -10,8 +10,8 @@
 #include "exsoccer.h"
 #include "debug.h"
 #include "input.h"
-#include "pt3/pt3_player.h"
-#include "pt3/pt3_notetable2.h"
+//#include "pt3/pt3_player.h"
+//#include "pt3/pt3_notetable2.h"
 #include "memory.h"
 
 // CONSTANTS
@@ -30,6 +30,12 @@ extern const unsigned char  g_Teams_part2[4096];
 extern const unsigned char  g_MusicMenu[3610];
 
 // VARIABLES
+u8 					g_PonPonGirlsPos[6]={30,50,70,175,195,215};
+u8 					g_GirlPatterns[] = {
+		SPRITE_GIRL_1, SPRITE_GIRL_2, SPRITE_GIRL_3,
+		SPRITE_GIRL_4, SPRITE_GIRL_5, SPRITE_GIRL_6,
+		SPRITE_GIRL_7, SPRITE_GIRL_8, SPRITE_GIRL_9
+	};
 u8                  g_RAM_MusicBuffer[4096];
 char                g_History1[20] = "PLY:      ";
 char                g_History2[20] = "CPU:      ";
@@ -68,13 +74,17 @@ u8                  g_ThrowInPlayerId = NO_VALUE;
 bool 		        g_VSynch = FALSE;
 i8                  g_GkRecoilY = 0;
 bool                g_GkIsGroundKick = false;           // Bank 1 = Segment 0
+u8 g_ponPonPatternIndex=0;
+u8 g_PonPonGrilsPoseCounter=0;
+bool g_peopleState=false;
+u8   g_ponPonGirlsInitailized=false;
 const TeamStats g_TeamStats[] = {
     { 3, 12, 5, 5, 14 }, // AUS (Standard)
-    { 4, 12, 8, 7, 14 }, // BRA (Fast, Shoot+, Pass+)
-    { 3, 16, 4, 5, 16 }, // ITA (Aggressive+, GK+)
+    { 5, 15, 8, 9, 14 }, // BRA (Super Fast, Strong, Pass++)
+    { 3, 17, 4, 5, 16 }, // ITA (Aggressive++, GK+)
     { 3, 12, 6, 8, 14 }, // FRA (Pass++)
     { 3, 15, 6, 5, 14 }, // GBR (Aggressive+)
-    { 4, 14, 7, 6, 15 }  // GER (Fast, Strong)
+    { 5, 16, 7, 8, 15 }  // GER (Super Fast, Strong, Pass+)
 };
 
 
@@ -103,26 +113,26 @@ void WaitV9990Synch()
 	}
 }
 
-void StopPT3Music()
-{
-    PT3_Mute(PT3_STATE_MUTE_A, TRUE);
-    PT3_Pause();
-    PT3_UpdatePSG();
-}
-void PlayPT3Music(u8 id){
-
-	PT3_Init();                
-    PT3_SetNoteTable(PT3_NT2); 
-    PT3_SetLoop(TRUE);
-	switch(id){
-		case PT3_MENU:
-            SET_BANK_SEGMENT(2, 15);
-			Mem_Copy(g_MusicMenu, g_RAM_MusicBuffer, sizeof(g_MusicMenu));
-            SET_BANK_SEGMENT(2, 1);
-			break;
-	}
-    PT3_InitSong(g_RAM_MusicBuffer);
-}
+//void StopPT3Music()
+//{
+//    PT3_Mute(PT3_STATE_MUTE_A, TRUE);
+//    PT3_Pause();
+//    PT3_UpdatePSG();
+//}
+//void PlayPT3Music(u8 id){
+//
+//	PT3_Init();                
+//    PT3_SetNoteTable(PT3_NT2); 
+//    PT3_SetLoop(TRUE);
+//	switch(id){
+//		case PT3_MENU:
+//            SET_BANK_SEGMENT(2, 15);
+//			Mem_Copy(g_MusicMenu, g_RAM_MusicBuffer, sizeof(g_MusicMenu));
+//            SET_BANK_SEGMENT(2, 1);
+//			break;
+//	}
+//    PT3_InitSong(g_RAM_MusicBuffer);
+//}
 
 void LoadP1LayerA(){
 	V9_FillVRAM(V9_P1_PGT_A, 0x00, 128*212); // Clean layer A pattern
@@ -138,8 +148,6 @@ void LoadP1LayerA(){
 	// draw layer A
 
 }
-//-----------------------------------------------------------------------------
-// Load Layer B
 void LoadP1LayerB(){
 	V9_FillVRAM(V9_P1_PGT_B, 0x00, 128*212); // Clean layer B pattern
 	SET_BANK_SEGMENT(2, 3); 
@@ -174,36 +182,16 @@ void ShowField(){
 		V9_PutLayerATileAtPos(x,0,32);
 	}
 }
-void PeopleMoving(bool isBasicMoving){
-    u16 tileId=PUBLIC_TILE_1;
-    u8  yPosition=0;
-    if(!g_ActiveFieldZone==FIELD_NORTH_ZONE){
-        yPosition=62;
-    }
 
-
-    if(!isBasicMoving){
-        tileId=PUBLIC_TILE_2;
-    }
-    for (u8 y=yPosition;y<yPosition+2;y++){
-		for (u8 x=0;x<32;x++){
-			V9_PutLayerBTileAtPos(x,y,tileId);
-		}
-	}
-}
-//-----------------------------------------------------------------------------
 void V9_InterruptHBlank(){
 
 }
 void V9_InterruptVBlank(){
 
-    //if(PT3_IsPlaying()){
-    //    SET_BANK_SEGMENT(2,15);
-    PT3_Decode();	 
-    //    //ayFX_Update();
-    PT3_UpdatePSG(); 
-    //    SET_BANK_SEGMENT(2, 1);
-    //}
+
+    //PT3_Decode();	 
+    //PT3_UpdatePSG(); 
+
 
     if(g_MatchStatus==MATCH_PRESENTATION){
         
@@ -250,20 +238,32 @@ void V9_InterruptVBlank(){
 			break;
 		}
 		V9_SetScrollingBY(g_FieldCurrentYPosition);
+		//SET_BANK_SEGMENT(2,23);
         for(u8 i=0;i<6;i++){
             PutPonPonGirlSprite(i);
         }
+		//SET_BANK_SEGMENT(2,1);
 	}
 }
-
-//-----------------------------------------------------------------------------
-// V9990 Command end interrupt
+void PutPonPonGirlSprite(u8 ponPonGirlId){
+	struct V9_Sprite attr;
+	attr.D=0;
+	
+	attr.SC=0;
+	attr.Y=g_PonPonGirls[ponPonGirlId].Y-g_FieldCurrentYPosition;
+	attr.X=g_PonPonGirls[ponPonGirlId].X;
+	if(g_ActiveFieldZone!=FIELD_NORTH_ZONE||attr.Y>100){
+		attr.D=1;
+	}
+	attr.Pattern = g_PonPonGirls[ponPonGirlId].PatternId;
+	attr.P = 1;
+	V9_SetSpriteP1(ponPonGirlId+20, &attr);
+}
 void V9_InterruptCommand()
 {
 	
 }
 
-//-----------------------------------------------------------------------------
 void GameStart(){
     
     g_PassTargetPlayer=NO_VALUE;
@@ -283,7 +283,9 @@ void GameStart(){
 	SetTeamsPresentationSpritesPosition();
 	ShowFieldZone(FIELD_CENTRAL_ZONE);
 	ShowHeaderInfo();
+	SET_BANK_SEGMENT(2,23);
     InitPonPonGirls();
+	SET_BANK_SEGMENT(2, 1); 
 	V9_SetDisplayEnable(TRUE);
 }
 void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str)
@@ -296,8 +298,6 @@ void V9_PrintLayerAStringAtPos(u8 x, u8 y, const c8* str)
 	}
 		
 }
-//-----------------------------------------------------------------------------
-// Active field zone management
 void TickActiveFieldZone(){
 
 	// Disable auto-camera zone switching during presentation/cutscenes
@@ -534,7 +534,6 @@ void LoadSprites(){
 	V9_WriteVRAM(0x08000+sizeof(g_Sprites1), g_Sprites2, sizeof(g_Sprites2));	
 	SET_BANK_SEGMENT(2, 1); 
 }
-
 void TickGoalCelebration(){
     if(g_MatchStatus!=MATCH_AFTER_IN_GOAL) return;
     
@@ -640,8 +639,6 @@ void TickGoalCelebration(){
         ShowFieldZone(FIELD_CENTRAL_ZONE);
     }
 }
-//-----------------------------------------------------------------------------
-// Program entry point
 void main()
 {
 	DEBUG_INIT();
@@ -680,8 +677,7 @@ void main()
 		for(;;);
 	}
 	
-    DEBUG_LOG("START MUSIC");
-    PlayPT3Music(PT3_MENU);
+    //PlayPT3Music(PT3_MENU);
 
 	InitializeV9990();
 	
@@ -712,18 +708,22 @@ void MainGameLoop(){
 			for(u8 i=0;i<15;i++){
 				SetPlayerTarget(i);
 			}
-			TickPlayerToOwnTarget();
+			//TickPlayerToOwnTarget();
 		}
 		
-        TickCornerKick(); // <<< Added Hook
+        TickCornerKick(); 
         if(g_MatchStatus == MATCH_BEFORE_GOAL_KICK){
             TickGoalKick();
         }
         
         TickThrowIn();
+		SET_BANK_SEGMENT(2,23);
         TickPonPonGirlsAnimation();
-		TickGoalCelebration();
 		TickPlayerToOwnTarget();
+		SET_BANK_SEGMENT(2,1);
+
+		TickGoalCelebration();
+		
 		TickActiveFieldZone();
 		if(g_FieldScrollingActionInProgress==NO_VALUE){
             // AI runs during ACTION and GK_BALL
@@ -790,9 +790,6 @@ void MainGameLoop(){
 		}
 	}
 }
-
-// *******
-
 void UpdatePlayerPatternByDirection(u8 playerId){
 	if(g_Players[playerId].Status==PLAYER_STATUS_POSITIONED){
 		return;
@@ -836,8 +833,6 @@ void UpdatePlayerPatternByDirection(u8 playerId){
 		}
 	}
 }
-
-
 u8 GetNoMovingPlayerPatternId(u8 direction){
 	u8 patternId=PLAYER_POSE_FRONT_PLAYING; // Default fallback
 	switch (direction){
@@ -873,7 +868,6 @@ u8 GetNoMovingPlayerPatternId(u8 direction){
 	}
 	return patternId;
 }
-
 u8 GetNewPoseByDirection(u8 direction){
 	u8 pose=NO_VALUE;
 	switch (direction)
@@ -905,7 +899,6 @@ u8 GetNewPoseByDirection(u8 direction){
 	}
 	return pose;
 }
-
 u8 GetPatternIdByPoseAndDirection(u8 playerId){
 	u8 pose = g_Players[playerId].LastPose;
 	u8 dir = g_Players[playerId].Direction;

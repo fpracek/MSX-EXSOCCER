@@ -14,14 +14,14 @@ Symbol Table
     _GetTeamStats                                                   ******** GX
     _IsOffside                                                      ******** GX
     _IsTeamJoystickTriggerPressed                                   ******** GX
-  7 _Math_Abs32_Local                                               00001D12 R
-  7 _PenaltyShots                                                   00001D28 GR
+  7 _Math_Abs32_Local                                               00001F11 R
+  7 _PenaltyShots                                                   00001F27 GR
     _PerformPass                                                    ******** GX
     _PerformShot                                                    ******** GX
     _PutBallOnPlayerFeet                                            ******** GX
     _ShowHeaderInfo                                                 ******** GX
     _ShowMenu                                                       ******** GX
-  7 _TeamVictory                                                    0000330D GR
+  7 _TeamVictory                                                    0000350C GR
   7 _TickAI                                                         00000000 GR
     _UpdateSpritesPositions                                         ******** GX
     _UpdateV9990                                                    ******** GX
@@ -29,10 +29,10 @@ Symbol Table
     _V9_SetScrollingBY                                              ******** GX
     _V9_SetWriteAddress                                             ******** GX
     _V9_WriteVRAM_CurrentAddr                                       ******** GX
-  7 ___str_0                                                        000032E9 R
-  7 ___str_1                                                        000032FA R
-  7 ___str_2                                                        00003300 R
-  7 ___str_3                                                        00003307 R
+  7 ___str_0                                                        000034E8 R
+  7 ___str_1                                                        000034F9 R
+  7 ___str_2                                                        000034FF R
+  7 ___str_3                                                        00003506 R
     __divuint                                                       ******** GX
     __modsint                                                       ******** GX
     __moduint                                                       ******** GX
@@ -328,7 +328,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size        0   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG22                                     size     3AE3   flags    0
+   7 _SEG22                                     size     3CE2   flags    0
    8 _INITIALIZER                               size        0   flags    0
    9 _CABS                                      size        0   flags    8
 

@@ -386,3 +386,4 @@ void StopPT3Music();
 void PlayPT3Music(u8 id);
 void InitPresentationPT3Song();
 void UpdatePT3VRAM();
+void PrintTeamName(u8 x, u8 teamPaletteId);
