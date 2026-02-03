@@ -10,8 +10,8 @@
 #include "exsoccer.h"
 #include "debug.h"
 #include "input.h"
-//#include "pt3/pt3_player.h"
-//#include "pt3/pt3_notetable2.h"
+#include "pt3/pt3_player.h"
+#include "pt3/pt3_notetable2.h"
 #include "memory.h"
 
 // CONSTANTS
@@ -37,6 +37,8 @@ u8 					g_GirlPatterns[] = {
 		SPRITE_GIRL_7, SPRITE_GIRL_8, SPRITE_GIRL_9
 	};
 u8                  g_RAM_MusicBuffer[4096];
+u8 					g_GkAnimTimer = 0;
+u8 					g_GkAnimPlayerId = NO_VALUE;
 char                g_History1[20] = "PLY:      ";
 char                g_History2[20] = "CPU:      ";
 u16 		        g_FrameCounter;
