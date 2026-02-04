@@ -62,6 +62,7 @@ extern bool g_GameWith2Players;
 bool g_ShowButtonsInfo=true;
 char   g_FioBreText[6];
 
+
 // CONSTANTS
 
 

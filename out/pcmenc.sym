@@ -1,0 +1,92 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 1
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =   00002710 L
+    .__.ABS.                                                    =   00000000 G
+    .__.CPU.                                                    =   00000000 L
+    .__.H$L.                                                    =   00000000 L
+  0 PCM_11K_DoneA                                                   000000D0 R
+  0 PCM_11K_DoneB                                                   000000DC R
+  0 PCM_11K_DoneC                                                   000000E7 R
+  0 PCM_11K_Loop                                                    000000C3 R
+  0 PCM_11K_Play                                                    000000B5 R
+  0 PCM_11K_WaitA                                                   00000105 R
+  0 PCM_11K_WaitB                                                   0000010C R
+  0 PCM_11K_WaitC                                                   00000113 R
+  0 PCM_22K_DoneA                                                   00000142 R
+  0 PCM_22K_DoneB                                                   0000014E R
+  0 PCM_22K_DoneC                                                   00000159 R
+  0 PCM_22K_Loop                                                    00000131 R
+  0 PCM_22K_Play                                                    00000123 R
+  0 PCM_22K_WaitA                                                   00000175 R
+  0 PCM_22K_WaitB                                                   0000017D R
+  0 PCM_22K_WaitC                                                   00000184 R
+  0 PCM_44K_DoneA                                                   000001AE R
+  0 PCM_44K_DoneB                                                   000001BC R
+  0 PCM_44K_DoneC                                                   000001CD R
+  0 PCM_44K_Dummy                                                   000001BF R
+  0 PCM_44K_Loop                                                    000001A0 R
+  0 PCM_44K_Play                                                    00000194 R
+  0 PCM_44K_WaitA                                                   000001D7 R
+  0 PCM_44K_WaitB                                                   000001DF R
+  0 PCM_44K_WaitC                                                   000001E7 R
+  0 PCM_8K_DoneA                                                    00000051 R
+  0 PCM_8K_DoneB                                                    0000005D R
+  0 PCM_8K_DoneC                                                    00000068 R
+  0 PCM_8K_Loop                                                     00000044 R
+  0 PCM_8K_Play                                                     00000036 R
+  0 PCM_8K_WaitA                                                    00000084 R
+  0 PCM_8K_WaitB                                                    0000008B R
+  0 PCM_8K_WaitC                                                    00000092 R
+  0 Wait147                                                         00000099 R
+  0 _PCM_Play_11K                                                   000000AD GR
+  0 _PCM_Play_22K                                                   0000011B GR
+  0 _PCM_Play_44K                                                   0000018C GR
+  0 _PCM_Play_8K                                                    0000002E GR
+  0 _PCM_Reset                                                      00000000 GR
+    _g_MSXAudio_DataPort                                        =   000000C1 
+    _g_MSXAudio_DataPort2                                       =   000000C3 
+    _g_MSXAudio_IndexPort                                       =   000000C0 
+    _g_MSXAudio_IndexPort2                                      =   000000C2 
+    _g_MSXMusic_DataPort                                        =   0000007D 
+    _g_MSXMusic_IndexPort                                       =   0000007C 
+    _g_PSG_DataPort                                             =   000000A1 
+    _g_PSG_Ext_DataPort                                         =   00000011 
+    _g_PSG_Ext_RegPort                                          =   00000010 
+    _g_PSG_Ext_StatPort                                         =   00000012 
+    _g_PSG_RegPort                                              =   000000A0 
+    _g_PSG_StatPort                                             =   000000A2 
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+    _g_PortAccessKeyboard                                       =   000000AA 
+    _g_PortControl                                              =   000000AB 
+    _g_PortPrimarySlot                                          =   000000A8 
+    _g_PortReadKeyboard                                         =   000000A9 
+    _g_RTC_AddrPort                                             =   000000B4 
+    _g_RTC_DataPort                                             =   000000B5 
+    _g_VDP_AddrPort                                             =   00000099 
+    _g_VDP_DataPort                                             =   00000098 
+    _g_VDP_RegPort                                              =   00000099 
+    _g_VDP_StatPort                                             =   00000099 
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 3
+Hexadecimal [32-Bits]
+
+Area Table
+
+   0 _CODE                                      size      1F0   flags    0
+   1 _DATA                                      size        0   flags    0
+   2 _INITIALIZED                               size        0   flags    0
+   3 _DABS                                      size        0   flags    8
+   4 _HOME                                      size        0   flags    0
+   5 _GSINIT                                    size        0   flags    0
+   6 _GSFINAL                                   size        0   flags    0
+   7 _INITIALIZER                               size        0   flags    0
+   8 _CABS                                      size        0   flags    8
+

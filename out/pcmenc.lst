@@ -1,0 +1,507 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.2.0 #13081 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module pcmenc
+                                      6 	.optsdcc -mz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _PCM_Reset
+                                     12 	.globl _PCM_Play_8K
+                                     13 	.globl _PCM_Play_11K
+                                     14 	.globl _PCM_Play_22K
+                                     15 	.globl _PCM_Play_44K
+                                     16 ;--------------------------------------------------------
+                                     17 ; special function registers
+                                     18 ;--------------------------------------------------------
+                         000000A8    19 _g_PortPrimarySlot	=	0x00a8
+                         000000A9    20 _g_PortReadKeyboard	=	0x00a9
+                         000000AA    21 _g_PortAccessKeyboard	=	0x00aa
+                         000000AB    22 _g_PortControl	=	0x00ab
+                         00000098    23 _g_VDP_DataPort	=	0x0098
+                         00000099    24 _g_VDP_RegPort	=	0x0099
+                         00000099    25 _g_VDP_AddrPort	=	0x0099
+                         00000099    26 _g_VDP_StatPort	=	0x0099
+                         000000A0    27 _g_PSG_RegPort	=	0x00a0
+                         000000A1    28 _g_PSG_DataPort	=	0x00a1
+                         000000A2    29 _g_PSG_StatPort	=	0x00a2
+                         00000010    30 _g_PSG_Ext_RegPort	=	0x0010
+                         00000011    31 _g_PSG_Ext_DataPort	=	0x0011
+                         00000012    32 _g_PSG_Ext_StatPort	=	0x0012
+                         0000007C    33 _g_MSXMusic_IndexPort	=	0x007c
+                         0000007D    34 _g_MSXMusic_DataPort	=	0x007d
+                         000000C0    35 _g_MSXAudio_IndexPort	=	0x00c0
+                         000000C1    36 _g_MSXAudio_DataPort	=	0x00c1
+                         000000C2    37 _g_MSXAudio_IndexPort2	=	0x00c2
+                         000000C3    38 _g_MSXAudio_DataPort2	=	0x00c3
+                         000000B4    39 _g_RTC_AddrPort	=	0x00b4
+                         000000B5    40 _g_RTC_DataPort	=	0x00b5
+                                     41 ;--------------------------------------------------------
+                                     42 ; ram data
+                                     43 ;--------------------------------------------------------
+                                     44 	.area _DATA
+                                     45 ;--------------------------------------------------------
+                                     46 ; ram data
+                                     47 ;--------------------------------------------------------
+                                     48 	.area _INITIALIZED
+                                     49 ;--------------------------------------------------------
+                                     50 ; absolute external ram data
+                                     51 ;--------------------------------------------------------
+                                     52 	.area _DABS (ABS)
+                                     53 ;--------------------------------------------------------
+                                     54 ; global & static initialisations
+                                     55 ;--------------------------------------------------------
+                                     56 	.area _HOME
+                                     57 	.area _GSINIT
+                                     58 	.area _GSFINAL
+                                     59 	.area _GSINIT
+                                     60 ;--------------------------------------------------------
+                                     61 ; Home
+                                     62 ;--------------------------------------------------------
+                                     63 	.area _HOME
+                                     64 	.area _HOME
+                                     65 ;--------------------------------------------------------
+                                     66 ; code
+                                     67 ;--------------------------------------------------------
+                                     68 	.area _CODE
+                                     69 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:33: void PCM_Reset()
+                                     70 ;	---------------------------------
+                                     71 ; Function PCM_Reset
+                                     72 ; ---------------------------------
+    00000000                         73 _PCM_Reset::
+                                     74 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:62: __endasm;		
+    00000000 AF               [ 4]   75 	xor	a
+    00000001 01 A1 FF         [10]   76 	ld	bc, #0xFFA1
+    00000004 D3 A0            [11]   77 	out	(0xA0), a
+    00000006 3C               [ 4]   78 	inc	a
+    00000007 ED 41            [12]   79 	out	(c), b
+    00000009 D3 A0            [11]   80 	out	(0xA0), a
+    0000000B 3C               [ 4]   81 	inc	a
+    0000000C ED 41            [12]   82 	out	(c), b
+    0000000E D3 A0            [11]   83 	out	(0xA0), a
+    00000010 3C               [ 4]   84 	inc	a
+    00000011 ED 41            [12]   85 	out	(c), b
+    00000013 D3 A0            [11]   86 	out	(0xA0), a
+    00000015 3C               [ 4]   87 	inc	a
+    00000016 ED 41            [12]   88 	out	(c), b
+    00000018 D3 A0            [11]   89 	out	(0xA0), a
+    0000001A 3C               [ 4]   90 	inc	a
+    0000001B ED 41            [12]   91 	out	(c), b
+    0000001D D3 A0            [11]   92 	out	(0xA0), a
+    0000001F 3C               [ 4]   93 	inc	a
+    00000020 ED 41            [12]   94 	out	(c), b
+    00000022 D3 A0            [11]   95 	out	(0xA0), a
+    00000024 3C               [ 4]   96 	inc	a
+    00000025 ED 41            [12]   97 	out	(c), b
+    00000027 D3 A0            [11]   98 	out	(0xA0), a
+    00000029 06 BF            [ 7]   99 	ld	b, #0xBF
+    0000002B ED 41            [12]  100 	out	(c), b
+                                    101 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:63: }
+    0000002D C9               [10]  102 	ret
+                                    103 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:78: void PCM_Play_8K(u16 addr)
+                                    104 ;	---------------------------------
+                                    105 ; Function PCM_Play_8K
+                                    106 ; ---------------------------------
+    0000002E                        107 _PCM_Play_8K::
+                                    108 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:82: PCM_Reset(); // don't change HL
+    0000002E CDr00r00         [17]  109 	call	_PCM_Reset
+                                    110 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:214: __endasm;
+    00000031 F3               [ 4]  111 	di
+    00000032 5E               [ 7]  112 	ld	e, (hl)
+    00000033 23               [ 6]  113 	inc	hl
+    00000034 56               [ 7]  114 	ld	d, (hl)
+    00000035 23               [ 6]  115 	inc	hl
+    00000036                        116 	PCM_8K_Play:
+    00000036 0E A1            [ 7]  117 	ld	c, #0xA1
+    00000038 E5               [11]  118 	push	hl
+    00000039 EB               [ 4]  119 	ex	de, hl
+    0000003A 24               [ 4]  120 	inc	h
+    0000003B D9               [ 4]  121 	exx
+    0000003C E1               [10]  122 	pop	hl
+    0000003D 01 10 00         [10]  123 	ld	bc, #0x0010
+    00000040 11 00 00         [10]  124 	ld	de, #0x0000
+    00000043 D9               [ 4]  125 	exx
+    00000044                        126 	PCM_8K_Loop:
+    00000044 D9               [ 4]  127 	exx
+    00000045 78               [ 4]  128 	ld	a, b
+    00000046 91               [ 4]  129 	sub	c
+    00000047 30 3B            [12]  130 	jr	nc, PCM_8K_WaitA
+    00000049 7E               [ 7]  131 	ld	a, (hl)
+    0000004A 47               [ 4]  132 	ld	b, a
+    0000004B E6 0F            [ 7]  133 	and	#0x0F
+    0000004D 23               [ 6]  134 	inc	hl
+    0000004E D9               [ 4]  135 	exx
+    0000004F 47               [ 4]  136 	ld	b, a
+    00000050 D9               [ 4]  137 	exx
+    00000051                        138 	PCM_8K_DoneA:
+    00000051 7A               [ 4]  139 	ld	a, d
+    00000052 91               [ 4]  140 	sub	c
+    00000053 30 36            [12]  141 	jr	nc, PCM_8K_WaitB
+    00000055 7E               [ 7]  142 	ld	a, (hl)
+    00000056 57               [ 4]  143 	ld	d, a
+    00000057 E6 0F            [ 7]  144 	and	#0x0F
+    00000059 23               [ 6]  145 	inc	hl
+    0000005A D9               [ 4]  146 	exx
+    0000005B 57               [ 4]  147 	ld	d, a
+    0000005C D9               [ 4]  148 	exx
+    0000005D                        149 	PCM_8K_DoneB:
+    0000005D 7B               [ 4]  150 	ld	a, e
+    0000005E 91               [ 4]  151 	sub	c
+    0000005F 30 31            [12]  152 	jr	nc, PCM_8K_WaitC
+    00000061 7E               [ 7]  153 	ld	a, (hl)
+    00000062 5F               [ 4]  154 	ld	e, a
+    00000063 E6 0F            [ 7]  155 	and	#0x0F
+    00000065 23               [ 6]  156 	inc	hl
+    00000066 D9               [ 4]  157 	exx
+    00000067 5F               [ 4]  158 	ld	e, a
+    00000068                        159 	PCM_8K_DoneC:
+    00000068 3E 08            [ 7]  160 	ld	a, #8
+    0000006A D3 A0            [11]  161 	out	(0xA0), a
+    0000006C 3C               [ 4]  162 	inc	a
+    0000006D ED 41            [12]  163 	out	(c), b
+    0000006F D3 A0            [11]  164 	out	(0xA0), a
+    00000071 3C               [ 4]  165 	inc	a
+    00000072 ED 51            [12]  166 	out	(c), d
+    00000074 D3 A0            [11]  167 	out	(0xA0), a
+    00000076 ED 59            [12]  168 	out	(c), e
+    00000078 CDr99r00         [17]  169 	call	Wait147
+    0000007B 2D               [ 4]  170 	dec	l
+    0000007C 20 C6            [12]  171 	jr	nz, PCM_8K_Loop
+    0000007E 25               [ 4]  172 	dec	h
+    0000007F C2r44r00         [10]  173 	jp	nz, PCM_8K_Loop
+    00000082 FB               [ 4]  174 	ei
+    00000083 C9               [10]  175 	ret
+    00000084                        176 	PCM_8K_WaitA:
+    00000084 47               [ 4]  177 	ld	b, a
+    00000085 00               [ 4]  178 	nop
+    00000086 00               [ 4]  179 	nop
+    00000087 00               [ 4]  180 	nop
+    00000088 00               [ 4]  181 	nop
+    00000089 18 C6            [12]  182 	jr	PCM_8K_DoneA
+    0000008B                        183 	PCM_8K_WaitB:
+    0000008B 57               [ 4]  184 	ld	d, a
+    0000008C 00               [ 4]  185 	nop
+    0000008D 00               [ 4]  186 	nop
+    0000008E 00               [ 4]  187 	nop
+    0000008F 00               [ 4]  188 	nop
+    00000090 18 CB            [12]  189 	jr	PCM_8K_DoneB
+    00000092                        190 	PCM_8K_WaitC:
+    00000092 5F               [ 4]  191 	ld	e, a
+    00000093 D9               [ 4]  192 	exx
+    00000094 00               [ 4]  193 	nop
+    00000095 00               [ 4]  194 	nop
+    00000096 00               [ 4]  195 	nop
+    00000097 18 CF            [12]  196 	jr	PCM_8K_DoneC
+    00000099                        197 	Wait147:
+    00000099 23               [ 6]  198 	inc	hl
+    0000009A 2B               [ 6]  199 	dec	hl
+    0000009B 23               [ 6]  200 	inc	hl
+    0000009C 2B               [ 6]  201 	dec	hl
+    0000009D 23               [ 6]  202 	inc	hl
+    0000009E 2B               [ 6]  203 	dec	hl
+    0000009F 23               [ 6]  204 	inc	hl
+    000000A0 2B               [ 6]  205 	dec	hl
+    000000A1 23               [ 6]  206 	inc	hl
+    000000A2 2B               [ 6]  207 	dec	hl
+    000000A3 23               [ 6]  208 	inc	hl
+    000000A4 2B               [ 6]  209 	dec	hl
+    000000A5 23               [ 6]  210 	inc	hl
+    000000A6 2B               [ 6]  211 	dec	hl
+    000000A7 00               [ 4]  212 	nop
+    000000A8 00               [ 4]  213 	nop
+    000000A9 00               [ 4]  214 	nop
+    000000AA 00               [ 4]  215 	nop
+    000000AB C9               [10]  216 	ret
+                                    217 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:215: }        
+    000000AC C9               [10]  218 	ret
+                                    219 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:231: void PCM_Play_11K(u16 addr)
+                                    220 ;	---------------------------------
+                                    221 ; Function PCM_Play_11K
+                                    222 ; ---------------------------------
+    000000AD                        223 _PCM_Play_11K::
+                                    224 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:235: PCM_Reset(); // don't change HL
+    000000AD CDr00r00         [17]  225 	call	_PCM_Reset
+                                    226 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:349: __endasm;
+    000000B0 F3               [ 4]  227 	di
+    000000B1 5E               [ 7]  228 	ld	e, (hl)
+    000000B2 23               [ 6]  229 	inc	hl
+    000000B3 56               [ 7]  230 	ld	d, (hl)
+    000000B4 23               [ 6]  231 	inc	hl
+    000000B5                        232 	PCM_11K_Play:
+    000000B5 0E A1            [ 7]  233 	ld	c, #0xA1
+    000000B7 E5               [11]  234 	push	hl
+    000000B8 EB               [ 4]  235 	ex	de, hl
+    000000B9 24               [ 4]  236 	inc	h
+    000000BA D9               [ 4]  237 	exx
+    000000BB E1               [10]  238 	pop	hl
+    000000BC 01 10 00         [10]  239 	ld	bc, #0x0010
+    000000BF 11 00 00         [10]  240 	ld	de, #0x0000
+    000000C2 D9               [ 4]  241 	exx
+    000000C3                        242 	PCM_11K_Loop:
+    000000C3 D9               [ 4]  243 	exx
+    000000C4 78               [ 4]  244 	ld	a, b
+    000000C5 91               [ 4]  245 	sub	c
+    000000C6 30 3D            [12]  246 	jr	nc, PCM_11K_WaitA
+    000000C8 7E               [ 7]  247 	ld	a, (hl)
+    000000C9 47               [ 4]  248 	ld	b, a
+    000000CA E6 0F            [ 7]  249 	and	#0x0F
+    000000CC 23               [ 6]  250 	inc	hl
+    000000CD D9               [ 4]  251 	exx
+    000000CE 47               [ 4]  252 	ld	b, a
+    000000CF D9               [ 4]  253 	exx
+    000000D0                        254 	PCM_11K_DoneA:
+    000000D0 7A               [ 4]  255 	ld	a, d
+    000000D1 91               [ 4]  256 	sub	c
+    000000D2 30 38            [12]  257 	jr	nc, PCM_11K_WaitB
+    000000D4 7E               [ 7]  258 	ld	a, (hl)
+    000000D5 57               [ 4]  259 	ld	d, a
+    000000D6 E6 0F            [ 7]  260 	and	#0x0F
+    000000D8 23               [ 6]  261 	inc	hl
+    000000D9 D9               [ 4]  262 	exx
+    000000DA 57               [ 4]  263 	ld	d, a
+    000000DB D9               [ 4]  264 	exx
+    000000DC                        265 	PCM_11K_DoneB:
+    000000DC 7B               [ 4]  266 	ld	a, e
+    000000DD 91               [ 4]  267 	sub	c
+    000000DE 30 33            [12]  268 	jr	nc, PCM_11K_WaitC
+    000000E0 7E               [ 7]  269 	ld	a, (hl)
+    000000E1 5F               [ 4]  270 	ld	e, a
+    000000E2 E6 0F            [ 7]  271 	and	#0x0F
+    000000E4 23               [ 6]  272 	inc	hl
+    000000E5 D9               [ 4]  273 	exx
+    000000E6 5F               [ 4]  274 	ld	e, a
+    000000E7                        275 	PCM_11K_DoneC:
+    000000E7 3E 08            [ 7]  276 	ld	a, #8
+    000000E9 D3 A0            [11]  277 	out	(0xA0), a
+    000000EB 3C               [ 4]  278 	inc	a
+    000000EC ED 41            [12]  279 	out	(c), b
+    000000EE D3 A0            [11]  280 	out	(0xA0), a
+    000000F0 3C               [ 4]  281 	inc	a
+    000000F1 ED 51            [12]  282 	out	(c), d
+    000000F3 D3 A0            [11]  283 	out	(0xA0), a
+    000000F5 ED 59            [12]  284 	out	(c), e
+    000000F7 00               [ 4]  285 	nop
+    000000F8 00               [ 4]  286 	nop
+    000000F9 00               [ 4]  287 	nop
+    000000FA 00               [ 4]  288 	nop
+    000000FB 00               [ 4]  289 	nop
+    000000FC 2D               [ 4]  290 	dec	l
+    000000FD 20 C4            [12]  291 	jr	nz, PCM_11K_Loop
+    000000FF 25               [ 4]  292 	dec	h
+    00000100 C2rC3r00         [10]  293 	jp	nz, PCM_11K_Loop
+    00000103 FB               [ 4]  294 	ei
+    00000104 C9               [10]  295 	ret
+    00000105                        296 	PCM_11K_WaitA:
+    00000105 47               [ 4]  297 	ld	b, a
+    00000106 00               [ 4]  298 	nop
+    00000107 00               [ 4]  299 	nop
+    00000108 00               [ 4]  300 	nop
+    00000109 00               [ 4]  301 	nop
+    0000010A 18 C4            [12]  302 	jr	PCM_11K_DoneA
+    0000010C                        303 	PCM_11K_WaitB:
+    0000010C 57               [ 4]  304 	ld	d, a
+    0000010D 00               [ 4]  305 	nop
+    0000010E 00               [ 4]  306 	nop
+    0000010F 00               [ 4]  307 	nop
+    00000110 00               [ 4]  308 	nop
+    00000111 18 C9            [12]  309 	jr	PCM_11K_DoneB
+    00000113                        310 	PCM_11K_WaitC:
+    00000113 5F               [ 4]  311 	ld	e, a
+    00000114 D9               [ 4]  312 	exx
+    00000115 00               [ 4]  313 	nop
+    00000116 00               [ 4]  314 	nop
+    00000117 00               [ 4]  315 	nop
+    00000118 18 CD            [12]  316 	jr	PCM_11K_DoneC
+                                    317 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:350: }
+    0000011A C9               [10]  318 	ret
+                                    319 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:366: void PCM_Play_22K(u16 addr)
+                                    320 ;	---------------------------------
+                                    321 ; Function PCM_Play_22K
+                                    322 ; ---------------------------------
+    0000011B                        323 _PCM_Play_22K::
+                                    324 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:370: PCM_Reset(); // don't change HL
+    0000011B CDr00r00         [17]  325 	call	_PCM_Reset
+                                    326 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:481: __endasm;
+    0000011E F3               [ 4]  327 	di
+    0000011F 5E               [ 7]  328 	ld	e, (hl)
+    00000120 23               [ 6]  329 	inc	hl
+    00000121 56               [ 7]  330 	ld	d, (hl)
+    00000122 23               [ 6]  331 	inc	hl
+    00000123                        332 	PCM_22K_Play:
+    00000123 0E A1            [ 7]  333 	ld	c, #0xA1
+    00000125 E5               [11]  334 	push	hl
+    00000126 EB               [ 4]  335 	ex	de, hl
+    00000127 24               [ 4]  336 	inc	h
+    00000128 D9               [ 4]  337 	exx
+    00000129 E1               [10]  338 	pop	hl
+    0000012A 01 10 00         [10]  339 	ld	bc, #0x0010
+    0000012D 11 00 00         [10]  340 	ld	de, #0x0000
+    00000130 D9               [ 4]  341 	exx
+    00000131                        342 	PCM_22K_Loop:
+    00000131 D9               [ 4]  343 	exx
+    00000132 78               [ 4]  344 	ld	a, b
+    00000133 D6 10            [ 7]  345 	sub	#0x10
+    00000135 30 3E            [12]  346 	jr	nc, PCM_22K_WaitA
+    00000137 3E 08            [ 7]  347 	ld	a, #8
+    00000139 D3 A0            [11]  348 	out	(0xA0), a
+    0000013B 7E               [ 7]  349 	ld	a, (hl)
+    0000013C 23               [ 6]  350 	inc	hl
+    0000013D 47               [ 4]  351 	ld	b, a
+    0000013E E6 0F            [ 7]  352 	and	#0x0F
+    00000140 D3 A1            [11]  353 	out	(0xA1), a
+    00000142                        354 	PCM_22K_DoneA:
+    00000142 7A               [ 4]  355 	ld	a, d
+    00000143 91               [ 4]  356 	sub	c
+    00000144 30 37            [12]  357 	jr	nc, PCM_22K_WaitB
+    00000146 7E               [ 7]  358 	ld	a, (hl)
+    00000147 23               [ 6]  359 	inc	hl
+    00000148 57               [ 4]  360 	ld	d, a
+    00000149 E6 0F            [ 7]  361 	and	#0x0F
+    0000014B D9               [ 4]  362 	exx
+    0000014C 57               [ 4]  363 	ld	d, a
+    0000014D D9               [ 4]  364 	exx
+    0000014E                        365 	PCM_22K_DoneB:
+    0000014E 7B               [ 4]  366 	ld	a, e
+    0000014F 91               [ 4]  367 	sub	c
+    00000150 30 32            [12]  368 	jr	nc, PCM_22K_WaitC
+    00000152 7E               [ 7]  369 	ld	a, (hl)
+    00000153 23               [ 6]  370 	inc	hl
+    00000154 5F               [ 4]  371 	ld	e, a
+    00000155 E6 0F            [ 7]  372 	and	#0x0F
+    00000157 D9               [ 4]  373 	exx
+    00000158 5F               [ 4]  374 	ld	e, a
+    00000159                        375 	PCM_22K_DoneC:
+    00000159 3E 09            [ 7]  376 	ld	a, #9
+    0000015B D3 A0            [11]  377 	out	(0xA0), a
+    0000015D 3C               [ 4]  378 	inc	a
+    0000015E ED 51            [12]  379 	out	(c), d
+    00000160 D3 A0            [11]  380 	out	(0xA0), a
+    00000162 ED 59            [12]  381 	out	(c), e
+    00000164 F6 00            [ 7]  382 	or	#0
+    00000166 F6 00            [ 7]  383 	or	#0
+    00000168 F6 00            [ 7]  384 	or	#0
+    0000016A F6 00            [ 7]  385 	or	#0
+    0000016C 2D               [ 4]  386 	dec	l
+    0000016D 20 C2            [12]  387 	jr	nz, PCM_22K_Loop
+    0000016F 25               [ 4]  388 	dec	h
+    00000170 C2r31r01         [10]  389 	jp	nz, PCM_22K_Loop
+    00000173 FB               [ 4]  390 	ei
+    00000174 C9               [10]  391 	ret
+    00000175                        392 	PCM_22K_WaitA:
+    00000175 47               [ 4]  393 	ld	b, a
+    00000176 23               [ 6]  394 	inc	hl
+    00000177 2B               [ 6]  395 	dec	hl
+    00000178 00               [ 4]  396 	nop
+    00000179 00               [ 4]  397 	nop
+    0000017A 00               [ 4]  398 	nop
+    0000017B 18 C5            [12]  399 	jr	PCM_22K_DoneA
+    0000017D                        400 	PCM_22K_WaitB:
+    0000017D 57               [ 4]  401 	ld	d, a
+    0000017E 00               [ 4]  402 	nop
+    0000017F 00               [ 4]  403 	nop
+    00000180 00               [ 4]  404 	nop
+    00000181 00               [ 4]  405 	nop
+    00000182 18 CA            [12]  406 	jr	PCM_22K_DoneB
+    00000184                        407 	PCM_22K_WaitC:
+    00000184 5F               [ 4]  408 	ld	e, a
+    00000185 D9               [ 4]  409 	exx
+    00000186 00               [ 4]  410 	nop
+    00000187 00               [ 4]  411 	nop
+    00000188 00               [ 4]  412 	nop
+    00000189 18 CE            [12]  413 	jr	PCM_22K_DoneC
+                                    414 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:482: }
+    0000018B C9               [10]  415 	ret
+                                    416 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:498: void PCM_Play_44K(u16 addr)
+                                    417 ;	---------------------------------
+                                    418 ; Function PCM_Play_44K
+                                    419 ; ---------------------------------
+    0000018C                        420 _PCM_Play_44K::
+                                    421 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:502: PCM_Reset(); // don't change HL
+    0000018C CDr00r00         [17]  422 	call	_PCM_Reset
+                                    423 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:602: __endasm;
+    0000018F F3               [ 4]  424 	di
+    00000190 5E               [ 7]  425 	ld	e, (hl)
+    00000191 23               [ 6]  426 	inc	hl
+    00000192 56               [ 7]  427 	ld	d, (hl)
+    00000193 23               [ 6]  428 	inc	hl
+    00000194                        429 	PCM_44K_Play:
+    00000194 E5               [11]  430 	push	hl
+    00000195 62               [ 4]  431 	ld	h, d
+    00000196 24               [ 4]  432 	inc	h
+    00000197 7B               [ 4]  433 	ld	a, e
+    00000198 D9               [ 4]  434 	exx
+    00000199 E1               [10]  435 	pop	hl
+    0000019A 47               [ 4]  436 	ld	b, a
+    0000019B 0E 00            [ 7]  437 	ld	c, #0x00
+    0000019D 11 00 00         [10]  438 	ld	de, #0x0000
+    000001A0                        439 	PCM_44K_Loop:
+    000001A0 79               [ 4]  440 	ld	a, c
+    000001A1 D6 20            [ 7]  441 	sub	#0x20
+    000001A3 30 32            [12]  442 	jr	nc, PCM_44K_WaitA
+    000001A5 3E 08            [ 7]  443 	ld	a, #8
+    000001A7 D3 A0            [11]  444 	out	(0xA0), a
+    000001A9 7E               [ 7]  445 	ld	a, (hl)
+    000001AA 23               [ 6]  446 	inc	hl
+    000001AB 4F               [ 4]  447 	ld	c, a
+    000001AC D3 A1            [11]  448 	out	(0xA1), a
+    000001AE                        449 	PCM_44K_DoneA:
+    000001AE 7A               [ 4]  450 	ld	a, d
+    000001AF D6 20            [ 7]  451 	sub	#0x20
+    000001B1 30 2C            [12]  452 	jr	nc, PCM_44K_WaitB
+    000001B3 3E 09            [ 7]  453 	ld	a, #9
+    000001B5 D3 A0            [11]  454 	out	(0xA0), a
+    000001B7 7E               [ 7]  455 	ld	a, (hl)
+    000001B8 23               [ 6]  456 	inc	hl
+    000001B9 57               [ 4]  457 	ld	d, a
+    000001BA D3 A1            [11]  458 	out	(0xA1), a
+    000001BC                        459 	PCM_44K_DoneB:
+    000001BC C3rBFr01         [10]  460 	jp	PCM_44K_Dummy
+    000001BF                        461 	PCM_44K_Dummy:
+    000001BF 7B               [ 4]  462 	ld	a, e
+    000001C0 D6 20            [ 7]  463 	sub	#0x20
+    000001C2 30 23            [12]  464 	jr	nc, PCM_44K_WaitC
+    000001C4 3E 0A            [ 7]  465 	ld	a, #10
+    000001C6 D3 A0            [11]  466 	out	(0xA0), a
+    000001C8 7E               [ 7]  467 	ld	a, (hl)
+    000001C9 23               [ 6]  468 	inc	hl
+    000001CA 5F               [ 4]  469 	ld	e, a
+    000001CB D3 A1            [11]  470 	out	(0xA1), a
+    000001CD                        471 	PCM_44K_DoneC:
+    000001CD 10 D1            [13]  472 	djnz	PCM_44K_Loop
+    000001CF D9               [ 4]  473 	exx
+    000001D0 25               [ 4]  474 	dec	h
+    000001D1 D9               [ 4]  475 	exx
+    000001D2 C2rA0r01         [10]  476 	jp	nz, PCM_44K_Loop
+    000001D5 FB               [ 4]  477 	ei
+    000001D6 C9               [10]  478 	ret
+    000001D7                        479 	PCM_44K_WaitA:
+    000001D7 4F               [ 4]  480 	ld	c, a
+    000001D8 23               [ 6]  481 	inc	hl
+    000001D9 2B               [ 6]  482 	dec	hl
+    000001DA 00               [ 4]  483 	nop
+    000001DB 00               [ 4]  484 	nop
+    000001DC 00               [ 4]  485 	nop
+    000001DD 18 CF            [12]  486 	jr	PCM_44K_DoneA
+    000001DF                        487 	PCM_44K_WaitB:
+    000001DF 57               [ 4]  488 	ld	d, a
+    000001E0 23               [ 6]  489 	inc	hl
+    000001E1 2B               [ 6]  490 	dec	hl
+    000001E2 00               [ 4]  491 	nop
+    000001E3 00               [ 4]  492 	nop
+    000001E4 00               [ 4]  493 	nop
+    000001E5 18 D5            [12]  494 	jr	PCM_44K_DoneB
+    000001E7                        495 	PCM_44K_WaitC:
+    000001E7 5F               [ 4]  496 	ld	e, a
+    000001E8 23               [ 6]  497 	inc	hl
+    000001E9 2B               [ 6]  498 	dec	hl
+    000001EA 00               [ 4]  499 	nop
+    000001EB 00               [ 4]  500 	nop
+    000001EC 00               [ 4]  501 	nop
+    000001ED 18 DE            [12]  502 	jr	PCM_44K_DoneC
+                                    503 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\engine/src/pcm/pcmenc.c:603: }
+    000001EF C9               [10]  504 	ret
+                                    505 	.area _CODE
+                                    506 	.area _INITIALIZER
+                                    507 	.area _CABS (ABS)

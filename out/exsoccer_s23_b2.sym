@@ -15,7 +15,7 @@ Symbol Table
     _PutPlayerSprite                                                ******** GX
     _PutPonPonGirlSprite                                            ******** GX
   7 _TickPlayerToOwnTarget                                          00000000 GR
-  1 _TickPlayerToOwnTarget_s_GkMoveTick_131072_1157                 00000000 R
+  1 _TickPlayerToOwnTarget_s_GkMoveTick_131072_1159                 00000000 R
   7 _TickPonPonGirlsAnimation                                       0000090A GR
     _V9_PutLayerBTileAtPos                                          ******** GX
     __modsint                                                       ******** GX

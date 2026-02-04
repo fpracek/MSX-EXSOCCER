@@ -12,8 +12,8 @@
 
 
 
-// *** CONSTANTS ***
 
+extern bool			g_PcmStartPlaying;
 extern u8 			g_FieldScrollingActionInProgress; 	// Bank 1 = Segment 0
 extern int  		g_FieldCurrentYPosition;			// Bank 1 = Segment 0
 extern u8       	g_Team1PaletteId;					// Bank 1 = Segment 0
@@ -42,6 +42,7 @@ extern u8           g_ShootCooldown; // From exsoccer.c
 extern u8           g_GoalKickSide;
 extern u8 			g_GkAnimTimer;
 extern u8 			g_GkAnimPlayerId;
+extern u8			g_PmcSoundPlaying;
 
 void GoalKick(u8 teamId){
 	// Placeholder for Goal Kick Logic
@@ -1911,9 +1912,12 @@ void TickShowKickOff(){
 	if(g_MatchStatus==MATCH_KICK_OFF){
 		if(g_Timer==1){
 			V9_PrintLayerAStringAtPos(12,18,"KICK OFF");
+            g_PmcSoundPlaying=SOUND_KICKOFF;
+            g_PcmStartPlaying=true;
 			g_Timer=2;
 		}
 		if(g_Timer==3){
+            g_PmcSoundPlaying=NO_VALUE;
 			ClearTextFromLayerA(12,18,9);
 			g_Timer=NO_VALUE;
 			u8 playerId=NO_VALUE;

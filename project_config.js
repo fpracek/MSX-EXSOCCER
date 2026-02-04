@@ -27,7 +27,7 @@ ProjModules = [ ProjName ];
 // ProjSegments = "";
 
 //-- List of library modules to build (array)
-LibModules = [ "v9990", "system", "input", "vdp", "print", "input", "memory", "debug", "math", "pt3/pt3_player" ];
+LibModules = [ "v9990", "system", "input", "vdp", "print", "input", "memory", "debug", "math", "pcm/pcmenc" ];
 
 //-- Additional sources to be compiled and linked with the project (array)
 // AddSources = [];
@@ -104,7 +104,7 @@ CustomISR = "V9990";
 
 //-- List of raw data files to be added to final binary (array). Each entry must be in the following format: { offset:0x0000, file:"myfile.bin" }
 RawFiles = [
-	
+
 ];
 
 //-- Size of the final disk (.DSK file). Can be "360K" or "720K" (string)

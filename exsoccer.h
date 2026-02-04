@@ -78,6 +78,22 @@ typedef struct TeamStats
 
 #define PT3_MENU                            10
 
+#define SOUND_KICKOFF						1
+#define SOUND_REFEREE						2
+#define SOUND_CORNERKICK					3
+#define SOUND_GOALKICK						4
+#define SOUND_INGOAL						5
+#define SOUND_INGOAL1						6
+#define SOUND_INGOAL2						7
+#define SOUND_THROWIN						8
+#define SOUND_PERFORM_PASS					9
+#define SOUND_PUBLIC                        10
+#define SOUND_SHOT							11
+#define SOUND_GKHANDS						12
+#define SOUND_TACKLE						13
+
+#define SPRITE_BALL	11
+
 #define MENU_POS_1							0
 #define MENU_POS_2							1
 #define MENU_POS_3							2
@@ -388,3 +404,4 @@ void InitPresentationPT3Song();
 void UpdatePT3VRAM();
 void PrintTeamName(u8 x, u8 teamPaletteId);
 i32 Math_Abs32(i32 v);
+void PlayPcm(u8 id);

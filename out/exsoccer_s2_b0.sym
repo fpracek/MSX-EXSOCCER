@@ -16,7 +16,7 @@ Symbol Table
   7 _GetJoystick1Direction                                          00000873 GR
   7 _GetJoystick2Direction                                          00000973 GR
   7 _GetNumberString                                                000007C4 GR
-  1 _GetNumberString_str_65536_1239                                 00000007 R
+  1 _GetNumberString_str_65536_1240                                 00000007 R
   7 _GetPlayerIdByRole                                              00000000 GR
     _GoalKick                                                       ******** GX
     _InitPalette                                                    ******** GX
@@ -34,8 +34,8 @@ Symbol Table
   7 _PrintTeamName                                                  000001F0 GR
     _PutBallOnPlayerFeet                                            ******** GX
   7 _PutBallSprite                                                  0000009D GR
-  7 _PutBallSprite_k_BallPatterns_65539_1170                        000001E8 R
-  1 _PutBallSprite_s_StopCooldown_65538_1167                        00000006 R
+  7 _PutBallSprite_k_BallPatterns_65539_1171                        000001E8 R
+  1 _PutBallSprite_s_StopCooldown_65538_1168                        00000006 R
   7 _PutPlayerSprite                                                00000469 GR
   7 _ResetPlayersInfo                                               00000749 GR
   7 _SelectTeam                                                     00000CA1 GR
@@ -49,9 +49,9 @@ Symbol Table
   7 _TickBallFlying                                                 00001650 GR
   7 _TickCheckBallBoundaries                                        0000097C GR
   7 _TickThrowIn                                                    00001F61 GR
-  1 _TickThrowIn_s_ForceThrowTimer_65537_1738                       0000000E R
-  1 _TickThrowIn_s_JoyMoved_65537_1738                              0000000D R
-  1 _TickThrowIn_s_ThrowTargetId_65537_1738                         0000000C R
+  1 _TickThrowIn_s_ForceThrowTimer_65537_1739                       0000000E R
+  1 _TickThrowIn_s_JoyMoved_65537_1739                              0000000D R
+  1 _TickThrowIn_s_ThrowTargetId_65537_1739                         0000000C R
   7 _TimeUp                                                         00000B29 GR
     _UpdatePlayerPatternByDirection                                 ******** GX
   7 _UpdateSpritesPositions                                         0000008B GR

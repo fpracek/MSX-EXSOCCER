@@ -8,6 +8,7 @@
 #include "exsoccer.h"
 #include "debug.h"
 #include "input.h"
+//#include "ayfx/ayfx_player.h"
 
 extern u16 				g_FrameCounter;
 extern PonPonGirlInfo   g_PonPonGirls[];					
@@ -28,6 +29,7 @@ extern bool 			g_GameWith2Players;
 extern u8 				g_FieldScrollingActionInProgress; 	// Bank 1 = Segment 0
 extern u8 				g_FieldScrollSpeed;					// Bank 1 = Segment 0
 extern u8       		g_Timer;							// Bank 1 = Segment 0
+
 
 void TickPlayerToOwnTarget(){
     //if(g_MatchStatus == MATCH_AFTER_IN_GOAL) return; // FIX: Referee moves during celebration
@@ -254,9 +256,6 @@ void TickPlayerToOwnTarget(){
 		
 	}
 }
-
-
-
 void InitPonPonGirls(){
 	g_ponPonPatternIndex=0;
 	

@@ -10,9 +10,11 @@
 #include "exsoccer.h"
 #include "debug.h"
 #include "input.h"
-#include "pt3/pt3_player.h"
-#include "pt3/pt3_notetable2.h"
+//#include "pt3/pt3_player.h"
+//#include "pt3/pt3_notetable2.h"
 #include "memory.h"
+#include "pcm/pcmenc.h"
+//#include "ayfx/ayfx_player.h"
 
 // CONSTANTS
 extern const unsigned char 	g_Font_MGL_Sample6[]; // Bank 1 = Segment 2
@@ -28,8 +30,23 @@ extern const unsigned char  g_Presentation_palette[];
 extern const unsigned char  g_Teams_part1[16384];
 extern const unsigned char  g_Teams_part2[4096];
 extern const unsigned char  g_MusicMenu[3610];
+extern const unsigned char 	g_SoundRefereer[];
+extern const unsigned char 	g_SoundKickoff[];
+extern const unsigned char 	g_SoundCornerKick[];
+extern const unsigned char g_SoundInGoal[];
+extern const unsigned char g_SoundThrowIn[];
+extern const unsigned char g_SoundInGoal1[];
+extern const unsigned char g_SoundInGoal2[];
+extern const unsigned char g_SoundGoalKick[];
+extern const unsigned char g_SoundPerformPass[];
+extern const unsigned char g_SoundPublic[];
+extern const unsigned char g_SoundShot[];
+extern const unsigned char g_SoundGKHands[];
+extern const unsigned char g_SoundTackle[];
 
 // VARIABLES
+bool				g_PcmStartPlaying=FALSE;
+u8 					g_PmcSoundPlaying=NO_VALUE;
 u8 					g_PonPonGirlsPos[6]={30,50,70,175,195,215};
 u8 					g_GirlPatterns[] = {
 		SPRITE_GIRL_1, SPRITE_GIRL_2, SPRITE_GIRL_3,
@@ -90,7 +107,63 @@ const TeamStats g_TeamStats[] = {
 };
 
 
-
+void PlayPcm(u8 id){
+	switch(id){
+		case SOUND_REFEREE:
+			SET_BANK_SEGMENT(2, 31);
+			PCM_Play_11K((u16)g_SoundRefereer);
+			break;
+		case SOUND_CORNERKICK:
+			SET_BANK_SEGMENT(2, 32);
+			PCM_Play_11K((u16)g_SoundCornerKick);
+			break;
+		case SOUND_KICKOFF:
+			SET_BANK_SEGMENT(2, 30);
+			PCM_Play_11K((u16)g_SoundKickoff);
+			break;
+		case SOUND_INGOAL:
+			SET_BANK_SEGMENT(2, 33);
+			PCM_Play_11K((u16)g_SoundInGoal);
+			break;
+		case SOUND_THROWIN:
+			SET_BANK_SEGMENT(2, 34);
+			PCM_Play_11K((u16)g_SoundThrowIn);
+			break;
+		case SOUND_INGOAL1:
+			SET_BANK_SEGMENT(2, 35);
+			PCM_Play_11K((u16)g_SoundInGoal1);
+			break;		
+		case SOUND_INGOAL2:
+			SET_BANK_SEGMENT(2, 36);
+			PCM_Play_11K((u16)g_SoundInGoal2);
+			break;	
+		case SOUND_GOALKICK:
+			SET_BANK_SEGMENT(2, 37);
+			PCM_Play_11K((u16)g_SoundGoalKick);
+			break;
+		case SOUND_PERFORM_PASS:
+			SET_BANK_SEGMENT(2, 38);
+			PCM_Play_11K((u16)g_SoundPerformPass);
+			break;
+		case SOUND_PUBLIC:
+			SET_BANK_SEGMENT(2, 38);
+			PCM_Play_11K((u16)g_SoundPublic);
+			break;	
+		case SOUND_SHOT:
+			SET_BANK_SEGMENT(2, 39);
+			PCM_Play_11K((u16)g_SoundShot);
+			break;
+		case SOUND_GKHANDS:
+			SET_BANK_SEGMENT(2, 39);
+			PCM_Play_11K((u16)g_SoundGKHands);
+			break;
+		case SOUND_TACKLE:
+			SET_BANK_SEGMENT(2, 31);
+			PCM_Play_11K((u16)g_SoundTackle);
+			break; 
+	}
+	SET_BANK_SEGMENT(2, 1);
+}
 void UpdateV9990()
 {
 	WaitV9990Synch();
@@ -188,9 +261,15 @@ void ShowField(){
 void V9_InterruptHBlank(){
 
 }
+
 void V9_InterruptVBlank(){
 
-
+	//if(g_PmcSoundPlaying!=NO_VALUE){
+	//	if(!g_PcmStartPlaying){
+	//		ayFX_Update();
+	//	}
+	//	
+	//}
     //PT3_Decode();	 
     //PT3_UpdatePSG(); 
 
@@ -267,7 +346,8 @@ void V9_InterruptCommand()
 }
 
 void GameStart(){
-    
+	g_PcmStartPlaying=FALSE;
+    g_PmcSoundPlaying=NO_VALUE;
     g_PassTargetPlayer=NO_VALUE;
     g_Team1ActivePlayer=NO_VALUE;
 	V9_SetDisplayEnable(FALSE);
@@ -644,7 +724,7 @@ void TickGoalCelebration(){
 void main()
 {
 	DEBUG_INIT();
-	SET_BANK_SEGMENT(2, 1); 
+	PlayPcm(SOUND_TACKLE);
 	InitVariables();
 	V9_SetPort(V9_P15, 0);
 
@@ -699,11 +779,10 @@ void MainGameLoop(){
 
 	for(;;){
 		UpdateV9990();
-
-
-
-        
-
+		if(g_PcmStartPlaying){
+			g_PcmStartPlaying=false;
+			PlayPcm(g_PmcSoundPlaying);
+		}
 
 		if(g_MatchStatus==MATCH_NOT_STARTED && g_FieldScrollingActionInProgress==NO_VALUE && g_ActiveFieldZone==FIELD_CENTRAL_ZONE){
 			g_MatchStatus=MATCH_BEFORE_KICK_OFF;
