@@ -132,6 +132,7 @@ void PlayPcm(u8 id){
 			g_PlayMatchMusic=true;
 			break;
 		case SOUND_INGOAL:
+			PT3_Pause();
 			SET_BANK_SEGMENT(2, 33);
 			PCM_Play_11K((u16)g_SoundInGoal);
 			SET_BANK_SEGMENT(2, 35);
@@ -139,6 +140,7 @@ void PlayPcm(u8 id){
 			SET_BANK_SEGMENT(2, 36);
 			PCM_Play_11K((u16)g_SoundInGoal2);
 			PCM_Play_11K((u16)g_SoundInGoal2);
+			PT3_Resume();
 			break;
 		case SOUND_THROWIN:
 			PT3_Pause();

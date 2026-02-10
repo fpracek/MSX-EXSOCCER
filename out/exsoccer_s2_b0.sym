@@ -9,69 +9,69 @@ Symbol Table
     .__.H$L.                                                    =   00000000 L
     _BallInGoal                                                     ******** GX
     _BallThrowIn                                                    ******** GX
-  7 _ClearTextFromLayerA                                            00000832 GR
+  7 _ClearTextFromLayerA                                            0000082D GR
     _CornerKick                                                     ******** GX
   7 _EffectPlay                                                     00000000 GR
     _GameStart                                                      ******** GX
-  7 _GetClosestPlayerToBall                                         00000BF7 GR
-  7 _GetJoystick1Direction                                          00000902 GR
-  7 _GetJoystick2Direction                                          00000A02 GR
-  7 _GetNumberString                                                00000853 GR
-  1 _GetNumberString_str_65536_1318                                 00000007 R
-  7 _GetPlayerIdByRole                                              000000E6 GR
+  7 _GetClosestPlayerToBall                                         00000BF2 GR
+  7 _GetJoystick1Direction                                          000008FD GR
+  7 _GetJoystick2Direction                                          000009FD GR
+  7 _GetNumberString                                                0000084E GR
+  1 _GetNumberString_str_65536_1315                                 00000007 R
+  7 _GetPlayerIdByRole                                              000000E1 GR
     _GoalKick                                                       ******** GX
     _InitPalette                                                    ******** GX
-  7 _IsTeamJoystickTriggerPressed                                   00000892 GR
+  7 _IsTeamJoystickTriggerPressed                                   0000088D GR
     _Joystick_Read                                                  ******** GX
     _Keyboard_IsKeyPressed                                          ******** GX
     _LoadP1LayerA                                                   ******** GX
     _LoadP1LayerB                                                   ******** GX
-  7 _LoadPresentation                                               0000131C GR
+  7 _LoadPresentation                                               00001317 GR
     _LoadSprites                                                    ******** GX
-  7 _Math_Abs32                                                     00000D1A GR
+  7 _Math_Abs32                                                     00000D15 GR
     _PT3_State                                                      ******** GX
     _PenaltyShots                                                   ******** GX
     _PerformPass                                                    ******** GX
-  7 _PerformShot                                                    00001402 GR
-  7 _PrintTeamName                                                  000002A6 GR
+  7 _PerformShot                                                    000013FD GR
+  7 _PrintTeamName                                                  000002A1 GR
     _PutBallOnPlayerFeet                                            ******** GX
-  7 _PutBallSprite                                                  00000153 GR
-  7 _PutBallSprite_k_BallPatterns_65539_1250                        0000029E R
-  1 _PutBallSprite_s_StopCooldown_65538_1247                        00000006 R
-  7 _PutPlayerSprite                                                000004F8 GR
-  7 _ResetPlayersInfo                                               000007D8 GR
-  7 _SelectTeam                                                     00000D30 GR
+  7 _PutBallSprite                                                  0000014E GR
+  7 _PutBallSprite_k_BallPatterns_65539_1247                        00000299 R
+  1 _PutBallSprite_s_StopCooldown_65538_1244                        00000006 R
+  7 _PutPlayerSprite                                                000004F3 GR
+  7 _ResetPlayersInfo                                               000007D3 GR
+  7 _SelectTeam                                                     00000D2B GR
     _SetPlayerBallPossession                                        ******** GX
     _ShowField                                                      ******** GX
-  7 _ShowFieldZone                                                  00000A07 GR
-  7 _ShowHeaderInfo                                                 000003A6 GR
-  7 _ShowMenu                                                       00000EC1 GR
+  7 _ShowFieldZone                                                  00000A02 GR
+  7 _ShowHeaderInfo                                                 000003A1 GR
+  7 _ShowMenu                                                       00000EBC GR
     _SpriteBlinking                                                 ******** GX
-  7 _StadiumSoundEffectLoopFinished                                 000000DC GR
-  7 _StopStadiumSound                                               000000BC GR
+  7 _StadiumSoundEffectLoopFinished                                 000000D7 GR
+  7 _StopStadiumSound                                               000000B7 GR
     _TeamVictory                                                    ******** GX
-  7 _TickBallFlying                                                 000016DF GR
-  7 _TickCheckBallBoundaries                                        00000A0B GR
-  7 _TickThrowIn                                                    00001FF0 GR
-  1 _TickThrowIn_s_ForceThrowTimer_65537_1817                       0000000E R
-  1 _TickThrowIn_s_JoyMoved_65537_1817                              0000000D R
-  1 _TickThrowIn_s_ThrowTargetId_65537_1817                         0000000C R
-  7 _TimeUp                                                         00000BB8 GR
+  7 _TickBallFlying                                                 000016DA GR
+  7 _TickCheckBallBoundaries                                        00000A06 GR
+  7 _TickThrowIn                                                    00001FEB GR
+  1 _TickThrowIn_s_ForceThrowTimer_65537_1814                       0000000E R
+  1 _TickThrowIn_s_JoyMoved_65537_1814                              0000000D R
+  1 _TickThrowIn_s_ThrowTargetId_65537_1814                         0000000C R
+  7 _TimeUp                                                         00000BB3 GR
     _UpdatePlayerPatternByDirection                                 ******** GX
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next / eZ80 / R800)                          Page 2
 Hexadecimal [32-Bits]
 
 Symbol Table
 
-  7 _UpdateSpritesPositions                                         00000141 GR
+  7 _UpdateSpritesPositions                                         0000013C GR
     _UpdateV9990                                                    ******** GX
     _V9_FillVRAM16_CurrentAddr                                      ******** GX
     _V9_FillVRAM_CurrentAddr                                        ******** GX
     _V9_GetRegister                                                 ******** GX
     _V9_Poke16_CurrentAddr                                          ******** GX
     _V9_PrintLayerAStringAtPos                                      ******** GX
-  7 _V9_PutLayerATileAtPos                                          00000482 GR
-  7 _V9_PutLayerBTileAtPos                                          000004BD GR
+  7 _V9_PutLayerATileAtPos                                          0000047D GR
+  7 _V9_PutLayerBTileAtPos                                          000004B8 GR
     _V9_SetColorMode                                                ******** GX
     _V9_SetPaletteEntry                                             ******** GX
     _V9_SetRegister                                                 ******** GX
@@ -79,18 +79,18 @@ Symbol Table
     _V9_SetScrollingBY                                              ******** GX
     _V9_SetWriteAddress                                             ******** GX
     _V9_WriteVRAM_CurrentAddr                                       ******** GX
-  7 ___str_0                                                        0000038A R
-  7 ___str_1                                                        0000038E R
-  7 ___str_10                                                       000012ED R
-  7 ___str_11                                                       00001304 R
-  7 ___str_2                                                        00000392 R
-  7 ___str_3                                                        00000396 R
-  7 ___str_4                                                        0000039A R
-  7 ___str_5                                                        0000039E R
-  7 ___str_6                                                        000003A2 R
-  7 ___str_7                                                        0000047C R
-  7 ___str_8                                                        0000047E R
-  7 ___str_9                                                        00000480 R
+  7 ___str_0                                                        00000385 R
+  7 ___str_1                                                        00000389 R
+  7 ___str_10                                                       000012E8 R
+  7 ___str_11                                                       000012FF R
+  7 ___str_2                                                        0000038D R
+  7 ___str_3                                                        00000391 R
+  7 ___str_4                                                        00000395 R
+  7 ___str_5                                                        00000399 R
+  7 ___str_6                                                        0000039D R
+  7 ___str_7                                                        00000477 R
+  7 ___str_8                                                        00000479 R
+  7 ___str_9                                                        0000047B R
     __divsint                                                       ******** GX
     __divslong                                                      ******** GX
     __divuint                                                       ******** GX
@@ -161,8 +161,8 @@ Symbol Table
     _g_ESTBLS                                                   =   0000FB1C G
     _g_EXBRSA                                                   =   0000FAF8 G
     _g_EXPTBL                                                   =   0000FCC1 G
-  7 _g_EffectBall                                                   0000005E GR
-  7 _g_EffectStadium                                                00000068 GR
+  7 _g_EffectBall                                                   00000059 GR
+  7 _g_EffectStadium                                                00000063 GR
     _g_FLAGS                                                    =   0000FB1B G
     _g_FLBMEM                                                   =   0000FCAE G
     _g_FNKFLG                                                   =   0000FBCE G
@@ -368,8 +368,8 @@ Symbol Table
     _g_Team2ActivePlayer                                            ******** GX
     _g_Team2PaletteId                                               ******** GX
     _g_Team2Score                                                   ******** GX
-  7 _g_TeamGrayPos                                                  000000A4 R
-  7 _g_TeamPos                                                      0000008C R
+  7 _g_TeamGrayPos                                                  0000009F R
+  7 _g_TeamPos                                                      00000087 R
     _g_Teams_Gray_palette                                           ******** GX
     _g_Teams_Gray_part1                                             ******** GX
     _g_Teams_Gray_part2                                             ******** GX
@@ -423,7 +423,7 @@ Area Table
    4 _HOME                                      size        0   flags    0
    5 _GSINIT                                    size       1B   flags    0
    6 _GSFINAL                                   size        0   flags    0
-   7 _SEG2                                      size     2CA7   flags    0
+   7 _SEG2                                      size     2CA2   flags    0
    8 _INITIALIZER                               size        1   flags    0
    9 _CABS                                      size        0   flags    8
 

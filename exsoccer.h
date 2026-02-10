@@ -413,3 +413,4 @@ void PlayPcm(u8 id);
 void EffectPlay(u8 id);
 void StopStadiumSound();
 void StadiumSoundEffectLoopFinished();
+

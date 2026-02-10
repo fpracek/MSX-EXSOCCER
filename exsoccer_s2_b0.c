@@ -98,7 +98,7 @@ void EffectPlay(u8 id)
 			ayFX_InitBank(g_EffectBall);
 			break;
 		case SOUND_STADIUM:
-			PT3_Mute(PSG_CHANNEL_A, true);
+
 			PT3_Mute(PSG_CHANNEL_B, true);
 			PT3_Mute(PSG_CHANNEL_C, true);
 			g_SoundEffectLoopIsActive=true;

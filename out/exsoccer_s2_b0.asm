@@ -363,15 +363,15 @@ _g_GRPACY	=	0xfcb9
 _g_SLTSL	=	0xffff
 _g_FioBreText::
 	.ds 6
-_PutBallSprite_s_StopCooldown_65538_1247:
+_PutBallSprite_s_StopCooldown_65538_1244:
 	.ds 1
-_GetNumberString_str_65536_1318:
+_GetNumberString_str_65536_1315:
 	.ds 5
-_TickThrowIn_s_ThrowTargetId_65537_1817:
+_TickThrowIn_s_ThrowTargetId_65537_1814:
 	.ds 1
-_TickThrowIn_s_JoyMoved_65537_1817:
+_TickThrowIn_s_JoyMoved_65537_1814:
 	.ds 1
-_TickThrowIn_s_ForceThrowTimer_65537_1817:
+_TickThrowIn_s_ForceThrowTimer_65537_1814:
 	.ds 2
 ;--------------------------------------------------------
 ; ram data
@@ -391,17 +391,17 @@ _g_ShowButtonsInfo::
 	.area _GSFINAL
 	.area _GSINIT
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:158: static u8 s_StopCooldown = 0;
-	ld	iy, #_PutBallSprite_s_StopCooldown_65538_1247
+	ld	iy, #_PutBallSprite_s_StopCooldown_65538_1244
 	ld	0 (iy), #0x00
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1142: static u8 s_ThrowTargetId = NO_VALUE;
-	ld	hl, #_TickThrowIn_s_ThrowTargetId_65537_1817
+	ld	hl, #_TickThrowIn_s_ThrowTargetId_65537_1814
 	ld	(hl), #0xff
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1143: static bool s_JoyMoved = false;
-	ld	iy, #_TickThrowIn_s_JoyMoved_65537_1817
+	ld	iy, #_TickThrowIn_s_JoyMoved_65537_1814
 	ld	0 (iy), #0x00
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1144: static u16 s_ForceThrowTimer = 0;
 	ld	hl, #0x0000
-	ld	(_TickThrowIn_s_ForceThrowTimer_65537_1817), hl
+	ld	(_TickThrowIn_s_ForceThrowTimer_65537_1814), hl
 ;--------------------------------------------------------
 ; Home
 ;--------------------------------------------------------
@@ -445,8 +445,6 @@ _EffectPlay::
 00102$:
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/pt3/pt3_player.h:301: PT3_State |= 1 << (chan + 1);
 	ld	a, (_PT3_State+0)
-	or	a, #0x02
-	ld	(_PT3_State+0), a
 	or	a, #0x04
 	ld	(_PT3_State+0), a
 	or	a, #0x08
@@ -958,18 +956,18 @@ _PutBallSprite::
 	jr	Z, 00110$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:166: s_StopCooldown = 15; // Keep animation active for ~1/4 sec after last move
 	ld	a, #0x0f
-	ld	(#_PutBallSprite_s_StopCooldown_65538_1247), a
+	ld	(#_PutBallSprite_s_StopCooldown_65538_1244), a
 	jp	00111$
 00110$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:168: if (s_StopCooldown > 0) s_StopCooldown--;
-	ld	a, (_PutBallSprite_s_StopCooldown_65538_1247+0)
+	ld	a, (_PutBallSprite_s_StopCooldown_65538_1244+0)
 	or	a, a
 	jr	Z, 00111$
-	ld	iy, #_PutBallSprite_s_StopCooldown_65538_1247
+	ld	iy, #_PutBallSprite_s_StopCooldown_65538_1244
 	dec	0 (iy)
 00111$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:171: bool isAnimating = (s_StopCooldown > 0);
-	ld	a, (_PutBallSprite_s_StopCooldown_65538_1247+0)
+	ld	a, (_PutBallSprite_s_StopCooldown_65538_1244+0)
 	or	a, a
 	ld	a, #0x01
 	jr	NZ, 00120$
@@ -1002,7 +1000,7 @@ _PutBallSprite::
 00125$:
 	add	hl, de
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:183: attr.Pattern = k_BallPatterns[idx & 7];
-	ld	de, #_PutBallSprite_k_BallPatterns_65539_1250+0
+	ld	de, #_PutBallSprite_k_BallPatterns_65539_1247+0
 	ld	a, l
 ;	spillPairReg hl
 ;	spillPairReg hl
@@ -1064,7 +1062,7 @@ _PutBallSprite::
 	ld	sp, ix
 	pop	ix
 	ret
-_PutBallSprite_k_BallPatterns_65539_1250:
+_PutBallSprite_k_BallPatterns_65539_1247:
 	.db #0x39	; 57	'9'
 	.db #0x3a	; 58
 	.db #0x3b	; 59
@@ -2138,7 +2136,7 @@ _GetNumberString::
 	sbc	a, #0x00
 	jr	NC, 00102$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:375: str[0] = '0' + value;
-	ld	bc, #_GetNumberString_str_65536_1318+0
+	ld	bc, #_GetNumberString_str_65536_1315+0
 	ld	a, e
 	add	a, #0x30
 	ld	(bc), a
@@ -2161,7 +2159,7 @@ _GetNumberString::
 	pop	bc
 	ld	a, e
 	add	a, #0x30
-	ld	(#_GetNumberString_str_65536_1318),a
+	ld	(#_GetNumberString_str_65536_1315),a
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:379: str[1] = '0' + (value % 10);
 	ld	de, #0x000a
 	ld	l, c
@@ -2173,13 +2171,13 @@ _GetNumberString::
 	call	__moduint
 	ld	a, e
 	add	a, #0x30
-	ld	(#(_GetNumberString_str_65536_1318 + 1)),a
+	ld	(#(_GetNumberString_str_65536_1315 + 1)),a
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:380: str[2] = '\0';
-	ld	hl, #(_GetNumberString_str_65536_1318 + 2)
+	ld	hl, #(_GetNumberString_str_65536_1315 + 2)
 	ld	(hl), #0x00
 00103$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:383: return str;
-	ld	de, #_GetNumberString_str_65536_1318
+	ld	de, #_GetNumberString_str_65536_1315
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:384: }
 	ret
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:386: bool IsTeamJoystickTriggerPressed(u8 teamId){
@@ -5921,14 +5919,14 @@ _TickThrowIn::
 	or	a, a
 	jp	NZ, 00171$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1147: s_ThrowTargetId = NO_VALUE;
-	ld	hl, #_TickThrowIn_s_ThrowTargetId_65537_1817
+	ld	hl, #_TickThrowIn_s_ThrowTargetId_65537_1814
 	ld	(hl), #0xff
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1148: s_JoyMoved = false;
-	ld	hl, #_TickThrowIn_s_JoyMoved_65537_1817
+	ld	hl, #_TickThrowIn_s_JoyMoved_65537_1814
 	ld	(hl), #0x00
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1149: s_ForceThrowTimer = 0;
 	ld	hl, #0x0000
-	ld	(_TickThrowIn_s_ForceThrowTimer_65537_1817), hl
+	ld	(_TickThrowIn_s_ForceThrowTimer_65537_1814), hl
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1152: if (g_Ball.X < FIELD_POS_X_CENTER) {
 	ld	hl, (#(_g_Ball + 2) + 0)
 	ld	de, #0x0078
@@ -7480,17 +7478,17 @@ _TickThrowIn::
 	ld	a, -14 (ix)
 	ld	-1 (ix), a
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1354: if (s_ThrowTargetId == NO_VALUE && c1 != NO_VALUE) s_ThrowTargetId = c1;
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	inc	a
 	jr	NZ, 00209$
 	ld	a, -15 (ix)
 	inc	a
 	jr	Z, 00209$
 	ld	a, -15 (ix)
-	ld	(_TickThrowIn_s_ThrowTargetId_65537_1817+0), a
+	ld	(_TickThrowIn_s_ThrowTargetId_65537_1814+0), a
 00209$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1356: if (s_ThrowTargetId == NO_VALUE) {
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	inc	a
 	jr	NZ, 00212$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1357: s_ThrowTargetId = GetClosestPlayerToBall(g_RestartKickTeamId, g_ThrowInPlayerId);
@@ -7500,7 +7498,7 @@ _TickThrowIn::
 ;	spillPairReg hl
 	ld	a, (_g_RestartKickTeamId+0)
 	call	_GetClosestPlayerToBall
-	ld	(_TickThrowIn_s_ThrowTargetId_65537_1817+0), a
+	ld	(_TickThrowIn_s_ThrowTargetId_65537_1814+0), a
 00212$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1361: bool isHuman = (g_RestartKickTeamId == TEAM_1);
 	ld	a, (_g_RestartKickTeamId+0)
@@ -7550,7 +7548,7 @@ _TickThrowIn::
 	ld	a, d
 	or	a, a
 	jr	Z, 00227$
-	ld	a, (_TickThrowIn_s_JoyMoved_65537_1817+0)
+	ld	a, (_TickThrowIn_s_JoyMoved_65537_1814+0)
 	or	a, a
 	jr	NZ, 00227$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1373: if (c1 != NO_VALUE && c2 != NO_VALUE) {
@@ -7561,20 +7559,20 @@ _TickThrowIn::
 	inc	a
 	jr	Z, 00222$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1374: if (s_ThrowTargetId == c1) s_ThrowTargetId = c2;
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	sub	a, -2 (ix)
 	jr	NZ, 00219$
 	ld	a, -1 (ix)
-	ld	(_TickThrowIn_s_ThrowTargetId_65537_1817+0), a
+	ld	(_TickThrowIn_s_ThrowTargetId_65537_1814+0), a
 	jp	00222$
 00219$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1375: else s_ThrowTargetId = c1;
 	ld	a, -2 (ix)
-	ld	(_TickThrowIn_s_ThrowTargetId_65537_1817+0), a
+	ld	(_TickThrowIn_s_ThrowTargetId_65537_1814+0), a
 00222$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1377: s_JoyMoved = true;
 	ld	a, #0x01
-	ld	(#_TickThrowIn_s_JoyMoved_65537_1817), a
+	ld	(#_TickThrowIn_s_JoyMoved_65537_1814), a
 	jp	00228$
 00227$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1378: } else if (joy == DIRECTION_NONE) {
@@ -7582,27 +7580,27 @@ _TickThrowIn::
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1379: s_JoyMoved = false;
 	or	a,a
 	jr	NZ, 00228$
-	ld	(#_TickThrowIn_s_JoyMoved_65537_1817), a
+	ld	(#_TickThrowIn_s_JoyMoved_65537_1814), a
 00228$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1383: g_PassTargetPlayer = s_ThrowTargetId; 
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	ld	(_g_PassTargetPlayer+0), a
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1386: s_ForceThrowTimer++;
-	ld	hl, (_TickThrowIn_s_ForceThrowTimer_65537_1817)
+	ld	hl, (_TickThrowIn_s_ForceThrowTimer_65537_1814)
 	inc	hl
-	ld	(_TickThrowIn_s_ForceThrowTimer_65537_1817), hl
+	ld	(_TickThrowIn_s_ForceThrowTimer_65537_1814), hl
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1389: if ((trig || s_ForceThrowTimer > 240) && s_ThrowTargetId != NO_VALUE) {
 	ld	a, -3 (ix)
 	or	a, a
 	jr	NZ, 00233$
-	ld	hl, (_TickThrowIn_s_ForceThrowTimer_65537_1817)
+	ld	hl, (_TickThrowIn_s_ForceThrowTimer_65537_1814)
 	ld	a, #0xf0
 	cp	a, l
 	ld	a, #0x00
 	sbc	a, h
 	jp	NC, 00269$
 00233$:
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	inc	a
 	jp	Z,00269$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1390: g_Ball.PossessionPlayerId = g_ThrowInPlayerId;
@@ -7645,7 +7643,7 @@ _TickThrowIn::
 	ld	a, -1 (ix)
 	ld	(hl), a
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1393: PerformPass(s_ThrowTargetId);
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	call	_PerformPass
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1394: g_MatchStatus = MATCH_IN_ACTION;
 	ld	hl, #_g_MatchStatus
@@ -7673,17 +7671,17 @@ _TickThrowIn::
 	sub	a, 0 (iy)
 	jp	NC, 00243$
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1402: if (s_ThrowTargetId == NO_VALUE && c1 != NO_VALUE) s_ThrowTargetId = c1; 
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	inc	a
 	jr	NZ, 00235$
 	ld	a, -2 (ix)
 	inc	a
 	jr	Z, 00235$
 	ld	a, -2 (ix)
-	ld	(_TickThrowIn_s_ThrowTargetId_65537_1817+0), a
+	ld	(_TickThrowIn_s_ThrowTargetId_65537_1814+0), a
 00235$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1403: if (s_ThrowTargetId == NO_VALUE) s_ThrowTargetId = GetClosestPlayerToBall(g_RestartKickTeamId, g_ThrowInPlayerId);
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	inc	a
 	jr	NZ, 00238$
 	ld	a, (_g_ThrowInPlayerId+0)
@@ -7692,7 +7690,7 @@ _TickThrowIn::
 ;	spillPairReg hl
 	ld	a, (_g_RestartKickTeamId+0)
 	call	_GetClosestPlayerToBall
-	ld	(_TickThrowIn_s_ThrowTargetId_65537_1817+0), a
+	ld	(_TickThrowIn_s_ThrowTargetId_65537_1814+0), a
 00238$:
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1406: if (g_Timer > 120) {
 	ld	a, #0x78
@@ -7724,7 +7722,7 @@ _TickThrowIn::
 	ld	b, (hl)
 	ld	(_g_Ball), bc
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1410: PerformPass(s_ThrowTargetId);
-	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1817+0)
+	ld	a, (_TickThrowIn_s_ThrowTargetId_65537_1814+0)
 	call	_PerformPass
 ;E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer/exsoccer_s2_b0.c:1411: g_MatchStatus = MATCH_IN_ACTION; 
 	ld	hl, #_g_MatchStatus
