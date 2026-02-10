@@ -8,6 +8,8 @@
 #include "exsoccer.h"
 #include "debug.h"
 #include "input.h"
+#include "pt3/pt3_player.h"
+#include "ayfx/ayfx_player.h"
 
 // *** CONSTANTS ***
 extern u8 				g_FieldScrollingActionInProgress; 	// Bank 1 = Segment 0
@@ -46,6 +48,16 @@ extern const unsigned char  g_Buttons_part2[16384]; // Bank 1 = Segment 14
 extern const unsigned char g_Buttons_palette[];
 extern char g_History1[20];
 extern char g_History2[20];
+extern bool g_SoundEffectLoopIsActive;
+const unsigned char g_EffectBall[] = {
+	0x6C, 0x00, 0x04, 0x18, 0x09, 0x06, 0x03, 0x01, 0xD0, 0x20, 
+};
+const unsigned char g_EffectStadium[] = {
+	0x5A, 0x0C, 0x5B, 0x00, 0x1C, 0x1D, 0x1F, 0x1E, 0x1C, 0x1B, 0x19, 0x1A, 0x1C, 0x1E, 0x1F, 0x1D, 
+	0x1B, 0x19, 0x1A, 0x1C, 0x1D, 0x1F, 0x1F, 0x1E, 0x1C, 0x1A, 0x19, 0x18, 0x1D, 0x1F, 0x1E, 0x1C, 
+	0x1A, 0x18, 0xD0, 0x20, 
+};
+
 static const struct { u16 x; u16 y; } g_TeamPos[6] = {
     { 33, 109 }, { 114, 109 }, { 197, 109 },   // Row 1
     { 33, 192 }, { 114, 192 }, { 197, 192 } // Row 2
@@ -75,7 +87,33 @@ char   g_FioBreText[6];
 
 // *** SPRITE FUNCTIONS ***
 
-
+void EffectPlay(u8 id)
+{
+	ayFX_Mute();
+	 
+    ayFX_SetMode(AYFX_MODE_FIXED); 
+	switch(id){
+		case SOUND_BALL:
+			ayFX_SetChannel(PSG_CHANNEL_C);
+			ayFX_InitBank(g_EffectBall);
+			break;
+		case SOUND_STADIUM:
+			PT3_Mute(PSG_CHANNEL_A, true);
+			PT3_Mute(PSG_CHANNEL_B, true);
+			PT3_Mute(PSG_CHANNEL_C, true);
+			g_SoundEffectLoopIsActive=true;
+			ayFX_SetFinishCB(StadiumSoundEffectLoopFinished);
+			ayFX_SetChannel(PSG_CHANNEL_A);
+			ayFX_InitBank(g_EffectStadium);
+			break;
+	}
+	ayFX_PlayBank(0, 0); 
+}
+void StadiumSoundEffectLoopFinished(){
+	if(g_SoundEffectLoopIsActive){
+		EffectPlay(SOUND_STADIUM);
+	}
+}
 u8 GetPlayerIdByRole(u8 teamId, u8 role){
 	u8 playerId=NO_VALUE;
 	for(u8 i=0;i<14;i++){
@@ -143,13 +181,15 @@ void PutBallSprite(){
 void PrintTeamName(u8 x, u8 teamPaletteId) {
 
     const char* pName = 0;
-    if (g_FioBre) {
-        if (teamPaletteId == TEAM_AUS) pName = "FIO";
-        else if (teamPaletteId == TEAM_ITA) pName = "BRE";
-    }
+    //if (g_FioBre) {
+	//	DEBUG_LOG("iii");
+    //    if (teamPaletteId == TEAM_AUS) pName = "FIO";
+    //    else if (teamPaletteId == TEAM_ITA) pName = "BRE";
+    //}
 
     if (!pName) {
         switch (teamPaletteId) {
+
             case TEAM_AUS: pName = "AUS"; break;
             case TEAM_BRA: pName = "BRA"; break;
             case TEAM_ITA: pName = "ITA"; break;
@@ -782,7 +822,7 @@ void ShowMenu(){
     InitPalette();
 
 	if(g_FioBreText[0]=='R' && g_FioBreText[1]=='E' && g_FioBreText[2]=='N' && g_FioBreText[3]=='Z' && g_FioBreText[4]=='O'){
-		g_FioBre=true;
+			g_FioBre=true;
 		g_Team2PaletteId=TEAM_AUS;
 		g_Team1PaletteId=TEAM_ITA;
 	}

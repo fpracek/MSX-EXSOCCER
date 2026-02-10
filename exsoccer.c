@@ -10,11 +10,11 @@
 #include "exsoccer.h"
 #include "debug.h"
 #include "input.h"
-//#include "pt3/pt3_player.h"
-//#include "pt3/pt3_notetable2.h"
+#include "pt3/pt3_player.h"
+#include "pt3/pt3_notetable2.h"
 #include "memory.h"
 #include "pcm/pcmenc.h"
-//#include "ayfx/ayfx_player.h"
+#include "ayfx/ayfx_player.h"
 
 // CONSTANTS
 extern const unsigned char 	g_Font_MGL_Sample6[]; // Bank 1 = Segment 2
@@ -30,22 +30,27 @@ extern const unsigned char  g_Presentation_palette[];
 extern const unsigned char  g_Teams_part1[16384];
 extern const unsigned char  g_Teams_part2[4096];
 extern const unsigned char  g_MusicMenu[3610];
+extern const unsigned char  g_MusicMatch[1497];
 extern const unsigned char 	g_SoundRefereer[];
 extern const unsigned char 	g_SoundKickoff[];
 extern const unsigned char 	g_SoundCornerKick[];
-extern const unsigned char g_SoundInGoal[];
-extern const unsigned char g_SoundThrowIn[];
-extern const unsigned char g_SoundInGoal1[];
-extern const unsigned char g_SoundInGoal2[];
-extern const unsigned char g_SoundGoalKick[];
-extern const unsigned char g_SoundPerformPass[];
-extern const unsigned char g_SoundPublic[];
-extern const unsigned char g_SoundShot[];
-extern const unsigned char g_SoundGKHands[];
-extern const unsigned char g_SoundTackle[];
+extern const unsigned char 	g_SoundInGoal[];
+extern const unsigned char 	g_SoundThrowIn[];
+extern const unsigned char 	g_SoundInGoal1[];
+extern const unsigned char 	g_SoundInGoal2[];
+extern const unsigned char 	g_SoundGoalKick[];
+extern const unsigned char 	g_SoundPerformPass[];
+extern const unsigned char 	g_SoundPublic[];
+extern const unsigned char 	g_SoundShot[];
+extern const unsigned char 	g_SoundGKHands[];
+extern const unsigned char 	g_SoundTackle[];
+extern const unsigned char 	g_SoundBall[];
+
 
 // VARIABLES
+bool                g_PlayMatchMusic;
 bool				g_PcmStartPlaying=FALSE;
+u8                  g_SoundRequest=NO_VALUE;
 u8 					g_PmcSoundPlaying=NO_VALUE;
 u8 					g_PonPonGirlsPos[6]={30,50,70,175,195,215};
 u8 					g_GirlPatterns[] = {
@@ -93,6 +98,7 @@ u8                  g_ThrowInPlayerId = NO_VALUE;
 bool 		        g_VSynch = FALSE;
 i8                  g_GkRecoilY = 0;
 bool                g_GkIsGroundKick = false;           // Bank 1 = Segment 0
+bool                g_SoundEffectLoopIsActive;
 u8 g_ponPonPatternIndex=0;
 u8 g_PonPonGrilsPoseCounter=0;
 bool g_peopleState=false;
@@ -108,38 +114,43 @@ const TeamStats g_TeamStats[] = {
 
 
 void PlayPcm(u8 id){
+	
 	switch(id){
 		case SOUND_REFEREE:
 			SET_BANK_SEGMENT(2, 31);
 			PCM_Play_11K((u16)g_SoundRefereer);
 			break;
 		case SOUND_CORNERKICK:
+			PT3_Pause();
 			SET_BANK_SEGMENT(2, 32);
 			PCM_Play_11K((u16)g_SoundCornerKick);
+			PT3_Resume();
 			break;
 		case SOUND_KICKOFF:
 			SET_BANK_SEGMENT(2, 30);
 			PCM_Play_11K((u16)g_SoundKickoff);
+			g_PlayMatchMusic=true;
 			break;
 		case SOUND_INGOAL:
 			SET_BANK_SEGMENT(2, 33);
 			PCM_Play_11K((u16)g_SoundInGoal);
-			break;
-		case SOUND_THROWIN:
-			SET_BANK_SEGMENT(2, 34);
-			PCM_Play_11K((u16)g_SoundThrowIn);
-			break;
-		case SOUND_INGOAL1:
 			SET_BANK_SEGMENT(2, 35);
 			PCM_Play_11K((u16)g_SoundInGoal1);
-			break;		
-		case SOUND_INGOAL2:
 			SET_BANK_SEGMENT(2, 36);
 			PCM_Play_11K((u16)g_SoundInGoal2);
-			break;	
+			PCM_Play_11K((u16)g_SoundInGoal2);
+			break;
+		case SOUND_THROWIN:
+			PT3_Pause();
+			SET_BANK_SEGMENT(2, 34);
+			PCM_Play_11K((u16)g_SoundThrowIn);
+			PT3_Resume();
+			break;
 		case SOUND_GOALKICK:
+			PT3_Pause();
 			SET_BANK_SEGMENT(2, 37);
 			PCM_Play_11K((u16)g_SoundGoalKick);
+			PT3_Resume();
 			break;
 		case SOUND_PERFORM_PASS:
 			SET_BANK_SEGMENT(2, 38);
@@ -149,18 +160,6 @@ void PlayPcm(u8 id){
 			SET_BANK_SEGMENT(2, 38);
 			PCM_Play_11K((u16)g_SoundPublic);
 			break;	
-		case SOUND_SHOT:
-			SET_BANK_SEGMENT(2, 39);
-			PCM_Play_11K((u16)g_SoundShot);
-			break;
-		case SOUND_GKHANDS:
-			SET_BANK_SEGMENT(2, 39);
-			PCM_Play_11K((u16)g_SoundGKHands);
-			break;
-		case SOUND_TACKLE:
-			SET_BANK_SEGMENT(2, 31);
-			PCM_Play_11K((u16)g_SoundTackle);
-			break; 
 	}
 	SET_BANK_SEGMENT(2, 1);
 }
@@ -188,26 +187,31 @@ void WaitV9990Synch()
 	}
 }
 
-//void StopPT3Music()
-//{
-//    PT3_Mute(PT3_STATE_MUTE_A, TRUE);
-//    PT3_Pause();
-//    PT3_UpdatePSG();
-//}
-//void PlayPT3Music(u8 id){
-//
-//	PT3_Init();                
-//    PT3_SetNoteTable(PT3_NT2); 
-//    PT3_SetLoop(TRUE);
-//	switch(id){
-//		case PT3_MENU:
-//            SET_BANK_SEGMENT(2, 15);
-//			Mem_Copy(g_MusicMenu, g_RAM_MusicBuffer, sizeof(g_MusicMenu));
-//            SET_BANK_SEGMENT(2, 1);
-//			break;
-//	}
-//    PT3_InitSong(g_RAM_MusicBuffer);
-//}
+void StopPT3Music()
+{
+    PT3_Mute(PT3_STATE_MUTE_A, TRUE);
+    PT3_Pause();
+    PT3_UpdatePSG();
+}
+void PlayPT3Music(u8 id){
+
+	PT3_Init();                
+    PT3_SetNoteTable(PT3_NT2); 
+    PT3_SetLoop(TRUE);
+	switch(id){
+		case PT3_MENU:
+            SET_BANK_SEGMENT(2, 15);
+			Mem_Copy(g_MusicMenu, g_RAM_MusicBuffer, sizeof(g_MusicMenu));
+            SET_BANK_SEGMENT(2, 1);
+			break;
+		case PT3_MATCH:
+            SET_BANK_SEGMENT(2, 15);
+			Mem_Copy(g_MusicMatch, g_RAM_MusicBuffer, sizeof(g_MusicMatch));
+            SET_BANK_SEGMENT(2, 1);
+			break;
+	}
+    PT3_InitSong(g_RAM_MusicBuffer);
+}
 
 void LoadP1LayerA(){
 	V9_FillVRAM(V9_P1_PGT_A, 0x00, 128*212); // Clean layer A pattern
@@ -270,8 +274,15 @@ void V9_InterruptVBlank(){
 	//	}
 	//	
 	//}
-    //PT3_Decode();	 
-    //PT3_UpdatePSG(); 
+	if(g_PlayMatchMusic){
+		if(!g_SoundEffectLoopIsActive){
+			PT3_Decode();
+		}
+		
+		ayFX_Update(); 	 
+    	PT3_UpdatePSG(); 
+	}
+
 
 
     if(g_MatchStatus==MATCH_PRESENTATION){
@@ -618,6 +629,8 @@ void LoadSprites(){
 }
 void TickGoalCelebration(){
     if(g_MatchStatus!=MATCH_AFTER_IN_GOAL) return;
+
+    EffectPlay(SOUND_PUBLIC);
     
     g_Timer++;
     // Blink effect
@@ -723,8 +736,9 @@ void TickGoalCelebration(){
 }
 void main()
 {
+	
 	DEBUG_INIT();
-	PlayPcm(SOUND_TACKLE);
+	g_PlayMatchMusic=false;
 	InitVariables();
 	V9_SetPort(V9_P15, 0);
 
@@ -759,7 +773,7 @@ void main()
 		for(;;);
 	}
 	
-    //PlayPT3Music(PT3_MENU);
+    PlayPT3Music(PT3_MATCH);
 
 	InitializeV9990();
 	
@@ -802,6 +816,11 @@ void MainGameLoop(){
         TickPonPonGirlsAnimation();
 		TickPlayerToOwnTarget();
 		SET_BANK_SEGMENT(2,1);
+        
+        if (g_SoundRequest != NO_VALUE) {
+            PlayPcm(g_SoundRequest);
+            g_SoundRequest = NO_VALUE;
+        }
 
 		TickGoalCelebration();
 		
@@ -1212,7 +1231,11 @@ void PerformPass(u8 toPlayerId) {
 
     g_Ball.PassStartX = g_Ball.X;
     g_Ball.PassStartY = g_Ball.Y;
-    
+        
+	// Prevent immediate re-interaction (Steal) and reset dribble state
+    g_ActionCooldown = 20;
+    g_Ball.KickMoveState = 0;
+
     dx = (i16)g_Players[toPlayerId].X - (i16)g_Ball.X;
     dy = (i16)g_Players[toPlayerId].Y - (i16)g_Ball.Y;
     g_Ball.PassTotalDist = (u16)((dx<0?-dx:dx) + (dy<0?-dy:dy)); 

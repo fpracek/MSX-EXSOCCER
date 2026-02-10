@@ -13,6 +13,7 @@ extern u8 g_CornerKickTargetId;
 extern u8 g_ThrowInPlayerId;
 extern u8 g_ActionCooldown;
 extern u8 g_ShootCooldown;
+extern u8 g_SoundRequest;
 
 // STRUCTURES
 typedef struct PlayerInfo
@@ -77,6 +78,8 @@ typedef struct TeamStats
 // =======================
 
 #define PT3_MENU                            10
+#define PT3_MATCH                           11
+
 
 #define SOUND_KICKOFF						1
 #define SOUND_REFEREE						2
@@ -91,6 +94,8 @@ typedef struct TeamStats
 #define SOUND_SHOT							11
 #define SOUND_GKHANDS						12
 #define SOUND_TACKLE						13
+#define SOUND_BALL							14
+#define SOUND_STADIUM                       15
 
 #define SPRITE_BALL	11
 
@@ -102,7 +107,7 @@ typedef struct TeamStats
 #define MENU_POS_6							5
 
 #define FIELD_BOUND_X_LEFT                  10
-#define FIELD_BOUND_X_RIGHT                 246
+#define FIELD_BOUND_X_RIGHT                 236
 #define FIELD_BOUND_Y_TOP                   50
 #define FIELD_BOUND_Y_BOTTOM                430
 
@@ -405,3 +410,5 @@ void UpdatePT3VRAM();
 void PrintTeamName(u8 x, u8 teamPaletteId);
 i32 Math_Abs32(i32 v);
 void PlayPcm(u8 id);
+void EffectPlay(u8 id);
+void StadiumSoundEffectLoopFinished();

@@ -867,3 +867,5 @@ const unsigned char g_SoundKickoff[7220] = {
 	0x21, 0x01, 0xA0, 0x90, 0x2D, 0x01, 0x01, 0x01, 0x0D, 
 };
 
+//E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\tools\audio\pcmenc\pcmenc E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer\media\wav\ball.wav
+//msxbin E:\Dropbox\FAUSTO\SVILUPPI\MSX\CODE\C\MSXgl\projects\exsoccer\media\wav\ball.bin -o ball.h

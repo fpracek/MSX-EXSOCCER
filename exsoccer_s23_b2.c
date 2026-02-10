@@ -9,7 +9,7 @@
 #include "debug.h"
 #include "input.h"
 //#include "ayfx/ayfx_player.h"
-
+extern bool				g_PlayMatchMusic;
 extern u16 				g_FrameCounter;
 extern PonPonGirlInfo   g_PonPonGirls[];					
 extern int  			g_FieldCurrentYPosition;			
@@ -176,6 +176,7 @@ void TickPlayerToOwnTarget(){
                         if (g_Ball.KickMoveState == NO_VALUE) g_Ball.KickMoveState = 0;
                         g_Ball.KickMoveState++;
                         if (g_Ball.KickMoveState > 3) g_Ball.KickMoveState = 0;
+                        if (g_Ball.KickMoveState == 1) EffectPlay(SOUND_BALL);
                     } else {
                         g_Ball.KickMoveState = 0;
                     }
@@ -250,6 +251,7 @@ void TickPlayerToOwnTarget(){
 		if(g_MatchStatus==MATCH_BEFORE_KICK_OFF && allPlayersInPosition && g_FieldScrollingActionInProgress==NO_VALUE){
 			g_FieldScrollSpeed=FIELD_SCROLL_GAME_SPEED;
 			g_MatchStatus=MATCH_KICK_OFF;
+			
 			g_Timer=0;
 			g_GoalScorerId = NO_VALUE; // Reset scorer
 		}

@@ -47,6 +47,7 @@ extern u8			g_PmcSoundPlaying;
 void GoalKick(u8 teamId){
 	// Placeholder for Goal Kick Logic
 	V9_PrintLayerAStringAtPos(10,18,"GOAL KICK");
+    PlayPcm(SOUND_GOALKICK);
 	g_MatchStatus=MATCH_BEFORE_GOAL_KICK;
 	g_RestartKickTeamId = teamId;
 	g_Timer = 0;
@@ -58,7 +59,7 @@ void GoalKick(u8 teamId){
 void BallInGoal(u8 teamScored){
 	// Placeholder for Goal Logic
 	V9_PrintLayerAStringAtPos(12,18,"IN  GOAL");
-
+    
     g_GoalScorerId = g_Ball.PossessionPlayerId;
     
     // Better heuristic: if possession is NO_VALUE, use closest player of scoring team
@@ -73,10 +74,13 @@ void BallInGoal(u8 teamScored){
 	}
 	else{
 		// Scored DOWN (South)
-		g_Ball.Y = FIELD_BOUND_Y_BOTTOM + 12L;
+		g_Ball.Y = FIELD_BOUND_Y_BOTTOM + 24L;
 		g_Team2Score++;
 	}
 	ShowHeaderInfo();
+    PutBallSprite();
+    PlayPcm(SOUND_INGOAL);
+    
 
 	g_MatchStatus=MATCH_AFTER_IN_GOAL;
 	g_RestartKickTeamId = (teamScored == TEAM_1) ? TEAM_2 : TEAM_1;
@@ -396,6 +400,7 @@ void BallThrowIn(u8 teamId){
 	u8 i; // C89 declaration
 	// Placeholder for Throw-in Logic
 	V9_PrintLayerAStringAtPos(10,18,"THROW IN");
+    PlayPcm(SOUND_THROWIN);
 	g_MatchStatus=MATCH_BEFORE_THROW_IN;
 	g_RestartKickTeamId = teamId;
 	g_Timer = 0;
@@ -422,6 +427,7 @@ void BallThrowIn(u8 teamId){
 void CornerKick(u8 teamId){
 	// Placeholder for Corner Kick Logic
 	V9_PrintLayerAStringAtPos(10,12,"CORNER KICK");
+    PlayPcm(SOUND_CORNERKICK);
 	g_MatchStatus=MATCH_BEFORE_CORNER_KICK;
 	g_RestartKickTeamId = teamId;
 	g_CornerKickTargetId = NO_VALUE;
@@ -1401,6 +1407,7 @@ void TickTeamJoystick(u8 teamId, u8 direction){
 			if(g_Ball.KickMoveState>3){
 				g_Ball.KickMoveState=0;
 			}
+            if(g_Ball.KickMoveState==1) EffectPlay(SOUND_BALL);
 		}
 	}
 	else{

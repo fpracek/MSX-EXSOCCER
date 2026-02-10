@@ -426,6 +426,11 @@
 // - PCMENC_NONE, PCMENC_8K, PCMENC_11K, PCMENC_22K and PCMENC_44K
 #define PCMENC_FREQ					PCMENC_8K | PCMENC_11K | PCMENC_22K | PCMENC_44K
 
+// ayFX options
+// - AYFX_BUFFER_DEFAULT .......... Use PSG module PSG register buffer
+// - AYFX_BUFFER_PT3 .............. Use PT3 module PSG register buffer
+#define AYFX_BUFFER					AYFX_BUFFER_PT3
+
 // PCMPlay
 // - PCMPLAY_8K or PCMPLAY_11K
 #define PCMPLAY_FREQ				PCMPLAY_8K
