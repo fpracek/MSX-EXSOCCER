@@ -630,7 +630,7 @@ void LoadSprites(){
 void TickGoalCelebration(){
     if(g_MatchStatus!=MATCH_AFTER_IN_GOAL) return;
 
-    EffectPlay(SOUND_PUBLIC);
+    if(g_Timer==0) EffectPlay(SOUND_STADIUM);
     
     g_Timer++;
     // Blink effect

@@ -109,6 +109,15 @@ void EffectPlay(u8 id)
 	}
 	ayFX_PlayBank(0, 0); 
 }
+void StopStadiumSound(){
+	if(g_SoundEffectLoopIsActive){
+		g_SoundEffectLoopIsActive=false;
+		ayFX_Mute();
+		PT3_Mute(PSG_CHANNEL_A, false);
+		PT3_Mute(PSG_CHANNEL_B, false);
+		PT3_Mute(PSG_CHANNEL_C, false);
+	}
+}
 void StadiumSoundEffectLoopFinished(){
 	if(g_SoundEffectLoopIsActive){
 		EffectPlay(SOUND_STADIUM);

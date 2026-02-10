@@ -411,4 +411,5 @@ void PrintTeamName(u8 x, u8 teamPaletteId);
 i32 Math_Abs32(i32 v);
 void PlayPcm(u8 id);
 void EffectPlay(u8 id);
+void StopStadiumSound();
 void StadiumSoundEffectLoopFinished();

@@ -1918,6 +1918,7 @@ const u16* GetTeamPaletteById(u8 id){
 void TickShowKickOff(){
 	if(g_MatchStatus==MATCH_KICK_OFF){
 		if(g_Timer==1){
+			StopStadiumSound();
 			V9_PrintLayerAStringAtPos(12,18,"KICK OFF");
             g_PmcSoundPlaying=SOUND_KICKOFF;
             g_PcmStartPlaying=true;

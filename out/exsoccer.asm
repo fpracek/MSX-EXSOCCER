@@ -3316,10 +3316,14 @@ _TickGoalCelebration::
 ;./exsoccer.c:631: if(g_MatchStatus!=MATCH_AFTER_IN_GOAL) return;
 	ld	a, (_g_MatchStatus+0)
 	sub	a, #0x06
-	jp	NZ,00158$
-;./exsoccer.c:633: EffectPlay(SOUND_PUBLIC);
-	ld	a, #0x0a
+	jp	NZ,00160$
+;./exsoccer.c:633: if(g_Timer==0) EffectPlay(SOUND_STADIUM);
+	ld	a, (_g_Timer+0)
+	or	a, a
+	jr	NZ, 00104$
+	ld	a, #0x0f
 	call	_EffectPlay
+00104$:
 ;./exsoccer.c:635: g_Timer++;
 	ld	hl, #_g_Timer
 	inc	(hl)
@@ -3340,7 +3344,7 @@ _TickGoalCelebration::
 	ccf
 	rra
 	sbc	a, #0x80
-	jr	NC, 00104$
+	jr	NC, 00106$
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:480: inline void V9_SetBackgroundColor(u8 color) { V9_SetRegister(15, color); }
 	ld	l, #0x08
 ;	spillPairReg hl
@@ -3348,8 +3352,8 @@ _TickGoalCelebration::
 	ld	a, #0x0f
 	call	_V9_SetRegister
 ;./exsoccer.c:638: V9_SetBackgroundColor(8); // Cyan/Flash
-	jp	00105$
-00104$:
+	jp	00107$
+00106$:
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:480: inline void V9_SetBackgroundColor(u8 color) { V9_SetRegister(15, color); }
 	ld	l, #0x01
 ;	spillPairReg hl
@@ -3357,20 +3361,20 @@ _TickGoalCelebration::
 	ld	a, #0x0f
 	call	_V9_SetRegister
 ;./exsoccer.c:640: V9_SetBackgroundColor(1); // Default Blue
-00105$:
+00107$:
 ;./exsoccer.c:646: if (g_Timer < 120) {
 	ld	a, (_g_Timer+0)
 	sub	a, #0x78
-	jp	NC, 00136$
+	jp	NC, 00138$
 ;./exsoccer.c:647: u8 scoringTeamId = (g_RestartKickTeamId == TEAM_1) ? TEAM_2 : TEAM_1;
 	ld	a, (_g_RestartKickTeamId+0)
 	dec	a
-	jr	NZ, 00160$
+	jr	NZ, 00162$
 	ld	bc, #0x0002
-	jp	00161$
-00160$:
+	jp	00163$
+00162$:
 	ld	bc, #0x0001
-00161$:
+00163$:
 	ld	-11 (ix), c
 ;./exsoccer.c:650: u16 limitY_Top = FIELD_BOUND_Y_TOP;
 	ld	-10 (ix), #0x32
@@ -3390,26 +3394,26 @@ _TickGoalCelebration::
 	sub	a, #0x8c
 	ld	a, -1 (ix)
 	sbc	a, #0x00
-	jr	NC, 00107$
+	jr	NC, 00109$
 ;./exsoccer.c:654: limitY_Bottom = FIELD_BOUND_Y_TOP + 160; 
 	ld	-8 (ix), #0xd2
 	ld	-7 (ix), #0
-	jp	00200$
-00107$:
+	jp	00203$
+00109$:
 ;./exsoccer.c:656: limitY_Top = FIELD_BOUND_Y_BOTTOM - 160;
 	ld	-10 (ix), #0x0e
 	ld	-9 (ix), #0x01
 ;./exsoccer.c:664: for(u8 i=0; i<15; i++){
-00200$:
+00203$:
 	ld	-1 (ix), #0x00
-00154$:
+00156$:
 	ld	a, -1 (ix)
 	sub	a, #0x0f
-	jp	NC, 00136$
+	jp	NC, 00138$
 ;./exsoccer.c:665: if(i == REFEREE) continue;
 	ld	a, -1 (ix)
 	sub	a, #0x0e
-	jp	Z,00133$
+	jp	Z,00135$
 ;./exsoccer.c:666: u8 dir = g_Players[i].Direction;
 	ld	c, -1 (ix)
 	ld	b, #0x00
@@ -3448,7 +3452,7 @@ _TickGoalCelebration::
 ;./exsoccer.c:669: if (g_Players[i].TeamId == scoringTeamId) {
 	ld	a, -11 (ix)
 	sub	a, e
-	jp	NZ,00131$
+	jp	NZ,00133$
 ;./exsoccer.c:673: if ((g_Timer % 19) == 0) {
 	ld	a, (_g_Timer+0)
 	ld	l, a
@@ -3463,7 +3467,7 @@ _TickGoalCelebration::
 	pop	bc
 	ld	a, d
 	or	a, e
-	jr	NZ, 00112$
+	jr	NZ, 00114$
 ;./exsoccer.c:675: u8 rnd = (g_Timer * 3) + (i * 37); 
 	ld	a, (_g_Timer+0)
 	ld	e, a
@@ -3488,7 +3492,7 @@ _TickGoalCelebration::
 ;./exsoccer.c:677: g_Players[i].Direction = dir;
 	ld	-2 (ix), a
 	ld	(bc), a
-00112$:
+00114$:
 ;./exsoccer.c:680: i8 dy = k_CelebDY[dir];
 	ld	a, #<(_TickGoalCelebration_k_CelebDY_131073_1769)
 	add	a, -2 (ix)
@@ -3515,7 +3519,7 @@ _TickGoalCelebration::
 	and	a,#0x01
 	ld	-4 (ix), a
 	or	a, a
-	jr	Z, 00117$
+	jr	Z, 00119$
 	pop	hl
 	push	hl
 	ld	e, (hl)
@@ -3525,22 +3529,22 @@ _TickGoalCelebration::
 	sub	a, e
 	ld	a, -9 (ix)
 	sbc	a, d
-	jr	NC, 00117$
+	jr	NC, 00119$
 	dec	de
 	pop	hl
 	push	hl
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-	jp	00118$
-00117$:
+	jp	00120$
+00119$:
 ;./exsoccer.c:684: else if (dy > 0 && g_Players[i].Y < limitY_Bottom) g_Players[i].Y++;
 	xor	a, a
 	sub	a, c
-	jp	PO, 00387$
+	jp	PO, 00395$
 	xor	a, #0x80
-00387$:
-	jp	P, 00118$
+00395$:
+	jp	P, 00120$
 	pop	hl
 	push	hl
 	ld	e, (hl)
@@ -3550,17 +3554,17 @@ _TickGoalCelebration::
 	sub	a, -8 (ix)
 	ld	a, d
 	sbc	a, -7 (ix)
-	jr	NC, 00118$
+	jr	NC, 00120$
 	inc	de
 	pop	hl
 	push	hl
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-00118$:
+00120$:
 ;./exsoccer.c:686: if (dx < 0 && g_Players[i].X > FIELD_BOUND_X_LEFT) g_Players[i].X--;
 	bit	7, b
-	jr	Z, 00124$
+	jr	Z, 00126$
 	pop	hl
 	push	hl
 	inc	hl
@@ -3575,20 +3579,20 @@ _TickGoalCelebration::
 	cp	a, -3 (ix)
 	ld	a, #0x00
 	sbc	a, -2 (ix)
-	jr	NC, 00124$
+	jr	NC, 00126$
 	dec	de
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-	jp	00125$
-00124$:
+	jp	00127$
+00126$:
 ;./exsoccer.c:687: else if (dx > 0 && g_Players[i].X < FIELD_BOUND_X_RIGHT) g_Players[i].X++;
 	xor	a, a
 	sub	a, b
-	jp	PO, 00388$
+	jp	PO, 00396$
 	xor	a, #0x80
-00388$:
-	jp	P, 00125$
+00396$:
+	jp	P, 00127$
 	pop	hl
 	push	hl
 	inc	hl
@@ -3603,12 +3607,12 @@ _TickGoalCelebration::
 	sub	a, #0xec
 	ld	a, d
 	sbc	a, #0x00
-	jr	NC, 00125$
+	jr	NC, 00127$
 	inc	bc
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-00125$:
+00127$:
 ;./exsoccer.c:690: bool animFrame1 = ((g_Timer / 8) % 2) == 0;
 	ld	a, (_g_Timer+0)
 	ld	e, a
@@ -3616,12 +3620,12 @@ _TickGoalCelebration::
 	ld	c, e
 	ld	b, d
 	bit	7, d
-	jr	Z, 00162$
+	jr	Z, 00164$
 	ld	hl, #0x0007
 	add	hl, de
 	ld	c, l
 	ld	b, h
-00162$:
+00164$:
 	ld	-3 (ix), c
 	ld	-2 (ix), b
 	sra	-2 (ix)
@@ -3644,90 +3648,90 @@ _TickGoalCelebration::
 	or	a, a
 	or	a, -2 (ix)
 	ld	a, #0x01
-	jr	Z, 00390$
+	jr	Z, 00398$
 	xor	a, a
-00390$:
+00398$:
 	ld	-2 (ix), a
 ;./exsoccer.c:693: if (isBack) g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_BACK_1 : PLAYER_POSE_CELEBRATION_BACK_2;
 	ld	a, -4 (ix)
 	or	a, a
-	jr	Z, 00128$
-	ld	a, -2 (ix)
-	or	a, a
-	jr	Z, 00163$
-	ld	-3 (ix), #0x32
-	ld	-2 (ix), #0
-	jp	00164$
-00163$:
-	ld	-3 (ix), #0x33
-	ld	-2 (ix), #0
-00164$:
-	ld	a, -3 (ix)
-	ld	-2 (ix), a
-	ld	l, -6 (ix)
-	ld	h, -5 (ix)
-	ld	a, -2 (ix)
-	ld	(hl), a
-	jp	00133$
-00128$:
-;./exsoccer.c:694: else g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_FRONT_1 : PLAYER_POSE_CELEBRATION_FRONT_2;
+	jr	Z, 00130$
 	ld	a, -2 (ix)
 	or	a, a
 	jr	Z, 00165$
-	ld	-3 (ix), #0x30
+	ld	-3 (ix), #0x32
 	ld	-2 (ix), #0
 	jp	00166$
 00165$:
-	ld	-3 (ix), #0x31
+	ld	-3 (ix), #0x33
 	ld	-2 (ix), #0
 00166$:
-	ld	a, -3 (ix)
-	ld	l, -6 (ix)
-	ld	h, -5 (ix)
-	ld	(hl), a
-	jp	00133$
-00131$:
-;./exsoccer.c:698: bool isUp = (dir == DIRECTION_UP || dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT);
-	ld	a, -2 (ix)
-	dec	a
-	jr	Z, 00168$
-	ld	a, -2 (ix)
-	sub	a, #0x08
-	jr	Z, 00168$
-	ld	a, -2 (ix)
-	sub	a, #0x02
-	jr	Z, 00168$
-	xor	a, a
-	jp	00169$
-00168$:
-	ld	a, #0x01
-00169$:
-;./exsoccer.c:699: g_Players[i].PatternId = isUp ? PLAYER_POSE_BACK : PLAYER_POSE_FRONT;
-	or	a, a
-	jr	Z, 00173$
-	ld	-3 (ix), #0x11
-	ld	-2 (ix), #0
-	jp	00174$
-00173$:
-	ld	-3 (ix), #0x10
-	ld	-2 (ix), #0
-00174$:
 	ld	a, -3 (ix)
 	ld	-2 (ix), a
 	ld	l, -6 (ix)
 	ld	h, -5 (ix)
 	ld	a, -2 (ix)
 	ld	(hl), a
+	jp	00135$
+00130$:
+;./exsoccer.c:694: else g_Players[i].PatternId = (animFrame1) ? PLAYER_POSE_CELEBRATION_FRONT_1 : PLAYER_POSE_CELEBRATION_FRONT_2;
+	ld	a, -2 (ix)
+	or	a, a
+	jr	Z, 00167$
+	ld	-3 (ix), #0x30
+	ld	-2 (ix), #0
+	jp	00168$
+00167$:
+	ld	-3 (ix), #0x31
+	ld	-2 (ix), #0
+00168$:
+	ld	a, -3 (ix)
+	ld	l, -6 (ix)
+	ld	h, -5 (ix)
+	ld	(hl), a
+	jp	00135$
 00133$:
+;./exsoccer.c:698: bool isUp = (dir == DIRECTION_UP || dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT);
+	ld	a, -2 (ix)
+	dec	a
+	jr	Z, 00170$
+	ld	a, -2 (ix)
+	sub	a, #0x08
+	jr	Z, 00170$
+	ld	a, -2 (ix)
+	sub	a, #0x02
+	jr	Z, 00170$
+	xor	a, a
+	jp	00171$
+00170$:
+	ld	a, #0x01
+00171$:
+;./exsoccer.c:699: g_Players[i].PatternId = isUp ? PLAYER_POSE_BACK : PLAYER_POSE_FRONT;
+	or	a, a
+	jr	Z, 00175$
+	ld	-3 (ix), #0x11
+	ld	-2 (ix), #0
+	jp	00176$
+00175$:
+	ld	-3 (ix), #0x10
+	ld	-2 (ix), #0
+00176$:
+	ld	a, -3 (ix)
+	ld	-2 (ix), a
+	ld	l, -6 (ix)
+	ld	h, -5 (ix)
+	ld	a, -2 (ix)
+	ld	(hl), a
+00135$:
 ;./exsoccer.c:664: for(u8 i=0; i<15; i++){
 	inc	-1 (ix)
-	jp	00154$
-00136$:
+	jp	00156$
+00138$:
 ;./exsoccer.c:704: if(g_Timer > 150){
 	ld	a, #0x96
 	ld	hl, #_g_Timer
 	sub	a, (hl)
-	jp	NC, 00158$
+	jp	NC, 00160$
 ;E:/Dropbox/FAUSTO/SVILUPPI/MSX/CODE/C/MSXgl/engine/src/v9990.h:480: inline void V9_SetBackgroundColor(u8 color) { V9_SetRegister(15, color); }
 	ld	l, #0x01
 ;	spillPairReg hl
@@ -3758,7 +3762,7 @@ _TickGoalCelebration::
 ;./exsoccer.c:712: if(g_Team1ActivePlayer!=NO_VALUE) g_Players[g_Team1ActivePlayer].Status=PLAYER_STATUS_NONE;
 	ld	a, (_g_Team1ActivePlayer+0)
 	inc	a
-	jr	Z, 00138$
+	jr	Z, 00140$
 	ld	bc, #_g_Players+0
 	ld	de, (_g_Team1ActivePlayer)
 	ld	d, #0x00
@@ -3777,11 +3781,11 @@ _TickGoalCelebration::
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
-00138$:
+00140$:
 ;./exsoccer.c:713: if(g_Team2ActivePlayer!=NO_VALUE) g_Players[g_Team2ActivePlayer].Status=PLAYER_STATUS_NONE;
 	ld	a, (_g_Team2ActivePlayer+0)
 	inc	a
-	jr	Z, 00140$
+	jr	Z, 00142$
 	ld	bc, #_g_Players+0
 	ld	de, (_g_Team2ActivePlayer)
 	ld	d, #0x00
@@ -3800,7 +3804,7 @@ _TickGoalCelebration::
 	ld	(hl), a
 	inc	hl
 	ld	(hl), a
-00140$:
+00142$:
 ;./exsoccer.c:714: g_Team1ActivePlayer=NO_VALUE;
 	ld	hl, #_g_Team1ActivePlayer
 	ld	(hl), #0xff
@@ -3821,20 +3825,20 @@ _TickGoalCelebration::
 ;./exsoccer.c:722: for(u8 i=0; i<15; i++){
 	ld	de, #_g_Players
 	ld	-1 (ix), #0x00
-00156$:
+00158$:
 	ld	a, -1 (ix)
 	sub	a, #0x0f
-	jp	NC, 00147$
+	jp	NC, 00149$
 ;./exsoccer.c:723: if(i==REFEREE || g_Players[i].TeamId==TEAM_1 || g_Players[i].TeamId==TEAM_2){
 	ld	a, -1 (ix)
 	sub	a, #0x0e
 	ld	a, #0x01
-	jr	Z, 00397$
+	jr	Z, 00405$
 	xor	a, a
-00397$:
+00405$:
 	ld	c, a
 	or	a, a
-	jr	NZ, 00143$
+	jr	NZ, 00145$
 	push	de
 	ld	e, -1 (ix)
 	ld	d, #0x00
@@ -3855,14 +3859,14 @@ _TickGoalCelebration::
 	pop	bc
 	ld	a, 9 (iy)
 	cp	a, #0x01
-	jr	Z, 00143$
+	jr	Z, 00145$
 	sub	a, #0x02
-	jr	NZ, 00157$
-00143$:
+	jr	NZ, 00159$
+00145$:
 ;./exsoccer.c:725: if (i==REFEREE) {
 	ld	a, c
 	or	a, a
-	jr	Z, 00142$
+	jr	Z, 00144$
 ;./exsoccer.c:726: g_Players[i].Direction=DIRECTION_RIGHT;
 	ld	c, -1 (ix)
 	ld	b, #0x00
@@ -3893,21 +3897,21 @@ _TickGoalCelebration::
 	ld	bc, #0x000c
 	add	hl, bc
 	ld	(hl), #0x00
-00142$:
+00144$:
 ;./exsoccer.c:729: SetPlayerTarget(i); 
 	push	de
 	ld	a, -1 (ix)
 	call	_SetPlayerTarget
 	pop	de
-00157$:
+00159$:
 ;./exsoccer.c:722: for(u8 i=0; i<15; i++){
 	inc	-1 (ix)
-	jp	00156$
-00147$:
+	jp	00158$
+00149$:
 ;./exsoccer.c:734: ShowFieldZone(FIELD_CENTRAL_ZONE);
 	ld	a, #0x01
 	call	_ShowFieldZone
-00158$:
+00160$:
 ;./exsoccer.c:736: }
 	ld	sp, ix
 	pop	ix
